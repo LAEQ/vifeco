@@ -6,7 +6,7 @@
 
 <GridPane prefHeight="60.0" prefWidth="200.0"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="org.laeq.VifecoController">
+          fx:controller="org.laeq.SubMenuController">
     <Label fx:id="clickLabel"
            text="0"
            GridPane.columnIndex="0" GridPane.rowIndex="0"/>
