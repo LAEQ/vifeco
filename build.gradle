@@ -69,6 +69,8 @@ jfx {
 
 dependencies {
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
+    compile 'org.kordamp.ikonli:ikonli-javafx:1.8.0'
+    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:1.8.0'
 
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
 

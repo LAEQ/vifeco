@@ -4,21 +4,49 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import griffon.transform.Threading;
 import javax.annotation.Nonnull;
+import java.io.File;
 
 @ArtifactProviderFor(GriffonController.class)
 public class MenuController extends AbstractGriffonController {
     private MenuModel model;
+
+    private FileChooser fileChooser;
 
     @MVCMember
     public void setModel(@Nonnull MenuModel model) {
         this.model = model;
     }
 
+    @MVCMember @Nonnull
+    private MenuView view;
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void open() {
-        System.out.println("Click");
+        fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Audio Files", "*.mp4", "*.wav", "*.mkv")
+                );
+
+        Stage stage = (Stage) getApplication().getWindowManager().findWindow("mainWindow");
+
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if (selectedFile != null) {
+            System.out.printf("File: %s loaded\n", selectedFile);
+        }
+
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void quit() {
+
     }
 }

@@ -26,6 +26,11 @@ public class Config extends AbstractMapResourceBundle {
                     .e("view", "org.laeq.MenuView")
                     .e("controller", "org.laeq.MenuController")
                 )
+                .e("menu2", map()
+                        .e("model", "org.laeq.SubMenuModel")
+                        .e("view", "org.laeq.SubMenuView")
+                        .e("controller", "org.laeq.SubMenuController")
+                )
             );
     }
 }
