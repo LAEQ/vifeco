@@ -87,4 +87,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             getLog().error("File: %s does not exists\n", filePath);
         }
     }
+
+    public void play() {
+        if(model.isIsPlaying()){
+            mediaPlayer.pause();
+        } else{
+            mediaPlayer.play();
+        }
+
+        model.setIsPlaying(model.isIsPlaying());
+    }
 }

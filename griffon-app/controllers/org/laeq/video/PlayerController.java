@@ -22,7 +22,6 @@ public class PlayerController extends AbstractGriffonController {
     @MVCMember @Nonnull
     private PlayerView view;
 
-
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener("menu.open.video", files -> {
@@ -40,9 +39,6 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void play() {
-        System.out.println("play");
-
-
-
+        view.play();
     }
 }
