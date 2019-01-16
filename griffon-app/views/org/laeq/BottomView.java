@@ -17,9 +17,9 @@ import java.util.Collections;
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
-public class SubMenuView extends AbstractJavaFXGriffonView {
-    private SubMenuController controller;
-    private SubMenuModel model;
+public class BottomView extends AbstractJavaFXGriffonView {
+    private BottomController controller;
+    private BottomModel model;
 
     @MVCMember @Nonnull
     private VifecoView parentView;
@@ -27,24 +27,22 @@ public class SubMenuView extends AbstractJavaFXGriffonView {
     @FXML
     private Label clickLabel;
 
-    public Label getClickLabel(){
-        return clickLabel;
-    }
-
     @MVCMember
-    public void setController(@Nonnull SubMenuController controller) {
+    public void setController(@Nonnull BottomController controller) {
         this.controller = controller;
     }
 
     @MVCMember
-    public void setModel(@Nonnull SubMenuModel model) {
+    public void setModel(@Nonnull BottomModel model) {
         this.model = model;
     }
 
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-        connectActions(node, controller);
-    }
 
+        connectActions(node, controller);
+
+        parentView.getBottom().getChildren().add(node);
+    }
 }

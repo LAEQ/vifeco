@@ -1,4 +1,4 @@
-package org.laeq;
+package org.laeq.video;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
@@ -12,39 +12,35 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.laeq.VifecoView;
 
 import java.util.Collections;
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
-public class SubMenuView extends AbstractJavaFXGriffonView {
-    private SubMenuController controller;
-    private SubMenuModel model;
+public class ControlsView extends AbstractJavaFXGriffonView {
+    private ControlsController controller;
+    private ControlsModel model;
 
     @MVCMember @Nonnull
     private VifecoView parentView;
 
-    @FXML
-    private Label clickLabel;
-
-    public Label getClickLabel(){
-        return clickLabel;
-    }
-
     @MVCMember
-    public void setController(@Nonnull SubMenuController controller) {
+    public void setController(@Nonnull ControlsController controller) {
         this.controller = controller;
     }
 
     @MVCMember
-    public void setModel(@Nonnull SubMenuModel model) {
+    public void setModel(@Nonnull ControlsModel model) {
         this.model = model;
     }
 
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-        connectActions(node, controller);
+
+        parentView.getMiddlePane().getItems().add(node);
     }
+
 
 }

@@ -11,6 +11,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import griffon.transform.Threading;
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.Arrays;
 
 @ArtifactProviderFor(GriffonController.class)
 public class MenuController extends AbstractGriffonController {
@@ -39,7 +40,9 @@ public class MenuController extends AbstractGriffonController {
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            System.out.printf("File: %s loaded\n", selectedFile);
+            getApplication().getEventRouter().publishEventAsync("menu.open.video", Arrays.asList(selectedFile));
+        } else {
+            System.out.println("Error loading the file");
         }
 
     }

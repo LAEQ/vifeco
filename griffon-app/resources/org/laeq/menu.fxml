@@ -7,7 +7,7 @@
 
 <MenuBar maxHeight="31.0" minHeight="31.0" prefHeight="31.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.MenuController">
     <menus>
-        <Menu mnemonicParsing="false" text="File">
+        <Menu mnemonicParsing="false" text="Video">
             <items>
                 <MenuItem fx:id="openActionTarget" mnemonicParsing="false" text="Open" />
                 <MenuItem fx:id="closeActionTarget" mnemonicParsing="false" text="Close" />
@@ -24,18 +24,22 @@
                 <MenuItem fx:id="quitActionTarget" mnemonicParsing="false" text="Quit" />
             </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
+        <Menu mnemonicParsing="false" text="Category">
             <items>
-                <MenuItem mnemonicParsing="false" text="Undo" />
-                <MenuItem mnemonicParsing="false" text="Redo" />
+                <MenuItem mnemonicParsing="false" text="New" />
+                <MenuItem mnemonicParsing="false" text="List" />
                 <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Cut" />
-                <MenuItem mnemonicParsing="false" text="Copy" />
+                <MenuItem mnemonicParsing="false" text="Export" />
+                <MenuItem mnemonicParsing="false" text="Import" />
                 <MenuItem mnemonicParsing="false" text="Paste" />
-                <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Database">
+            <items>
+                <MenuItem mnemonicParsing="false" text="Export" />
+                <MenuItem mnemonicParsing="false" text="Import" />
                 <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Select All" />
-                <MenuItem mnemonicParsing="false" text="Unselect All" />
+                <MenuItem mnemonicParsing="false" text="Backup" />
             </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">

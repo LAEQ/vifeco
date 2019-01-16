@@ -40,7 +40,11 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
         createMVCGroup("menu");
-//        createMVCGroup("menu2");
+        createMVCGroup("controls");
+        createMVCGroup("videoList");
+        createMVCGroup("player");
+        createMVCGroup("category");
+        createMVCGroup("bottom");
     }
 
     @Override
@@ -55,10 +59,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     private Scene init() {
         Scene scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
-
-
         scene.setRoot(generateView());
-
         return scene;
     }
 
@@ -70,20 +71,23 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         top = new VBox();
         top.setPrefWidth(900);
         top.setPrefHeight(102);
+        root.setVgrow(top, Priority.NEVER);
 
         middlePane = new SplitPane();
         middlePane.prefHeight(-1);
         middlePane.prefWidth(-1);
-        middlePane.setDividerPositions(0.1492204899777283, 0.8340757238307349);
+        middlePane.setDividerPositions(0.2, 0.6);
+        middlePane.setStyle("-fx-border-color: black");
+        root.setVgrow(middlePane, Priority.ALWAYS);
+
 
         bottom = new HBox();
         bottom.setAlignment(Pos.CENTER_LEFT);
         bottom.setSpacing(5);
+        root.setVgrow(bottom, Priority.NEVER);
 
         root.getChildren().addAll(top, middlePane, bottom);
 
         return root;
     }
-
-
 }

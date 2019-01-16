@@ -1,4 +1,4 @@
-package org.laeq;
+package org.laeq.video;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
@@ -10,11 +10,18 @@ import griffon.transform.Threading;
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonController.class)
-public class VifecoController extends AbstractGriffonController {
-    private VifecoModel model;
+public class ControlsController extends AbstractGriffonController {
+    private ControlsModel model;
 
     @MVCMember
-    public void setModel(@Nonnull VifecoModel model) {
+    public void setModel(@Nonnull ControlsModel model) {
         this.model = model;
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void click() {
+        int count = Integer.parseInt(model.getClickCount());
+        model.setClickCount(String.valueOf(count + 1));
     }
 }
