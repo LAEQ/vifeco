@@ -5,6 +5,10 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import javafx.fxml.FXML;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -40,5 +44,12 @@ public class PlayerController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void play() {
         view.play();
+    }
+
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void test(KeyEvent keyEvent) {
+        System.out.println("test");
     }
 }

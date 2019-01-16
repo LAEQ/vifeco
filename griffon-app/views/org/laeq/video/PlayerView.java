@@ -3,10 +3,12 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
@@ -52,6 +54,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         this.model = model;
     }
 
+    private ControlsModel controlsModel;
+
     @Override
     public void initUI() {
        Node node = loadFromFXML();
@@ -96,5 +100,21 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         }
 
         model.setIsPlaying(model.isIsPlaying());
+    }
+
+    @FXML
+    public void test(ScrollEvent event){
+        getLog().info(String.format("Scroll: %f", event.getDeltaY()));
+        if(controlsModel == null){
+            controlsModel = (ControlsModel) getApplication().getMvcGroupManager().getAt("controls").getModel();
+        }
+
+        if(event.getDeltaY() > 0){
+            controlsModel.increaseRate();
+            mediaPlayer.setRate(controlsModel.getRate());
+        } else if (event.getDeltaY() < 0){
+            controlsModel.decreateRate();
+            mediaPlayer.setRate(controlsModel.getRate());
+        }
     }
 }

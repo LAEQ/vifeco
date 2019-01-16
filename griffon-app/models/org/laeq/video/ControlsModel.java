@@ -2,9 +2,10 @@ package org.laeq.video;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonModel;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.property.StringProperty;
-import javafx.beans.property.SimpleStringProperty;
+import griffon.transform.Observable;
+import javafx.beans.property.*;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 import javax.annotation.Nonnull;
@@ -13,21 +14,28 @@ import java.util.Map;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ControlsModel extends AbstractGriffonModel {
-    private StringProperty clickCount;
+    private SimpleStringProperty rate;
+
+    public ControlsModel(){
+        this.rate = new SimpleStringProperty(this, "rate", "1");
+    }
 
     @Nonnull
-    public final StringProperty clickCountProperty() {
-        if (clickCount == null) {
-            clickCount = new SimpleStringProperty(this, "clickCount", "0");
-        }
-        return clickCount;
+    public final SimpleStringProperty rateProperty() {return rate;}
+    public String getRate() {return rate.get(); }
+    public void setRate(String rate) {this.rate.set(rate); }
+
+    public void increaseRate() {
+        getLog().info("Increase rate");
+//        if(getRate() < 10){
+//            setRate(rate.add(0.1).doubleValue());
+//        }
     }
 
-    public void setClickCount(String clickCount) {
-        clickCountProperty().set(clickCount);
-    }
-
-    public String getClickCount() {
-        return clickCountProperty().get();
+    public void decreateRate() {
+        getLog().info("Increase rate");
+//        if(getRate() > 0.1){
+//            this.setRate(getRate() - 0.1);
+//        }
     }
 }

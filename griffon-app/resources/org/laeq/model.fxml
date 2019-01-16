@@ -77,7 +77,8 @@
                 <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
               </textFill>
             </Label>
-                  <Label alignment="CENTER" layoutX="6.0" layoutY="40.0" minWidth="36.0" prefHeight="14.0" prefWidth="36.0" style="&#10;" text="Speed" wrapText="true">
+                  <Label alignment="CENTER" layoutX="12.0" layoutY="67.0" minWidth="36.0" prefHeight="14.0" prefWidth="36.0" style="&#10;" text="Speed"
+                         wrapText="true" AnchorPane.leftAnchor="12.0" AnchorPane.topAnchor="67.0">
                      <textFill>
                         <Color blue="0.624" green="0.624" red="0.624" fx:id="x21" />
                      </textFill>
@@ -85,7 +86,7 @@
                         <Font size="11.0" />
                      </font>
                   </Label>
-                  <Spinner layoutX="6.0" layoutY="61.0" prefHeight="26.0" prefWidth="118.0" />
+                  <Spinner layoutX="65.0" layoutY="62.0" prefHeight="26.0" prefWidth="67.0" AnchorPane.leftAnchor="65.0" AnchorPane.topAnchor="62.0" />
                   <Slider layoutX="10.0" layoutY="143.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                   <Label layoutX="14.0" layoutY="114.0" text="Opacity" AnchorPane.leftAnchor="10.0">
                      <font>
