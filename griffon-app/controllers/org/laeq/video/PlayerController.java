@@ -28,10 +28,16 @@ public class PlayerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
+        getApplication().getEventRouter().addEventListener("controls.volume.change", volume -> {
+            runInsideUIAsync(()->{
+                view.setVolume();
+            });
+        });
+
         getApplication().getEventRouter().addEventListener("menu.open.video", files -> {
+            //@todo: check file exists
             File file = (File) files[0];
 
-            System.out.println(file.toString());
             runInsideUISync(() -> {
                 model.setVideoPath(file.toString());
                 view.setMedia(file.toString());
@@ -45,7 +51,6 @@ public class PlayerController extends AbstractGriffonController {
     public void play() {
         view.play();
     }
-
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)

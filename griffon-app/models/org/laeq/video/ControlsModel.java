@@ -10,32 +10,119 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ControlsModel extends AbstractGriffonModel {
-    private SimpleStringProperty rate;
+    private SimpleDoubleProperty rate;
+    private SimpleStringProperty spinnerRate;
+    private SimpleIntegerProperty volume;
+    private SimpleIntegerProperty pointSize;
+    private SimpleIntegerProperty pointDuration;
+    private SimpleDoubleProperty pointOpacity;
+
+    private final Integer VOLUME_MIN = 0;
+    private final Integer VOLUME_MAX = 10;
 
     public ControlsModel(){
-        this.rate = new SimpleStringProperty(this, "rate", "1");
+        this.rate = new SimpleDoubleProperty(this, "rate", 1.0);
+        this.spinnerRate = new SimpleStringProperty(this.getRate().toString());;
+        this.volume = new SimpleIntegerProperty(this, "volume", 10);
+        this.pointSize = new SimpleIntegerProperty(this, "pointSize", 30);
+        this.pointDuration = new SimpleIntegerProperty(this, "pointDuration", 5);
+        this.pointOpacity = new SimpleDoubleProperty(this, "pointOpacity", 0.5);
     }
 
     @Nonnull
-    public final SimpleStringProperty rateProperty() {return rate;}
-    public String getRate() {return rate.get(); }
-    public void setRate(String rate) {this.rate.set(rate); }
-
-    public void increaseRate() {
-        getLog().info("Increase rate");
-//        if(getRate() < 10){
-//            setRate(rate.add(0.1).doubleValue());
-//        }
+    public final SimpleDoubleProperty rateProperty() {return rate;}
+    public Double getRate() {return rate.get(); }
+    public void setRate(Double rate) {
+        this.rate.set(rate);
+        this.spinnerRate.setValue(getRate().toString());
     }
 
+    @Nonnull
+    public SimpleStringProperty spinnerRateProperty() {
+        return spinnerRate;
+    }
+    public void setSpinnerRate() {
+        this.spinnerRate.set(getRate().toString());
+    }
+    public String getSpinnerRate() {
+        return spinnerRate.get();
+    }
+
+    @Nonnull
+    public SimpleIntegerProperty volumeProperty() {
+        return volume;
+    }
+    public int getVolume() {
+        return volume.get();
+    }
+    public void setVolume(int volume) {
+        this.volume.set(volume);
+    }
+
+
+    @Nonnull
+    public SimpleIntegerProperty pointSizeProperty() {
+        return pointSize;
+    }
+    public int getPointSize() {
+        return pointSize.get();
+    }
+    public void setPointSize(int pointSize) {
+        this.pointSize.set(pointSize);
+    }
+
+    @Nonnull
+    public SimpleDoubleProperty pointOpacityProperty() {
+        return pointOpacity;
+    }
+    public void setPointOpacity(double pointOpacity) {
+        this.pointOpacity.set(pointOpacity);
+    }
+    public double getPointOpacity() {
+        return pointOpacity.get();
+    }
+
+    public SimpleIntegerProperty pointDurationProperty() {
+        return pointDuration;
+    }
+    public int getPointDuration() {
+        return pointDuration.get();
+    }
+    public void setPointDuration(int pointDuration) {
+        this.pointDuration.set(pointDuration);
+    }
+
+    public void increaseVolume(){
+        if(getVolume() < VOLUME_MAX){
+            setVolume(getVolume() + 1);
+        }
+    }
+    public void decreaseVolume(){
+        if(getVolume() > VOLUME_MIN){
+            setVolume(getVolume() - 1);
+        }
+    }
+
+    public void increaseRate() {
+        if(getRate() < 10){
+            BigDecimal bg = new BigDecimal(rate.add(0.1).doubleValue());
+            setRate(bg.setScale(1, RoundingMode.HALF_EVEN).doubleValue());
+        }
+    }
     public void decreateRate() {
-        getLog().info("Increase rate");
-//        if(getRate() > 0.1){
-//            this.setRate(getRate() - 0.1);
-//        }
+        if(getRate() > 0.1){
+            BigDecimal bg = new BigDecimal(getRate() - 0.1);
+            this.setRate(bg.setScale(1, RoundingMode.HALF_EVEN).doubleValue());
+        }
+    }
+
+    public double getVolumeRatio() {
+        return getVolume() / 10.0;
     }
 }

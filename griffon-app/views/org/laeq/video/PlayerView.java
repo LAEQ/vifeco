@@ -81,6 +81,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 mediaPlayer = new MediaPlayer(media);
                 mediaView.setMediaPlayer(mediaPlayer);
                 playActionTarget.setDisable(false);
+
+
             } catch (IOException | MediaException e) {
                 getLog().error(String.format("MediaException: %s\n", e.toString()));
             } catch (Exception e){
@@ -93,21 +95,24 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void play() {
+        getLog().info(String.format("%b\n", model.isIsPlaying()));
         if(model.isIsPlaying()){
             mediaPlayer.pause();
         } else{
             mediaPlayer.play();
         }
 
-        model.setIsPlaying(model.isIsPlaying());
+        model.setIsPlaying(! model.isIsPlaying());
     }
 
     @FXML
     public void test(ScrollEvent event){
-        getLog().info(String.format("Scroll: %f", event.getDeltaY()));
         if(controlsModel == null){
             controlsModel = (ControlsModel) getApplication().getMvcGroupManager().getAt("controls").getModel();
         }
+
+//        mediaPlayer.volumeProperty().bindBidirectional(controlsModel.volumeProperty());
+
 
         if(event.getDeltaY() > 0){
             controlsModel.increaseRate();
@@ -115,6 +120,22 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         } else if (event.getDeltaY() < 0){
             controlsModel.decreateRate();
             mediaPlayer.setRate(controlsModel.getRate());
+        }
+    }
+
+    public void setVolume() {
+        if(controlsModel == null){
+            controlsModel = (ControlsModel) getApplication().getMvcGroupManager().getAt("controls").getModel();
+        }
+
+        Integer volume = controlsModel.getVolume();
+        getLog().info(String.format("Set volume: %d", volume));
+
+        if(mediaPlayer != null){
+//            getLog().info(String.format("Set volume: %f", (volume / 10.0)));
+//            getLog().info(String.format("Set volume: %d", controlsModel.getVolume()));
+//            System.out.println(controlsModel.getVolume());
+//            mediaPlayer.setVolume(controlsModel.getVolume() / 10);
         }
     }
 }
