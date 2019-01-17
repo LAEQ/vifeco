@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
@@ -16,28 +13,40 @@
                 <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
             </textFill>
         </Label>
-        <Label alignment="CENTER" layoutX="13.0" layoutY="66.0" minWidth="36.0" prefHeight="14.0" prefWidth="36.0" style="&#10;" text="Speed" wrapText="true" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="66.0">
-            <textFill>
-                <Color blue="0.624" green="0.624" red="0.624" fx:id="x21" />
-            </textFill>
-            <font>
-                <Font size="11.0" />
-            </font>
-        </Label>
-        <Pane fx:id="rateSpinnerPane" layoutX="65.0" layoutY="62.0" prefHeight="26.0" prefWidth="67.0" AnchorPane.leftAnchor="65.0" AnchorPane.topAnchor="62.0" />
-        <Group layoutX="13.0" layoutY="103.0">
-            <children>
-                <Label alignment="CENTER" layoutY="5.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Volume" wrapText="true">
-                    <textFill>
-                        <Color blue="0.624" green="0.624" red="0.624" fx:id="x211" />
-                    </textFill>
-                    <font>
-                        <Font size="11.0" />
-                    </font>
-                </Label>
-                <Spinner fx:id="volumeSpinner" layoutX="83.0" prefHeight="26.0" prefWidth="67.0" />
-            </children>
-        </Group>
+      <Label alignment="CENTER" layoutX="22.0" layoutY="53.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Speed" wrapText="true">
+         <textFill>
+            <Color blue="0.624" green="0.624" red="0.624" fx:id="x211131" />
+         </textFill>
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Label>
+      <Label fx:id="rateLabel" alignment="CENTER" layoutX="144.0" layoutY="52.0" minWidth="36.0" prefHeight="16.0" prefWidth="77.0" style="&#10;" text="1" wrapText="true">
+         <textFill>
+            <Color blue="0.624" green="0.624" red="0.624" fx:id="x2111121" />
+         </textFill>
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Label>
+      <Slider fx:id="rateSlider" min="0.1" max="10"  layoutX="20.0" layoutY="71.0" prefHeight="14.0" prefWidth="197.0" />
+      <Label alignment="CENTER" layoutX="22.0" layoutY="103.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Volume" wrapText="true">
+         <textFill>
+            <Color blue="0.624" green="0.624" red="0.624" fx:id="x21113" />
+         </textFill>
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Label>
+      <Label fx:id="volumeLabel" alignment="CENTER" layoutX="144.0" layoutY="102.0" minWidth="36.0" prefHeight="16.0" prefWidth="77.0" style="&#10;" text="10" wrapText="true">
+         <textFill>
+            <Color blue="0.624" green="0.624" red="0.624" fx:id="x211112" />
+         </textFill>
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Label>
+      <Slider fx:id="volumeSlider" layoutX="20.0" layoutY="121.0" prefHeight="14.0" prefWidth="197.0" />
       <Label alignment="CENTER" layoutX="23.0" layoutY="146.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Size" wrapText="true">
          <textFill>
             <Color blue="0.624" green="0.624" red="0.624" fx:id="x2111" />
@@ -71,7 +80,7 @@
             <Font size="11.0" />
          </font>
       </Label>
-      <Slider fx:id="durationPointSlider" layoutX="22.0" layoutY="216.0" prefHeight="14.0" prefWidth="197.0" min="1" max="15"/>
+      <Slider fx:id="durationPointSlider" layoutX="22.0" layoutY="216.0" max="15" min="1" prefHeight="14.0" prefWidth="197.0" />
       <Label alignment="CENTER" layoutX="18.0" layoutY="244.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Opacity" wrapText="true">
          <textFill>
             <Color blue="0.624" green="0.624" red="0.624" fx:id="x211121" />
@@ -88,6 +97,6 @@
             <Font size="11.0" />
          </font>
       </Label>
-      <Slider fx:id="opacityPointSlider" layoutX="21.0" layoutY="264.0" prefHeight="14.0" prefWidth="197.0" min="0.1" max="1.0" />
+      <Slider fx:id="opacityPointSlider" layoutX="21.0" layoutY="264.0" max="1.0" min="0.1" prefHeight="14.0" prefWidth="197.0" />
     </children>
 </AnchorPane>

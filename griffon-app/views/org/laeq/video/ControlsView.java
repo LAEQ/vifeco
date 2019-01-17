@@ -10,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.layout.Pane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 
@@ -24,12 +23,11 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull
     private VifecoView parentView;
 
-    @FXML
-    private Pane rateSpinnerPane;
+    @FXML private Slider rateSlider;
+    @FXML private Label rateLabel;
 
-    private Spinner<String> spinner;
-
-    @FXML Spinner<Integer> volumeSpinner;
+    @FXML private Slider volumeSlider;
+    @FXML private Label volumeLabel;
 
     @FXML private Slider sizePointSlider;
     @FXML private Label sizePointLabel;
@@ -54,7 +52,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     public void initUI() {
         Node node = loadFromFXML();
 
-        initRateSpinner();
+        initRateSlider();
         initVolumeSpinner();
         initSizePoint();
         initDurationPoint();
@@ -78,40 +76,16 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         sizePointLabel.textProperty().bind(model.pointSizeProperty().asString());
     }
 
-    private void initRateSpinner(){
-        spinner = new Spinner<String>();
-        spinner.setEditable(false);
+    private void initRateSlider(){
+        model.rateProperty().bindBidirectional(rateSlider.valueProperty());
+        rateLabel.textProperty().bind(model.rateProperty().asString());
 
-        SpinnerValueFactory<String> valueFactory = new SpinnerValueFactory<String>() {
-            @Override
-            public void decrement(int steps) {
-                model.decreateRate();
-                this.setValue(model.getSpinnerRate());
-            }
-
-            @Override
-            public void increment(int steps) {
-                model.increaseRate();
-                this.setValue(model.getSpinnerRate());
-            }
-        };
-
-        valueFactory.setValue(model.getSpinnerRate());
-        spinner.setValueFactory(valueFactory);
-
-        rateSpinnerPane.getChildren().add(spinner);
-        model.spinnerRateProperty().bindBidirectional(spinner.getEditor().textProperty());
+        rateSlider.setValue(model.getRate());
+        rateSlider.setShowTickMarks(true);
     }
 
     private void initVolumeSpinner(){
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 10);
-
-        valueFactory.valueProperty().addListener((observable, oldValue, newValue) -> {
-            controller.volumeChangeEvent();
-        });
-
-        volumeSpinner.setValueFactory(valueFactory);
-        model.volumeProperty().bindBidirectional(IntegerProperty.integerProperty(volumeSpinner.getValueFactory().valueProperty()));
-        getLog().info(String.format("model volume: %d", model.getVolume()));
+        model.volumeProperty().bindBidirectional(volumeSlider.valueProperty());
+        volumeLabel.textProperty().bind(model.volumeProperty().asString());
     }
 }
