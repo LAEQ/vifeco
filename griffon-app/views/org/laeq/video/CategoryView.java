@@ -76,13 +76,6 @@ public class CategoryView extends AbstractJavaFXGriffonView {
         parentView.getMiddlePane().getItems().add(node);
     }
 
-//    <Group>
-//               <children>
-//                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
-//                  <Label layoutX="76.0" layoutY="18.0" prefHeight="17.0" prefWidth="124.0" text="0 / 0" />
-//               </children>
-//            </Group>
-
 
     private Group generateCategory(String filePath) throws FileNotFoundException {
         Group group = new Group();

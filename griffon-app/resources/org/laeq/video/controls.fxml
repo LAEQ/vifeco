@@ -46,7 +46,7 @@
             <Font size="11.0" />
          </font>
       </Label>
-      <Slider fx:id="volumeSlider" layoutX="20.0" layoutY="121.0" prefHeight="14.0" prefWidth="197.0" />
+      <Slider fx:id="volumeSlider" layoutX="20.0" layoutY="121.0" prefHeight="14.0" prefWidth="197.0" min="0" max="10" />
       <Label alignment="CENTER" layoutX="23.0" layoutY="146.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Size" wrapText="true">
          <textFill>
             <Color blue="0.624" green="0.624" red="0.624" fx:id="x2111" />

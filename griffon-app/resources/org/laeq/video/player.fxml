@@ -9,16 +9,17 @@
 
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1" fx:controller="org.laeq.video.PlayerController">
     <children>
-        <Pane fx:id="playerPane" onScroll="#test"
+        <Pane fx:id="playerPane" onScroll="#playerPaneScroll" onMouseClicked="#playerPaneMouseClicked"
               layoutX="14.0" layoutY="23.0" prefHeight="380.0" prefWidth="578.0" style="-fx-border-color: blue;"
               AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
               AnchorPane.topAnchor="20.0">
             <MediaView fx:id="mediaView" fitHeight="${playerPane.height}" fitWidth="${playerPane.width}" layoutX="1.0" style="-fx-background-color: pink" />
+            <Pane fx:id="iconPane"  layoutX="0.0" layoutY="0.0" prefHeight="${playerPane.height}" prefWidth="${playerPane.width}" style="-fx-border-color: yellow;" />
         </Pane>
         <Button fx:id="playActionTarget" layoutX="14.0" layoutY="432.0" mnemonicParsing="false" text="Play" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="10.0" />
-        <Slider layoutX="14.0" layoutY="405.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+        <Slider layoutX="14.0" layoutY="405.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" fx:id="videoTimeSlider" />
         <Button layoutX="86.0" layoutY="440.0" mnemonicParsing="false" text="&lt;&lt;" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="86.0" />
         <Button layoutX="137.0" layoutY="440.0" mnemonicParsing="false" text="&gt;&gt;" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="130.0" />
-        <Label layoutX="495.0" layoutY="432.0" prefHeight="39.0" prefWidth="127.0" text="12:00 / 1:23:00" textAlignment="RIGHT" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+        <Label layoutX="495.0" fx:id="durationLabel" layoutY="432.0" prefHeight="39.0" prefWidth="127.0" text="12:00 / 1:23:00" textAlignment="RIGHT" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
     </children>
 </AnchorPane>
