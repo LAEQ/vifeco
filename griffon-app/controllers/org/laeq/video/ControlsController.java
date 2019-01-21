@@ -29,7 +29,7 @@ public class ControlsController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void volumeChangeEvent() {
-        Integer volume[] = new Integer[]{model.getVolume()};
+//        Integer volume[] = new Integer[]{model.getVolume()};
         getApplication().getEventRouter().publishEventAsync("controls.volume.change");
     }
 }

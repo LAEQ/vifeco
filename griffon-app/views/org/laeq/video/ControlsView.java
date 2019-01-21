@@ -3,20 +3,21 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 
 import javax.annotation.Nonnull;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ControlsView extends AbstractJavaFXGriffonView {
@@ -26,20 +27,22 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull
     private VifecoView parentView;
 
+    @FXML private Pane sliderPanel;
+
     @FXML private Slider rateSlider;
-    @FXML private Label rateLabel;
+    @FXML private Text rateValue;
 
     @FXML private Slider volumeSlider;
-    @FXML private Label volumeLabel;
+    @FXML private Text volumeValue;
 
     @FXML private Slider sizePointSlider;
-    @FXML private Label sizePointLabel;
+    @FXML private Text sizePointValue;
 
     @FXML private Slider durationPointSlider;
-    @FXML private Label durationPointLabel;
+    @FXML private Text durationPointValue;
 
     @FXML private Slider opacityPointSlider;
-    @FXML private Label opacityPointLabel;
+    @FXML private Text opacityPointValue;
 
     @MVCMember
     public void setController(@Nonnull ControlsController controller) {
@@ -72,52 +75,67 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         parentView.getMiddlePane().getItems().add(node);
     }
 
+    private Group generateSlider(){
+        Group group = new Group();
+
+        return group;
+    }
+
     private void setSliderOptions(Slider slider, Double value){
-        slider.setValue(value);
-//        slider.setShowTickLabels(true);
-//        slider.setShowTickMarks(true);
-//        slider.setMajorTickUnit(5);
-//        slider.setMinorTickCount(1);
-
-        DoubleProperty integerProperty = new SimpleDoubleProperty(model.getVolume() / 10);
-        ObjectProperty<Integer> objectProperty = new SimpleObjectProperty<>(2);
-
-        // Need to keep the reference as bidirectional binding uses weak references
-        IntegerProperty objectAsInteger = IntegerProperty.integerProperty(objectProperty);
-
-        integerProperty.bindBidirectional(objectAsInteger);
+//        slider.setValue(value);
+//        DoubleProperty integerProperty = new SimpleDoubleProperty(model.getVolume() / 10);
+//        ObjectProperty<Integer> objectProperty = new SimpleObjectProperty<>(2);
+//        // Need to keep the reference as bidirectional binding uses weak references
+//        IntegerProperty objectAsInteger = IntegerProperty.integerProperty(objectProperty);
+//        integerProperty.bindBidirectional(objectAsInteger);
     }
 
     private void initOpacityPoint() {
-        setSliderOptions(opacityPointSlider, 0.3);
+        opacityPointSlider.setStyle("-fx-tick-label-fill: #eeeeee;");
+        opacityPointSlider.valueProperty().addListener((obs, oldval, newVal) -> {
+            BigDecimal bd = new BigDecimal((newVal.toString()));
+            bd = bd.setScale(1, RoundingMode.HALF_EVEN);
+            opacityPointSlider.setValue(bd.doubleValue());
+        });
         model.pointOpacityProperty().bindBidirectional(opacityPointSlider.valueProperty());
-        opacityPointLabel.textProperty().bind(model.pointOpacityProperty().asString());
+        opacityPointValue.textProperty().bind(model.pointOpacityProperty().asString());
     }
 
     private void initDurationPoint() {
-        setSliderOptions(durationPointSlider, 0.3);
+        durationPointSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            volumeSlider.setValue(newValue.intValue());
+        }));
         model.pointDurationProperty().bindBidirectional(durationPointSlider.valueProperty());
-        durationPointLabel.textProperty().bind(model.pointDurationProperty().asString());
+        durationPointValue.textProperty().bind(model.pointDurationProperty().asString());
     }
 
     private void initSizePoint() {
         setSliderOptions(sizePointSlider, 10.0);
         model.pointSizeProperty().bindBidirectional(sizePointSlider.valueProperty());
-        sizePointLabel.textProperty().bind(model.pointSizeProperty().asString());
+        sizePointValue.textProperty().bind(model.pointSizeProperty().asString());
     }
 
     private void initRateSlider(){
-        setSliderOptions(rateSlider, 1.0);
+        rateSlider.valueProperty().addListener((obs, oldval, newVal) -> {
+            BigDecimal bd = new BigDecimal((newVal.toString()));
+            bd = bd.setScale(1, RoundingMode.HALF_EVEN);
+            rateSlider.setValue(bd.doubleValue());
+        });
+
         model.rateProperty().bindBidirectional(rateSlider.valueProperty());
-        rateLabel.textProperty().bind(model.rateProperty().asString());
+        rateValue.textProperty().bind(model.rateProperty().asString());
 
         rateSlider.setValue(model.getRate());
         rateSlider.setShowTickMarks(true);
     }
-
     private void initVolumeSpinner(){
-        setSliderOptions(volumeSlider, 100.3);
+        volumeSlider.valueProperty().addListener((obs, oldval, newVal) -> {
+            BigDecimal bd = new BigDecimal((newVal.toString()));
+            bd = bd.setScale(1, RoundingMode.HALF_EVEN);
+            volumeSlider.setValue(bd.doubleValue());
+        });
+
         model.volumeProperty().bindBidirectional(volumeSlider.valueProperty());
-        volumeLabel.textProperty().bind(model.volumeProperty().asString());
+        volumeValue.textProperty().bind(model.volumeProperty().asString());
     }
 }

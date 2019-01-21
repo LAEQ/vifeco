@@ -3,100 +3,110 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane maxWidth="350.0" minHeight="200.0" minWidth="100" prefHeight="338.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.video.ControlsController">
+<AnchorPane maxWidth="350.0" minHeight="200.0" minWidth="200" prefHeight="338.0" prefWidth="250.0" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.video.ControlsController">
     <children>
-        <Label alignment="CENTER" layoutX="3.0" layoutY="14.0" minWidth="60.0" prefHeight="16.0" prefWidth="71.0" style="&#10;" text="Controls" wrapText="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-            <textFill>
-                <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
-            </textFill>
-        </Label>
-      <Label alignment="CENTER" layoutX="22.0" layoutY="53.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Speed" wrapText="true">
-         <textFill>
-            <Color blue="0.624" green="0.624" red="0.624" fx:id="x211131" />
-         </textFill>
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Label>
-      <Label fx:id="rateLabel" alignment="CENTER" layoutX="144.0" layoutY="52.0" minWidth="36.0" prefHeight="16.0" prefWidth="77.0" style="&#10;" text="1" wrapText="true">
-         <textFill>
-            <Color blue="0.624" green="0.624" red="0.624" fx:id="x2111121" />
-         </textFill>
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Label>
-      <Slider fx:id="rateSlider" min="0.1" max="10"  layoutX="20.0" layoutY="71.0" prefHeight="14.0" prefWidth="197.0" />
-      <Label alignment="CENTER" layoutX="22.0" layoutY="103.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Volume" wrapText="true">
-         <textFill>
-            <Color blue="0.624" green="0.624" red="0.624" fx:id="x21113" />
-         </textFill>
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Label>
-      <Label fx:id="volumeLabel" alignment="CENTER" layoutX="144.0" layoutY="102.0" minWidth="36.0" prefHeight="16.0" prefWidth="77.0" style="&#10;" text="10" wrapText="true">
-         <textFill>
-            <Color blue="0.624" green="0.624" red="0.624" fx:id="x211112" />
-         </textFill>
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Label>
-      <Slider fx:id="volumeSlider" layoutX="20.0" layoutY="121.0" prefHeight="14.0" prefWidth="197.0" min="0" max="10" />
-      <Label alignment="CENTER" layoutX="23.0" layoutY="146.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Size" wrapText="true">
-         <textFill>
-            <Color blue="0.624" green="0.624" red="0.624" fx:id="x2111" />
-         </textFill>
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Label>
-      <Label fx:id="sizePointLabel" alignment="CENTER" layoutX="145.0" layoutY="145.0" minWidth="36.0" prefHeight="16.0" prefWidth="77.0" style="&#10;" text="10px" wrapText="true">
-         <textFill>
-            <Color blue="0.624" green="0.624" red="0.624" fx:id="x21111" />
-         </textFill>
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Label>
-      <Slider fx:id="sizePointSlider" layoutX="21.0" layoutY="164.0" prefHeight="14.0" prefWidth="197.0" />
-      <Label alignment="CENTER" layoutX="19.0" layoutY="196.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Duration" wrapText="true">
-         <textFill>
-            <Color blue="0.624" green="0.624" red="0.624" fx:id="x21112" />
-         </textFill>
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Label>
-      <Label fx:id="durationPointLabel" alignment="CENTER" layoutX="141.0" layoutY="195.0" minWidth="36.0" prefHeight="16.0" prefWidth="77.0" style="&#10;" text="1 s" wrapText="true">
-         <textFill>
-            <Color blue="0.624" green="0.624" red="0.624" fx:id="x211111" />
-         </textFill>
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Label>
-      <Slider fx:id="durationPointSlider" layoutX="22.0" layoutY="216.0" max="15" min="1" prefHeight="14.0" prefWidth="197.0" />
-      <Label alignment="CENTER" layoutX="18.0" layoutY="244.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Opacity" wrapText="true">
-         <textFill>
-            <Color blue="0.624" green="0.624" red="0.624" fx:id="x211121" />
-         </textFill>
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Label>
-      <Label fx:id="opacityPointLabel" alignment="CENTER" layoutX="140.0" layoutY="243.0" minWidth="36.0" prefHeight="16.0" prefWidth="77.0" style="&#10;" text="0.1" wrapText="true">
-         <textFill>
-            <Color blue="0.624" green="0.624" red="0.624" fx:id="x2111111" />
-         </textFill>
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Label>
-      <Slider fx:id="opacityPointSlider" layoutX="21.0" layoutY="264.0" max="1.0" min="0.1" prefHeight="14.0" prefWidth="197.0" />
+      <Pane fx:id="sliderPanel" layoutY="40.0" prefHeight="298.0" prefWidth="250.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
+        <Label layoutX="10.0" layoutY="14.0" minWidth="60.0" prefHeight="17.0" prefWidth="89.0" text="Controls" textAlignment="LEFT" textFill="WHITE" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0" />
+
+        <AnchorPane layoutX="17.0" layoutY="52.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+             <children>
+                <Text fx:id="rateTitle" fill="#999" layoutX="-1.0" layoutY="11.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed" wrappingWidth="63.13671875" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <Slider
+                        fx:id="rateSlider"
+                        max="10"
+                        min="0.1"
+                        blockIncrement="0.1"
+                        cache="true"
+                        majorTickUnit="1.0"
+                        minorTickCount="0"
+                        showTickMarks="true"
+                        showTickLabels="true"
+                        layoutX="3.0"
+                        layoutY="19.0"
+                        prefHeight="14.0" prefWidth="197.0" AnchorPane.leftAnchor="0.0"
+                        AnchorPane.rightAnchor="0.0" />
+                <Text fx:id="rateValue" fill="#999" layoutX="195.0" layoutY="11.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1.0" textAlignment="RIGHT" wrappingWidth="100" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+             </children>
+        </AnchorPane>
+        <AnchorPane layoutX="17.0" layoutY="112.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+            <children>
+                <Text fx:id="volumeTitle" fill="#999" layoutX="-1.0" layoutY="11.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Volume" wrappingWidth="63.13671875" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <Slider
+                        blockIncrement="0.1"
+                        max="1"
+                        min="0.1"
+                        cache="true"
+                        majorTickUnit="0.1"
+                        minorTickCount="0"
+                        showTickMarks="true"
+                        showTickLabels="true"
+                        snapToTicks="true"
+                        fx:id="volumeSlider" layoutX="3.0" layoutY="19.0" prefHeight="14.0" prefWidth="197.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                <Text fx:id="volumeValue" fill="#999" layoutX="195.0" layoutY="11.0" strokeType="OUTSIDE" strokeWidth="0.0" text="10" textAlignment="RIGHT" wrappingWidth="100" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+            </children>
+        </AnchorPane>
+        <AnchorPane layoutX="17.0" layoutY="172.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+            <children>
+                <Text fx:id="sizePointTitle" fill="#999" layoutX="-1.0" layoutY="11.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Size" wrappingWidth="63.13671875" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <Slider
+                        blockIncrement="10"
+                        snapToTicks="true"
+                        max="100"
+                        min="10"
+                        cache="true"
+                        majorTickUnit="10"
+                        minorTickCount="0"
+                        showTickMarks="true"
+                        showTickLabels="true"
+                        fx:id="sizePointSlider" layoutX="3.0" layoutY="19.0" prefHeight="14.0" prefWidth="197.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                <Text fx:id="sizePointValue" fill="#999" layoutX="195.0" layoutY="11.0" strokeType="OUTSIDE" strokeWidth="0.0" text="10" textAlignment="RIGHT" wrappingWidth="100" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+            </children>
+        </AnchorPane>
+
+        <AnchorPane layoutX="17.0" layoutY="232.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+            <children>
+                <Text fx:id="durationPointTitle" fill="#999" layoutX="-1.0" layoutY="11.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Duration" wrappingWidth="63.13671875" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <Slider blockIncrement="1"
+                        snapToTicks="true"
+                        max="10"
+                        min="1"
+                        cache="true"
+                        majorTickUnit="1"
+                        minorTickCount="1"
+                        showTickMarks="true"
+                        showTickLabels="true"
+                        fx:id="durationPointSlider" layoutX="3.0" layoutY="19.0" prefHeight="14.0" prefWidth="197.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                <Text fx:id="durationPointValue" fill="#999" layoutX="195.0" layoutY="11.0" strokeType="OUTSIDE" strokeWidth="0.0" text="10" textAlignment="RIGHT" wrappingWidth="100" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+            </children>
+        </AnchorPane>
+
+        <AnchorPane layoutX="17.0" layoutY="292.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+            <children>
+                <Text fx:id="opacityPointTitle" fill="#999" layoutX="-1.0" layoutY="11.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Opacity" wrappingWidth="63.13671875" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <Slider blockIncrement="0.1"
+                        max="1"
+                        min="0.1"
+                        cache="true"
+                        majorTickUnit="0.1"
+                        minorTickCount="0"
+                        showTickMarks="true"
+                        showTickLabels="true"
+                        snapToTicks="true"
+                        fx:id="opacityPointSlider"
+                        layoutX="3.0"
+                        layoutY="19.0"
+                        prefHeight="14.0"
+                        prefWidth="197.0"
+                        AnchorPane.leftAnchor="0.0"
+                        AnchorPane.rightAnchor="0.0" />
+                <Text fx:id="opacityPointValue" fill="#999" layoutX="195.0" layoutY="11.0" strokeType="OUTSIDE" strokeWidth="0.0" text="10" textAlignment="RIGHT" wrappingWidth="100" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+            </children>
+        </AnchorPane>
+
     </children>
 </AnchorPane>

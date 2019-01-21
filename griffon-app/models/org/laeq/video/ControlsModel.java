@@ -17,8 +17,7 @@ import java.util.Map;
 @ArtifactProviderFor(GriffonModel.class)
 public class ControlsModel extends AbstractGriffonModel {
     private SimpleDoubleProperty rate;
-    private SimpleStringProperty spinnerRate;
-    private SimpleIntegerProperty volume;
+    private SimpleDoubleProperty volume;
     private SimpleIntegerProperty pointSize;
     private SimpleIntegerProperty pointDuration;
     private SimpleDoubleProperty pointOpacity;
@@ -28,11 +27,10 @@ public class ControlsModel extends AbstractGriffonModel {
 
     public ControlsModel(){
         this.rate = new SimpleDoubleProperty(this, "rate", 1.0);
-        this.spinnerRate = new SimpleStringProperty(this.getRate().toString());;
-        this.volume = new SimpleIntegerProperty(this, "volume", 10);
+        this.volume = new SimpleDoubleProperty(this, "volume", 1.0);
         this.pointSize = new SimpleIntegerProperty(this, "pointSize", 30);
         this.pointDuration = new SimpleIntegerProperty(this, "pointDuration", 5);
-        this.pointOpacity = new SimpleDoubleProperty(this, "pointOpacity", 0.5);
+        this.pointOpacity = new SimpleDoubleProperty(this, "pointOpacity", 1);
     }
 
     @Nonnull
@@ -40,25 +38,14 @@ public class ControlsModel extends AbstractGriffonModel {
     public Double getRate() {return rate.get(); }
     public void setRate(Double rate) {
         this.rate.set(rate);
-        this.spinnerRate.setValue(getRate().toString());
     }
 
     @Nonnull
-    public SimpleStringProperty spinnerRateProperty() {
-        return spinnerRate;
-    }
-    public void setSpinnerRate() {
-        this.spinnerRate.set(getRate().toString());
-    }
-    public String getSpinnerRate() {
-        return spinnerRate.get();
-    }
-
-    @Nonnull
-    public SimpleIntegerProperty volumeProperty() {
+    public SimpleDoubleProperty volumeProperty() {
         return volume;
     }
-    public int getVolume() {
+    public double getVolume() {
+        System.out.println("Get volume");
         return volume.get();
     }
     public void setVolume(int volume) {
@@ -99,14 +86,14 @@ public class ControlsModel extends AbstractGriffonModel {
     }
 
     public void increaseVolume(){
-        if(getVolume() < VOLUME_MAX){
-            setVolume(getVolume() + 1);
-        }
+//        if(getVolume() < VOLUME_MAX){
+//            setVolume(getVolume() + 1);
+//        }
     }
     public void decreaseVolume(){
-        if(getVolume() > VOLUME_MIN){
-            setVolume(getVolume() - 1);
-        }
+//        if(getVolume() > VOLUME_MIN){
+//            setVolume(getVolume() - 1);
+//        }
     }
 
     public void increaseRate() {

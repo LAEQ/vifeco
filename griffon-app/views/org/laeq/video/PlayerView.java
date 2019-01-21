@@ -216,8 +216,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             controlsModel = (ControlsModel) getApplication().getMvcGroupManager().getAt("controls").getModel();
         }
 
-        Integer volume = controlsModel.getVolume();
-        getLog().info(String.format("Set volume: %d", volume));
+//        Integer volume = controlsModel.getVolume();
+//        getLog().info(String.format("Set volume: %d", volume));
 
         if(mediaPlayer != null){
 //            getLog().info(String.format("Set volume: %f", (volume / 10.0)));
