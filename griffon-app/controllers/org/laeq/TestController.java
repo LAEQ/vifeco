@@ -10,11 +10,18 @@ import griffon.transform.Threading;
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonController.class)
-public class VifecoController extends AbstractGriffonController {
-    private VifecoModel model;
+public class TestController extends AbstractGriffonController {
+    private TestModel model;
 
     @MVCMember
-    public void setModel(@Nonnull VifecoModel model) {
+    public void setModel(@Nonnull TestModel model) {
         this.model = model;
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void click() {
+        int count = Integer.parseInt(model.getClickCount());
+        model.setClickCount(String.valueOf(count + 1));
     }
 }
