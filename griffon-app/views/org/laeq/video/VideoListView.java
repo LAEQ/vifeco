@@ -45,8 +45,6 @@ public class VideoListView extends AbstractJavaFXGriffonView {
     public void initUI() {
         Node node = loadFromFXML();
 
-//        TableView<Person> table = new TableView<>();
-
         TableColumn firstNameCol = new TableColumn("First Name");
         TableColumn lastNameCol = new TableColumn("Last Name");
         TableColumn emailCol = new TableColumn("Email");

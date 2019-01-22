@@ -27,6 +27,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 import org.laeq.icon.IconService;
 import org.laeq.model.PointIcon;
+import org.laeq.model.VideoPointList;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -71,6 +72,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     @FXML private Label durationLabel;
 
+    @Inject private VideoPointList videoPointList;
+
     private Media media;
     private MediaPlayer mediaPlayer;
     private Duration duration;
@@ -110,6 +113,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                }
            }
        });
+
+
+
     }
 
     public void setMedia(String filePath) {
@@ -135,7 +141,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
                 controlsModel.volumeProperty().bindBidirectional(mediaPlayer.volumeProperty());
 
-
                 videoTimeSlider.setOnMouseClicked(event -> {
                     videoTimeSlider.setValueChanging(true);
                     double value = (event.getX()/videoTimeSlider.getWidth()) * videoTimeSlider.getMax();
@@ -155,7 +160,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void play() {
-        getLog().info(String.format("%b\n", model.isIsPlaying()));
         if(model.isIsPlaying()){
             mediaPlayer.pause();
         } else{
@@ -204,7 +208,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 //            getLog().error(String.format("Icon file not found: %s"));
         }
 
-
 //        if(mouseEvent.getButton() == MouseButton.SECONDARY){
 //            Double newPosition = videoService.getPositionSecondsBefore(media.getDuration(), mediaPlayer.getCurrentTime(), REWIND_VALUE);
 //            videoTimeSlider.setValue(newPosition);
@@ -230,7 +233,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private void updateValues() {
         Platform.runLater(() -> {
             Duration currentTime = mediaPlayer.getCurrentTime();
-            durationLabel.setText(String.format("%s / %s", videoService.formatDuration(mediaPlayer.getCurrentTime()), videoService.formatDuration(mediaPlayer.getTotalDuration())));
+            durationLabel.setText(
+                String.format("%s / %s",
+                    videoService.formatDuration(mediaPlayer.getCurrentTime()),
+                    videoService.formatDuration(mediaPlayer.getTotalDuration())
+                )
+            );
         });
     }
 }

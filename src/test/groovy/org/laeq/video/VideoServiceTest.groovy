@@ -41,7 +41,5 @@ class VideoServiceTest extends Specification {
         43932 | "12:12:12"
         21276 | "05:54:36"
         12 | "00:00:12"
-
-
     }
 }
