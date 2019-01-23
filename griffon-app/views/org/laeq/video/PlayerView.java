@@ -182,12 +182,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     public void playerPaneMouseClicked(MouseEvent mouseEvent) {
         try {
             int rand = (int)(Math.random() * 10) % icons.length;
-
-
-            Group pointIcon = iconService.generateIcon(mouseEvent);
-
-            iconPane.getChildren().add(pointIcon);
-
+            videoService.addVideoIcon(mouseEvent, mediaPlayer.getCurrentTime());
         } catch (FileNotFoundException e) {
 //            getLog().error(String.format("Icon file not found: %s"));
         }
@@ -213,6 +208,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         Platform.runLater(() -> {
             Duration currentTime = mediaPlayer.getCurrentTime();
             videoService.update(currentTime);
+
+            videoTimeSlider.setDisable(duration.isUnknown());
+
+            if (!videoTimeSlider.isDisabled() && duration.greaterThan(Duration.ZERO) && !videoTimeSlider.isValueChanging()) {
+                videoTimeSlider.setValue(currentTime.divide(duration).toMillis() * 100.0);
+            }
 
             durationLabel.setText(
                 String.format("%s / %s",
