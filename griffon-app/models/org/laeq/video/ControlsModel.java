@@ -28,9 +28,9 @@ public class ControlsModel extends AbstractGriffonModel {
     public ControlsModel(){
         this.rate = new SimpleDoubleProperty(this, "rate", 1.0);
         this.volume = new SimpleDoubleProperty(this, "volume", 1.0);
-        this.pointSize = new SimpleIntegerProperty(this, "pointSize", 30);
+        this.pointSize = new SimpleIntegerProperty(this, "pointSize", 60);
         this.pointDuration = new SimpleIntegerProperty(this, "pointDuration", 5);
-        this.pointOpacity = new SimpleDoubleProperty(this, "pointOpacity", 1);
+        this.pointOpacity = new SimpleDoubleProperty(this, "pointOpacity", 0.65);
     }
 
     @Nonnull

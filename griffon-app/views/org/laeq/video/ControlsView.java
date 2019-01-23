@@ -91,51 +91,52 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initOpacityPoint() {
-        opacityPointSlider.setStyle("-fx-tick-label-fill: #eeeeee;");
+        opacityPointSlider.valueProperty().bindBidirectional(model.pointOpacityProperty());
+        opacityPointValue.textProperty().bind(model.pointOpacityProperty().asString());
+
         opacityPointSlider.valueProperty().addListener((obs, oldval, newVal) -> {
             BigDecimal bd = new BigDecimal((newVal.toString()));
             bd = bd.setScale(1, RoundingMode.HALF_EVEN);
             opacityPointSlider.setValue(bd.doubleValue());
         });
-        model.pointOpacityProperty().bindBidirectional(opacityPointSlider.valueProperty());
-        opacityPointValue.textProperty().bind(model.pointOpacityProperty().asString());
+
     }
 
     private void initDurationPoint() {
-        durationPointSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
-            volumeSlider.setValue(newValue.intValue());
-        }));
-        model.pointDurationProperty().bindBidirectional(durationPointSlider.valueProperty());
+        durationPointSlider.valueProperty().bindBidirectional(model.pointDurationProperty());
         durationPointValue.textProperty().bind(model.pointDurationProperty().asString());
+
+        durationPointSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            BigDecimal bd = new BigDecimal(newValue.toString());
+            bd = bd.setScale(0, RoundingMode.HALF_EVEN);
+            durationPointSlider.setValue(bd.intValueExact());
+        });
+
     }
 
     private void initSizePoint() {
-        setSliderOptions(sizePointSlider, 10.0);
-        model.pointSizeProperty().bindBidirectional(sizePointSlider.valueProperty());
+        sizePointSlider.valueProperty().bindBidirectional(model.pointSizeProperty());
         sizePointValue.textProperty().bind(model.pointSizeProperty().asString());
     }
 
     private void initRateSlider(){
+        rateSlider.valueProperty().bindBidirectional(model.rateProperty());
+        rateValue.textProperty().bind(model.rateProperty().asString());
+
         rateSlider.valueProperty().addListener((obs, oldval, newVal) -> {
             BigDecimal bd = new BigDecimal((newVal.toString()));
             bd = bd.setScale(1, RoundingMode.HALF_EVEN);
             rateSlider.setValue(bd.doubleValue());
         });
-
-        model.rateProperty().bindBidirectional(rateSlider.valueProperty());
-        rateValue.textProperty().bind(model.rateProperty().asString());
-
-        rateSlider.setValue(model.getRate());
-        rateSlider.setShowTickMarks(true);
     }
     private void initVolumeSpinner(){
+        volumeSlider.valueProperty().bindBidirectional(model.volumeProperty());
+        volumeValue.textProperty().bind(model.volumeProperty().asString());
+
         volumeSlider.valueProperty().addListener((obs, oldval, newVal) -> {
             BigDecimal bd = new BigDecimal((newVal.toString()));
             bd = bd.setScale(1, RoundingMode.HALF_EVEN);
             volumeSlider.setValue(bd.doubleValue());
         });
-
-        model.volumeProperty().bindBidirectional(volumeSlider.valueProperty());
-        volumeValue.textProperty().bind(model.volumeProperty().asString());
     }
 }
