@@ -114,8 +114,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
            }
        });
 
-
-
     }
 
     public void setMedia(String filePath) {

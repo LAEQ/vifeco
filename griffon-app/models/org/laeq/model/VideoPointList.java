@@ -16,14 +16,10 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 public class VideoPointList extends AbstractGriffonModel {
     private final ObservableList<VideoPoint> pointList;
     private final ObservableMap<VideoPoint, Group> displayPointMap;
-    private int duration;
-    private int size;
     private Pane iconPane;
 
     public VideoPointList() {
-        duration = 10;
-        size = 100;
-        pointList = FXCollections.emptyObservableList();
+        pointList = FXCollections.observableArrayList();
         displayPointMap = FXCollections.observableHashMap();
 
         displayPointMap.addListener((MapChangeListener<VideoPoint, Group>) change -> {
@@ -38,6 +34,14 @@ public class VideoPointList extends AbstractGriffonModel {
     public void addVideoPoint(VideoPoint videoPoint){
         pointList.add(videoPoint);
         displayPointMap.put(videoPoint, new Group());
+    }
+
+    public ObservableList<VideoPoint> getPointList() {
+        return pointList;
+    }
+
+    public ObservableMap<VideoPoint, Group> getDisplayPointMap() {
+        return displayPointMap;
     }
 
     public void updatePane(Duration now) {

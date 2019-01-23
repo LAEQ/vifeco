@@ -2,6 +2,8 @@ package org.laeq.model;
 
 import javafx.util.Duration;
 
+import java.util.Objects;
+
 public class VideoPoint {
     private final double x;
     private final double y;
@@ -19,11 +21,28 @@ public class VideoPoint {
         this.start = start;
         this.end = Duration.seconds(start.toSeconds() + duration);
         this.category = category;
-        System.out.println(this.start);
-        System.out.println(this.end);
     }
 
     public Boolean isValid(Duration now){
-        return this.end.greaterThanOrEqualTo(now);
+        return this.end.greaterThanOrEqualTo(now) && this.start.lessThanOrEqualTo(now);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VideoPoint that = (VideoPoint) o;
+        return Double.compare(that.x, x) == 0 &&
+                Double.compare(that.y, y) == 0 &&
+                size == that.size &&
+                duration == that.duration &&
+                Objects.equals(start, that.start) &&
+                Objects.equals(end, that.end) &&
+                Objects.equals(category, that.category);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, size, duration, start, end, category);
     }
 }
