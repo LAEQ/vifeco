@@ -1,5 +1,6 @@
 package org.laeq.model;
 
+import javafx.scene.Group;
 import javafx.util.Duration;
 
 import java.util.Objects;
@@ -12,8 +13,10 @@ public class VideoPoint {
     private final Duration start;
     private final Duration end;
     private final Category category;
+    private final Group icon;
 
-    public VideoPoint(double x, double y, int size, int duration, Duration start, Category category) {
+
+    public VideoPoint(double x, double y, int size, int duration, Duration start, Category category, Group icon) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -21,6 +24,11 @@ public class VideoPoint {
         this.start = start;
         this.end = Duration.seconds(start.toSeconds() + duration);
         this.category = category;
+        this.icon = icon;
+    }
+
+    public Group getIcon() {
+        return icon;
     }
 
     public Boolean isValid(Duration now){
@@ -39,6 +47,16 @@ public class VideoPoint {
                 Objects.equals(start, that.start) &&
                 Objects.equals(end, that.end) &&
                 Objects.equals(category, that.category);
+    }
+
+    @Override
+    public String toString() {
+        return "VideoPoint{" +
+                "x=" + x +
+                ", y=" + y +
+                ", start=" + start +
+                ", category=" + category +
+                '}';
     }
 
     @Override

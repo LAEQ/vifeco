@@ -51,4 +51,11 @@ public class Category {
     public int hashCode() {
         return Objects.hash(name, icon, shortcut);
     }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

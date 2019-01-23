@@ -9,6 +9,7 @@ import javafx.beans.Observable;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -72,8 +73,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     @FXML private Label durationLabel;
 
-    @Inject private VideoPointList videoPointList;
-
     private Media media;
     private MediaPlayer mediaPlayer;
     private Duration duration;
@@ -101,7 +100,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
        connectActions(node, controller);
 
        Tab tab = new Tab();
-       model.videoPathProperty().bindBidirectional(tab.textProperty());
+       tab.textProperty().bind(model.videoPathProperty());
        tab.setContent(node);
 
        test.getTabPane().getTabs().add(tab);
@@ -114,6 +113,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
            }
        });
 
+       videoService.setUp(iconPane);
     }
 
     public void setMedia(String filePath) {
@@ -123,6 +123,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         if(file.exists()){
             try {
+                videoService.init();
+
                 media = new Media(file.getCanonicalFile().toURI().toString());
                 mediaPlayer = new MediaPlayer(media);
                 mediaPlayer.setOnReady(() -> {duration = mediaPlayer.getMedia().getDuration();});
@@ -132,12 +134,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 mediaPlayer.currentTimeProperty().addListener(observable -> {
                     updateValues();
                 });
-
-                if(controlsModel == null){
-                    controlsModel = (ControlsModel) getApplication().getMvcGroupManager().getAt("controls").getModel();
-                }
-
-                controlsModel.volumeProperty().bindBidirectional(mediaPlayer.volumeProperty());
 
                 videoTimeSlider.setOnMouseClicked(event -> {
                     videoTimeSlider.setValueChanging(true);
@@ -184,32 +180,17 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     @FXML
     public void playerPaneMouseClicked(MouseEvent mouseEvent) {
-//        Double seconds = duration.toSeconds();
-//        mediaPlayer.getCurrentTime();
-
         try {
             int rand = (int)(Math.random() * 10) % icons.length;
 
-            System.out.println(rand);
 
-            PointIcon pointIcon = new PointIcon(100, 100,icons[rand]);
+            Group pointIcon = iconService.generateIcon(mouseEvent);
 
-            iconService.generateIcon(pointIcon);
-
-            pointIcon.setLayoutX(mouseEvent.getX() - pointIcon.getWidth() / 2);
-            pointIcon.setLayoutY(mouseEvent.getY() - pointIcon.getHeight() / 2);
-            pointIcon.setOpacity(0.65);
-//
             iconPane.getChildren().add(pointIcon);
 
         } catch (FileNotFoundException e) {
 //            getLog().error(String.format("Icon file not found: %s"));
         }
-
-//        if(mouseEvent.getButton() == MouseButton.SECONDARY){
-//            Double newPosition = videoService.getPositionSecondsBefore(media.getDuration(), mediaPlayer.getCurrentTime(), REWIND_VALUE);
-//            videoTimeSlider.setValue(newPosition);
-//        }
     }
 
     public void setVolume() {
@@ -231,6 +212,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private void updateValues() {
         Platform.runLater(() -> {
             Duration currentTime = mediaPlayer.getCurrentTime();
+            videoService.update(currentTime);
+
             durationLabel.setText(
                 String.format("%s / %s",
                     videoService.formatDuration(mediaPlayer.getCurrentTime()),
