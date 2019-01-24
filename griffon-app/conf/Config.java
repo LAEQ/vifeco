@@ -51,7 +51,7 @@ public class Config extends AbstractMapResourceBundle {
                 )
                 .e("category", map()
                         .e("model", "org.laeq.video.CategoryModel")
-                        .e("view", "org.laeq.video.CategoryView")
+                        .e("view", "org.laeq.video.category.CategoryView")
                         .e("controller", "org.laeq.video.CategoryController")
                 )
             );

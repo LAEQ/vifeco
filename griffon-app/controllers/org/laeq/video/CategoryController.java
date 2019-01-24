@@ -4,14 +4,36 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.property.SimpleIntegerProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import griffon.transform.Threading;
+import org.laeq.model.VideoPoint;
+import org.laeq.video.category.CategoryView;
+
 import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class CategoryController extends AbstractGriffonController {
-    private CategoryModel model;
+
+    @MVCMember @Nonnull private CategoryModel model;
+    @MVCMember @Nonnull private CategoryView view;
+
+
+    @Override
+    public void mvcGroupInit(@Nonnull Map<String, Object> args) {
+        getApplication().getEventRouter().addEventListener("video.point.create", videoPoints -> {
+            getLog().info("video.point.create");
+            runInsideUIAsync(() -> {
+                VideoPoint vp = (VideoPoint) videoPoints[0];
+                SimpleIntegerProperty property = model.getCategoryProperty(vp.getCategory());
+                property.set(property.getValue() + 1);
+//                model.setClickCount(model.getClickCount() + 1);
+            });
+        });
+    }
 
     @MVCMember
     public void setModel(@Nonnull CategoryModel model) {
@@ -21,7 +43,6 @@ public class CategoryController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void click() {
-        int count = Integer.parseInt(model.getClickCount());
-        model.setClickCount(String.valueOf(count + 1));
+
     }
 }

@@ -17,6 +17,7 @@ import org.laeq.model.VideoPointList;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 
 
 @javax.inject.Singleton
@@ -35,8 +36,6 @@ public final class VideoService extends AbstractGriffonService {
         tearDown();
         videoPointList = new VideoPointList();
         videoPointList.init(pane);
-
-
     }
 
     public void tearDown(){
@@ -50,8 +49,9 @@ public final class VideoService extends AbstractGriffonService {
 
     public void addVideoIcon(Point2D point, Duration start) throws FileNotFoundException {
         VideoPoint vp = videoPointService.generatePoint(point, start);
-
         videoPointList.addVideoPoint(vp);
+        getApplication().getEventRouter().publishEventAsync("video.point.create", Arrays.asList(vp));
+
     }
 
     public Double getPositionSecondsBefore(Duration totalDuration, Duration currentDuration, int rewindSeconds) {

@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 
 
 @ArtifactProviderFor(GriffonView.class)
@@ -213,8 +214,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         try {
             int rand = (int)(Math.random() * 10) % icons.length;
             Point2D point = new Point2D(mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth(), mouseEvent.getY() / iconPane.getBoundsInLocal().getHeight());
-            System.out.println(mediaPlayer.getCurrentTime());
+
             videoService.addVideoIcon(point, mediaPlayer.getCurrentTime());
+
+
+
         } catch (FileNotFoundException e) {
 //            getLog().error(String.format("Icon file not found: %s"));
         }
