@@ -1,5 +1,6 @@
 package org.laeq.model
 
+import javafx.geometry.Point2D
 import javafx.util.Duration
 import spock.lang.Specification
 
@@ -8,7 +9,10 @@ class VideoPointTest extends Specification {
         given: "a video point with initial values"
         Duration s = Duration.seconds(start)
         Category category = new Category()
-        VideoPoint videoPoint = new VideoPoint(10d, 10d, 10, duration, s, category)
+        Point2D point = new Point2D(10d, 10d);
+        def icon = Mock(CategoryIcon)
+
+        VideoPoint videoPoint = new VideoPoint(point, 10, duration, s, category, icon)
 
         when:
         Duration n = Duration.seconds(now)

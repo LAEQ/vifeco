@@ -1,8 +1,6 @@
 package org.laeq.model
 
-import javafx.collections.ObservableList
-import javafx.collections.ObservableMap
-import javafx.scene.Group
+import javafx.geometry.Point2D
 import javafx.scene.layout.Pane
 import javafx.util.Duration
 import spock.lang.Specification
@@ -57,7 +55,6 @@ class VideoPointListTest extends Specification {
         then:
         list.getPointList().size() == 6
         list.getDisplayPoint().size() == 3
-
     }
 
 
@@ -89,6 +86,7 @@ class VideoPointListTest extends Specification {
     }
 
     def VideoPoint generatePoint(double x, double y, int size, int duration, Duration start, Category cat){
-        return new VideoPoint(x, y, size, duration, start, cat, new Group())
+        PointIcon icon = new PointIcon(10, 10, "path/mock/image");
+        return new VideoPoint(new Point2D(x, y), size, duration, start, cat, icon)
     }
 }

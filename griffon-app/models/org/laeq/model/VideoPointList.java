@@ -2,16 +2,18 @@ package org.laeq.model;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.collections.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.scene.Group;
+import javafx.geometry.Bounds;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
-import java.util.ArrayList;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class VideoPointList extends AbstractGriffonModel {
@@ -22,7 +24,6 @@ public class VideoPointList extends AbstractGriffonModel {
     public VideoPointList() {
         pointList = FXCollections.observableArrayList();
         displayPoint  = FXCollections.observableArrayList();
-
 
         pointList.addListener((ListChangeListener<VideoPoint>) c -> {
             while(c.next()){
@@ -39,7 +40,8 @@ public class VideoPointList extends AbstractGriffonModel {
         displayPoint.addListener((ListChangeListener<VideoPoint>) c -> {
             while(c.next()){
                 if(c.wasAdded()){
-                    c.getAddedSubList().forEach(e -> iconPane.getChildren().add(e.getIcon()));
+
+                    c.getAddedSubList().forEach(e -> iconPane.getChildren().add(getPositionedIcon(e)));
                 }
 
                 if(c.wasRemoved()){
@@ -47,8 +49,22 @@ public class VideoPointList extends AbstractGriffonModel {
                 }
             }
         });
+    }
 
+    public PointIcon getPositionedIcon(VideoPoint point){
+        PointIcon icon = (PointIcon)point.getIcon();
 
+        icon.setLayoutX(point.getIconX(iconPane.getBoundsInLocal()));
+        icon.setLayoutY(point.getIconY(iconPane.getBoundsInLocal()));
+
+        return icon;
+    }
+
+    public void setPositionedIcon(VideoPoint point){
+        PointIcon icon = (PointIcon) point.getIcon();
+
+        icon.setLayoutX(point.getIconX(iconPane.getBoundsInLocal()));
+        icon.setLayoutY(point.getIconY(iconPane.getBoundsInLocal()));
     }
 
     public void addVideoPoint(VideoPoint videoPoint) {
@@ -74,7 +90,11 @@ public class VideoPointList extends AbstractGriffonModel {
         });
     }
 
-    public void init(Pane iconPane) {
+    public void init(@Nonnull Pane iconPane) {
         this.iconPane = iconPane;
+
+        iconPane.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
+            pointList.filtered(videoPoint -> iconPane.getChildren().contains(videoPoint.getIcon())).forEach(videoPoint -> setPositionedIcon(videoPoint));
+        });
     }
 }

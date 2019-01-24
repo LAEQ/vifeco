@@ -4,18 +4,16 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
@@ -26,9 +24,7 @@ import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
-import org.laeq.icon.IconService;
-import org.laeq.model.PointIcon;
-import org.laeq.model.VideoPointList;
+import org.laeq.icon.VideoPointService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -78,7 +74,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private Duration duration;
 
     @Inject private VideoService videoService;
-    @Inject private IconService iconService;
+    @Inject private VideoPointService videoPointService;
 
     @MVCMember
     public void setController(@Nonnull PlayerController controller) {
@@ -114,10 +110,19 @@ public class PlayerView extends AbstractJavaFXGriffonView {
        });
 
        videoService.setUp(iconPane);
+       setMedia("C:\\Users\\David\\Desktop\\inrs-videa\\ID2_MG_2018-06-19_TRAJET13.mp4");
+
+       mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
+           System.out.println(newValue);
+           iconPane.setPrefWidth(newValue.getWidth());
+           iconPane.setPrefHeight(newValue.getHeight());
+       });
     }
 
     public void setMedia(String filePath) {
         playActionTarget.setDisable(true);
+
+        System.out.println(filePath);
 
         File file = new File(filePath);
 
@@ -182,7 +187,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     public void playerPaneMouseClicked(MouseEvent mouseEvent) {
         try {
             int rand = (int)(Math.random() * 10) % icons.length;
-            videoService.addVideoIcon(mouseEvent, mediaPlayer.getCurrentTime());
+            Point2D point = new Point2D(mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth(), mouseEvent.getY() / iconPane.getBoundsInLocal().getHeight());
+            videoService.addVideoIcon(point, mediaPlayer.getCurrentTime());
         } catch (FileNotFoundException e) {
 //            getLog().error(String.format("Icon file not found: %s"));
         }

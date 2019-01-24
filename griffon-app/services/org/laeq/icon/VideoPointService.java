@@ -2,25 +2,31 @@ package org.laeq.icon;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.scene.Group;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
+import org.laeq.model.Category;
 import org.laeq.model.PointIcon;
+import org.laeq.model.VideoPoint;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
-public class IconService extends AbstractGriffonService {
+public class VideoPointService extends AbstractGriffonService {
     private int width = 100;
     private int height = 100;
     private float opacity = 0.65f;
+    private int duration = 10;
+    private int size = 100;
     private String fillColor = "#EEEEEE";
 
     private final String[] icons = new String[]{
@@ -33,7 +39,14 @@ public class IconService extends AbstractGriffonService {
             "icons/icon-car-elec-black-64.png",
     };
 
-    public Group generateIcon(MouseEvent mouseEvent) throws FileNotFoundException {
+    public VideoPoint generatePoint(Point2D point, Duration start) throws FileNotFoundException {
+        PointIcon icon = generateIcon();
+        VideoPoint vp =  new VideoPoint(point, size, duration, start, new Category(), icon);
+
+        return vp;
+    }
+
+    public PointIcon generateIcon() throws FileNotFoundException {
         int rand = (int)(Math.random() * 10) % icons.length;
 
         PointIcon pointIcon = new PointIcon(width, height,icons[rand]);
@@ -53,8 +66,8 @@ public class IconService extends AbstractGriffonService {
 
         pointIcon.getChildren().addAll(canvas, imageView);
 
-        pointIcon.setLayoutX(mouseEvent.getX() - pointIcon.getWidth() / 2);
-        pointIcon.setLayoutY(mouseEvent.getY() - pointIcon.getHeight() / 2);
+//        pointIcon.setLayoutX(mouseEvent.getX() - pointIcon.getWidth() / 2);
+//        pointIcon.setLayoutY(mouseEvent.getY() - pointIcon.getHeight() / 2);
         pointIcon.setOpacity(opacity);
 
         return pointIcon;

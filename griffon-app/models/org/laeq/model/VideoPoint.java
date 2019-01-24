@@ -1,24 +1,22 @@
 package org.laeq.model;
 
-import javafx.scene.Group;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
 import java.util.Objects;
 
 public class VideoPoint {
-    private final double x;
-    private final double y;
+    private final Point2D point;
     private final int size;
     private final int duration;
     private final Duration start;
     private final Duration end;
     private final Category category;
-    private final Group icon;
+    private final CategoryIcon icon;
 
-
-    public VideoPoint(double x, double y, int size, int duration, Duration start, Category category, Group icon) {
-        this.x = x;
-        this.y = y;
+    public VideoPoint(Point2D point, int size, int duration, Duration start, Category category, CategoryIcon icon) {
+        this.point = point;
         this.size = size;
         this.duration = duration;
         this.start = start;
@@ -27,7 +25,15 @@ public class VideoPoint {
         this.icon = icon;
     }
 
-    public Group getIcon() {
+    public double getIconX(Bounds bounds){
+        return point.getX() * bounds.getWidth() - (icon.getWidth() / 2);
+    }
+
+    public double getIconY(Bounds bounds){
+        return point.getY() * bounds.getHeight() - (icon.getHeight() / 2);
+    }
+
+    public CategoryIcon getIcon() {
         return icon;
     }
 
@@ -36,31 +42,30 @@ public class VideoPoint {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        VideoPoint that = (VideoPoint) o;
-        return Double.compare(that.x, x) == 0 &&
-                Double.compare(that.y, y) == 0 &&
-                size == that.size &&
-                duration == that.duration &&
-                Objects.equals(start, that.start) &&
-                Objects.equals(end, that.end) &&
-                Objects.equals(category, that.category);
-    }
-
-    @Override
     public String toString() {
         return "VideoPoint{" +
-                "x=" + x +
-                ", y=" + y +
+                "point=" + point +
                 ", start=" + start +
                 ", category=" + category +
                 '}';
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VideoPoint that = (VideoPoint) o;
+        return size == that.size &&
+                duration == that.duration &&
+                point.equals(that.point) &&
+                start.equals(that.start) &&
+                Objects.equals(end, that.end) &&
+                category.equals(that.category) &&
+                Objects.equals(icon, that.icon);
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(x, y, size, duration, start, end, category);
+        return Objects.hash(point, start, category);
     }
 }

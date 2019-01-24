@@ -2,16 +2,19 @@ package org.laeq.video;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
-import org.laeq.icon.IconService;
+import org.laeq.icon.VideoPointService;
 import org.laeq.model.Category;
 import org.laeq.model.VideoPoint;
 import org.laeq.model.VideoPointList;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.FileNotFoundException;
 
@@ -19,12 +22,12 @@ import java.io.FileNotFoundException;
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
 public final class VideoService extends AbstractGriffonService {
-    @Inject private IconService iconService;
+    @Inject private VideoPointService videoPointService;
 
     private VideoPointList videoPointList;
     private Pane pane;
 
-    public void setUp(Pane pane){
+    public void setUp(@Nonnull Pane pane){
         this.pane = pane;
     }
 
@@ -39,14 +42,12 @@ public final class VideoService extends AbstractGriffonService {
         this.pane.getChildren().clear();
     }
 
-    public void update(Duration now){
+    public void update(@Nonnull Duration now){
         videoPointList.update(now);
     }
 
-    public void addVideoIcon(MouseEvent event, Duration start) throws FileNotFoundException {
-        Group icon = iconService.generateIcon(event);
-
-        VideoPoint vp = new VideoPoint(event.getX(), event.getY(), 100, 10, start, new Category(), icon);
+    public void addVideoIcon(Point2D point, Duration start) throws FileNotFoundException {
+        VideoPoint vp = videoPointService.generatePoint(point, start);
 
         videoPointList.addVideoPoint(vp);
     }
@@ -58,7 +59,6 @@ public final class VideoService extends AbstractGriffonService {
     }
 
     public String formatDuration(Duration duration) {
-
         Double seconds = duration.toSeconds();
         int hours = (int) (seconds / 3600);
         double rest = (seconds - (hours * 3600));
