@@ -40,7 +40,6 @@ public class VideoPointList extends AbstractGriffonModel {
         displayPoint.addListener((ListChangeListener<VideoPoint>) c -> {
             while(c.next()){
                 if(c.wasAdded()){
-
                     c.getAddedSubList().forEach(e -> iconPane.getChildren().add(getPositionedIcon(e)));
                 }
 
@@ -96,5 +95,9 @@ public class VideoPointList extends AbstractGriffonModel {
         iconPane.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
             pointList.filtered(videoPoint -> iconPane.getChildren().contains(videoPoint.getIcon())).forEach(videoPoint -> setPositionedIcon(videoPoint));
         });
+    }
+
+    public void addVideoPointTest(VideoPoint vp) {
+        pointList.add(vp);
     }
 }

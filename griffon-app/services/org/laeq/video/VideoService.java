@@ -35,6 +35,8 @@ public final class VideoService extends AbstractGriffonService {
         tearDown();
         videoPointList = new VideoPointList();
         videoPointList.init(pane);
+
+
     }
 
     public void tearDown(){
@@ -71,5 +73,10 @@ public final class VideoService extends AbstractGriffonService {
     private String numberToString(int number){
         String value = String.format("%d", number);
         return (value.length() > 1)? value : String.format("0%s", value);
+    }
+
+    public void addVideoIconDebug(Point2D point, Duration start) throws FileNotFoundException {
+        VideoPoint vp = videoPointService.generatePoint(point, start);
+        videoPointList.addVideoPointTest(vp);
     }
 }

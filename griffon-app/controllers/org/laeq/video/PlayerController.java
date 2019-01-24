@@ -53,6 +53,18 @@ public class PlayerController extends AbstractGriffonController {
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void rewind() {
+
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void forward() {
+
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void test(KeyEvent keyEvent) {
         System.out.println("test");
     }

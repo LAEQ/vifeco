@@ -65,6 +65,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML
     private Button playActionTarget;
 
+    @FXML private Button rewindActionTarget;
+    @FXML private Button forwardActionTarger;
+
     @FXML private Slider videoTimeSlider;
 
     @FXML private Label durationLabel;
@@ -101,6 +104,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
        test.getTabPane().getTabs().add(tab);
 
+       rewindActionTarget.setText("");
+       forwardActionTarger.setText("");
+
        videoTimeSlider.valueProperty().addListener(observable -> {
            if(videoTimeSlider.isValueChanging()){
                if(mediaPlayer != null){
@@ -119,10 +125,26 @@ public class PlayerView extends AbstractJavaFXGriffonView {
        });
     }
 
+    public void debug(){
+        for(int i = 0; i < 2000; i ++){
+            double x = rand(100, 800);
+            double y = rand(100, 600);
+            Point2D point = new Point2D(x / iconPane.getBoundsInLocal().getWidth(), y / iconPane.getBoundsInLocal().getHeight());
+            System.out.println(point);
+           try {
+               videoService.addVideoIcon(point, Duration.seconds(rand(20, 3000)));
+           } catch (FileNotFoundException e) {
+               e.printStackTrace();
+           }
+        }
+    }
+
+    private double rand(double min, double max){
+        return min + Math.random() * (max - min);
+    }
+
     public void setMedia(String filePath) {
         playActionTarget.setDisable(true);
-
-        System.out.println(filePath);
 
         File file = new File(filePath);
 
@@ -159,6 +181,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void play() {
+        debug();
         if(model.isIsPlaying()){
             mediaPlayer.pause();
         } else{
@@ -188,6 +211,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         try {
             int rand = (int)(Math.random() * 10) % icons.length;
             Point2D point = new Point2D(mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth(), mouseEvent.getY() / iconPane.getBoundsInLocal().getHeight());
+            System.out.println(mediaPlayer.getCurrentTime());
             videoService.addVideoIcon(point, mediaPlayer.getCurrentTime());
         } catch (FileNotFoundException e) {
 //            getLog().error(String.format("Icon file not found: %s"));
