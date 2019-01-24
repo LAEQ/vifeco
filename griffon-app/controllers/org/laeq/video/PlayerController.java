@@ -8,8 +8,10 @@ import griffon.transform.Threading;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.File;
 import java.util.Map;
 
@@ -24,6 +26,8 @@ public class PlayerController extends AbstractGriffonController {
 
     @MVCMember @Nonnull
     private PlayerView view;
+
+    @Inject private DialogService dialogService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -54,14 +58,21 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void rewind() {
-
+        dialogService.dialog();
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void forward() {
-
+        dialogService.dialog();
     }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void backVideo() {
+        dialogService.dialog();
+    }
+
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)

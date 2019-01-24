@@ -4,10 +4,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -66,7 +63,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private Button playActionTarget;
 
     @FXML private Button rewindActionTarget;
-    @FXML private Button forwardActionTarger;
+    @FXML private Button forwardActionTarget;
+    @FXML private Button backVideoActionTarget;
 
     @FXML private Slider videoTimeSlider;
 
@@ -104,25 +102,34 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
        test.getTabPane().getTabs().add(tab);
 
-       rewindActionTarget.setText("");
-       forwardActionTarger.setText("");
+       subInit();
 
-       videoTimeSlider.valueProperty().addListener(observable -> {
-           if(videoTimeSlider.isValueChanging()){
-               if(mediaPlayer != null){
-                   mediaPlayer.seek(duration.multiply(videoTimeSlider.getValue() / 100.0));
-               }
-           }
-       });
+//       setMedia("C:\\Users\\David\\Desktop\\inrs-videa\\ID2_MG_2018-06-19_TRAJET13.mp4");
+       setMedia("/home/david/Downloads/temple_of_love-sisters_of_mercy.wav");
 
-       videoService.setUp(iconPane);
-       setMedia("C:\\Users\\David\\Desktop\\inrs-videa\\ID2_MG_2018-06-19_TRAJET13.mp4");
+    }
 
-       mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
-           System.out.println(newValue);
-           iconPane.setPrefWidth(newValue.getWidth());
-           iconPane.setPrefHeight(newValue.getHeight());
-       });
+    private void subInit(){
+        rewindActionTarget.setText("");
+        forwardActionTarget.setText("");
+        backVideoActionTarget.setText("");
+        videoService.setUp(iconPane);
+
+        mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(newValue);
+            iconPane.setPrefWidth(newValue.getWidth());
+            iconPane.setPrefHeight(newValue.getHeight());
+        });
+    }
+
+    private void initPlayer(){
+        videoTimeSlider.valueProperty().addListener(observable -> {
+            if(videoTimeSlider.isValueChanging()){
+                if(mediaPlayer != null){
+                    mediaPlayer.seek(duration.multiply(videoTimeSlider.getValue() / 100.0));
+                }
+            }
+        });
     }
 
     public void debug(){
@@ -130,17 +137,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             double x = rand(100, 800);
             double y = rand(100, 600);
             Point2D point = new Point2D(x / iconPane.getBoundsInLocal().getWidth(), y / iconPane.getBoundsInLocal().getHeight());
-            System.out.println(point);
            try {
-               videoService.addVideoIcon(point, Duration.seconds(rand(20, 3000)));
+               videoService.addVideoIcon(point, Duration.seconds(rand(20, 1000)));
            } catch (FileNotFoundException e) {
                e.printStackTrace();
            }
         }
-    }
-
-    private double rand(double min, double max){
-        return min + Math.random() * (max - min);
     }
 
     public void setMedia(String filePath) {
@@ -233,7 +235,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 //            mediaPlayer.setVolume(controlsModel.getVolume() / 10);
         }
     }
-
     private void updateValues() {
         Platform.runLater(() -> {
             Duration currentTime = mediaPlayer.getCurrentTime();
@@ -253,4 +254,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             );
         });
     }
+
+    private double rand(double min, double max){
+        return min + Math.random() * (max - min);
+    }
+
 }
