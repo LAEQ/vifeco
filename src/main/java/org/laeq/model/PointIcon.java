@@ -4,7 +4,7 @@ package org.laeq.model;
 import javafx.scene.Group;
 import java.io.FileNotFoundException;
 
-public class PointIcon extends Group {
+public class PointIcon extends Group implements CategoryIcon{
     private String imagePath;
     private double width;
     private double height;

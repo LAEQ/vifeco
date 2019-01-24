@@ -19,7 +19,7 @@ public class PlayerModel extends AbstractGriffonModel {
     private Duration duration;
 
     public PlayerModel(){
-        this.videoPath = new SimpleStringProperty(this, "videoPath", "");
+        this.videoPath = new SimpleStringProperty(this, "videoPath", "(Ctrl+0) to open a video.");
         this.isPlaying = new SimpleBooleanProperty(this, "isPlaying", false);
     }
 
