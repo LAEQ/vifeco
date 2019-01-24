@@ -9,7 +9,10 @@ import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import griffon.transform.Threading;
+import org.laeq.ui.DialogService;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.File;
 import java.util.Arrays;
 
@@ -26,6 +29,8 @@ public class MenuController extends AbstractGriffonController {
 
     @MVCMember @Nonnull
     private MenuView view;
+
+    @Inject private DialogService dialogService;
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
@@ -44,12 +49,41 @@ public class MenuController extends AbstractGriffonController {
         } else {
             System.out.println("Error loading the file");
         }
+    }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    public void close(){
+        dialogService.dialog();
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    public void save(){
+        dialogService.dialog();
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    public void saveAs(){
+        dialogService.dialog();
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    public void sendTo(){
+        dialogService.dialog();
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void preferences() {
+        dialogService.dialog();
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void quit() {
-
+        getApplication().shutdown();
     }
 }

@@ -14,12 +14,11 @@
                 <SeparatorMenuItem mnemonicParsing="false" />
                 <Menu mnemonicParsing="false" text="Open Recent" />
                 <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Close" />
                 <MenuItem fx:id="saveActionTarget" mnemonicParsing="false" text="Save" />
-                <MenuItem mnemonicParsing="false" text="Save As…" />
-                <MenuItem mnemonicParsing="false" text="Revert" />
+                <MenuItem mnemonicParsing="false" text="Save As…" fx:id="saveAsActionTarget"/>
+                <MenuItem mnemonicParsing="false" text="Send To…" fx:id="sendToActionTarget"/>
                 <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Preferences…" />
+                <MenuItem mnemonicParsing="false" text="Preferences…" fx:id="Preferences" />
                 <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem fx:id="quitActionTarget" mnemonicParsing="false" text="Quit" />
             </items>
