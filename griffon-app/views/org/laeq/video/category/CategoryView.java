@@ -11,65 +11,51 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 import org.laeq.model.Category;
+import org.laeq.model.CategoryService;
 import org.laeq.video.CategoryController;
 import org.laeq.video.CategoryModel;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 @ArtifactProviderFor(GriffonView.class)
 public class CategoryView extends AbstractJavaFXGriffonView {
-    private CategoryController controller;
-    private CategoryModel model;
-
-
-    @MVCMember @Nonnull
-    private VifecoView parentView;
+    @MVCMember @Nonnull private CategoryController controller;
+    @MVCMember @Nonnull private CategoryModel model;
+    @MVCMember @Nonnull private VifecoView parentView;
 
     @FXML private Pane categoryPane;
+    @FXML private Text totalLabel;
 
-    @MVCMember
-    public void setController(@Nonnull CategoryController controller) {
-        this.controller = controller;
-    }
+    @Inject
+    private CategoryService service;
 
-    @MVCMember
-    public void setModel(@Nonnull CategoryModel model) {
-        this.model = model;
-    }
+
+    private Category[] categories;
 
     @Override
     public void initUI() {
+        this.categories = service.getCategoryList();
+
         Node node = loadFromFXML();
 
-        String[] icons = new String[]{
-                "icons/truck-mvt-blk.png",
-                "icons/truck-mvt-red.png",
-                "icons/icon-bicycle-mvt-64.png",
-                "icons/icon-car-co2-black-64.png",
-                "icons/icon-constr-black-64.png",
-                "icons/iconmonstr-car-23-64.png",
-                "icons/icon-car-elec-black-64.png",
-        };
+//        totalLabel.setText(0);
 
 
         HashMap<Category, CategoryGroup> categoryList = new HashMap<>();
         try {
-            for (int i = 0; i < icons.length; i++) {
-                String name = icons[i].substring(6, icons[i].lastIndexOf('.') - 1);
-                String path = getApplication().getResourceHandler().getResourceAsURL(icons[i]).getPath();
-                Category category = new Category(name, path, "1");
-
-                CategoryGroup group = new CategoryGroup(path);
+            for (int i = 0; i < categories.length; i++) {
+                CategoryGroup group = new CategoryGroup(categories[i].getIcon());
                 group.setLayoutX(10);
                 group.setLayoutY(65 * i);
-
-                categoryList.put(category, group);
+                categoryList.put(categories[i], group);
 
             }
         } catch (FileNotFoundException e){
@@ -78,12 +64,14 @@ public class CategoryView extends AbstractJavaFXGriffonView {
 
 
         categoryPane.getChildren().addAll(categoryList.values());
-
         model.generateProperties(categoryList.keySet());
+
 
         categoryList.forEach((k, v) -> {
             v.getLabel().textProperty().bind(model.getCategoryProperty(k).asString());
         });
+
+        totalLabel.textProperty().bind(model.totalCountProperty().asString());
 
         parentView.getMiddlePane().getItems().add(node);
     }

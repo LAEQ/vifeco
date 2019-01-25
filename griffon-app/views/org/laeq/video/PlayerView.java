@@ -105,7 +105,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
        subInit();
 
 //       setMedia("C:\\Users\\David\\Desktop\\inrs-videa\\ID2_MG_2018-06-19_TRAJET13.mp4");
-       setMedia("/home/david/Downloads/temple_of_love-sisters_of_mercy.wav");
+       setMedia("/home/david/Downloads/small.wav");
 
     }
 
