@@ -1,10 +1,12 @@
 package org.laeq.video
 
+import spock.lang.Ignore
 import spock.lang.Specification
+
 import static spock.util.matcher.HamcrestMatchers.closeTo
 
-
 class ControlsModelTest extends Specification {
+    @Ignore
     def "increaseRate() should increase the rate by 0.1 to a max of 10.0"(double a, double b, String c) {
         given:
         def controlsModel = new ControlsModel();
@@ -24,6 +26,7 @@ class ControlsModelTest extends Specification {
         10.0d | 10.0d | "10.0"
     }
 
+    @Ignore
     def "decreaseRate should decrease the rate by 0.1 to a min of 0.1"(double a, double b, String c) {
         given:
         def controlsModel = new ControlsModel();

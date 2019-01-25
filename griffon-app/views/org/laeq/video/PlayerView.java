@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 
 
 @ArtifactProviderFor(GriffonView.class)
@@ -225,20 +224,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void setVolume() {
-        if(controlsModel == null){
-            controlsModel = (ControlsModel) getApplication().getMvcGroupManager().getAt("controls").getModel();
-        }
-
-//        Integer volume = controlsModel.getVolume();
-//        getLog().info(String.format("Set volume: %d", volume));
-
-        if(mediaPlayer != null){
-//            getLog().info(String.format("Set volume: %f", (volume / 10.0)));
-//            getLog().info(String.format("Set volume: %d", controlsModel.getVolume()));
-//            System.out.println(controlsModel.getVolume());
-//            mediaPlayer.setVolume(controlsModel.getVolume() / 10);
-        }
+        getLog().info("set volume");
     }
+
     private void updateValues() {
         Platform.runLater(() -> {
             Duration currentTime = mediaPlayer.getCurrentTime();

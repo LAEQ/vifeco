@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
@@ -21,10 +20,7 @@ import org.laeq.video.CategoryModel;
 import javax.annotation.Nonnull;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 @ArtifactProviderFor(GriffonView.class)
 public class CategoryView extends AbstractJavaFXGriffonView {

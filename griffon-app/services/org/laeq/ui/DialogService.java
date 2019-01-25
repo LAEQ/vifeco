@@ -9,8 +9,6 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 
 import java.util.Optional;
 
-import static javafx.scene.control.ButtonType.*;
-
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
 public class DialogService extends AbstractGriffonService {

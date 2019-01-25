@@ -4,15 +4,13 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import griffon.transform.Threading;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-
-import griffon.transform.Threading;
 import org.laeq.model.VideoPoint;
 import org.laeq.video.category.CategoryView;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)

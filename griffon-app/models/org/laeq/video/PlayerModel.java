@@ -2,11 +2,10 @@ package org.laeq.video;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import griffon.transform.FXObservable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 import javax.annotation.Nonnull;

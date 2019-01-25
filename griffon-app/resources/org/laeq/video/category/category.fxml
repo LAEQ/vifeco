@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-
+<?import javafx.scene.layout.*?>
 <AnchorPane maxWidth="380" minHeight="200" minWidth="200" prefHeight="200" prefWidth="200" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.video.CategoryController">
     <children>
         <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Categories" textAlignment="CENTER" wrapText="false" />

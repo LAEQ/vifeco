@@ -5,6 +5,7 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.scene.Node;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)

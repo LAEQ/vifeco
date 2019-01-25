@@ -2,7 +2,6 @@ package org.laeq.model;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -18,8 +17,6 @@ public class VideoPointList extends AbstractGriffonModel {
     private final ObservableList<VideoPoint> pointList;
     private final ObservableList<VideoPoint> displayPoint;
     private Pane iconPane;
-
-    private SimpleIntegerProperty category_1;
 
     public VideoPointList() {
         pointList = FXCollections.observableArrayList();

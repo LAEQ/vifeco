@@ -2,15 +2,11 @@ package org.laeq.video;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-import javafx.scene.Group;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.icon.VideoPointService;
-import org.laeq.model.Category;
 import org.laeq.model.VideoPoint;
 import org.laeq.model.VideoPointList;
 

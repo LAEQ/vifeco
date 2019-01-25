@@ -4,11 +4,10 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import griffon.transform.Threading;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-
-import griffon.transform.Threading;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;

@@ -3,8 +3,6 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.property.SimpleStringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 

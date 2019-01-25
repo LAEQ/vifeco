@@ -101,7 +101,10 @@ tasks.withType(GroovyCompile) {
     targetCompatibility = project.targetCompatibility
 }
 
-import com.github.jengelman.gradle.plugins.shadow.transformers.*
+
+import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
+
 import java.text.SimpleDateFormat
 
 shadowJar {
