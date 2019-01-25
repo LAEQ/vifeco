@@ -6,7 +6,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @TestFor(CategoryService.class)
 public class CategoryServiceTest {

@@ -1,5 +1,6 @@
 package org.laeq.video.category;
 
+import eu.lestard.advanced_bindings.api.CollectionBindings;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
@@ -12,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 import org.laeq.model.Category;
@@ -36,7 +38,6 @@ public class CategoryView extends AbstractJavaFXGriffonView {
 
     @Inject
     private CategoryService service;
-
 
     private Category[] categories;
 
@@ -71,7 +72,10 @@ public class CategoryView extends AbstractJavaFXGriffonView {
             v.getLabel().textProperty().bind(model.getCategoryProperty(k).asString());
         });
 
-        totalLabel.textProperty().bind(model.totalCountProperty().asString());
+        totalLabel.setText("12");
+
+
+        totalLabel.textProperty().bind(model.totalProperty().asString());
 
         parentView.getMiddlePane().getItems().add(node);
     }

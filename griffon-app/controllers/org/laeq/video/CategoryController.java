@@ -7,12 +7,10 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.model.CategoryService;
 import org.laeq.model.VideoPoint;
 import org.laeq.video.category.CategoryView;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -31,7 +29,7 @@ public class CategoryController extends AbstractGriffonController {
                 VideoPoint vp = (VideoPoint) videoPoints[0];
                 SimpleIntegerProperty property = model.getCategoryProperty(vp.getCategory());
                 property.set(property.getValue() + 1);
-//                model.setTotalCount(model.getTotalCount() + 1);
+                model.setTotal(model.totalProperty().getValue() + 1);
             });
         });
     }

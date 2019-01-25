@@ -3,8 +3,6 @@ package org.laeq.video
 import org.laeq.model.Category
 import spock.lang.Specification
 
-import java.util.function.Consumer
-
 class CategoryModelTest extends Specification {
 
     def "GetTotalCount"() {
