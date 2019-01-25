@@ -3,8 +3,8 @@ import griffon.util.AbstractMapResourceBundle;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
 import static griffon.util.CollectionUtils.map;
+import static java.util.Arrays.asList;
 
 public class Config extends AbstractMapResourceBundle {
     @Override
@@ -51,7 +51,7 @@ public class Config extends AbstractMapResourceBundle {
                 )
                 .e("category", map()
                         .e("model", "org.laeq.video.CategoryModel")
-                        .e("view", "org.laeq.video.CategoryView")
+                        .e("view", "org.laeq.video.category.CategoryView")
                         .e("controller", "org.laeq.video.CategoryController")
                 )
             );

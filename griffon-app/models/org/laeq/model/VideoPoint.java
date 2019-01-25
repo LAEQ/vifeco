@@ -68,4 +68,8 @@ public class VideoPoint {
     public int hashCode() {
         return Objects.hash(point, start, category);
     }
+
+    public Category getCategory() {
+        return category;
+    }
 }

@@ -1,8 +1,12 @@
 language: java
+cache:
+  directories:
+  - .autoconf
+  - $HOME/.m2
 install: true
 
 jdk:
   - oraclejdk8
 
 script:
-  - ./gradlew build --scan -s
+  - ./gradlew build

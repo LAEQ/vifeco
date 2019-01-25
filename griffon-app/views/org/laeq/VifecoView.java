@@ -5,15 +5,17 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 
 @ArtifactProviderFor(GriffonView.class)

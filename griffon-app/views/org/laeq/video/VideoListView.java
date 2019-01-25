@@ -16,7 +16,6 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 import org.laeq.model.Person;
 
-
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)

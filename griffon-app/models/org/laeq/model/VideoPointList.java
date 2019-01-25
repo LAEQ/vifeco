@@ -2,13 +2,10 @@ package org.laeq.model;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.geometry.Bounds;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
@@ -40,7 +37,7 @@ public class VideoPointList extends AbstractGriffonModel {
         displayPoint.addListener((ListChangeListener<VideoPoint>) c -> {
             while(c.next()){
                 if(c.wasAdded()){
-
+                    //@todo check if iconPane est deja present.
                     c.getAddedSubList().forEach(e -> iconPane.getChildren().add(getPositionedIcon(e)));
                 }
 
@@ -96,5 +93,9 @@ public class VideoPointList extends AbstractGriffonModel {
         iconPane.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
             pointList.filtered(videoPoint -> iconPane.getChildren().contains(videoPoint.getIcon())).forEach(videoPoint -> setPositionedIcon(videoPoint));
         });
+    }
+
+    public void addVideoPointTest(VideoPoint vp) {
+        pointList.add(vp);
     }
 }

@@ -2,6 +2,7 @@ package org.laeq.video
 
 import javafx.util.Duration
 import spock.lang.Specification
+
 import static spock.util.matcher.HamcrestMatchers.closeTo
 
 class VideoServiceTest extends Specification {

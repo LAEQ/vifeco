@@ -2,6 +2,7 @@ package org.laeq.model;
 
 
 import javafx.scene.Group;
+
 import java.io.FileNotFoundException;
 
 public class PointIcon extends Group implements CategoryIcon{

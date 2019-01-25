@@ -2,21 +2,18 @@ package org.laeq.video;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-import javafx.scene.Group;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.icon.VideoPointService;
-import org.laeq.model.Category;
 import org.laeq.model.VideoPoint;
 import org.laeq.model.VideoPointList;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 
 
 @javax.inject.Singleton
@@ -48,8 +45,9 @@ public final class VideoService extends AbstractGriffonService {
 
     public void addVideoIcon(Point2D point, Duration start) throws FileNotFoundException {
         VideoPoint vp = videoPointService.generatePoint(point, start);
-
         videoPointList.addVideoPoint(vp);
+        getApplication().getEventRouter().publishEventAsync("video.point.create", Arrays.asList(vp));
+
     }
 
     public Double getPositionSecondsBefore(Duration totalDuration, Duration currentDuration, int rewindSeconds) {
@@ -71,5 +69,10 @@ public final class VideoService extends AbstractGriffonService {
     private String numberToString(int number){
         String value = String.format("%d", number);
         return (value.length() > 1)? value : String.format("0%s", value);
+    }
+
+    public void addVideoIconDebug(Point2D point, Duration start) throws FileNotFoundException {
+        VideoPoint vp = videoPointService.generatePoint(point, start);
+        videoPointList.addVideoPointTest(vp);
     }
 }

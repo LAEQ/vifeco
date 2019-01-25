@@ -1,4 +1,4 @@
-package org.laeq.video;
+package org.laeq.video.category;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
@@ -9,22 +9,24 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
+import org.laeq.model.Category;
+import org.laeq.video.CategoryController;
+import org.laeq.video.CategoryModel;
 
 import javax.annotation.Nonnull;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 @ArtifactProviderFor(GriffonView.class)
 public class CategoryView extends AbstractJavaFXGriffonView {
     private CategoryController controller;
     private CategoryModel model;
+
 
     @MVCMember @Nonnull
     private VifecoView parentView;
@@ -55,23 +57,33 @@ public class CategoryView extends AbstractJavaFXGriffonView {
                 "icons/icon-car-elec-black-64.png",
         };
 
-        List<Group> categoryList = new ArrayList<>();
 
-        for (int i = 0; i < icons.length; i++){
-            try {
-                Group category = generateCategory(icons[i]);
-                category.setLayoutX(10);
-                category.setLayoutY(65 * i);
+        HashMap<Category, CategoryGroup> categoryList = new HashMap<>();
+        try {
+            for (int i = 0; i < icons.length; i++) {
+                String name = icons[i].substring(6, icons[i].lastIndexOf('.') - 1);
+                String path = getApplication().getResourceHandler().getResourceAsURL(icons[i]).getPath();
+                Category category = new Category(name, path, "1");
 
-                categoryList.add(category);
+                CategoryGroup group = new CategoryGroup(path);
+                group.setLayoutX(10);
+                group.setLayoutY(65 * i);
 
-            } catch (FileNotFoundException e) {
-                getLog().error(String.format("File: %s not found\n", icons[i]));
+                categoryList.put(category, group);
+
             }
-
+        } catch (FileNotFoundException e){
+            getLog().error(e.getMessage());
         }
 
-        categoryPane.getChildren().addAll(categoryList);
+
+        categoryPane.getChildren().addAll(categoryList.values());
+
+        model.generateProperties(categoryList.keySet());
+
+        categoryList.forEach((k, v) -> {
+            v.getLabel().textProperty().bind(model.getCategoryProperty(k).asString());
+        });
 
         parentView.getMiddlePane().getItems().add(node);
     }

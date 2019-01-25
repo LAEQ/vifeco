@@ -1,18 +1,14 @@
 package org.laeq.video;
 
-import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonModel;
-import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import griffon.transform.Observable;
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Map;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ControlsModel extends AbstractGriffonModel {
@@ -21,9 +17,6 @@ public class ControlsModel extends AbstractGriffonModel {
     private SimpleIntegerProperty pointSize;
     private SimpleIntegerProperty pointDuration;
     private SimpleDoubleProperty pointOpacity;
-
-    private final Integer VOLUME_MIN = 0;
-    private final Integer VOLUME_MAX = 10;
 
     public ControlsModel(){
         this.rate = new SimpleDoubleProperty(this, "rate", 1.0);

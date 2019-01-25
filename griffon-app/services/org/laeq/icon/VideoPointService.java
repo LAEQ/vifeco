@@ -7,7 +7,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
@@ -40,15 +39,21 @@ public class VideoPointService extends AbstractGriffonService {
     };
 
     public VideoPoint generatePoint(Point2D point, Duration start) throws FileNotFoundException {
-        PointIcon icon = generateIcon();
-        VideoPoint vp =  new VideoPoint(point, size, duration, start, new Category(), icon);
+        int rand = (int)(Math.random() * 10) % icons.length;
+
+        PointIcon icon = generateIcon(rand);
+
+        String name = icons[rand].substring(6, icons[rand].lastIndexOf('.') - 1);
+        String path = getApplication().getResourceHandler().getResourceAsURL(icons[rand]).getPath();
+        Category category = new Category(name, path, "1");
+
+        VideoPoint vp =  new VideoPoint(point, size, duration, start, category, icon);
 
         return vp;
     }
 
-    public PointIcon generateIcon() throws FileNotFoundException {
-        int rand = (int)(Math.random() * 10) % icons.length;
 
+    public PointIcon generateIcon(int rand) throws FileNotFoundException {
         PointIcon pointIcon = new PointIcon(width, height,icons[rand]);
         String path = getApplication().getResourceHandler().getResourceAsURL(pointIcon.getImagePath()).getPath();
         FileInputStream inputStream = new FileInputStream(path);
@@ -65,9 +70,6 @@ public class VideoPointService extends AbstractGriffonService {
         gc.fillOval(0,0, pointIcon.getWidth(), pointIcon.getHeight());
 
         pointIcon.getChildren().addAll(canvas, imageView);
-
-//        pointIcon.setLayoutX(mouseEvent.getX() - pointIcon.getWidth() / 2);
-//        pointIcon.setLayoutY(mouseEvent.getY() - pointIcon.getHeight() / 2);
         pointIcon.setOpacity(opacity);
 
         return pointIcon;
