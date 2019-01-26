@@ -1,5 +1,13 @@
 # vifeco
 
+
+### Build status
+| Branch | status |
+| ------------- | ------------- |
+| Master  |  [[https://api.travis-ci.org/LAEQ/vifeco.svg?branch=master|alt=build status]] |
+
+
+
 ### List events
 | Section  | Name | Type |
 | ------------- | ------------- | ---|
