@@ -85,4 +85,46 @@ public class MenuController extends AbstractGriffonController {
     public void quit() {
         getApplication().shutdown();
     }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void newCategory() {
+        dialogService.dialog();
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void listCategory() {
+        dialogService.dialog();
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void exportCategory() {
+        dialogService.dialog();
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void importCategory() {
+        dialogService.dialog();
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void exportDB() {
+        dialogService.dialog();
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void importDB() {
+        dialogService.dialog();
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void backupDB() {
+        dialogService.dialog();
+    }
 }

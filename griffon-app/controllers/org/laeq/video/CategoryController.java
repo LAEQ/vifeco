@@ -24,7 +24,6 @@ public class CategoryController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener("video.point.create", videoPoints -> {
-            getLog().info("video.point.create");
             runInsideUIAsync(() -> {
                 VideoPoint vp = (VideoPoint) videoPoints[0];
                 SimpleIntegerProperty property = model.getCategoryProperty(vp.getCategory());
