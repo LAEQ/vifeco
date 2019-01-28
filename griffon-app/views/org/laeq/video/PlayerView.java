@@ -104,9 +104,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
        subInit();
 
-//       setMedia("C:\\Users\\David\\Desktop\\inrs-videa\\ID2_MG_2018-06-19_TRAJET13.mp4");
-       setMedia("/home/david/Downloads/small.wav");
-
+       setMedia("C:\\Users\\David\\Desktop\\inrs-videa\\ID2_MG_2018-06-19_TRAJET13.mp4");
     }
 
     private void subInit(){
@@ -171,6 +169,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                     videoTimeSlider.setValueChanging(false);
                 });
 
+                initPlayer();
+
             } catch (IOException | MediaException e) {
                 getLog().error(String.format("MediaException: %s\n", e.toString()));
             } catch (Exception e){
@@ -183,7 +183,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void play() {
-        debug();
+//        debug();
         if(model.isIsPlaying()){
             mediaPlayer.pause();
         } else{
