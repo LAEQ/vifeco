@@ -4,7 +4,7 @@
 ### Build status
 | Branch | status |
 | ------------- | ------------- |
-| Master  |  [[https://api.travis-ci.org/LAEQ/vifeco.svg?branch=master|alt=build status]] |
+| Master  |  [build status](https://travis-ci.com/LAEQ/vifeco.svg?branch=master)|
 
 
 
