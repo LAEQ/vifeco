@@ -1,17 +1,17 @@
 apply plugin: 'java'
 
-task startDatabase() {
+task startDatabase()
+    dependsOn('build')
     println "start database"
 
     def className = "org.hsqldb.server.Server";
-
     def javaHome = System.getProperty("java.home")
     def javaBin = javaHome + File.separator + "bin" + File.separator + "java"
 
 //    java -classpath .\lib\hsqldb.jar org.hsqldb.server.Server --database.0 file:hsqldb/demodb --dbname.0 testdb
 
     println javaBin
-    def builder = new ProcessBuilder(javaBin, "-classpath",  "./lib/hsqldb.jar",  "org.hsqldb.server.Server")
+    def builder = new ProcessBuilder(javaBin, "-classpath",  "./lib/hsqldb.jar",  "org.hsqldb.server.Server", "--database.0", "file:hsqldb/demodb", "--dbname.0", "testdb")
     builder.directory(new File("C:/Users/David/Documents/inrs/db/hsqldb-2.4.1/hsqldb"))
     builder.redirectErrorStream(true)
     def process = builder.start()
