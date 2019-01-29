@@ -8,7 +8,7 @@ CREATE TABLE USER (
    NAME varchar(30) NOT NULL
 );
 
-CREATE TABLE CATEGORY (
+CREATE TAB CATEGORY (
    ID int NOT NULL PRIMARY KEY,
    NAME varchar(30) NOT NULL,
    ICON varchar(255) NOT NULL,
@@ -29,5 +29,3 @@ CREATE TABLE POINT (
  CATEGORY_ID int NOT NULL,
  millis double NOT NULL
 );
-
-GRANT insert ON USER TO public;

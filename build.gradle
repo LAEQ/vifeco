@@ -80,19 +80,13 @@ dependencies {
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
     testCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"
     testCompile "org.spockframework:spock-core:${spockVersion}"
-    testCompile group: 'org.hsqldb', name: 'hsqldb', version: '2.0.0'
-
-//    compile('db/hsqldb-2.4.1/hsqldb/lib/hsqldb.jar')
-//    testCompile files('db/hsqldb-2.4.1/hsqldb/lib/hsqldb.jar')
+    testCompile 'org.hsqldb:hsqldb:2.4.1'
 
     compile files('db/hsqldb-2.4.1/hsqldb/lib/hsqldb.jar')
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }
 
-task listJars << {
-    configurations.compile.each { File file -> println file.name }
-}
 
 task sourceJar(type: Jar) {
     group 'Build'
