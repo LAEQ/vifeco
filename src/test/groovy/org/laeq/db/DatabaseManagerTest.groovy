@@ -44,14 +44,12 @@ class DatabaseManagerTest extends Specification {
 
         } catch (Exception e){
             println e
-            exception = e;
         }
 
 
         then:
         result == 0
         con != null
-        exception == null
 
         cleanup: "destroy the database process"
         process.destroy()
@@ -59,7 +57,6 @@ class DatabaseManagerTest extends Specification {
 
     def "test the create table sql"() {
         setup: "Create a database process"
-        println "ICI"
         def hslqdbPath = this.class.getClassLoader().getResource("db/lib/hsqldb.jar")
         def builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),  "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/demodb",  "--dbname.0", " testdb")
         builder.redirectErrorStream(true)
@@ -72,17 +69,13 @@ class DatabaseManagerTest extends Specification {
         DatabaseManager manager = new DatabaseManager("jdbc:hsqldb:mem:.", "SA", "")
 
         Connection con
-        Exception exception
         int result = 1
 
         try{
             con = manager.getConnection()
             Statement stmt = con.createStatement()
-
             result = stmt.executeUpdate(createSQL)
-
         } catch (Exception e){
-            exception = e;
             println e
         }
 
@@ -90,7 +83,39 @@ class DatabaseManagerTest extends Specification {
         then:
         result == 0
         con != null
-        exception == null
+
+        cleanup: "destroy the database process"
+        process.destroy()
+    }
+
+    def "create sequences"() {
+        setup: "Create a database process"
+        def hslqdbPath = this.class.getClassLoader().getResource("db/lib/hsqldb.jar")
+        def builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),  "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/demodb",  "--dbname.0", " testdb")
+        builder.redirectErrorStream(true)
+        def process = builder.start()
+
+        and:
+        def sqlString = this.class.getClassLoader().getResource("sql/create_sequences.sql").text
+
+        when:
+        DatabaseManager manager = new DatabaseManager("jdbc:hsqldb:mem:.", "SA", "")
+
+        Connection con
+        int result = 1
+
+        try{
+            con = manager.getConnection()
+            Statement stmt = con.createStatement()
+            result = stmt.executeUpdate(sqlString)
+        } catch (Exception e){
+            println e
+        }
+
+
+        then:
+        result == 0
+        con != null
 
         cleanup: "destroy the database process"
         process.destroy()
