@@ -14,7 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
-import org.laeq.model.Person;
+import org.laeq.model.User;
 
 import javax.annotation.Nonnull;
 
@@ -31,7 +31,7 @@ public class VideoListView extends AbstractJavaFXGriffonView {
 
     @FXML private AnchorPane videoListPane;
 
-    @FXML private TableView<Person> videoListTable;
+    @FXML private TableView<User> videoListTable;
 
     @FXML private TabPane tabPane;
 
@@ -50,20 +50,20 @@ public class VideoListView extends AbstractJavaFXGriffonView {
 
         videoListTable.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
 
-        final ObservableList<Person> data = FXCollections.observableArrayList(
-                new Person("Jacob", "Smith", "jacob.smith@example.com"),
-                new Person("Isabella", "Johnson", "isabella.johnson@example.com"),
-                new Person("Ethan", "Williams", "ethan.williams@example.com"),
-                new Person("Emma", "Jones", "emma.jones@example.com"),
-                new Person("Michael", "Brown", "michael.brown@example.com")
+        final ObservableList<User> data = FXCollections.observableArrayList(
+                new User("Jacob", "Smith", "jacob.smith@example.com"),
+                new User("Isabella", "Johnson", "isabella.johnson@example.com"),
+                new User("Ethan", "Williams", "ethan.williams@example.com"),
+                new User("Emma", "Jones", "emma.jones@example.com"),
+                new User("Michael", "Brown", "michael.brown@example.com")
         );
 
         firstNameCol.setCellValueFactory(new PropertyValueFactory<
-                Person, String>("firstName"));
+                User, String>("firstName"));
         lastNameCol.setCellValueFactory(new PropertyValueFactory<
-                Person, String>("lastName"));
+                User, String>("lastName"));
         emailCol.setCellValueFactory(new PropertyValueFactory<
-                Person, String>("email"));
+                User, String>("email"));
 
         videoListTable.setItems(data);
 //        videoListPane.getChildren().add(videoListTable);

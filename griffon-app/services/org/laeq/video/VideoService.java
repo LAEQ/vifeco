@@ -9,7 +9,6 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.icon.VideoPointService;
 import org.laeq.model.VideoPoint;
 import org.laeq.model.VideoPointList;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.FileNotFoundException;

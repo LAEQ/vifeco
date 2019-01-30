@@ -16,6 +16,7 @@ buildscript {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
         classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:1.2.5'
         classpath 'net.nemerosa:versioning:2.6.1'
+        classpath 'org.hsqldb:hsqldb:2.4.1'
     }
 }
 
@@ -52,6 +53,7 @@ apply from: 'gradle/integration-test.gradle'
 apply from: 'gradle/functional-test.gradle'
 apply from: 'gradle/package.gradle'
 apply from: 'gradle/docs.gradle'
+apply from: 'gradle/db.gradle'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'org.kordamp.gradle.stats'
 apply plugin: 'com.github.ben-manes.versions'
@@ -71,7 +73,6 @@ dependencies {
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
     compile 'org.kordamp.ikonli:ikonli-javafx:1.8.0'
     compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:1.8.0'
-//    compile 'org.kordamp.ikonli:ikonli-fontawesome5-pack:11.1.0'
     compile 'eu.lestard:advanced-bindings:0.4.0'
 
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
@@ -79,9 +80,13 @@ dependencies {
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
     testCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"
     testCompile "org.spockframework:spock-core:${spockVersion}"
+    testCompile 'org.hsqldb:hsqldb:2.4.1'
+
+    compile files('db/hsqldb-2.4.1/hsqldb/lib/hsqldb.jar')
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }
+
 
 task sourceJar(type: Jar) {
     group 'Build'

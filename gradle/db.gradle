@@ -1,0 +1,24 @@
+apply plugin: 'java'
+
+task startDatabase() {
+    def javaHome = System.getProperty("java.home")
+    def javaBin = javaHome + File.separator + "bin" + File.separator + "java"
+
+    def builder = new ProcessBuilder(
+            javaBin,
+            "-classpath",
+            "./griffon-app/resources/db/lib/hsqldb.jar",
+            "org.hsqldb.server.Server",
+            "--database.1",
+            "file:hsqldb/vifecodb",
+            "--dbname.1",
+            "vifecodb")
+    builder.redirectErrorStream(true)
+    def process = builder.start()
+}
+
+
+
+//cd C:\hsqldb-2.3.4\hsqldb
+//hsqldb>java -classpath lib/hsqldb.jar org.hsqldb.server.Server --database.0
+//file:hsqldb/demodb --dbname.0 testdb
