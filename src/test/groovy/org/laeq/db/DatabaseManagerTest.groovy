@@ -7,31 +7,19 @@ import java.sql.DriverManager
 import java.sql.Statement
 
 class DatabaseManagerTest extends Specification {
-
-    def schema = this.class.classLoader.rootLoader;
-    def className = "org.hsqldb.server.Server";
-    def javaHome = System.getProperty("java.home")
-    def javaBin = javaHome + File.separator + "bin" + File.separator + "java"
-
     def "test the db connection and creation of dummy table"() {
         setup: "Create a database process"
-        def hslqdbPath = this.class.getClassLoader().getResource("db/lib/hsqldb.jar")
-        def builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),  "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/demodb",  "--dbname.0", " testdb")
-        builder.redirectErrorStream(true)
+        def builder = createProcess()
         def process = builder.start()
 
-        given:
-//        def createSQL = this.class.getClassLoader().getResource("sql/create_tables.sql").text
-
         when:
-        DatabaseManager manager = new DatabaseManager("jdbc:hsqldb:mem:.", "SA", "")
+        DatabaseConfigInterface config = new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", "")
+        DatabaseManager manager = new DatabaseManager(config)
 
-        Connection con
-        Exception exception
-        int result = 1
+        def result = 1
 
         try{
-            con = manager.getConnection()
+            Connection con = manager.getConnection()
             Statement stmt = con.createStatement()
 
             result = stmt.executeUpdate(
@@ -46,10 +34,8 @@ class DatabaseManagerTest extends Specification {
             println e
         }
 
-
         then:
         result == 0
-        con != null
 
         cleanup: "destroy the database process"
         process.destroy()
@@ -57,22 +43,19 @@ class DatabaseManagerTest extends Specification {
 
     def "test the create table sql"() {
         setup: "Create a database process"
-        def hslqdbPath = this.class.getClassLoader().getResource("db/lib/hsqldb.jar")
-        def builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),  "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/demodb",  "--dbname.0", " testdb")
-        builder.redirectErrorStream(true)
+        def builder = createProcess()
         def process = builder.start()
 
         and:
         def createSQL = this.class.getClassLoader().getResource("sql/create_tables.sql").text
 
         when:
-        DatabaseManager manager = new DatabaseManager("jdbc:hsqldb:mem:.", "SA", "")
+        DatabaseManager manager = new DatabaseManager(new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", ""))
 
-        Connection con
-        int result = 1
+        def result = 1
 
         try{
-            con = manager.getConnection()
+            Connection con = manager.getConnection()
             Statement stmt = con.createStatement()
             result = stmt.executeUpdate(createSQL)
         } catch (Exception e){
@@ -82,7 +65,6 @@ class DatabaseManagerTest extends Specification {
 
         then:
         result == 0
-        con != null
 
         cleanup: "destroy the database process"
         process.destroy()
@@ -90,22 +72,19 @@ class DatabaseManagerTest extends Specification {
 
     def "create sequences"() {
         setup: "Create a database process"
-        def hslqdbPath = this.class.getClassLoader().getResource("db/lib/hsqldb.jar")
-        def builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),  "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/demodb",  "--dbname.0", " testdb")
-        builder.redirectErrorStream(true)
+        def builder = createProcess()
         def process = builder.start()
 
         and:
         def sqlString = this.class.getClassLoader().getResource("sql/create_sequences.sql").text
 
         when:
-        DatabaseManager manager = new DatabaseManager("jdbc:hsqldb:mem:.", "SA", "")
+        DatabaseManager manager = new DatabaseManager(new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", ""))
 
-        Connection con
-        int result = 1
+        def result = 1
 
         try{
-            con = manager.getConnection()
+            Connection con = manager.getConnection()
             Statement stmt = con.createStatement()
             result = stmt.executeUpdate(sqlString)
         } catch (Exception e){
@@ -115,9 +94,19 @@ class DatabaseManagerTest extends Specification {
 
         then:
         result == 0
-        con != null
 
         cleanup: "destroy the database process"
         process.destroy()
+    }
+
+    def ProcessBuilder createProcess(){
+        def javaHome = System.getProperty("java.home")
+        def javaBin = javaHome + File.separator + "bin" + File.separator + "java"
+        def hslqdbPath = this.class.getClassLoader().getResource("db/lib/hsqldb.jar")
+
+        def builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),  "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/demodb",  "--dbname.0", " testdb")
+        builder.redirectErrorStream(true)
+
+        return builder
     }
 }

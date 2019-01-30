@@ -5,7 +5,9 @@ DROP TABLE IF EXISTS USER;
 
 CREATE TABLE USER (
        ID int NOT NULL PRIMARY KEY,
-       NAME varchar(30) NOT NULL
+       FIRST_NAME varchar(30) NOT NULL,
+       LAST_NAME varchar(30) NOT NULL,
+       EMAIL varchar(100) NOT NULL
 );
 
 CREATE TABLE CATEGORY (

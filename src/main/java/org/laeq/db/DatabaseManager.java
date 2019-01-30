@@ -1,26 +1,44 @@
 package org.laeq.db;
 
+import javax.annotation.Nonnull;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 
 public class DatabaseManager {
-    private final String url;
-    private final String user;
-    private final String password;
+    @Nonnull
+    private DatabaseConfigInterface config;
 
-    public DatabaseManager(String url, String user, String password) {
-        this.url = url;
-        this.user = user;
-        this.password = password;
+    public DatabaseManager(DatabaseConfigInterface config) {
+        this.config = config;
     }
 
-    public DatabaseManager() throws ClassNotFoundException {
-//        Class.forName("org.hsqldb.jdbc.JDBCDriver");
-        this.url = "jdbc:hsqldb:hsql://localhost/testdb";
-        this.user = "SA";
-        this.password = "";
-    }
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(this.url, this.user, this.password);
+        return DriverManager.getConnection(this.config.getUrl(), this.config.getUser(), this.config.getPassword());
+    }
+
+    public boolean loadFixtures(String fixturesPath) throws IOException, SQLException {
+        BufferedReader reader = new BufferedReader(new FileReader(fixturesPath));
+        StringBuilder builder = new StringBuilder();
+        String line;
+
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+
+                if (line.contains(";")) {
+                    statement.addBatch(builder.toString());
+                    builder.delete(0, builder.length());
+                }
+            }
+
+            statement.executeBatch();
+
+            return true;
+        }
     }
 }
