@@ -19,12 +19,12 @@ public class User {
         this.email = new SimpleStringProperty("");
     }
 
-    public User(@Nonnull Integer id, @Nonnull String fName, @Nonnull String lastName, @Nonnull String email) {
+    public User(Integer id, String fName, String lastName, String email) {
         this(fName, lastName, email);
         this.id.set(id);
     }
 
-    public User(@Nonnull String fName, @Nonnull String lName, @Nonnull String email) {
+    public User(String fName, String lName, String email) {
         this.id = new SimpleIntegerProperty(0);
         this.firstName = new SimpleStringProperty(fName);
         this.lastName = new SimpleStringProperty(lName);

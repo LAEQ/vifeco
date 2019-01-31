@@ -5,10 +5,13 @@ import org.laeq.model.User
 import spock.lang.Specification
 
 class CategoryDAOTest extends AbstractDAOTest {
-    def "test get next id"() {
-        setup:
-        CategoryDAO repository = new CategoryDAO(manager)
+    def repository;
 
+    def setup(){
+        repository = new CategoryDAO(manager, "category_id")
+    }
+
+    def "test get next id"() {
         when:
         repository.getNextValue()
         repository.getNextValue()
@@ -21,31 +24,27 @@ class CategoryDAOTest extends AbstractDAOTest {
     def "test insertion"() {
         setup:
         Category category = new Category("mock name", "mock icon", "A")
-        CategoryDAO repository = new CategoryDAO(manager)
 
         when:
         repository.insert(category)
 
         then:
-        true == true
         category == new Category(1, "mock name", "mock icon", "A")
     }
 
     def "test insertion with an invalid category"(){
         setup:
-        Category category = new Category(null, "mock icon", "A")
-        CategoryDAO repository = new CategoryDAO(manager)
+        Category category = new Category("", "mock icon", "A")
 
         when:
         repository.insert(category)
 
         then:
-        thrown DAOException
+        notThrown DAOException
     }
 
     def "test findAll"() {
         setup:
-        CategoryDAO repository = new CategoryDAO(manager);
         Category user1 = new Category("mock name A", "mock icon A", "A")
         Category user2 = new Category("mock name B", "mock icon B", "B")
 
@@ -62,9 +61,6 @@ class CategoryDAOTest extends AbstractDAOTest {
     }
 
     def "test findAll but empty"() {
-        setup:
-        CategoryDAO repository = new CategoryDAO(manager);
-
         when:
         def result = repository.findAll()
 
@@ -80,7 +76,6 @@ class CategoryDAOTest extends AbstractDAOTest {
             println e
         }
 
-        DAOInterface<Category> repository = new CategoryDAO(manager);
         Category category = new Category(1, "mock", "mock", "A")
 
         when:
@@ -98,7 +93,6 @@ class CategoryDAOTest extends AbstractDAOTest {
             println e
         }
 
-        DAOInterface<Category> repository = new CategoryDAO(manager);
         Category category = new Category(-1, "mock", "mock", "A")
         when:
         repository.delete(category)

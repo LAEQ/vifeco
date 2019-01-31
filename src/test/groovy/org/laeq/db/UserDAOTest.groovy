@@ -9,10 +9,13 @@ import java.sql.SQLException
 import java.sql.Statement
 
 class UserDAOTest extends AbstractDAOTest {
-    def "test get next id"() {
-        setup:
-        UserDAO repository = new UserDAO(manager)
+    def repository;
 
+    def setup(){
+        repository = new UserDAO(manager, "user_id")
+    }
+
+    def "test get next id"() {
         when:
         repository.getNextValue()
         repository.getNextValue()
@@ -25,7 +28,6 @@ class UserDAOTest extends AbstractDAOTest {
     def "test insertion"() {
         setup:
         User user = new User("Luck", "Skywalker", "luke@maytheforcebewithyou.com")
-        UserDAO repository = new UserDAO(manager)
 
         when:
         repository.insert(user)
@@ -36,19 +38,17 @@ class UserDAOTest extends AbstractDAOTest {
 
     def "test insertion with an invalid user (no name, email, ...)"(){
         setup:
-        User user = new User(null, "Skywalker", "luke@maytheforcebewithyou.com")
-        UserDAO repository = new UserDAO(manager)
+        def user = new User("", "Skywalker", "luke@maytheforcebewithyou.com")
 
         when:
         repository.insert(user)
 
         then:
-        thrown DAOException
+        notThrown DAOException
     }
 
     def "test findAll"() {
         setup:
-        UserDAO repository = new UserDAO(manager);
         User user1 = new User("Luck", "Skywalker", "luke@maytheforcebewithyou.com")
         User user2 = new User("Darth", "Vader", "darth@iamyourfatcher.com")
 
@@ -65,9 +65,6 @@ class UserDAOTest extends AbstractDAOTest {
     }
 
     def "test findAll but empty"() {
-        setup:
-        UserDAO repository = new UserDAO(manager);
-
         when:
         def result = repository.findAll()
 
@@ -83,7 +80,6 @@ class UserDAOTest extends AbstractDAOTest {
             println e
         }
 
-        UserDAO repository = new UserDAO(manager);
         User user = new User(1,"Luck", "Skywalker", "luke@maytheforcebewithyou.com")
 
         when:
@@ -101,7 +97,6 @@ class UserDAOTest extends AbstractDAOTest {
             println e
         }
 
-        UserDAO repository = new UserDAO(manager);
         User user = new User(-1,"Luck", "Skywalker", "luke@maytheforcebewithyou.com")
 
         when:

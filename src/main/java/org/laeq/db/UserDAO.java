@@ -7,37 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UserDAO extends AbstractDAO implements DAOInterface<User> {
-    @Nonnull private String sequenceName = "user_id";
-
-    public UserDAO(@Nonnull DatabaseManager manager) {
-        super(manager);
-    }
-
-    /**
-     * Retrieve the next id (primaray key) from the database
-     *
-     * @return nextId
-     */
-    public Integer getNextValue(){
-        Integer nextID = null;
-        String query = String.format("CALL NEXT VALUE for %s;", sequenceName);
-
-
-        try( Connection connection = getManager().getConnection();
-             PreparedStatement statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS))
-        {
-            CallableStatement call = connection.prepareCall(query);
-            ResultSet result = call.executeQuery();
-
-            if(result.next()){
-                return result.getInt(1);
-            }
-
-        } catch (Exception e) {
-            getLogger().error(e.getMessage());
-        }
-
-        return nextID;
+    public UserDAO(@Nonnull DatabaseManager manager, String sequenceName) {
+        super(manager, sequenceName);
     }
 
     @Override
