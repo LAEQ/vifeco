@@ -30,7 +30,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
         {
             statement.setInt(1, nextId);
             statement.setString(2, video.getPath());
-            statement.setDouble(3, video.getDuration().toSeconds());
+            statement.setDouble(3, video.getDuration().toMillis());
 
             result = statement.executeUpdate();
 

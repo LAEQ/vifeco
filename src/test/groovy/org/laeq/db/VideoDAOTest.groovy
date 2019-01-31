@@ -23,21 +23,20 @@ class VideoDAOTest extends AbstractDAOTest {
 
     def "test insertion"() {
         setup:
-        Video video = new Video("path/to/video/name.mp4", Duration.seconds(3000))
+        Video video = new Video("path/to/video/name.mp4", Duration.millis(3600000))
 
         when:
-        repository.findAll();
         repository.insert(video)
 
         then:
-        video == new Video(1, "path/to/video/name.mp4", Duration.seconds(3600))
+        video == new Video(1, "path/to/video/name.mp4", Duration.millis(3600000))
     }
 
     def "test findAll"(){
         setup:
-        Video video1 = new Video("path/to/video/name.mp4", Duration.seconds(3000))
-        Video video2 = new Video("path/to/video/name2.mp4", Duration.seconds(3000))
-        Video video3 = new Video("path/to/video/name3.mp4", Duration.seconds(3000))
+        Video video1 = new Video("path/to/video/name.mp4", Duration.millis(3600000))
+        Video video2 = new Video("path/to/video/name2.mp4", Duration.millis(3600000))
+        Video video3 = new Video("path/to/video/name3.mp4", Duration.millis(3600000))
 
         repository.insert(video1)
         repository.insert(video2)
@@ -66,7 +65,7 @@ class VideoDAOTest extends AbstractDAOTest {
             println e
         }
 
-        Video video = new Video(1, "path/to/video.mp4", Duration.seconds(3600))
+        Video video = new Video(1, "path/to/video.mp4", Duration.millis(3600000))
 
         when:
         repository.delete(video)
@@ -83,7 +82,7 @@ class VideoDAOTest extends AbstractDAOTest {
             println e
         }
 
-        def video = new Video(-1, "path/to/video.mp4", Duration.seconds(3600))
+        def video = new Video(-1, "path/to/video.mp4", Duration.millis(3600000))
 
         when:
         repository.delete(video)
