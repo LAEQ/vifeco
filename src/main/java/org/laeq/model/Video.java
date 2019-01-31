@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-public class Video {
+public class Video implements Entity{
     private Integer id;
     private String path;
     private String name;
@@ -41,7 +41,9 @@ public class Video {
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
-    public Integer getId() {
+
+    @Override
+    public int getId() {
         return id;
     }
 

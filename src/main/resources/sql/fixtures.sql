@@ -5,11 +5,22 @@ INSERT INTO user (ID, FIRST_NAME, LAST_NAME, EMAIL) VALUES (NEXT VALUE FOR user_
 
 
 INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving truck', 'icons/icon1.png', 'A');
-INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving car', 'icons/icon1.png', 'B');
-INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving bike', 'icons/icon1.png', 'C');
-INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving bux', 'icons/icon1.png', 'D');
+INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving car', 'icons/icon2.png', 'B');
+INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving bike', 'icons/icon3.png', 'C');
+INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving bus', 'icons/icon4.png', 'D');
 
 INSERT INTO video(ID, PATH, DURATION) VALUES (NEXT VALUE FOR video_id, 'path/to/video1.mp4', 12345.00);
 INSERT INTO video(ID, PATH, DURATION) VALUES (NEXT VALUE FOR video_id, 'path/to/video2.mp4', 12345.00);
 INSERT INTO video(ID, PATH, DURATION) VALUES (NEXT VALUE FOR video_id, 'path/to/video3.mp4', 12345.00);
 INSERT INTO video(ID, PATH, DURATION) VALUES (NEXT VALUE FOR video_id, 'path/to/video4.mp4', 12345.00);
+
+INSERT INTO point(ID, X, Y, VIDEO_ID, USER_ID, CATEGORY_ID, START) VALUES(1, 10, 10, 1, 1, 1, 5);
+INSERT INTO point(ID, X, Y, VIDEO_ID, USER_ID, CATEGORY_ID, START) VALUES(2, 10, 10, 1, 1, 2, 1);
+INSERT INTO point(ID, X, Y, VIDEO_ID, USER_ID, CATEGORY_ID, START) VALUES(3, 10, 10, 1, 1, 1, 3);
+INSERT INTO point(ID, X, Y, VIDEO_ID, USER_ID, CATEGORY_ID, START) VALUES(4, 10, 10, 1, 1, 1, 2);
+INSERT INTO point(ID, X, Y, VIDEO_ID, USER_ID, CATEGORY_ID, START) VALUES(5, 10, 10, 1, 1, 3, 4);
+INSERT INTO point(ID, X, Y, VIDEO_ID, USER_ID, CATEGORY_ID, START) VALUES(6, 10, 10, 2, 1, 1, 1);
+INSERT INTO point(ID, X, Y, VIDEO_ID, USER_ID, CATEGORY_ID, START) VALUES(7, 10, 10, 2, 1, 1, 1);
+INSERT INTO point(ID, X, Y, VIDEO_ID, USER_ID, CATEGORY_ID, START) VALUES(8, 10, 10, 1, 2, 1, 3);
+INSERT INTO point(ID, X, Y, VIDEO_ID, USER_ID, CATEGORY_ID, START) VALUES(9, 10, 10, 1, 2, 1, 1);
+INSERT INTO point(ID, X, Y, VIDEO_ID, USER_ID, CATEGORY_ID, START) VALUES(10, 10, 10, 1, 2, 1, 1);

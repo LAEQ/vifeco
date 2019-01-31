@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class User {
+public class User implements Entity{
     private SimpleIntegerProperty id;
     private SimpleStringProperty firstName;
     private SimpleStringProperty lastName;
@@ -55,6 +55,8 @@ public class User {
     public void setId(int id) {
         this.id.set(id);
     }
+
+    @Override
     public int getId() {
         return this.id.getValue();
     }
