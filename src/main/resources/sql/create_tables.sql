@@ -14,7 +14,8 @@ CREATE TABLE CATEGORY (
        ID int NOT NULL PRIMARY KEY,
        NAME varchar(30) NOT NULL,
        ICON varchar(255) NOT NULL,
-       SHORTCUT varchar(1) NOT NULL
+       SHORTCUT varchar(1) NOT NULL,
+       CONSTRAINT category_shortcut_uniq UNIQUE (SHORTCUT)
 );
 
 CREATE TABLE VIDEO (

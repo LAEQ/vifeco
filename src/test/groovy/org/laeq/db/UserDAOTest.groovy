@@ -5,48 +5,45 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 import java.sql.Connection
+import java.sql.SQLException
 import java.sql.Statement
 
-class UserDAOTest extends Specification {
-    @Shared def process
-    @Shared def DatabaseManager manager
-
-    def setupSpec() {
-        def builder = createBuilder()
-        process = builder.start()
-    }
-
-    def cleanupSpec(){
-        process.destroy()
-    }
-
-    def setup(){
-        def sqlArray = ["sql/create_tables.sql", "sql/create_sequences.sql"] as String[]
-
-        manager = new DatabaseManager(new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", ""))
-
-        try{
-            sqlArray.each {
-                Connection con = manager.getConnection()
-                Statement stmt = con.createStatement()
-                stmt.executeUpdate(this.class.classLoader.getResource(it).text)
-            }
-        } catch (Exception e){
-            println e
-        }
-    }
-
-    def "test User insertion"() {
+class UserDAOTest extends AbstractDAOTest {
+    def "test get next id"() {
         setup:
-        User user = new User("Luck", "Skywalker", "luke@maytheforcebewithyou.com")
-        UserDAO repository = new UserDAO(manager);
+        UserDAO repository = new UserDAO(manager)
 
         when:
-        boolean  result = repository.insert(user)
+        repository.getNextValue()
+        repository.getNextValue()
+        int result = repository.getNextValue()
 
         then:
-        result == true
-        user == new User(0, "Luck", "Skywalker", "luke@maytheforcebewithyou.com")
+        result == 3
+    }
+
+    def "test insertion"() {
+        setup:
+        User user = new User("Luck", "Skywalker", "luke@maytheforcebewithyou.com")
+        UserDAO repository = new UserDAO(manager)
+
+        when:
+        repository.insert(user)
+
+        then:
+        user == new User(1, "Luck", "Skywalker", "luke@maytheforcebewithyou.com")
+    }
+
+    def "test insertion with an invalid user (no name, email, ...)"(){
+        setup:
+        User user = new User(null, "Skywalker", "luke@maytheforcebewithyou.com")
+        UserDAO repository = new UserDAO(manager)
+
+        when:
+        repository.insert(user)
+
+        then:
+        thrown DAOException
     }
 
     def "test findAll"() {
@@ -67,7 +64,18 @@ class UserDAOTest extends Specification {
         result.contains(new User(2,"Darth", "Vader", "darth@iamyourfatcher.com")) == true
     }
 
-    def "test delete User"() {
+    def "test findAll but empty"() {
+        setup:
+        UserDAO repository = new UserDAO(manager);
+
+        when:
+        def result = repository.findAll()
+
+        then:
+        result.size() == 0
+    }
+
+    def "test delete an existing user"() {
         setup:
         try{
             manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
@@ -79,20 +87,27 @@ class UserDAOTest extends Specification {
         User user = new User(1,"Luck", "Skywalker", "luke@maytheforcebewithyou.com")
 
         when:
-        def result = repository.delete(user)
+        repository.delete(user)
 
         then:
-        result == true
+        notThrown Exception
     }
 
-    ProcessBuilder createBuilder(){
-        def javaHome = System.getProperty("java.home")
-        def javaBin = javaHome + File.separator + "bin" + File.separator + "java"
-        def hslqdbPath = this.class.getClassLoader().getResource("db/lib/hsqldb.jar")
+    def "test delete an unknown user"() {
+        setup:
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+        } catch (Exception e){
+            println e
+        }
 
-        def builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),  "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/demodb",  "--dbname.0", " testdb")
-        builder.redirectErrorStream(true)
+        UserDAO repository = new UserDAO(manager);
+        User user = new User(-1,"Luck", "Skywalker", "luke@maytheforcebewithyou.com")
 
-        builder
+        when:
+        repository.delete(user)
+
+        then:
+        thrown DAOException
     }
 }

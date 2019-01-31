@@ -3,6 +3,7 @@ package org.laeq.model;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class User {
@@ -18,12 +19,12 @@ public class User {
         this.email = new SimpleStringProperty("");
     }
 
-    public User(Integer id, String fName, String lastName, String email) {
+    public User(@Nonnull Integer id, @Nonnull String fName, @Nonnull String lastName, @Nonnull String email) {
         this(fName, lastName, email);
         this.id.set(id);
     }
 
-    public User(String fName, String lName, String email) {
+    public User(@Nonnull String fName, @Nonnull String lName, @Nonnull String email) {
         this.id = new SimpleIntegerProperty(0);
         this.firstName = new SimpleStringProperty(fName);
         this.lastName = new SimpleStringProperty(lName);
@@ -73,12 +74,14 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id.getValue(), user.id.getValue()) &&
-                Objects.equals(lastName.getValue(), user.lastName.getValue());
+        return id.getValue().equals(user.id.getValue()) &&
+                firstName.getValue().equals(user.firstName.getValue()) &&
+                lastName.getValue().equals(user.lastName.getValue()) &&
+                email.getValue().equals(user.email.getValue());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id.getValue(), lastName.getValue());
+        return Objects.hash(id.getValue(), firstName.getValue(), lastName.getValue(), email.getValue());
     }
 }

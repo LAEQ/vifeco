@@ -1,15 +1,18 @@
 package org.laeq.db;
 
+import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
+import org.laeq.model.Category;
 import org.laeq.model.User;
+
 import javax.annotation.Nonnull;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UserDAO extends AbstractDAO implements DAOInterface<User> {
-    @Nonnull private String sequenceName = "user_id";
+public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
+    @Nonnull private String sequenceName = "category_id";
 
-    public UserDAO(@Nonnull DatabaseManager manager) {
+    public CategoryDAO(@Nonnull DatabaseManager manager) {
         super(manager);
     }
 
@@ -41,7 +44,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
     }
 
     @Override
-    public void insert(User user) throws DAOException {
+    public void insert(Category category) throws DAOException {
         int result = 0;
         Integer nextId = getNextValue();
 
@@ -49,80 +52,79 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
             throw new DAOException("Cannot generate the next user id from the database.");
         }
 
-        String query = "INSERT INTO user (ID, FIRST_NAME, LAST_NAME, EMAIL) VALUES (?, ?, ?, ?);";
+        String query = "INSERT INTO CATEGORY (ID, NAME, ICON, SHORTCUT) VALUES (?, ?, ?, ?);";
 
         try(Connection connection = getManager().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
         {
             statement.setInt(1, nextId);
-            statement.setString(2, user.getFirstName());
-            statement.setString(3, user.getLastName());
-            statement.setString(4, user.getEmail());
+            statement.setString(2, category.getName());
+            statement.setString(3, category.getIcon());
+            statement.setString(4, category.getShortcut());
 
             result = statement.executeUpdate();
 
-            user.setId(nextId);
+            category.setId(nextId);
         } catch (Exception e){
             getLogger().error(e.getMessage());
         }
 
         if(result != 1)
-            throw new DAOException("Error during DAO insert user");
-
+            throw new DAOException("Error during DAO insert category");
     }
 
     @Override
-    public Set<User> findAll() {
-        String query = "SELECT * from USER;";
+    public Set<Category> findAll() {
+        String query = "SELECT * FROM CATEGORY;";
 
-        Set<User> result = new HashSet<>();
+        Set<Category> result = new HashSet<>();
 
         try(Connection connection = getManager().getConnection();
-        PreparedStatement statement = connection.prepareStatement(query);){
+            PreparedStatement statement = connection.prepareStatement(query);){
 
             ResultSet queryResult = statement.executeQuery();
             result = getResult(queryResult);
 
         } catch (SQLException e){
+            System.out.println(e);
             getLogger().error(e.getMessage());
+        }
+
+        return result;
+    }
+
+    private Set<Category> getResult(ResultSet datas) throws SQLException {
+        Set<Category> result = new HashSet<>();
+
+        while(datas.next()){
+            Category category = new Category();
+            category.setId(datas.getInt("ID"));
+            category.setName(datas.getString("NAME"));
+            category.setIcon(datas.getString("ICON"));
+            category.setShortcut(datas.getString("SHORTCUT"));
+            result.add(category);
         }
 
         return result;
     }
 
     @Override
-    public void delete(User user) throws DAOException {
+    public void delete(Category category) throws DAOException {
         int result = 0;
-        String query = "DELETE FROM USER WHERE ID=?";
+        String query = "DELETE FROM CATEGORY WHERE ID=?";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query);)
         {
-            statement.setInt(1, user.getId());
+            statement.setInt(1, category.getId());
 
             result = statement.executeUpdate();
-
         } catch (Exception e){
             getLogger().error(e.getMessage());
         }
 
-        if(result != 1)
-            throw new DAOException("Error deleting a user");
+        if(result !=1)
+            throw new DAOException("Error deleting a category");
     }
 
-
-    private Set<User> getResult(@Nonnull ResultSet datas) throws SQLException {
-        Set<User> result = new HashSet<>();
-
-        while(datas.next()){
-            User user = new User();
-            user.setId(datas.getInt("ID"));
-            user.setFirstName(datas.getString("FIRST_NAME"));
-            user.setLastName(datas.getString("LAST_NAME"));
-            user.setEmail(datas.getString("EMAIL"));
-            result.add(user);
-        }
-
-        return result;
-    }
 }
