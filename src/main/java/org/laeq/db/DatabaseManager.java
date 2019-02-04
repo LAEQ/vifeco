@@ -1,17 +1,29 @@
 package org.laeq.db;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 
 public class DatabaseManager {
+    private Logger logger;
+
     @Nonnull
     private DatabaseConfigInterface config;
 
     public DatabaseManager(DatabaseConfigInterface config) {
+        logger = LoggerFactory.getLogger(getClass().getCanonicalName());
+
         this.config = config;
     }
 
@@ -20,25 +32,20 @@ public class DatabaseManager {
         return DriverManager.getConnection(this.config.getUrl(), this.config.getUser(), this.config.getPassword());
     }
 
-    public boolean loadFixtures(String fixturesPath) throws IOException, SQLException {
-        BufferedReader reader = new BufferedReader(new FileReader(fixturesPath));
-        StringBuilder builder = new StringBuilder();
-        String line;
+    public boolean loadFixtures(URI fixtures) throws IOException, SQLException {
+        int result = 0;
 
+        String content = new String(Files.readAllBytes(Paths.get(fixtures)));
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
+             Statement stmt = connection.createStatement()){
 
-                if (line.contains(";")) {
-                    statement.addBatch(builder.toString());
-                    builder.delete(0, builder.length());
-                }
-            }
-
-            statement.executeBatch();
-
-            return true;
+            result = stmt.executeUpdate(content);
         }
+
+        return result == 0;
+    }
+
+    public boolean loadFixtures(URL fixtures) throws IOException, SQLException, URISyntaxException {
+        return loadFixtures(fixtures.toURI());
     }
 }

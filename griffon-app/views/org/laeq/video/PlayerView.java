@@ -114,7 +114,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         videoService.setUp(iconPane);
 
         mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue);
             iconPane.setPrefWidth(newValue.getWidth());
             iconPane.setPrefHeight(newValue.getHeight());
         });

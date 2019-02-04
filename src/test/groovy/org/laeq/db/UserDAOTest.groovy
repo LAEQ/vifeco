@@ -36,6 +36,21 @@ class UserDAOTest extends AbstractDAOTest {
         user == new User(1, "Luck", "Skywalker", "luke@maytheforcebewithyou.com")
     }
 
+    def "test multiple insertion"() {
+        setup:
+        User user = new User("Luck", "Skywalker", "luke@maytheforcebewithyou.com")
+        User user2 = new User("Luck2", "Skywalker2", "luke@maytheforcebewithyou.com")
+
+        when:
+        repository.insert(user)
+        repository.insert(user2)
+
+        then:
+        user == new User(1, "Luck", "Skywalker", "luke@maytheforcebewithyou.com")
+        user2 == new User(2,"Luck2", "Skywalker2", "luke@maytheforcebewithyou.com")
+
+    }
+
     def "test insertion with an invalid user (no name, email, ...)"(){
         setup:
         def user = new User("", "Skywalker", "luke@maytheforcebewithyou.com")
@@ -75,7 +90,7 @@ class UserDAOTest extends AbstractDAOTest {
     def "test delete an existing user"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -92,7 +107,7 @@ class UserDAOTest extends AbstractDAOTest {
     def "test delete an unknown user"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
             println e
         }

@@ -41,6 +41,28 @@ class DatabaseManagerTest extends Specification {
         process.destroy()
     }
 
+    def "test loadFixtures"() {
+        setup: "Create a database process"
+        def builder = createProcess()
+        def process = builder.start()
+
+        and:
+        def createSQL = this.class.getClassLoader().getResource("sql/create_tables.sql")
+
+        println createSQL
+
+        when:
+        DatabaseManager manager = new DatabaseManager(new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", ""))
+
+        def result = manager.loadFixtures(createSQL)
+
+        then:
+        result == true
+
+        cleanup: "destroy the database process"
+        process.destroy()
+    }
+
     def "test the create table sql"() {
         setup: "Create a database process"
         def builder = createProcess()

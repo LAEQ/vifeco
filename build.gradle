@@ -74,6 +74,7 @@ dependencies {
     compile 'org.kordamp.ikonli:ikonli-javafx:1.8.0'
     compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:1.8.0'
     compile 'eu.lestard:advanced-bindings:0.4.0'
+    compile 'org.hsqldb:hsqldb:2.4.1'
 
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
 

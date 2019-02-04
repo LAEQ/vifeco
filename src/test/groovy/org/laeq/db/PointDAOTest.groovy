@@ -14,7 +14,7 @@ class PointDAOTest extends AbstractDAOTest {
         setup:
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -57,7 +57,7 @@ class PointDAOTest extends AbstractDAOTest {
     def "test count"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -72,7 +72,7 @@ class PointDAOTest extends AbstractDAOTest {
     def "test findAll"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -87,7 +87,7 @@ class PointDAOTest extends AbstractDAOTest {
     def "test findByVideoAndUser"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -107,7 +107,7 @@ class PointDAOTest extends AbstractDAOTest {
     def "test delete"(){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -129,7 +129,7 @@ class PointDAOTest extends AbstractDAOTest {
     def "test delete does not exists"(){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
             println e
         }

@@ -35,8 +35,6 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             result = statement.executeUpdate();
 
             video.setId(nextId);
-
-            System.out.println(getLogger());
         } catch (Exception e){
             getLogger().error(e.getMessage());
         }
@@ -83,8 +81,6 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
     public void delete(Video video) throws DAOException {
         int result = 0;
         String query = "DELETE FROM VIDEO WHERE ID=?";
-
-        System.out.println(findAll().size());
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query);)

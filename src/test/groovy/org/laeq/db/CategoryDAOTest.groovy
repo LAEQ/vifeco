@@ -71,7 +71,7 @@ class CategoryDAOTest extends AbstractDAOTest {
     def "test delete an existing category"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
             println e
         }

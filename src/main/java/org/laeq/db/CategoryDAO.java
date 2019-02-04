@@ -57,7 +57,6 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             result = getResult(queryResult);
 
         } catch (SQLException e){
-            System.out.println(e);
             getLogger().error(e.getMessage());
         }
 

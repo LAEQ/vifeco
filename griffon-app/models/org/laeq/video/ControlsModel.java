@@ -38,7 +38,6 @@ public class ControlsModel extends AbstractGriffonModel {
         return volume;
     }
     public double getVolume() {
-        System.out.println("Get volume");
         return volume.get();
     }
     public void setVolume(int volume) {
