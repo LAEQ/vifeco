@@ -103,4 +103,48 @@ class PointDAOTest extends AbstractDAOTest {
         result.collect{it.id} == [2, 4, 3, 5, 1]
         result.collect{it.category.icon} == ["icons/icon2.png", "icons/icon1.png", "icons/icon1.png", "icons/icon3.png", "icons/icon1.png"]
     }
+
+    def "test delete"(){
+        setup:
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+        } catch (Exception e){
+            println e
+        }
+
+        User user = new User(1, 'luck', 'skywalker', 'luke@maytheforcebewithyou.com')
+        Category category = new Category(1,  'Moving truck', 'icons/icon1.png', 'A')
+        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00))
+
+
+        Point point = new Point(1, 12.0, 12.0, Duration.seconds(1200), video, user, category)
+
+        when:
+        repository.delete(point)
+
+        then:
+        notThrown DAOException
+    }
+
+    def "test delete does not exists"(){
+        setup:
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql").toURI().getPath())
+        } catch (Exception e){
+            println e
+        }
+
+        User user = new User(1, 'luck', 'skywalker', 'luke@maytheforcebewithyou.com')
+        Category category = new Category(1,  'Moving truck', 'icons/icon1.png', 'A')
+        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00))
+
+
+        Point point = new Point(-1, 12.0, 12.0, Duration.seconds(1200), video, user, category)
+
+        when:
+        repository.delete(point)
+
+        then:
+        thrown DAOException
+    }
 }

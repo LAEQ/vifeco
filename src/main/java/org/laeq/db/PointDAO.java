@@ -57,7 +57,6 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
         return result;
     }
 
-
     public int count() {
         int result = 0;
 
@@ -78,8 +77,6 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
 
         return result;
     }
-
-
 
     public SortedSet<Point> findByVideoAndUser(Video video, User user){
         String query = "SELECT P.ID, P.X, P.Y, P.START, C.ICON  FROM POINT AS P LEFT JOIN CATEGORY AS C ON P.CATEGORY_ID = C.ID WHERE VIDEO_ID = ? AND USER_ID = ? ORDER BY P.START;";
@@ -140,9 +137,20 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
     }
 
     @Override
-    public void delete(Point data) throws DAOException {
+    public void delete(Point point) throws DAOException {
+        int result = 0;
+        String query = "DELETE FROM POINT WHERE ID=?";
 
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setInt(1, point.getId());
+            result = statement.executeUpdate();
+        } catch (Exception e){
+            getLogger().error(e.getMessage());
+        }
 
-
+        if(result !=1)
+            throw new DAOException("Error deleting a point");
     }
 }

@@ -14,6 +14,16 @@ public class Point implements Comparable<Point> {
     public Point() {
     }
 
+    public Point(int id, double x, double y, Duration start, Video video, User user, Category category) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.start = start;
+        this.user = user;
+        this.category = category;
+        this.video = video;
+    }
+
     public Point(double x, double y, Duration start, Video video, User user, Category category) {
         this.x = x;
         this.y = y;
