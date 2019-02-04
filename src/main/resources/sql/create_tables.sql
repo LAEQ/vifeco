@@ -13,7 +13,7 @@ CREATE TABLE USER (
 CREATE TABLE CATEGORY (
        ID int NOT NULL PRIMARY KEY,
        NAME varchar(30) NOT NULL,
-       ICON varchar(255) NOT NULL,
+       ICON varchar(3000) NOT NULL,
        SHORTCUT varchar(1) NOT NULL,
        CONSTRAINT category_shortcut_uniq UNIQUE (SHORTCUT)
 );

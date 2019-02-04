@@ -9,18 +9,26 @@ public class Point implements Comparable<Point> {
     private Duration start;
     private User user;
     private Category category;
+    private Video video;
 
     public Point() {
     }
 
-    public Point(double x, double y, Duration start, User user, Category category) {
+    public Point(double x, double y, Duration start, Video video, User user, Category category) {
         this.x = x;
         this.y = y;
         this.start = start;
         this.user = user;
         this.category = category;
+        this.video = video;
     }
 
+    public Video getVideo() {
+        return video;
+    }
+    public void setVideo(Video video) {
+        this.video = video;
+    }
     public int getId() {
         return id;
     }
