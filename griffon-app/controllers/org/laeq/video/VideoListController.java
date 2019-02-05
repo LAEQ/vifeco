@@ -7,38 +7,49 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.db.DatabaseService;
+import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class VideoListController extends AbstractGriffonController {
-    private VideoListModel model;
-
-    @MVCMember
-    public void setModel(@Nonnull VideoListModel model) {
-        this.model = model;
-    }
+    @MVCMember @Nonnull private VideoListModel model;
+    @MVCMember @Nonnull private VideoListView view;
+    @Inject private DatabaseService service;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
 
-        RunnableWithArgs runnable = new RunnableWithArgs() {
-            @Override
-            public void run(@Nullable Object... objects) {
-                System.out.println("VideoListController ping runnable");
-                System.out.println(objects);
-            }
-        };
+        this.model.addVideos(service.getVideoUser());
 
-        getApplication().getEventRouter().addEventListener("Ping", runnable);
-    }
 
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void click() {
-        int count = Integer.parseInt(model.getClickCount());
-        model.setClickCount(String.valueOf(count + 1));
+//        this.model.addVideos(list);
+//
+//        RunnableWithArgs runnable = new RunnableWithArgs() {
+//            @Override
+//            public void run(@Nullable Object... objects) {
+//                System.out.println("VideoListController ping runnable");
+//                System.out.println(objects);
+//            }
+//        };
+//
+//        getApplication().getEventRouter().addEventListener("Ping", runnable);
+
+        getApplication().getEventRouter().addEventListener("database.video.created", videos -> {
+//            Video video = (Video) videos[0];
+
+            runInsideUISync(() -> {
+//                this.model.addVideo(video);
+            });
+        });
+
+
     }
 }

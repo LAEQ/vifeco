@@ -7,11 +7,13 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.scene.input.KeyEvent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.model.Video;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -48,6 +50,10 @@ public class PlayerController extends AbstractGriffonController {
         });
     }
 
+    public void dispatchVideoCreated(Video video){
+        getApplication().getEventRouter().publishEventAsync("database.model.created", Arrays.asList(video));
+    }
+
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void play() {
@@ -71,7 +77,6 @@ public class PlayerController extends AbstractGriffonController {
     public void backVideo() {
         dialogService.dialog();
     }
-
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)

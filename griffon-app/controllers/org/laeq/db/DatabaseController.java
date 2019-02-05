@@ -7,11 +7,15 @@ import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import griffon.transform.Threading;
+import org.laeq.model.Video;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -33,9 +37,16 @@ public class DatabaseController extends AbstractGriffonController {
             getLog().error("Cannot create the database process." + e.getMessage());
         }
 
+        getApplication().getEventRouter().addEventListener("database.model.created", objects -> {
+            Video video = (Video) objects[0];
 
-
-
+            try {
+                service.create(video);
+                getApplication().getEventRouter().publishEventAsync("database.video.created", Arrays.asList(video));
+            } catch (Exception e) {
+                getLog().error(e.getMessage());
+            }
+        });
     }
 
     @Override

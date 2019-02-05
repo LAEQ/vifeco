@@ -10,11 +10,11 @@ import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
-import org.laeq.model.User;
+import org.laeq.model.Video;
+import org.laeq.model.VideoUser;
 
 import javax.annotation.Nonnull;
 
@@ -31,7 +31,7 @@ public class VideoListView extends AbstractJavaFXGriffonView {
 
     @FXML private AnchorPane videoListPane;
 
-    @FXML private TableView<User> videoListTable;
+    @FXML private TableView<VideoUser> videoListTable;
 
     @FXML private TabPane tabPane;
 
@@ -40,35 +40,27 @@ public class VideoListView extends AbstractJavaFXGriffonView {
         return tabPane;
     }
 
+    private ObservableList<VideoUser> videoList;
+
     @Override
     public void initUI() {
         Node node = loadFromFXML();
 
-        TableColumn firstNameCol = new TableColumn("First Name");
-        TableColumn lastNameCol = new TableColumn("Last Name");
-        TableColumn emailCol = new TableColumn("Email");
+        videoList = FXCollections.observableList(this.model.getVideoList());
 
-        videoListTable.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
+        TableColumn<VideoUser, String> firstNameColumn = new TableColumn("Video path");
+        TableColumn<VideoUser, String> durationColumne = new TableColumn("Duration");
 
-        final ObservableList<User> data = FXCollections.observableArrayList(
-                new User("Jacob", "Smith", "jacob.smith@example.com"),
-                new User("Isabella", "Johnson", "isabella.johnson@example.com"),
-                new User("Ethan", "Williams", "ethan.williams@example.com"),
-                new User("Emma", "Jones", "emma.jones@example.com"),
-                new User("Michael", "Brown", "michael.brown@example.com")
-        );
+        videoListTable.getColumns().addAll(firstNameColumn, durationColumne);
+        firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getVideo().pathProperty());
+        durationColumne.setCellValueFactory(cellData -> cellData.getValue().getVideo().durationProperty().asString());
 
-        firstNameCol.setCellValueFactory(new PropertyValueFactory<
-                User, String>("firstName"));
-        lastNameCol.setCellValueFactory(new PropertyValueFactory<
-                User, String>("lastName"));
-        emailCol.setCellValueFactory(new PropertyValueFactory<
-                User, String>("email"));
-
-        videoListTable.setItems(data);
-//        videoListPane.getChildren().add(videoListTable);
-
+        videoListTable.setItems(videoList);
         parentView.getMiddlePane().getItems().add(node);
+    }
+
+    public void addVideo(VideoUser video){
+        videoList.add(video);
     }
 
 }

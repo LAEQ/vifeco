@@ -22,6 +22,7 @@ import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 import org.laeq.icon.VideoPointService;
+import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -153,7 +154,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
                 media = new Media(file.getCanonicalFile().toURI().toString());
                 mediaPlayer = new MediaPlayer(media);
-                mediaPlayer.setOnReady(() -> {duration = mediaPlayer.getMedia().getDuration();});
+                mediaPlayer.setOnReady(() -> {
+                    duration = mediaPlayer.getMedia().getDuration();
+                    Video video = new Video(filePath, mediaPlayer.getMedia().getDuration());
+                    controller.dispatchVideoCreated(video);
+                });
+
                 mediaView.setMediaPlayer(mediaPlayer);
                 playActionTarget.setDisable(false);
 
@@ -169,6 +175,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 });
 
                 initPlayer();
+
 
             } catch (IOException | MediaException e) {
                 getLog().error(String.format("MediaException: %s\n", e.toString()));
