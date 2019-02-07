@@ -70,6 +70,8 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             video.setId(datas.getInt("ID"));
             video.setPath(datas.getString("PATH"));
             video.setDuration((datas.getDouble("DURATION")));
+            video.setCreatedAt(datas.getTimestamp("CREATED_AT"));
+            video.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
             result.add(video);
         }
 

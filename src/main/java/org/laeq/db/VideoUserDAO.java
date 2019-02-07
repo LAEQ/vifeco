@@ -65,6 +65,7 @@ public class VideoUserDAO extends AbstractDAO {
 
 
             videoUser.setTotal(datas.getInt("TOTAL"));
+            videoUser.setLast(datas.getDouble("LAST"));
 
 
             result.add(videoUser);

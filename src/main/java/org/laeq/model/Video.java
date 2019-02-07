@@ -5,25 +5,32 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.util.Duration;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.Temporal;
+import java.util.Calendar;
 import java.util.Objects;
 
-public class Video implements Entity{
+public class Video extends Entity{
     private Integer id;
     private SimpleStringProperty path;
     private SimpleStringProperty name;
     private SimpleDoubleProperty duration;
+    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+    private Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
+    private CategoryCollection categoryCollection;
+
 
     public Video(Integer id, String path, Duration duration) {
-
         this.id = id;
         this.path = new SimpleStringProperty(this, "path", path);
-        this.name = new SimpleStringProperty(Paths.get(path).getFileName().toString());
+        this.name = new SimpleStringProperty(this, "name", pathToName(path));
         this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
     }
 
     public Video(String path, Duration duration) {
         this.path = new SimpleStringProperty(this, "test", path);
-        this.name = new SimpleStringProperty(this, "name", Paths.get(path).getFileName().toString());
+        this.name = new SimpleStringProperty(this, "name", pathToName(path));
         this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
     }
 
@@ -41,6 +48,7 @@ public class Video implements Entity{
     }
     public void setPath(String path) {
         this.path.set(path);
+        this.name.set(pathToName(path));
     }
     public String getName() {
         return name.get();
@@ -59,6 +67,18 @@ public class Video implements Entity{
     }
     public void setDuration(double duration) {
         this.duration.set(duration);
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    private String pathToName(String path){
+        return Paths.get(path).getFileName().toString();
     }
 
     @Override

@@ -63,6 +63,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         Scene scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
         scene.setRoot(generateView());
+        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
         return scene;
     }
 
@@ -80,7 +81,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         middlePane.prefHeight(-1);
         middlePane.prefWidth(-1);
         middlePane.setDividerPositions(0.3, 0.7);
-        middlePane.setStyle("-fx-border-color: black");
+//        middlePane.setStyle("-fx-border-color: black");
         root.setVgrow(middlePane, Priority.ALWAYS);
 
 

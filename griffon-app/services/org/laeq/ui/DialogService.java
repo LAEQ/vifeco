@@ -26,8 +26,23 @@ public class DialogService extends AbstractGriffonService {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             formatSystem();
         }
-
     }
+
+    public void dialog(String text){
+        ButtonType btn = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        Dialog<ButtonType> dialog = new Dialog<>();
+
+        dialog.setContentText(text);
+        dialog.getDialogPane().getButtonTypes().addAll(btn);
+        boolean disabled = false;
+        dialog.getDialogPane().lookupButton(btn).setDisable(disabled);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            formatSystem();
+        }
+    }
+
 
     private void formatSystem() {
         System.out.println("Format system");

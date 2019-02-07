@@ -1,12 +1,14 @@
 package org.laeq.model;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class User implements Entity{
+public class User extends Entity{
     private SimpleIntegerProperty id;
     private SimpleStringProperty firstName;
     private SimpleStringProperty lastName;
@@ -85,5 +87,11 @@ public class User implements Entity{
     @Override
     public int hashCode() {
         return Objects.hash(id.getValue(), firstName.getValue(), lastName.getValue(), email.getValue());
+    }
+
+    public ObservableValue<String> getName() {
+        return Bindings.createStringBinding(() -> {
+            return String.format("%s %s", getFirstName(), getLastName());
+        });
     }
 }

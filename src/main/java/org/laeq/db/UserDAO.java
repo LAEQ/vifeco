@@ -91,6 +91,9 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
             user.setFirstName(datas.getString("FIRST_NAME"));
             user.setLastName(datas.getString("LAST_NAME"));
             user.setEmail(datas.getString("EMAIL"));
+            user.setCreatedAt(datas.getTimestamp("CREATED_AT"));
+            user.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
+
             result.add(user);
         }
 

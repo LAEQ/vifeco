@@ -2,7 +2,9 @@ package org.laeq.model;
 
 import javafx.util.Duration;
 
-public class Point implements Comparable<Point> {
+import java.util.Objects;
+
+public class Point extends Entity implements Comparable<Point> {
     private int id;
     private double x;
     private double y;
@@ -78,7 +80,35 @@ public class Point implements Comparable<Point> {
 
     @Override
     public int compareTo(Point o) {
-        return this.start.compareTo(o.start);
+        int compare = this.start.compareTo(o.start);
+
+        if(compare != 0){
+            return compare;
+        }
+
+        double positionCompare = this.x - o.x;
+
+        return (positionCompare < 0)? -1 : 1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return id == point.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "id=" + id +
+                '}';
     }
 }
 

@@ -4,7 +4,7 @@ import javafx.util.Duration
 import org.laeq.model.*
 
 class PointDAOTest extends AbstractDAOTest {
-    def repository;
+    PointDAO repository;
 
     def setup() {
         repository = new PointDAO(manager, "point_id")
@@ -98,11 +98,34 @@ class PointDAOTest extends AbstractDAOTest {
         when:
         def result = repository.findByVideoAndUser(video, user)
 
+
         then:
         result.size() == 5
         result.collect{it.id} == [2, 4, 3, 5, 1]
         result.collect{it.category.icon} == ["icons/icon2.png", "icons/icon1.png", "icons/icon1.png", "icons/icon3.png", "icons/icon1.png"]
     }
+
+    def "test findByVideoAndUser 2"() {
+        setup:
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+        } catch (Exception e){
+            println e
+        }
+
+        def user = new User(2, "mock", "mock", "mock@email.mock")
+        def video = new Video(1, "/path/to/video.mp4", Duration.millis(60000))
+
+        when:
+        def result = repository.findByVideoAndUser(video, user)
+
+
+        then:
+        result.size() == 3
+        result.collect{it.id} == [9, 10, 8]
+        result.collect{it.category.icon} == ["icons/icon2.png", "icons/icon3.png", "icons/icon1.png"]
+    }
+
 
     def "test delete"(){
         setup:

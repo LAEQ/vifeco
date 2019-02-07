@@ -56,7 +56,6 @@ public class CategoryView extends AbstractJavaFXGriffonView {
                 CategoryGroup group = new CategoryGroup(categories[i].getIcon());
                 group.setStyle("-fx-background-color: rgb(250,250,250);");
 
-
                 group.setMaxWidth(Control.USE_COMPUTED_SIZE);
                 group.setMinWidth(Control.USE_COMPUTED_SIZE);
                 group.setPrefWidth(Control.USE_COMPUTED_SIZE);

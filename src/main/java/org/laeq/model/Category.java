@@ -2,7 +2,7 @@ package org.laeq.model;
 
 import java.util.Objects;
 
-public class Category {
+public class Category extends Entity{
     private Integer id;
     private String name;
     private String icon;
@@ -23,7 +23,7 @@ public class Category {
         this.shortcut = shortcut;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
     public void setId(Integer id) {
@@ -56,15 +56,12 @@ public class Category {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return id.equals(category.id) &&
-                name.equals(category.name) &&
-                icon.equals(category.icon) &&
-                shortcut.equals(category.shortcut);
+        return id.equals(category.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, icon, shortcut);
+        return Objects.hash(id, name);
     }
 
     @Override

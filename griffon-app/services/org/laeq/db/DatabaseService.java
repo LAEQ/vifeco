@@ -3,6 +3,7 @@ package org.laeq.db;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
+import org.laeq.model.Point;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.model.VideoUser;
@@ -13,6 +14,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
@@ -35,6 +37,8 @@ public class DatabaseService extends AbstractGriffonService {
 
         URL sequenceQuery = getClass().getClassLoader().getResource("sql/create_sequences.sql");
         manager.loadFixtures(sequenceQuery);
+
+
     }
 
     public void create(Video video) throws SQLException, DAOException {
@@ -47,9 +51,16 @@ public class DatabaseService extends AbstractGriffonService {
         return new VideoUserDAO(manager, "not_applicable").findAll();
     }
 
-    public Set<Video> findAll() {
+    public Set<Video> findAll(VideoUser videoUser) {
         VideoDAO dao = new VideoDAO(manager, "video_id");
 
         return dao.findAll();
+    }
+
+    public SortedSet<Point> findByVideoUser(VideoUser videoUser){
+
+        PointDAO dao = new PointDAO(manager, "point_id");
+
+        return dao.findByVideoAndUser(videoUser.getVideo(), videoUser.getUser());
     }
 }
