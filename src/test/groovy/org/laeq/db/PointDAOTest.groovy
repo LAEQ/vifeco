@@ -5,9 +5,11 @@ import org.laeq.model.*
 
 class PointDAOTest extends AbstractDAOTest {
     PointDAO repository;
+    CategoryCollection categoryCollection;
 
     def setup() {
         repository = new PointDAO(manager, "point_id")
+        categoryCollection = new CategoryCollection(1, "mock")
     }
 
     def "test insertion"() {
@@ -20,7 +22,7 @@ class PointDAOTest extends AbstractDAOTest {
 
         User user = new User(1, 'luck', 'skywalker', 'luke@maytheforcebewithyou.com')
         Category category = new Category(1,  'Moving truck', 'icons/icon1.png', 'A')
-        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00))
+        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), categoryCollection)
 
 
         Point point = new Point(12.0, 12.0, Duration.seconds(1200), video, user, category)
@@ -92,7 +94,7 @@ class PointDAOTest extends AbstractDAOTest {
         }
 
         def user = new User(1, "mock", "mock", "mock@email.mock")
-        def video = new Video(1, "/path/to/video.mp4", Duration.millis(60000))
+        def video = new Video(1, "/path/to/video.mp4", Duration.millis(60000), categoryCollection)
 
         when:
         def result = repository.findByVideoAndUser(video, user)
@@ -113,7 +115,7 @@ class PointDAOTest extends AbstractDAOTest {
         }
 
         def user = new User(2, "mock", "mock", "mock@email.mock")
-        def video = new Video(1, "/path/to/video.mp4", Duration.millis(60000))
+        def video = new Video(1, "/path/to/video.mp4", Duration.millis(60000), categoryCollection)
 
         when:
         def result = repository.findByVideoAndUser(video, user)
@@ -136,7 +138,7 @@ class PointDAOTest extends AbstractDAOTest {
 
         User user = new User(1, 'luck', 'skywalker', 'luke@maytheforcebewithyou.com')
         Category category = new Category(1,  'Moving truck', 'icons/icon1.png', 'A')
-        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00))
+        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), categoryCollection)
 
 
         Point point = new Point(1, 12.0, 12.0, Duration.seconds(1200), video, user, category)
@@ -158,7 +160,7 @@ class PointDAOTest extends AbstractDAOTest {
 
         User user = new User(1, 'luck', 'skywalker', 'luke@maytheforcebewithyou.com')
         Category category = new Category(1,  'Moving truck', 'icons/icon1.png', 'A')
-        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00))
+        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), categoryCollection)
 
 
         Point point = new Point(-1, 12.0, 12.0, Duration.seconds(1200), video, user, category)

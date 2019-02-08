@@ -22,6 +22,7 @@ import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 import org.laeq.icon.VideoPointService;
+import org.laeq.model.CategoryCollection;
 import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
@@ -156,7 +157,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 mediaPlayer = new MediaPlayer(media);
                 mediaPlayer.setOnReady(() -> {
                     duration = mediaPlayer.getMedia().getDuration();
-                    Video video = new Video(filePath, mediaPlayer.getMedia().getDuration());
+                    CategoryCollection categoryCollection = new CategoryCollection(1, "get from dao");
+                    Video video = new Video(filePath, mediaPlayer.getMedia().getDuration(), categoryCollection);
                     controller.dispatchVideoCreated(video);
                 });
 
