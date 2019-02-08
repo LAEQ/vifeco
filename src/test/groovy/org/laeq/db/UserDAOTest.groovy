@@ -119,6 +119,23 @@ class UserDAOTest extends AbstractDAOTest {
         user == new User(1,"Luck", "Skywalker", "luke@maytheforcebewithyou.com")
     }
 
+    def "test set active user"() {
+        setup:
+        try {
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+        } catch (Exception e) {
+            println e
+        }
+
+        when:
+        User user = new User(2, 'Darth', 'Vador', 'darth@iamyourfather.com')
+        repository.setActive(user)
+
+        then:
+        user.isLoggedIn() == true
+        repository.findById(1).isLoggedIn() == false
+    }
+
     def "test delete an unknown user"() {
         setup:
         try{

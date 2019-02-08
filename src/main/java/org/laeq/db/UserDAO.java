@@ -42,6 +42,31 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
 
     }
 
+    public void setActive(User user) throws SQLException, DAOException {
+        try(Connection connection = getManager().getConnection())
+        {
+            String query = "UPDATE USER SET IS_LOGGED_IN = false;";
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            int result = statement.executeUpdate();
+
+            connection.commit();
+
+            String query2 = "UPDATE USER SET IS_LOGGED_IN = true WHERE ID = ?;";
+            PreparedStatement statement2 = connection.prepareStatement(query2);
+
+            statement2.setInt(1, user.getId());
+
+            int result2 = statement2.executeUpdate();
+
+            user.setLoggedIn(true);
+
+            if(result2 != 1){
+                throw new DAOException("UserDAO: no user is active.");
+            }
+        }
+    }
+
     public User findActive() throws DAOException, SQLException {
         String query = "SELECT * from USER WHERE IS_LOGGED_IN = true;";
 
@@ -52,6 +77,23 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
 
             if(result.next()){
                return generateUser(result);
+            }
+
+            throw new DAOException("UserDAO: no user is active.");
+        }
+    }
+
+    public User findById(int id) throws DAOException, SQLException {
+        String query = "SELECT * from USER WHERE ID = ?;";
+
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setInt(1, id);
+            ResultSet result = statement.executeQuery();
+
+            if(result.next()){
+                return generateUser(result);
             }
 
             throw new DAOException("UserDAO: no user is active.");
