@@ -2,6 +2,7 @@ package org.laeq.db;
 
 import org.laeq.model.Category;
 import org.laeq.model.CategoryCollection;
+import org.laeq.model.User;
 
 import javax.annotation.Nonnull;
 import java.sql.*;
@@ -51,6 +52,38 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
         } catch (Exception e){
             getLogger().error(e.getMessage());
             throw new DAOException("Error insert CategoryCollection: " + e.getMessage());
+        }
+    }
+
+    public void setDefault(CategoryCollection categoryCollection) throws SQLException, DAOException {
+        try(Connection connection = getManager().getConnection())
+        {
+            String query2 = "UPDATE CATEGORY_COLLECTION SET IS_ACTIVE = true WHERE ID = ?;";
+            PreparedStatement statement2 = connection.prepareStatement(query2);
+
+            statement2.setInt(1, categoryCollection.getId());
+
+            int result2 = statement2.executeUpdate();
+
+            categoryCollection.setIsDefault(true);
+
+            if(result2 != 1){
+                throw new DAOException("CATEGORY_COLLECTION: no category collection is active.");
+            }
+        }
+    }
+
+    public CategoryCollection findDefault() throws SQLException {
+        String query = "SELECT C.ID as CAT_ID, C.NAME AS CAT_NAME, C.ICON, C.SHORTCUT, CC.ID, CC.NAME, CC.IS_DEFAULT as IS_DEFAULT FROM CATEGORY_COLLECTION as CC" +
+                " LEFT JOIN CATEGORY_COLLECTION_CATEGORY as CCC ON CC.ID = CCC.CATEGORY_COLLECTION_ID " +
+                "JOIN CATEGORY as C ON C.ID = CCC.CATEGORY_ID WHERE CC.IS_DEFAULT = true";
+
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);){
+
+            ResultSet queryResult = statement.executeQuery();
+
+            return getCategoryResult(queryResult);
         }
     }
 
@@ -118,7 +151,6 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
                 PreparedStatement statement1 = connection.prepareStatement(query2);
 
                 for (Category category: newCategories) {
-                    System.out.println(category.getId());
                     statement1.setInt(1, categoryCollection.getId());
                     statement1.setInt(2, category.getId());
 
@@ -159,11 +191,59 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
 
     @Override
     public Set<CategoryCollection> findAll() {
-        return null;
+
+        Set<CategoryCollection> result = new HashSet<>();
+
+        String query = "SELECT C.ID as CAT_ID, C.NAME AS CAT_NAME, C.ICON, C.SHORTCUT, CC.ID, CC.NAME, CC.IS_DEFAULT as IS_DEFAULT FROM CATEGORY_COLLECTION as CC" +
+                " LEFT JOIN CATEGORY_COLLECTION_CATEGORY as CCC ON CC.ID = CCC.CATEGORY_COLLECTION_ID" +
+                " JOIN CATEGORY as C ON C.ID = CCC.CATEGORY_ID  ORDER BY CC.ID ASC;";
+
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);){
+
+
+            ResultSet queryResult = statement.executeQuery();
+
+            int id = 0;
+
+            CategoryCollection categoryCollection = null;
+
+            while(queryResult.next()){
+                id = queryResult.getInt("ID");
+
+                if(categoryCollection != null && categoryCollection.getId() == id) {
+                    Category category = new Category();
+                    category.setId(queryResult.getInt("CAT_ID"));
+                    category.setName(queryResult.getString("CAT_NAME"));
+                    category.setIcon(queryResult.getString("ICON"));
+                    category.setShortcut(queryResult.getString("SHORTCUT"));
+                    categoryCollection.addCategory(category);
+                } else {
+                    categoryCollection = new CategoryCollection();
+                    categoryCollection.setId(id);
+                    categoryCollection.setName(queryResult.getString("NAME"));
+                    categoryCollection.setIsDefault(queryResult.getBoolean("IS_DEFAULT"));
+
+                    Category category = new Category();
+                    category.setId(queryResult.getInt("CAT_ID"));
+                    category.setName(queryResult.getString("CAT_NAME"));
+                    category.setIcon(queryResult.getString("ICON"));
+                    category.setShortcut(queryResult.getString("SHORTCUT"));
+                    categoryCollection.addCategory(category);
+
+                    result.add(categoryCollection);
+                }
+            }
+
+        } catch (SQLException e) {
+            getLogger().error("Error catageryCollection: " + e.getMessage());
+        }
+
+        return result;
     }
 
     public CategoryCollection findByID(int id) throws SQLException {
-        String query = "SELECT C.ID as CAT_ID, C.NAME AS CAT_NAME, C.ICON, C.SHORTCUT, CC.ID, CC.NAME FROM CATEGORY_COLLECTION as CC" +
+        String query = "SELECT C.ID as CAT_ID, C.NAME AS CAT_NAME, C.ICON, C.SHORTCUT, CC.ID, CC.NAME, CC.IS_DEFAULT as IS_DEFAULT FROM CATEGORY_COLLECTION as CC" +
                 " LEFT JOIN CATEGORY_COLLECTION_CATEGORY as CCC ON CC.ID = CCC.CATEGORY_COLLECTION_ID " +
                 "JOIN CATEGORY as C ON C.ID = CCC.CATEGORY_ID WHERE CC.ID = ?";
 
@@ -185,6 +265,7 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
         while(datas.next()){
             categoryCollection.setId(datas.getInt("ID"));
             categoryCollection.setName(datas.getString("NAME"));
+            categoryCollection.setIsDefault(datas.getBoolean("IS_DEFAULT"));
 
             Category category = new Category();
             category.setId(datas.getInt("CAT_ID"));

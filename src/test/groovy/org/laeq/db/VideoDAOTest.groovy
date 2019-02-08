@@ -19,7 +19,7 @@ class VideoDAOTest extends AbstractDAOTest {
             println e
         }
 
-        categoryCollection = new CategoryCollection(1, "test");
+        categoryCollection = new CategoryCollection(1, "test", false);
     }
 
     def "test get next id"() {

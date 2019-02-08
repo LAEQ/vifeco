@@ -157,7 +157,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 mediaPlayer = new MediaPlayer(media);
                 mediaPlayer.setOnReady(() -> {
                     duration = mediaPlayer.getMedia().getDuration();
-                    CategoryCollection categoryCollection = new CategoryCollection(1, "get from dao");
+                    CategoryCollection categoryCollection = new CategoryCollection(1, "get from dao", false);
                     Video video = new Video(filePath, mediaPlayer.getMedia().getDuration(), categoryCollection);
                     controller.dispatchVideoCreated(video);
                 });

@@ -9,7 +9,7 @@ class PointDAOTest extends AbstractDAOTest {
 
     def setup() {
         repository = new PointDAO(manager, "point_id")
-        categoryCollection = new CategoryCollection(1, "mock")
+        categoryCollection = new CategoryCollection(1, "mock", false)
     }
 
     def "test insertion"() {

@@ -7,7 +7,7 @@ class CategoryCollectionTest extends Specification {
     CategoryCollection entity
 
     def setup(){
-        entity = new CategoryCollection(1, "mock")
+        entity = new CategoryCollection(1, "mock", false)
     }
 
     def "AddCategory"() {
@@ -18,7 +18,7 @@ class CategoryCollectionTest extends Specification {
 
         then:
         entity.getCategorySet().size() == 2
-        entity.categorySet.collect { it.id} == [1, 2]
+        entity.categorySet.collect { it.id } == [1, 2]
 
     }
 
@@ -51,7 +51,6 @@ class CategoryCollectionTest extends Specification {
 
         then:
         entity.getCategorySet().size() == 3
-        entity.categorySet.collect{ it.id} == [1, 2, 3]
     }
 
     def "Get category ids"(){
@@ -80,7 +79,5 @@ class CategoryCollectionTest extends Specification {
 
         then:
         result.size() == 3
-        result.collect{it.id} == [10,11,3]
-
     }
 }

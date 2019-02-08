@@ -8,9 +8,9 @@ INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id
 INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving bike', 'icons/icon3.png', 'C');
 INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving bus', 'icons/icon4.png', 'D');
 
-INSERT INTO category_collection(ID, NAME) VALUES(NEXT VALUE FOR category_collection_id, 'Default');
-INSERT INTO category_collection(ID, NAME) VALUES(NEXT VALUE FOR category_collection_id, 'Collection 1');
-INSERT INTO category_collection(ID, NAME) VALUES(NEXT VALUE FOR category_collection_id, 'Collection 2');
+INSERT INTO category_collection(ID, NAME, IS_DEFAULT) VALUES(NEXT VALUE FOR category_collection_id, 'Default', true);
+INSERT INTO category_collection(ID, NAME, IS_DEFAULT) VALUES(NEXT VALUE FOR category_collection_id, 'Collection 1', false);
+INSERT INTO category_collection(ID, NAME, IS_DEFAULT) VALUES(NEXT VALUE FOR category_collection_id, 'Collection 2', false);
 
 INSERT INTO category_collection_category(CATEGORY_COLLECTION_ID, CATEGORY_ID) VALUES(1, 1);
 INSERT INTO category_collection_category(CATEGORY_COLLECTION_ID, CATEGORY_ID) VALUES(1, 2);
