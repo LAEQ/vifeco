@@ -1,14 +1,25 @@
 package org.laeq.db
 
 import org.laeq.model.Category
+import org.laeq.model.CategoryCollection
 import org.laeq.model.Video
 import javafx.util.Duration;
 
 class VideoDAOTest extends AbstractDAOTest {
     DAOInterface<Video> repository
 
+    CategoryCollection categoryCollection;
+
     def setup() {
         repository = new VideoDAO(manager, "category_id")
+
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+        } catch (Exception e){
+            println e
+        }
+
+        categoryCollection = new CategoryCollection(1, "test");
     }
 
     def "test get next id"() {
@@ -18,25 +29,25 @@ class VideoDAOTest extends AbstractDAOTest {
         int result = repository.getNextValue()
 
         then:
-        result == 3
+        result == 7
     }
 
     def "test insertion"() {
         setup:
-        Video video = new Video("path/to/video/name.mp4", Duration.millis(3600000))
+        Video video = new Video("path/to/video/name.mp4", Duration.millis(3600000), categoryCollection)
 
         when:
         repository.insert(video)
 
         then:
-        video == new Video(1, "path/to/video/name.mp4", Duration.millis(3600000))
+        video == new Video(5, "path/to/video/name.mp4", Duration.millis(3600000), categoryCollection)
     }
 
     def "test findAll"(){
         setup:
-        Video video1 = new Video("path/to/video/name.mp4", Duration.millis(3600000))
-        Video video2 = new Video("path/to/video/name2.mp4", Duration.millis(3600000))
-        Video video3 = new Video("path/to/video/name3.mp4", Duration.millis(3600000))
+        Video video1 = new Video("path/to/video/name.mp4", Duration.millis(3600000), categoryCollection)
+        Video video2 = new Video("path/to/video/name2.mp4", Duration.millis(3600000), categoryCollection)
+        Video video3 = new Video("path/to/video/name3.mp4", Duration.millis(3600000), categoryCollection)
 
         repository.insert(video1)
         repository.insert(video2)
@@ -46,7 +57,7 @@ class VideoDAOTest extends AbstractDAOTest {
         def result = repository.findAll()
 
         then:
-        result.size() == 3
+        result.size() == 7
     }
 
     def "test findAll but empty"() {
@@ -54,7 +65,7 @@ class VideoDAOTest extends AbstractDAOTest {
         def result = repository.findAll()
 
         then:
-        result.size() == 0
+        result.size() == 4
     }
 
     def "test delete an existing video"() {
@@ -65,7 +76,7 @@ class VideoDAOTest extends AbstractDAOTest {
             println e
         }
 
-        Video video = new Video(1, "path/to/video.mp4", Duration.millis(3600000))
+        Video video = new Video(1, "path/to/video.mp4", Duration.millis(3600000), categoryCollection)
 
         when:
         repository.delete(video)
@@ -82,7 +93,7 @@ class VideoDAOTest extends AbstractDAOTest {
             println e
         }
 
-        def video = new Video(-1, "path/to/video.mp4", Duration.millis(3600000))
+        def video = new Video(-1, "path/to/video.mp4", Duration.millis(3600000), categoryCollection)
 
         when:
         repository.delete(video)

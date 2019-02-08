@@ -10,8 +10,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
+
+    private CategoryCollectionDAO categoryCollectionDAO;
+
     public VideoDAO(@Nonnull DatabaseManager manager, String sequenceName) {
         super(manager, sequenceName);
+
+        categoryCollectionDAO = new CategoryCollectionDAO(manager, CategoryCollectionDAO.sequence_name);
     }
 
     @Override
@@ -23,7 +28,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             throw new DAOException("Cannot generate the next video id from the database.");
         }
 
-        String query = "INSERT INTO VIDEO (ID, PATH, DURATION) VALUES (?, ?, ?);";
+        String query = "INSERT INTO VIDEO (ID, PATH, DURATION, CATEGORY_COLLECTION_ID) VALUES (?, ?, ?, ?);";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
@@ -31,6 +36,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             statement.setInt(1, nextId);
             statement.setString(2, video.getPath());
             statement.setDouble(3, video.getDuration());
+            statement.setInt(4, video.getCategoryCollection().getId());
 
             result = statement.executeUpdate();
 
@@ -66,16 +72,22 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
         Set<Video> result = new HashSet<>();
 
         while(datas.next()){
-            Video video = new Video();
-            video.setId(datas.getInt("ID"));
-            video.setPath(datas.getString("PATH"));
-            video.setDuration((datas.getDouble("DURATION")));
-            video.setCreatedAt(datas.getTimestamp("CREATED_AT"));
-            video.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
-            result.add(video);
+            result.add(generateVideo(datas));
         }
 
         return result;
+    }
+
+    private Video generateVideo(ResultSet datas) throws SQLException {
+        Video video = new Video();
+        video.setId(datas.getInt("ID"));
+        video.setPath(datas.getString("PATH"));
+        video.setDuration((datas.getDouble("DURATION")));
+        video.setCreatedAt(datas.getTimestamp("CREATED_AT"));
+        video.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
+        video.setCategoryCollection(categoryCollectionDAO.findByID(datas.getInt("CATEGORY_COLLECTION_ID")));
+
+        return video;
     }
 
 

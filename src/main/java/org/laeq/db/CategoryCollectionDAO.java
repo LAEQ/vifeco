@@ -8,6 +8,8 @@ import java.sql.*;
 import java.util.*;
 
 public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<CategoryCollection> {
+    public static String sequence_name = "category_collection_id";
+
     public CategoryCollectionDAO(@Nonnull DatabaseManager manager, String sequenceName) {
         super(manager, sequenceName);
     }
@@ -160,7 +162,7 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
         return null;
     }
 
-    public CategoryCollection findByID(int id) throws Exception {
+    public CategoryCollection findByID(int id) throws SQLException {
         String query = "SELECT C.ID as CAT_ID, C.NAME AS CAT_NAME, C.ICON, C.SHORTCUT, CC.ID, CC.NAME FROM CATEGORY_COLLECTION as CC" +
                 " LEFT JOIN CATEGORY_COLLECTION_CATEGORY as CCC ON CC.ID = CCC.CATEGORY_COLLECTION_ID " +
                 "JOIN CATEGORY as C ON C.ID = CCC.CATEGORY_ID WHERE CC.ID = ?";

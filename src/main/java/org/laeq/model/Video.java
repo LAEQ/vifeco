@@ -21,17 +21,19 @@ public class Video extends Entity{
     private CategoryCollection categoryCollection;
 
 
-    public Video(Integer id, String path, Duration duration) {
+    public Video(Integer id, String path, Duration duration, CategoryCollection categoryCollection) {
         this.id = id;
         this.path = new SimpleStringProperty(this, "path", path);
         this.name = new SimpleStringProperty(this, "name", pathToName(path));
         this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
+        this.categoryCollection = categoryCollection;
     }
 
-    public Video(String path, Duration duration) {
+    public Video(String path, Duration duration, CategoryCollection categoryCollection) {
         this.path = new SimpleStringProperty(this, "test", path);
         this.name = new SimpleStringProperty(this, "name", pathToName(path));
         this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
+        this.categoryCollection = categoryCollection;
     }
 
     public Video() {
@@ -72,13 +74,15 @@ public class Video extends Entity{
     public Timestamp getCreatedAt() {
         return createdAt;
     }
-
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
-    private String pathToName(String path){
-        return Paths.get(path).getFileName().toString();
+    public CategoryCollection getCategoryCollection() {
+        return categoryCollection;
+    }
+    public void setCategoryCollection(CategoryCollection categoryCollection) {
+        this.categoryCollection = categoryCollection;
     }
 
     @Override
@@ -100,5 +104,9 @@ public class Video extends Entity{
     @Override
     public int hashCode() {
         return Objects.hash(path.getValue());
+    }
+
+    private String pathToName(String path){
+        return Paths.get(path).getFileName().toString();
     }
 }

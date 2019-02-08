@@ -12,7 +12,6 @@ class PointDAOTest extends AbstractDAOTest {
 
     def "test insertion"() {
         setup:
-        setup:
         try{
             manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
