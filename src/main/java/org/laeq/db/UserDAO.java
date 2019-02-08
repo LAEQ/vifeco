@@ -45,21 +45,21 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
     public void setActive(User user) throws SQLException, DAOException {
         try(Connection connection = getManager().getConnection())
         {
-            String query = "UPDATE USER SET IS_LOGGED_IN = false;";
+            String query = "UPDATE USER SET IS_ACTIVE = false;";
             PreparedStatement statement = connection.prepareStatement(query);
 
             int result = statement.executeUpdate();
 
             connection.commit();
 
-            String query2 = "UPDATE USER SET IS_LOGGED_IN = true WHERE ID = ?;";
+            String query2 = "UPDATE USER SET IS_ACTIVE = true WHERE ID = ?;";
             PreparedStatement statement2 = connection.prepareStatement(query2);
 
             statement2.setInt(1, user.getId());
 
             int result2 = statement2.executeUpdate();
 
-            user.setLoggedIn(true);
+            user.setIsActive(true);
 
             if(result2 != 1){
                 throw new DAOException("UserDAO: no user is active.");
@@ -68,7 +68,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
     }
 
     public User findActive() throws DAOException, SQLException {
-        String query = "SELECT * from USER WHERE IS_LOGGED_IN = true;";
+        String query = "SELECT * from USER WHERE IS_ACTIVE = true;";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query))
@@ -156,7 +156,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         user.setFirstName(datas.getString("FIRST_NAME"));
         user.setLastName(datas.getString("LAST_NAME"));
         user.setEmail(datas.getString("EMAIL"));
-        user.setLoggedIn(datas.getBoolean("IS_LOGGED_IN"));
+        user.setIsActive(datas.getBoolean("IS_ACTIVE"));
         user.setCreatedAt(datas.getTimestamp("CREATED_AT"));
         user.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
 

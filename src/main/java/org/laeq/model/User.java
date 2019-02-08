@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class User extends Entity{
@@ -14,14 +13,14 @@ public class User extends Entity{
     private SimpleStringProperty firstName;
     private SimpleStringProperty lastName;
     private SimpleStringProperty email;
-    private SimpleBooleanProperty loggedIn;
+    private SimpleBooleanProperty isActive;
 
     public User() {
         this.id = new SimpleIntegerProperty(0);
         this.firstName = new SimpleStringProperty("");
         this.lastName = new SimpleStringProperty("");
         this.email = new SimpleStringProperty("");
-        this.loggedIn = new SimpleBooleanProperty(false);
+        this.isActive = new SimpleBooleanProperty(false);
     }
 
     public User(Integer id, String fName, String lastName, String email) {
@@ -34,7 +33,7 @@ public class User extends Entity{
         this.firstName = new SimpleStringProperty(fName);
         this.lastName = new SimpleStringProperty(lName);
         this.email = new SimpleStringProperty(email);
-        this.loggedIn = new SimpleBooleanProperty(false);
+        this.isActive = new SimpleBooleanProperty(false);
     }
 
     public String getFirstName() {
@@ -67,14 +66,14 @@ public class User extends Entity{
         return this.id.getValue();
     }
 
-    public boolean isLoggedIn() {
-        return loggedIn.get();
+    public boolean getIsActive() {
+        return isActive.get();
     }
-    public SimpleBooleanProperty loggedInProperty() {
-        return loggedIn;
+    public SimpleBooleanProperty isActiveProperty() {
+        return isActive;
     }
-    public void setLoggedIn(boolean loggedIn) {
-        this.loggedIn.set(loggedIn);
+    public void setIsActive(boolean isActive) {
+        this.isActive.set(isActive);
     }
 
     @Override

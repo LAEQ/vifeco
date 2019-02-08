@@ -1,12 +1,6 @@
 package org.laeq.db
 
 import org.laeq.model.User
-import spock.lang.Shared
-import spock.lang.Specification
-
-import java.sql.Connection
-import java.sql.SQLException
-import java.sql.Statement
 
 class UserDAOTest extends AbstractDAOTest {
     UserDAO repository;
@@ -132,8 +126,8 @@ class UserDAOTest extends AbstractDAOTest {
         repository.setActive(user)
 
         then:
-        user.isLoggedIn() == true
-        repository.findById(1).isLoggedIn() == false
+        user.getIsActive() == true
+        repository.findById(1).getIsActive() == false
     }
 
     def "test delete an unknown user"() {
