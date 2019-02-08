@@ -3,9 +3,11 @@ package org.laeq.model;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class CategoryCollection extends Entity {
     public final static String sequence_id = "category_collection_id";
@@ -76,11 +78,29 @@ public class CategoryCollection extends Entity {
         categorySet.add(category);
     }
 
+    public void removeCategory(Category category){
+        removeCategory(category.getId());
+    }
+
+    public void removeCategory(int id){
+        categorySet.removeIf( category -> category.getId() == id);
+    }
+
+
+
     @Override
     public String toString() {
         return "CategoryCollection{" +
                 "id=" + id.getValue() +
                 ", name=" + name.getValue() +
                 '}';
+    }
+
+    public List<Integer> getCategoryIds() {
+        return categorySet.stream().map(Category::getId).collect(toList());
+    }
+
+    public List<Category> getNewCategories(Collection<Integer> ids){
+        return categorySet.stream().filter(category -> ! ids.contains(category.getId())).collect(Collectors.toList());
     }
 }

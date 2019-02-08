@@ -4,7 +4,7 @@ import org.laeq.model.Category
 import org.laeq.model.CategoryCollection
 
 class CategoryCollectionDAOTest extends AbstractDAOTest {
-    def repository;
+    CategoryCollectionDAO repository;
 
     def setup(){
         repository = new CategoryCollectionDAO(manager, CategoryCollection.sequence_id)
@@ -41,6 +41,89 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
         then:
         entity.id == 4
     }
+
+    def "test update: modify name"() {
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+        } catch (Exception e){
+            println e
+        }
+
+        def entity = repository.findByID(1);
+        entity.setName("Mock name")
+
+        when:
+        repository.update(entity)
+
+        then:
+        notThrown DAOException
+    }
+
+    def "test update: delete 2 categories"() {
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+        } catch (Exception e){
+            println e
+        }
+
+        def entity = repository.findByID(1);
+
+        entity.removeCategory(1)
+        entity.removeCategory(3)
+
+        println entity.categorySet.size()
+
+
+        when:
+        repository.update(entity)
+        repository.findCollectionIdsById(1) == [2,4]
+
+        then:
+        notThrown DAOException
+    }
+
+    def "test update: delete 2 categories add 2 new ones"() {
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+        } catch (Exception e){
+            println e
+        }
+
+        def entity = repository.findByID(2);
+
+        entity.removeCategory(2)
+        entity.removeCategory(3)
+
+        println entity.categorySet.size()
+
+        entity.addCategory(new Category(1, "Moving", "Moving", "A"))
+        entity.addCategory(new Category(4, "Moving", "Moving", "A"))
+
+
+        when:
+        repository.update(entity)
+        repository.findCollectionIdsById(2) == [1, 4]
+
+        then:
+        notThrown DAOException
+    }
+
+    def "test: get list of ids of category for a specific collection."(){
+        setup:
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+        } catch (Exception e){
+            println e
+        }
+
+        when:
+        def result = repository.findCollectionIdsById(1)
+
+        then:
+        result.collect{it} == [1,2,3,4]
+    }
+
+
 
 //    def "test insertion with an invalid category"(){
 //        setup:

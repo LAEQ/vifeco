@@ -61,7 +61,7 @@ public class Category extends Entity{
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id);
     }
 
     @Override

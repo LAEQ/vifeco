@@ -5,9 +5,7 @@ import org.laeq.model.CategoryCollection;
 
 import javax.annotation.Nonnull;
 import java.sql.*;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<CategoryCollection> {
     public CategoryCollectionDAO(@Nonnull DatabaseManager manager, String sequenceName) {
@@ -75,8 +73,7 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
     }
 
 
-
-    public void update(CategoryCollection categoryCollection){
+    public void update(CategoryCollection categoryCollection) throws DAOException {
 
         String query = "UPDATE CATEGORY_COLLECTION SET NAME=? WHERE ID=?";
 
@@ -88,16 +85,74 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
             statement.setInt(2, categoryCollection.getId());
             statement.setString(1, categoryCollection.getName());
 
-            result = statement.executeUpdate();
+            if(statement.executeUpdate() != 1)
+                throw new DAOException("Cannot update category collection name");
 
+
+            //Bug hsqldb no support Array type
+            StringBuilder builder = new StringBuilder();
+            categoryCollection.getCategorySet().forEach(integer -> builder.append("?,"));
+
+            String deleteQuery = String.format("DELETE  FROM CATEGORY_COLLECTION_CATEGORY WHERE CATEGORY_COLLECTION_ID = ? " +
+                    "AND CATEGORY_ID NOT IN (%s) ;", builder.deleteCharAt(builder.lastIndexOf(",")).toString());
+
+            PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
+
+            deleteStatement.setInt(1, categoryCollection.getId());
+
+
+            ListIterator<Integer> it = categoryCollection.getCategoryIds().listIterator();
+            while(it.hasNext()){
+                deleteStatement.setInt(it.nextIndex() + 2, it.next());
+            }
+
+            deleteStatement.executeUpdate();
+            connection.commit();
+
+            List<Category> newCategories = categoryCollection.getNewCategories(findCollectionIdsById(categoryCollection));
+
+            if( ! newCategories.isEmpty()){
+                String query2 = "INSERT INTO category_collection_category(CATEGORY_COLLECTION_ID, CATEGORY_ID) VALUES(?, ?)";
+                PreparedStatement statement1 = connection.prepareStatement(query2);
+
+                for (Category category: newCategories) {
+                    System.out.println(category.getId());
+                    statement1.setInt(1, categoryCollection.getId());
+                    statement1.setInt(2, category.getId());
+
+                    statement1.addBatch();
+                }
+
+                statement1.executeBatch();
+            }
         } catch (Exception e){
             getLogger().error(e.getMessage());
+            throw new DAOException("Error for updating:" + categoryCollection + " - " + e.getMessage());
+        }
+    }
+
+    public Set<Integer> findCollectionIdsById(CategoryCollection categoryCollection) throws SQLException {
+      return findCollectionIdsById(categoryCollection.getId());
+    }
+
+    public Set<Integer> findCollectionIdsById(int id) throws SQLException {
+        String query = "SELECT CATEGORY_ID FROM CATEGORY_COLLECTION_CATEGORY WHERE CATEGORY_COLLECTION_ID = ?";
+
+        Set<Integer> result = new HashSet<>();
+
+        try(Connection con = getManager().getConnection();
+            PreparedStatement statement = con.prepareStatement(query)
+        ){
+            statement.setInt(1, id);
+
+            ResultSet datas = statement.executeQuery();
+
+            while(datas.next()){
+                result.add(datas.getInt("CATEGORY_ID"));
+            }
         }
 
-        if(result == 1){
-
-        }
-
+        return result;
     }
 
     @Override
@@ -160,5 +215,4 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
         if(result !=1)
             throw new DAOException("Error deleting a category");
     }
-
 }
