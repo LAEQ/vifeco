@@ -18,12 +18,9 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
     public void insert(CategoryCollection categoryCollection) throws DAOException {
         Integer nextId = getNextValue();
 
-        System.out.println(nextId);
-
         if(nextId == null){
             throw new DAOException("Cannot generate the next category_collection id from the database.");
         }
-
 
         try(Connection connection = getManager().getConnection())
         {
@@ -38,44 +35,43 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
 
             categoryCollection.setId(nextId);
 
-            categoryCollection.getCategorySet().forEach(category -> {
-                String query2 = "INSERT INTO category_collection_category(CATEGORY_COLLECTION_ID, CATEGORY_ID) VALUES(?, ?)";
-                try {
-                    PreparedStatement stmt2 = connection.prepareStatement(query2);
+            String query2 = "INSERT INTO category_collection_category(CATEGORY_COLLECTION_ID, CATEGORY_ID) VALUES(?, ?)";
 
+            PreparedStatement statement1 = connection.prepareStatement(query2);
 
+            for (Category category: categoryCollection.getCategorySet()) {
+                statement1.setInt(1, nextId);
+                statement1.setInt(2, category.getId());
 
-                    stmt2.setInt(1, nextId);
-                    stmt2.setInt(2, category.getId());
-//
-                    stmt2.executeUpdate();
-                } catch (SQLException e) {
-                    getLogger().error("Cannot save category collection");
-                    e.printStackTrace();
-                }
-            });
+                statement1.addBatch();
+            }
 
+            statement1.executeBatch();
 
+        } catch (Exception e){
+            getLogger().error(e.getMessage());
+            throw new DAOException("Error insert CategoryCollection: " + e.getMessage());
+        }
+    }
+
+    private void debug(){
+        String sql = "SELECT * FROM CATEGORY_COLLECTION_CATEGORY";
+
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql))
+        {
+            ResultSet test = statement.executeQuery();
+
+            while(test.next()){
+                System.out.println(String.format("CC_ID: %d : C_ID %d",
+                        test.getInt("CATEGORY_COLLECTION_ID"),
+                        test.getInt("CATEGORY_ID")));
+            }
 
         } catch (Exception e){
             getLogger().error(e.getMessage());
         }
 
-
-        categoryCollection.getCategorySet().forEach(category -> {
-            String query2 = "INSERT INTO CATEGORY_COLLECTION_CATEGORY (CATEGORY_COLLECTION_ID, CATEGORY_ID) VALUES (?, ?);";
-
-            try(Connection connection = getManager().getConnection();
-                PreparedStatement statement = connection.prepareStatement(query2, Statement.RETURN_GENERATED_KEYS))
-            {
-                statement.setInt(1, nextId);
-                statement.setInt(2, category.getId());
-
-                statement.executeUpdate();
-            } catch (Exception e){
-                getLogger().error(e.getMessage());
-            }
-        });
     }
 
 

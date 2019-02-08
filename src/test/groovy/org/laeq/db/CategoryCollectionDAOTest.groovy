@@ -31,8 +31,8 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
         entity.setName("Mock NAME")
         entity.addCategory(new Category(1, "Moving truck", "icon/icon1.png", "A"))
         entity.addCategory(new Category(2, "Moving car", "icon/icon2.png", "B"))
-//        entity.addCategory(new Category(3, "Moving bike", "icon/icon3.png", "C"))
-//        entity.addCategory(new Category(4, "Moving bus", "icon/icon4.png", "D"))
+        entity.addCategory(new Category(3, "Moving bike", "icon/icon3.png", "C"))
+        entity.addCategory(new Category(4, "Moving bus", "icon/icon4.png", "D"))
 
 
         when:
@@ -53,27 +53,27 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
 //        notThrown DAOException
 //    }
 
-    def "test findById"() {
-        setup:
-        try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
-        } catch (Exception e){
-            println e
-        }
-
-        when:
-        CategoryCollection result = repository.findByID(1)
-
-        def expected = new CategoryCollection(1, "Default")
-        expected.addCategory(new Category(1, "Moving truck", "icon/icon1.png", "A"))
-        expected.addCategory(new Category(2, "Moving car", "icon/icon2.png", "B"))
-        expected.addCategory(new Category(3, "Moving bike", "icon/icon3.png", "C"))
-        expected.addCategory(new Category(4, "Moving bus", "icon/icon4.png", "D"))
-
-        then:
-        result == expected
-
-    }
+//    def "test findById"() {
+//        setup:
+//        try{
+//            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+//        } catch (Exception e){
+//            println e
+//        }
+//
+//        when:
+//        CategoryCollection result = repository.findByID(1)
+//
+//        def expected = new CategoryCollection(1, "Default")
+//        expected.addCategory(new Category(1, "Moving truck", "icon/icon1.png", "A"))
+//        expected.addCategory(new Category(2, "Moving car", "icon/icon2.png", "B"))
+//        expected.addCategory(new Category(3, "Moving bike", "icon/icon3.png", "C"))
+//        expected.addCategory(new Category(4, "Moving bus", "icon/icon4.png", "D"))
+//
+//        then:
+//        result == expected
+//
+//    }
 //
 //    def "test findAll but empty"() {
 //        when:
