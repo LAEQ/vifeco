@@ -23,7 +23,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         String query = "INSERT INTO user (ID, FIRST_NAME, LAST_NAME, EMAIL) VALUES (?, ?, ?, ?);";
 
         try(Connection connection = getManager().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement statement = connection.prepareStatement(query))
         {
             statement.setInt(1, nextId);
             statement.setString(2, user.getFirstName());
@@ -40,6 +40,22 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         if(result != 1)
             throw new DAOException("Error during DAO insert user");
 
+    }
+
+    public User findActive() throws DAOException, SQLException {
+        String query = "SELECT * from USER WHERE IS_LOGGED_IN = true;";
+
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query))
+        {
+            ResultSet result = statement.executeQuery();
+
+            if(result.next()){
+               return generateUser(result);
+            }
+
+            throw new DAOException("UserDAO: no user is active.");
+        }
     }
 
     @Override
@@ -86,17 +102,22 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         Set<User> result = new HashSet<>();
 
         while(datas.next()){
-            User user = new User();
-            user.setId(datas.getInt("ID"));
-            user.setFirstName(datas.getString("FIRST_NAME"));
-            user.setLastName(datas.getString("LAST_NAME"));
-            user.setEmail(datas.getString("EMAIL"));
-            user.setCreatedAt(datas.getTimestamp("CREATED_AT"));
-            user.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
-
-            result.add(user);
+            result.add(generateUser(datas));
         }
 
         return result;
+    }
+
+    private User generateUser(ResultSet datas) throws SQLException {
+        User user = new User();
+        user.setId(datas.getInt("ID"));
+        user.setFirstName(datas.getString("FIRST_NAME"));
+        user.setLastName(datas.getString("LAST_NAME"));
+        user.setEmail(datas.getString("EMAIL"));
+        user.setLoggedIn(datas.getBoolean("IS_LOGGED_IN"));
+        user.setCreatedAt(datas.getTimestamp("CREATED_AT"));
+        user.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
+
+        return user;
     }
 }

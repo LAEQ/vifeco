@@ -9,7 +9,7 @@ import java.sql.SQLException
 import java.sql.Statement
 
 class UserDAOTest extends AbstractDAOTest {
-    def repository;
+    UserDAO repository;
 
     def setup(){
         repository = new UserDAO(manager, "user_id")
@@ -102,6 +102,21 @@ class UserDAOTest extends AbstractDAOTest {
 
         then:
         notThrown Exception
+    }
+
+    def "test find active user"() {
+        setup:
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+        } catch (Exception e){
+            println e
+        }
+
+        when:
+        User user = repository.findActive()
+
+        then:
+        user == new User(1,"Luck", "Skywalker", "luke@maytheforcebewithyou.com")
     }
 
     def "test delete an unknown user"() {
