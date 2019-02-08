@@ -175,7 +175,7 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
 
     }
 
-    def "test delete an existing category"() {
+    def "test delete an existing category collection"() {
         setup:
         try{
             manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
@@ -183,10 +183,10 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
             println e
         }
 
-        Category category = new Category(1, "mock", "mock", "A")
+        CategoryCollection categoryCollection = new CategoryCollection(1, "mock", false)
 
         when:
-        repository.delete(category)
+        repository.delete(categoryCollection)
 
         then:
         notThrown DAOException
@@ -200,11 +200,12 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
             println e
         }
 
-        Category category = new Category(-1, "mock", "mock", "A")
+        CategoryCollection categoryCollection = new CategoryCollection(1, "mock", false)
+
         when:
-        repository.delete(category)
+        repository.delete(categoryCollection)
 
         then:
-        thrown DAOException
+        notThrown DAOException
     }
 }

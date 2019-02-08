@@ -282,20 +282,6 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
 
     @Override
     public void delete(CategoryCollection category) throws DAOException {
-        int result = 0;
-        String query = "DELETE FROM CATEGORY WHERE ID=?";
-
-        try(Connection connection = getManager().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);)
-        {
-            statement.setInt(1, category.getId());
-
-            result = statement.executeUpdate();
-        } catch (Exception e){
-            getLogger().error(e.getMessage());
-        }
-
-        if(result !=1)
-            throw new DAOException("Error deleting a category");
+            throw new DAOException("To be implemented");
     }
 }
