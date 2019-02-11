@@ -3,70 +3,62 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.IntegerBinding;
+import javafx.beans.binding.LongBinding;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
-import org.laeq.model.Point;
+import org.laeq.model.VideoUser;
+import org.laeq.video.category.CategoryGroup;
 
 import java.util.HashMap;
 import java.util.Set;
-import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class CategoryModel extends AbstractGriffonModel {
+    private final HashMap<Category, CategoryGroup> categoryList = new HashMap<>();
+    private HashMap<Category, SimpleLongProperty> categoryPropertyList;
+    private LongBinding total;
+    private VideoUser videoUser;
 
-    private HashMap<Category, SimpleIntegerProperty> categoryPropertyList;
-    private IntegerBinding totalCount;
-    private SimpleIntegerProperty total;
-
-    public IntegerBinding totalCountProperty() {
-        return totalCount;
-    }
-
-    public int getTotal() {
+    public long getTotal() {
         return total.get();
     }
-
-    public SimpleIntegerProperty totalProperty() {
+    public LongBinding totalProperty() {
         return total;
     }
 
-    public void setTotal(int total) {
-        this.total.set(total);
-    }
-
-    public int getTotalCount() {
-        return totalCount.get();
-    }
-
-    public void generateProperties(Set<Category> keySet) {
-
+    public void generateProperties() {
         categoryPropertyList = new HashMap<>();
 
-        keySet.forEach(s -> {
-            categoryPropertyList.put(s, new SimpleIntegerProperty(this, s.getName(), 0));
+        videoUser.getVideo().getCategoryCollection().getCategorySet().forEach(category -> {
+
+            long total = videoUser.getPoints().stream().filter(point -> {
+                System.out.println(point.getCategory() + ": " + category + " : " + point.getCategory().equals(category));
+                return point.getCategory().equals(category);
+            }).count();
+            categoryPropertyList.put(category, new SimpleLongProperty(this, category.getName(), total));
+            SimpleLongProperty test = new SimpleLongProperty(this, category.getName(), total);
         });
 
-        total = new SimpleIntegerProperty(0);
-
-        totalCount = Bindings.createIntegerBinding(() -> categoryPropertyList.values().stream().mapToInt(SimpleIntegerProperty::getValue).sum());
+        total = Bindings.createLongBinding(() -> categoryPropertyList.values().stream().mapToLong(SimpleLongProperty::getValue).sum());
     }
 
-    public SimpleIntegerProperty getCategoryProperty(Category category){
+    public SimpleLongProperty getCategoryProperty(Category category){
         return categoryPropertyList.get(category);
     }
 
-    public HashMap<Category, SimpleIntegerProperty> getCategoryPropertyList() {
+    public HashMap<Category, SimpleLongProperty> getCategoryPropertyList() {
         return categoryPropertyList;
     }
 
-    public void setItems(SortedSet<Point> points) {
-        System.out.println(points);
-        points.forEach( point -> {
-            SimpleIntegerProperty property = getCategoryProperty(point.getCategory());
-            property.set(property.getValue() + 1);
-        });
 
+    public void setItem(VideoUser videoUser) {
+        this.videoUser = videoUser;
+        generateProperties();
+    }
+
+    public Set<Category> getCategorySet() {
+        return this.videoUser.getVideo().getCategoryCollection().getCategorySet();
     }
 }

@@ -35,13 +35,13 @@ import java.io.IOException;
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {
     private final String[] icons = new String[]{
-            "icons/truck-mvt-blk.png",
-            "icons/truck-mvt-red.png",
+            "icons/truck-mvt-blk-64.png",
+            "icons/truck-mvt-red-64.png",
             "icons/icon-bicycle-mvt-64.png",
             "icons/icon-car-co2-black-64.png",
             "icons/icon-constr-black-64.png",
             "icons/iconmonstr-car-23-64.png",
-            "icons/icon-car-elec-black-64.png",
+            "icons/icon-car-elec-blk-64.png",
     };
 
     private static int REWIND_VALUE = 10;

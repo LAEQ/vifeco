@@ -1,9 +1,6 @@
 package org.laeq.db;
 
-import org.laeq.model.Category;
-import org.laeq.model.User;
-import org.laeq.model.Video;
-import org.laeq.model.VideoUser;
+import org.laeq.model.*;
 
 import javax.annotation.Nonnull;
 import java.sql.Connection;
@@ -23,22 +20,19 @@ public class VideoUserDAO extends AbstractDAO {
 
 
     public List<VideoUser> findAll() {
-        String query = "SELECT count(P.VIDEO_ID) AS TOTAL, V.ID AS VIDEO_ID, MAX(P.START) AS LAST, U.FIRST_NAME AS FIRST_NAME , U.LAST_NAME AS LAST_NAME, U.ID AS USER_ID, V.PATH, V.DURATION from POINT AS P LEFT JOIN USER AS U ON P.USER_ID = U.ID full join VIDEO AS V on P.video_id = V.id GROUP BY P.VIDEO_ID, P.USER_ID, V.PATH, V.DURATION, V.ID, U.FIRST_NAME, U.LAST_NAME, U.ID ORDER BY V.ID, U.ID;";
+        String query = "SELECT V.CATEGORY_COLLECTION_ID as CAT_COL_ID, count(P.VIDEO_ID) AS TOTAL, V.ID AS VIDEO_ID, MAX(P.START) AS LAST, U.FIRST_NAME AS FIRST_NAME , U.LAST_NAME AS LAST_NAME, U.ID AS USER_ID, V.PATH, V.DURATION from POINT AS P LEFT JOIN USER AS U ON P.USER_ID = U.ID full join VIDEO AS V on P.video_id = V.id GROUP BY P.VIDEO_ID, P.USER_ID, V.PATH, V.DURATION, V.ID, U.FIRST_NAME, U.LAST_NAME, U.ID ORDER BY V.ID, U.ID, V.CATEGORY_COLLECTION_ID";
 
         List<VideoUser> result = new ArrayList<>();
-
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query);){
 
             ResultSet queryResult = statement.executeQuery();
 
-
-
-
             result = getResult(queryResult);
 
         } catch (SQLException e){
+            System.out.println(e.getMessage());
             getLogger().error(e.getMessage());
         }
 
@@ -54,6 +48,11 @@ public class VideoUserDAO extends AbstractDAO {
             video.setPath(datas.getString("PATH"));
             video.setDuration(datas.getDouble("DURATION"));
             video.setId(datas.getInt("VIDEO_ID"));
+
+            CategoryCollection categoryCollection = new CategoryCollection();
+            categoryCollection.setId(datas.getInt("CAT_COL_ID"));
+            video.setCategoryCollection(categoryCollection);
+
             videoUser.setVideo(video);
 
             User user = new User();

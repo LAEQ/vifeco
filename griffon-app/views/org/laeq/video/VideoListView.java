@@ -4,24 +4,18 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Paint;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.laeq.VifecoView;
 import org.laeq.model.VideoUser;
+
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -46,13 +40,10 @@ public class VideoListView extends AbstractJavaFXGriffonView {
         return tabPane;
     }
 
-    private ObservableList<VideoUser> videoList;
-
     @Override
     public void initUI() {
         Node node = loadFromFXML();
 
-        videoList = FXCollections.observableList(this.model.getVideoList());
         TableColumn<VideoUser, String> dateColumn = new TableColumn<>("Created At");
         TableColumn<VideoUser, String> pathColumn = new TableColumn("Name");
         TableColumn<VideoUser, String> userColumn = new TableColumn<>("User");
@@ -72,12 +63,8 @@ public class VideoListView extends AbstractJavaFXGriffonView {
         actionColumn.setCellFactory(addActions());
 
 
-        videoListTable.setItems(videoList);
+        videoListTable.setItems(this.model.getVideoList());
         parentView.getMiddlePane().getItems().add(node);
-    }
-
-    public void addVideo(VideoUser video){
-        videoList.add(video);
     }
 
     private Callback<TableColumn<VideoUser, Void>, TableCell<VideoUser, Void>> addActions() {

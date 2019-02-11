@@ -16,10 +16,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
 public class VideoListController extends AbstractGriffonController {
@@ -30,16 +27,15 @@ public class VideoListController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
+        getApplication().getEventRouter().addEventListener(listeners());
 
-        this.model.addVideos(service.getVideoUser());
-
-        getApplication().getEventRouter().addEventListener("database.video.created", videos -> {
-//            Video video = (Video) videos[0];
-
-            runInsideUISync(() -> {
-//                this.model.addVideo(video);
-            });
-        });
+//        getApplication().getEventRouter().addEventListener("database.video.created", videos -> {
+////            Video video = (Video) videos[0];
+//
+//            runInsideUISync(() -> {
+////                this.model.addVideo(video);
+//            });
+//        });
     }
 
     public void exportVideo(VideoUser videoUser) {
@@ -53,6 +49,27 @@ public class VideoListController extends AbstractGriffonController {
     }
 
     public void editVideo(VideoUser videoUser) {
-        getApplication().getEventRouter().publishEventAsync("video.load", Arrays.asList(videoUser));
+        System.out.println("Edit video");
+        getApplication().getEventRouter().publishEvent("database.video_user.load", Arrays.asList(videoUser));
+    }
+
+    private Map<String, RunnableWithArgs> listeners(){
+        Map<String, RunnableWithArgs> result = new HashMap<>();
+
+        result.put("database.video_user.findAll", objects -> {
+            System.out.println("database.video_user.findAll");
+
+            runInsideUISync(()->{
+                this.model.addVideos((List<VideoUser>) objects[0]);
+            });
+        });
+
+        result.put("database.video_user.created", objects -> {
+            runInsideUISync(()->{
+
+            });
+        });
+
+        return result;
     }
 }

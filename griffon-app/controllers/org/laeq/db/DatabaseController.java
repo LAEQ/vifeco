@@ -2,18 +2,13 @@ package org.laeq.db;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
-import griffon.core.controller.ControllerAction;
-import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
-import griffon.transform.Threading;
-import org.laeq.model.Point;
-import org.laeq.model.Video;
 import org.laeq.model.VideoUser;
+import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.File;
 import java.net.URISyntaxException;
@@ -22,12 +17,12 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonController.class)
 public class DatabaseController extends AbstractGriffonController {
 
     @Inject private DatabaseService service;
+    @Inject private DialogService dialogService;
 
     private ProcessBuilder builder;
     private Process dbProcess;
@@ -35,33 +30,21 @@ public class DatabaseController extends AbstractGriffonController {
 
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         try {
-            builder = createProcess();
-            dbProcess = builder.start();
-
+//            builder = createProcess();
+//            dbProcess = builder.start();
             service.init();
         } catch (Exception e) {
             getLog().error("Cannot create the database process." + e.getMessage());
         }
 
         getApplication().getEventRouter().addEventListener(listeners());
-
-
-//        getApplication().getEventRouter().addEventListener("database.model.created", objects -> {
-//            Video video = (Video) objects[0];
-//
-//            try {
-//                service.create(video);
-//                getApplication().getEventRouter().publishEventAsync("database.video.created", Arrays.asList(video));
-//            } catch (Exception e) {
-//                getLog().error(e.getMessage());
-//            }
-//        });
+        publishEvent("database.video_user.findAll", service.getVideoUserList());
     }
 
     @Override
     public void mvcGroupDestroy() {
         System.out.println("Database controller destruction");
-        dbProcess.destroy();
+//        dbProcess.destroy();
     }
 
     private ProcessBuilder createProcess() throws URISyntaxException {
@@ -80,13 +63,22 @@ public class DatabaseController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("video.load", objects -> {
+        list.put("database.video_user.load", objects -> {
+            System.out.println("database.video_user.load");
             VideoUser videoUser = (VideoUser) objects[0];
-            SortedSet<Point> result = service.findByVideoUser(videoUser);
-
-            getApplication().getEventRouter().publishEventAsync("video.load.points", Arrays.asList(result));
+            try {
+                service.set(videoUser);
+                publishEvent("player.video_user.load", videoUser);
+                publishEvent("category.video_user.load", videoUser);
+            } catch (SQLException e) {
+                dialogService.dialog("DBController: Cannot retrieve datas for " + videoUser);
+            }
         });
 
         return list;
+    }
+
+    private void publishEvent(String eventName, Object object){
+        getApplication().getEventRouter().publishEvent(eventName, Arrays.asList(object));
     }
 }

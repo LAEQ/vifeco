@@ -3,10 +3,10 @@ INSERT INTO user (ID, FIRST_NAME, LAST_NAME, EMAIL, IS_ACTIVE) VALUES (NEXT VALU
 INSERT INTO user (ID, FIRST_NAME, LAST_NAME, EMAIL, IS_ACTIVE) VALUES (NEXT VALUE FOR user_id, 'Leia', 'Organa', 'leia@areyoualittleshortforastormtrooper.com', false);
 INSERT INTO user (ID, FIRST_NAME, LAST_NAME, EMAIL, IS_ACTIVE) VALUES (NEXT VALUE FOR user_id, 'Han', 'Solo', 'han@bestpilotinthegalaxy.com', false);
 
-INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving truck', 'icons/icon1.png', 'A');
-INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving car', 'icons/icon2.png', 'B');
-INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving bike', 'icons/icon3.png', 'C');
-INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving bus', 'icons/icon4.png', 'D');
+INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving truck', 'icons/truck-mvt-blk-64.png', 'A');
+INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving car', 'icons/icon-car-co2-black-64.png', 'B');
+INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Moving bike', 'icons/icon-bicycle-mvt-64.png', 'C');
+INSERT INTO category(ID, NAME, ICON, SHORTCUT) VALUES(NEXT VALUE FOR category_id, 'Electric car', 'icons/icon-car-elec-blk-64.png', 'D');
 
 INSERT INTO category_collection(ID, NAME, IS_DEFAULT) VALUES(NEXT VALUE FOR category_collection_id, 'Default', true);
 INSERT INTO category_collection(ID, NAME, IS_DEFAULT) VALUES(NEXT VALUE FOR category_collection_id, 'Collection 1', false);

@@ -3,6 +3,7 @@ package org.laeq.video.category;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -25,7 +26,9 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Set;
 
 import static javafx.scene.layout.AnchorPane.setLeftAnchor;
 import static javafx.scene.layout.AnchorPane.setRightAnchor;
@@ -39,77 +42,88 @@ public class CategoryView extends AbstractJavaFXGriffonView {
     @FXML private Pane categoryPane;
     @FXML private Text totalLabel;
 
-    @Inject
-    private CategoryService service;
-
-    private Category[] categories;
+    private Node parent;
+    private HashMap<Category, CategoryGroup>  categoryList;
 
     @Override
     public void initUI() {
-        this.categories = service.getCategoryList();
+        parent = loadFromFXML();
+        categoryList = new HashMap<>();
 
-        Node node = loadFromFXML();
-
-//        HashMap<Category, CategoryGroup> categoryList = new HashMap<>();
-//        try {
-//            for (int i = 0; i < categories.length; i++) {
-//                CategoryGroup group = new CategoryGroup(categories[i].getIcon());
-//                group.setStyle("-fx-background-color: rgb(250,250,250);");
-//
-//                group.setMaxWidth(Control.USE_COMPUTED_SIZE);
-//                group.setMinWidth(Control.USE_COMPUTED_SIZE);
-//                group.setPrefWidth(Control.USE_COMPUTED_SIZE);
-//                group.setPrefHeight(60);
-//
-//                group.setLayoutX(10);
-//                group.setLayoutY(65 * i + 44);
-//                categoryList.put(categories[i], group);
-//
-//                setLeftAnchor(group, 1d);
-//                setRightAnchor(group, 1d);
-//            }
-//        } catch (FileNotFoundException e){
-//            getLog().error(e.getMessage());
-//        }
-//
-//        ((AnchorPane)node).getChildren().addAll(categoryList.values());
-//
 //        model.generateProperties(categoryList.keySet());
-//
 //        categoryList.forEach((k, v) -> {
 //            v.getTextLabel().textProperty().bind(model.getCategoryProperty(k).asString());
 //        });
-//
 //        totalLabel.textProperty().bind(model.totalProperty().asString());
 
-        parentView.getMiddlePane().getItems().add(node);
+        parentView.getMiddlePane().getItems().add(parent);
     }
 
+    public void clearView(){
+        categoryList.forEach((k, v) -> {
+            v.getTextLabel().textProperty().unbind();
+        });
 
-    private Group generateCategory(String filePath) throws FileNotFoundException {
-        Group group = new Group();
+        totalLabel.textProperty().unbind();
 
-        String path = getApplication().getResourceHandler().getResourceAsURL(filePath).getPath();
+        ((AnchorPane)parent).getChildren().removeAll(categoryList.values());
+        categoryList.clear();
+    }
 
-        FileInputStream inputStream = new FileInputStream(path);
-        Image image = new Image(inputStream);
-        ImageView imageView = new ImageView(image);
-        imageView.setX(0);
-        imageView.setY(0);
-        imageView.setPreserveRatio(true);
-        imageView.setScaleX(0.6);
-        imageView.setScaleY(0.6);
+    private CategoryGroup generateCategoryGroup(Category category, int index) throws FileNotFoundException {
+        CategoryGroup group = new CategoryGroup(category.getIcon());
+        group.setStyle("-fx-background-color: rgb(250,250,250);");
 
+        group.setMaxWidth(Control.USE_COMPUTED_SIZE);
+        group.setMinWidth(Control.USE_COMPUTED_SIZE);
+        group.setPrefWidth(Control.USE_COMPUTED_SIZE);
+        group.setPrefHeight(60);
 
-        Label label = new Label("12 / 123");
-        label.setFont(new Font("Arial", 15));
-        label.setLayoutX(76);
-        label.setLayoutY(22);
-        label.setPrefHeight(17);
-        label.setPrefWidth(124);
+        group.setLayoutX(10);
+        group.setLayoutY(65 * index + 44);
 
-        group.getChildren().addAll(imageView, label);
+        setLeftAnchor(group, 1d);
+        setRightAnchor(group, 1d);
 
         return group;
+    }
+
+    public void initView() {
+        clearView();
+
+        int i = 0;
+        for (Category category: model.getCategorySet()) {
+            try {
+                URL path = getApplication().getResourceHandler().getResourceAsURL(category.getIcon());
+
+                if(path == null){
+                    path = getApplication().getResourceHandler().getResourceAsURL("icons/truck-mvt-blk-64.png");
+                }
+
+                CategoryGroup group = new CategoryGroup(path.getPath());
+                group.setStyle("-fx-background-color: rgb(250,250,250);");
+                group.setMaxWidth(Control.USE_COMPUTED_SIZE);
+                group.setMinWidth(Control.USE_COMPUTED_SIZE);
+                group.setPrefWidth(Control.USE_COMPUTED_SIZE);
+                group.setPrefHeight(60);
+                group.setLayoutX(10);
+                group.setLayoutY(65 * i + 44);
+                setLeftAnchor(group, 1d);
+                setRightAnchor(group, 1d);
+                categoryList.put(category, group);
+                ++i;
+
+            } catch (FileNotFoundException e) {
+                getLog().error(String.format("CategoryView: cannot load file for %s.", category));
+            }
+        }
+
+        ((AnchorPane)parent).getChildren().addAll(categoryList.values());
+
+        categoryList.forEach((k, v) -> {
+            v.getTextLabel().textProperty().bind(model.getCategoryProperty(k).asString());
+        });
+
+        totalLabel.textProperty().bind(model.totalProperty().asString());
     }
 }

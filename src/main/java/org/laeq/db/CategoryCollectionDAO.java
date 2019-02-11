@@ -70,7 +70,7 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
         }
 
         try(Connection connection = getManager().getConnection()){
-            String query = "INSERT INTO CATEGORY_COLLECTION (ID, NAME) VALUES (?, ?);";
+            String query = "INSERT INTO CATEGORY_COLLECTION (ID, NAME, IS_DEFAULT) VALUES (?, ?, true);";
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             statement.setInt(1, nextId);

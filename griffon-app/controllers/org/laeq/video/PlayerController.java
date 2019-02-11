@@ -30,17 +30,6 @@ public class PlayerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        getApplication().getEventRouter().addEventListener("controls.volume.change", volume -> {
-            runInsideUIAsync(()->{
-                view.setVolume();
-            });
-        });
-
-        getApplication().getEventRouter().addEventListener("menu.open.video", files -> {
-
-        });
-
-
         getApplication().getEventRouter().addEventListener(listenerList());
     }
 
@@ -81,29 +70,13 @@ public class PlayerController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listenerList(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("video.load", objects -> {
+        list.put("player.video_user.load", objects -> {
             VideoUser videoUser = (VideoUser) objects[0];
 
             runInsideUISync(() ->{
                 model.setItem(videoUser);
+
             });
-        });
-
-        list.put("menu.open.video", objects -> {
-            //@todo: check file exists
-            File file = (File) objects[0];
-
-            runInsideUISync(() -> {
-                model.setVideoPath(file.toString());
-                view.setMedia(file.toString());
-                model.setIsPlaying(false);
-            });
-        });
-
-        list.put("video.list.point", objects -> {
-            SortedSet<Point> listPoint = (SortedSet<Point>) objects[0];
-
-            this.model.setItems(listPoint);
         });
 
         return list;

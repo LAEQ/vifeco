@@ -24,6 +24,6 @@ class CategoryModelTest extends Specification {
         set.each {model.getCategoryProperty(it).set(model.getCategoryProperty(it).get() + 1)}
 
         then:
-        model.getTotalCount() == 48
+        model.getTotal() == 48
     }
 }
