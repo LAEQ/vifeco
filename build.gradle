@@ -71,9 +71,12 @@ jfx {
 
 dependencies {
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
+    compile 'org.kordamp.bootstrapfx:bootstrapfx-core:0.2.4'
     compile 'org.kordamp.ikonli:ikonli-javafx:1.8.0'
     compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:1.8.0'
     compile 'eu.lestard:advanced-bindings:0.4.0'
+    compile 'org.hsqldb:hsqldb:2.4.1'
+    compile 'de.jensd:fontawesomefx:8.9'
 
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
 

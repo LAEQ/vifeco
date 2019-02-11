@@ -17,3 +17,5 @@
 
 ### HSQLDB
  java -classpath lib/hsqldb.jar org.hsqldb.server.Server
+ 
+ https://examples.javacodegeeks.com/enterprise-java/sql-enterprise-java/jdbc-hsqldb-tutorial/#howtoaccess

@@ -7,9 +7,11 @@ import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
+import org.laeq.model.Point;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class CategoryModel extends AbstractGriffonModel {
@@ -57,5 +59,14 @@ public class CategoryModel extends AbstractGriffonModel {
 
     public HashMap<Category, SimpleIntegerProperty> getCategoryPropertyList() {
         return categoryPropertyList;
+    }
+
+    public void setItems(SortedSet<Point> points) {
+        System.out.println(points);
+        points.forEach( point -> {
+            SimpleIntegerProperty property = getCategoryProperty(point.getCategory());
+            property.set(property.getValue() + 1);
+        });
+
     }
 }

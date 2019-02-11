@@ -2,18 +2,32 @@ package org.laeq.model;
 
 import java.util.Objects;
 
-public class Category {
+public class Category extends Entity{
+    private Integer id;
     private String name;
     private String icon;
     private String shortcut;
 
     public Category() {
+
+    }
+
+    public Category(Integer id, String name, String icon, String shortcut) {
+        this(name, icon, shortcut);
+        this.id = id;
     }
 
     public Category(String name, String icon, String shortcut) {
         this.name = name;
         this.icon = icon;
         this.shortcut = shortcut;
+    }
+
+    public int getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -42,20 +56,19 @@ public class Category {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return Objects.equals(name, category.name) &&
-                Objects.equals(icon, category.icon) &&
-                Objects.equals(shortcut, category.shortcut);
+        return id.equals(category.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, icon, shortcut);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Category{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

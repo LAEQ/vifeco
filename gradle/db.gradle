@@ -16,9 +16,3 @@ task startDatabase() {
     builder.redirectErrorStream(true)
     def process = builder.start()
 }
-
-
-
-//cd C:\hsqldb-2.3.4\hsqldb
-//hsqldb>java -classpath lib/hsqldb.jar org.hsqldb.server.Server --database.0
-//file:hsqldb/demodb --dbname.0 testdb

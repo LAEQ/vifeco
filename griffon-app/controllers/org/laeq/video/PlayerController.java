@@ -1,5 +1,6 @@
 package org.laeq.video;
 
+import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
@@ -7,25 +8,24 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.scene.input.KeyEvent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.model.Point;
+import org.laeq.model.Video;
+import org.laeq.model.VideoUser;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonController.class)
 public class PlayerController extends AbstractGriffonController {
-    private PlayerModel model;
-
-    @MVCMember
-    public void setModel(@Nonnull PlayerModel model) {
-        this.model = model;
-    }
-
-    @MVCMember @Nonnull
-    private PlayerView view;
-
+    @MVCMember @Nonnull private PlayerModel model;
+    @MVCMember @Nonnull private PlayerView view;
     @Inject private DialogService dialogService;
 
     @Override
@@ -37,15 +37,15 @@ public class PlayerController extends AbstractGriffonController {
         });
 
         getApplication().getEventRouter().addEventListener("menu.open.video", files -> {
-            //@todo: check file exists
-            File file = (File) files[0];
 
-            runInsideUISync(() -> {
-                model.setVideoPath(file.toString());
-                view.setMedia(file.toString());
-                model.setIsPlaying(false);
-            });
         });
+
+
+        getApplication().getEventRouter().addEventListener(listenerList());
+    }
+
+    public void dispatchVideoCreated(Video video){
+        getApplication().getEventRouter().publishEventAsync("database.model.created", Arrays.asList(video));
     }
 
     @ControllerAction
@@ -72,10 +72,40 @@ public class PlayerController extends AbstractGriffonController {
         dialogService.dialog();
     }
 
-
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void test(KeyEvent keyEvent) {
         System.out.println("test");
+    }
+
+    private Map<String, RunnableWithArgs> listenerList(){
+        Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        list.put("video.load", objects -> {
+            VideoUser videoUser = (VideoUser) objects[0];
+
+            runInsideUISync(() ->{
+                model.setItem(videoUser);
+            });
+        });
+
+        list.put("menu.open.video", objects -> {
+            //@todo: check file exists
+            File file = (File) objects[0];
+
+            runInsideUISync(() -> {
+                model.setVideoPath(file.toString());
+                view.setMedia(file.toString());
+                model.setIsPlaying(false);
+            });
+        });
+
+        list.put("video.list.point", objects -> {
+            SortedSet<Point> listPoint = (SortedSet<Point>) objects[0];
+
+            this.model.setItems(listPoint);
+        });
+
+        return list;
     }
 }
