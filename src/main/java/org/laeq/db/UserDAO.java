@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UserDAO extends AbstractDAO implements DAOInterface<User> {
+    public static String sequence_name = "user_id";
+
     public UserDAO(@Nonnull DatabaseManager manager, String sequenceName) {
         super(manager, sequenceName);
     }
@@ -40,6 +42,31 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         if(result != 1)
             throw new DAOException("Error during DAO insert user");
 
+    }
+
+    public void init() throws SQLException, DAOException {
+        int result = 0;
+        Integer nextId = getNextValue();
+
+        if(nextId > 1){
+            getLogger().info("UserDAO: init - default user exists");
+            return;
+        }
+
+        String query = "INSERT INTO user (ID, FIRST_NAME, LAST_NAME, EMAIL, IS_ACTIVE) VALUES (?, 'default', 'default', 'default@email.com', true); ";
+
+        try(Connection connection = getManager().getConnection();
+        PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setInt(1, nextId);
+
+            result = statement.executeUpdate();
+        }
+
+        if(result != 1) {
+            throw new DAOException("UserDAO: cannot create default user");
+        } else {
+            getLogger().info("UserDAO: default user created");
+        }
     }
 
     public void setActive(User user) throws SQLException, DAOException {
@@ -123,6 +150,10 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
     public void delete(User user) throws DAOException {
         int result = 0;
         String query = "DELETE FROM USER WHERE ID=?";
+
+        if(user.getId() == 1){
+            throw new DAOException("UserDAO: delete - you cannot delete the default user");
+        }
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query);)

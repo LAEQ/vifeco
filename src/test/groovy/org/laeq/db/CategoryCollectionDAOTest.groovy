@@ -7,7 +7,7 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
     CategoryCollectionDAO repository;
 
     def setup(){
-        repository = new CategoryCollectionDAO(manager, CategoryCollection.sequence_id)
+        repository = new CategoryCollectionDAO(manager, CategoryCollection.sequence_name)
     }
 
     def "test get next id"() {
@@ -18,6 +18,14 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
 
         then:
         result == 3
+    }
+
+    def "test init"(){
+        when:
+        repository.init();
+
+        then:
+        notThrown Exception
     }
 
     def "test insertion"() {
@@ -190,6 +198,14 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
 
         then:
         notThrown DAOException
+    }
+
+    def "test delete default category collection"() {
+        when:
+        repository.delete(new CategoryCollection(1, "mock", false))
+
+        then:
+        thrown DAOException
     }
 
     def "test delete an unknown category" (){

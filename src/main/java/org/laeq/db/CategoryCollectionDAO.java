@@ -55,6 +55,37 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
         }
     }
 
+    public void init() throws DAOException, SQLException {
+        Integer nextId = getNextValue();
+
+        int result = 0;
+
+        if(nextId == null){
+            throw new DAOException("Cannot generate the next category_collection id from the database.");
+        }
+
+        if(nextId > 1){
+            getLogger().info("CategoryCollectionDAO: init() - default category exists");
+            return;
+        }
+
+        try(Connection connection = getManager().getConnection()){
+            String query = "INSERT INTO CATEGORY_COLLECTION (ID, NAME) VALUES (?, ?);";
+            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+            statement.setInt(1, nextId);
+            statement.setString(2, "Default category");
+
+            result = statement.executeUpdate();
+        }
+
+        if(result != 1){
+            throw new DAOException("Cannot save category collection:");
+        } else {
+            getLogger().info("CategoryCollectionDAO: default category collection created");
+        }
+    }
+
     public void setDefault(CategoryCollection categoryCollection) throws SQLException, DAOException {
         try(Connection connection = getManager().getConnection())
         {
@@ -282,6 +313,10 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
 
     @Override
     public void delete(CategoryCollection category) throws DAOException {
-            throw new DAOException("To be implemented");
+        if(category.getId() == 1){
+            throw new DAOException("CategoryCollectionDAO: You cannot delete the default category collection");
+        }
+
+        throw new DAOException("To be implemented");
     }
 }

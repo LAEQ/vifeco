@@ -50,38 +50,37 @@ public class CategoryView extends AbstractJavaFXGriffonView {
 
         Node node = loadFromFXML();
 
-        HashMap<Category, CategoryGroup> categoryList = new HashMap<>();
-        try {
-            for (int i = 0; i < categories.length; i++) {
-                CategoryGroup group = new CategoryGroup(categories[i].getIcon());
-                group.setStyle("-fx-background-color: rgb(250,250,250);");
-
-                group.setMaxWidth(Control.USE_COMPUTED_SIZE);
-                group.setMinWidth(Control.USE_COMPUTED_SIZE);
-                group.setPrefWidth(Control.USE_COMPUTED_SIZE);
-                group.setPrefHeight(60);
-
-                group.setLayoutX(10);
-                group.setLayoutY(65 * i + 44);
-                categoryList.put(categories[i], group);
-
-                setLeftAnchor(group, 1d);
-                setRightAnchor(group, 1d);
-            }
-        } catch (FileNotFoundException e){
-            getLog().error(e.getMessage());
-        }
-
-        ((AnchorPane)node).getChildren().addAll(categoryList.values());
-
-        model.generateProperties(categoryList.keySet());
-
-        categoryList.forEach((k, v) -> {
-            v.getTextLabel().textProperty().bind(model.getCategoryProperty(k).asString());
-        });
-
-
-        totalLabel.textProperty().bind(model.totalProperty().asString());
+//        HashMap<Category, CategoryGroup> categoryList = new HashMap<>();
+//        try {
+//            for (int i = 0; i < categories.length; i++) {
+//                CategoryGroup group = new CategoryGroup(categories[i].getIcon());
+//                group.setStyle("-fx-background-color: rgb(250,250,250);");
+//
+//                group.setMaxWidth(Control.USE_COMPUTED_SIZE);
+//                group.setMinWidth(Control.USE_COMPUTED_SIZE);
+//                group.setPrefWidth(Control.USE_COMPUTED_SIZE);
+//                group.setPrefHeight(60);
+//
+//                group.setLayoutX(10);
+//                group.setLayoutY(65 * i + 44);
+//                categoryList.put(categories[i], group);
+//
+//                setLeftAnchor(group, 1d);
+//                setRightAnchor(group, 1d);
+//            }
+//        } catch (FileNotFoundException e){
+//            getLog().error(e.getMessage());
+//        }
+//
+//        ((AnchorPane)node).getChildren().addAll(categoryList.values());
+//
+//        model.generateProperties(categoryList.keySet());
+//
+//        categoryList.forEach((k, v) -> {
+//            v.getTextLabel().textProperty().bind(model.getCategoryProperty(k).asString());
+//        });
+//
+//        totalLabel.textProperty().bind(model.totalProperty().asString());
 
         parentView.getMiddlePane().getItems().add(node);
     }

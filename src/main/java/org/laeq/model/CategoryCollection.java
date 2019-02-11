@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 public class CategoryCollection extends Entity{
-    public final static String sequence_id = "category_collection_id";
+    public final static String sequence_name = "category_collection_id";
 
     private SimpleIntegerProperty id;
     private SimpleStringProperty name;

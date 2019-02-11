@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
+    public static String sequence_name = "video_id";
 
     private CategoryCollectionDAO categoryCollectionDAO;
 

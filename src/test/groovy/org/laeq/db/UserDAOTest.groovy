@@ -2,6 +2,8 @@ package org.laeq.db
 
 import org.laeq.model.User
 
+import java.sql.SQLException
+
 class UserDAOTest extends AbstractDAOTest {
     UserDAO repository;
 
@@ -81,7 +83,7 @@ class UserDAOTest extends AbstractDAOTest {
         result.size() == 0
     }
 
-    def "test delete an existing user"() {
+    def "test delete the default user"() {
         setup:
         try{
             manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
@@ -90,6 +92,23 @@ class UserDAOTest extends AbstractDAOTest {
         }
 
         User user = new User(1,"Luck", "Skywalker", "luke@maytheforcebewithyou.com")
+
+        when:
+        repository.delete(user)
+
+        then:
+        thrown DAOException
+    }
+
+    def "test delete an existing user"() {
+        setup:
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+        } catch (Exception e){
+            println e
+        }
+
+        User user = new User(2,"Luck", "Skywalker", "luke@maytheforcebewithyou.com")
 
         when:
         repository.delete(user)
@@ -145,5 +164,13 @@ class UserDAOTest extends AbstractDAOTest {
 
         then:
         thrown DAOException
+    }
+
+    def "test init user"(){
+        when:
+        repository.init()
+
+        then:
+        notThrown DAOException
     }
 }
