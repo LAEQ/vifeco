@@ -48,8 +48,8 @@ public class VideoPointList extends AbstractGriffonModel {
         });
     }
 
-    public PointIcon getPositionedIcon(VideoPoint point){
-        PointIcon icon = (PointIcon)point.getIcon();
+    public Icon getPositionedIcon(VideoPoint point){
+        Icon icon = (Icon)point.getIcon();
 
         icon.setLayoutX(point.getIconX(iconPane.getBoundsInLocal()));
         icon.setLayoutY(point.getIconY(iconPane.getBoundsInLocal()));
@@ -58,7 +58,7 @@ public class VideoPointList extends AbstractGriffonModel {
     }
 
     public void setPositionedIcon(VideoPoint point){
-        PointIcon icon = (PointIcon) point.getIcon();
+        Icon icon = (Icon) point.getIcon();
 
         icon.setLayoutX(point.getIconX(iconPane.getBoundsInLocal()));
         icon.setLayoutY(point.getIconY(iconPane.getBoundsInLocal()));

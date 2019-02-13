@@ -6,7 +6,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
-import org.laeq.icon.VideoPointService;
+import org.laeq.icon.IconService;
 import org.laeq.model.VideoPoint;
 import org.laeq.model.VideoPointList;
 import javax.annotation.Nonnull;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
 public final class VideoService extends AbstractGriffonService {
-    @Inject private VideoPointService videoPointService;
+    @Inject private IconService iconService;
 
     private VideoPointList videoPointList;
     private Pane pane;
@@ -43,7 +43,7 @@ public final class VideoService extends AbstractGriffonService {
     }
 
     public void addVideoIcon(Point2D point, Duration start) throws FileNotFoundException {
-        VideoPoint vp = videoPointService.generatePoint(point, start);
+        VideoPoint vp = iconService.generatePoint(point, start);
         videoPointList.addVideoPoint(vp);
         getApplication().getEventRouter().publishEventAsync("video.point.create", Arrays.asList(vp));
 
@@ -71,7 +71,7 @@ public final class VideoService extends AbstractGriffonService {
     }
 
     public void addVideoIconDebug(Point2D point, Duration start) throws FileNotFoundException {
-        VideoPoint vp = videoPointService.generatePoint(point, start);
+        VideoPoint vp = iconService.generatePoint(point, start);
         videoPointList.addVideoPointTest(vp);
     }
 }

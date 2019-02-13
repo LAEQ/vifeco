@@ -5,6 +5,8 @@ import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
+import org.laeq.model.Point;
+import org.laeq.model.User;
 import org.laeq.model.VideoUser;
 import org.laeq.ui.DialogService;
 
@@ -14,6 +16,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +42,7 @@ public class DatabaseController extends AbstractGriffonController {
 
         getApplication().getEventRouter().addEventListener(listeners());
         publishEvent("database.video_user.findAll", service.getVideoUserList());
+        publishEvent("menu.user.init", new ArrayList<User>(service.getUserList()));
     }
 
     @Override
@@ -48,13 +52,15 @@ public class DatabaseController extends AbstractGriffonController {
     }
 
     private ProcessBuilder createProcess() throws URISyntaxException {
+//        java -classpath lib/hsqldb.jar org.hsqldb.server.Server --database.0 file:hsqldb/vifecodb --dbname.0 vifecodb
+
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
-
         URL hslqdbPath = getClass().getClassLoader().getResource("db/lib/hsqldb.jar");
 
-        ProcessBuilder builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),
-                "org.hsqldb.server.Server", "--database.1",  "file:hsqldb/vifecodb",  "--dbname.1", " vifecodb");
+
+        ProcessBuilder builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.getFile(),
+                "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/vifecodb",  "--dbname.0", " vifecodb");
         builder.redirectErrorStream(true);
 
         return builder;
@@ -72,6 +78,25 @@ public class DatabaseController extends AbstractGriffonController {
                 publishEvent("category.video_user.load", videoUser);
             } catch (SQLException e) {
                 dialogService.dialog("DBController: Cannot retrieve datas for " + videoUser);
+            }
+        });
+
+        list.put("database.user.active", objects -> {
+            User user = (User) objects[0];
+            try {
+                service.setUserActive(user);
+            } catch (Exception e) {
+                getLog().error("DatabaseController: failed to set user %s active", user );
+            }
+        });
+
+        list.put("database.point.new", objects -> {
+            Point newPoint = (Point) objects[0];
+            try {
+                service.save(newPoint);
+            } catch (DAOException e) {
+                getLog().error("DB controller: cannot save new point %s", newPoint);
+                publishEvent("player.point.not_created", Arrays.asList(newPoint));
             }
         });
 

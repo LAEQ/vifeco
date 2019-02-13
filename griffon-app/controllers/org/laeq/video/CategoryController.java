@@ -30,23 +30,15 @@ public class CategoryController extends AbstractGriffonController {
     }
 
 
-
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         list.put("player.video_user.load", objects -> {
             VideoUser videoUser = (VideoUser) objects[0];
-
-            System.out.println(videoUser);
-            System.out.println(videoUser.getPoints().size());
-
             model.setItem(videoUser);
             view.initView();
         });
 
-
         return list;
     }
-
-
 }

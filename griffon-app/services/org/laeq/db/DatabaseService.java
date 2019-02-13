@@ -112,4 +112,16 @@ public class DatabaseService extends AbstractGriffonService {
 
         videoUser.getVideo().setCategoryCollection(categoryCollectionDAO.findByID(categoryCollectionId));
     }
+
+    public Set<User> getUserList() {
+        return userDAO.findAll();
+    }
+
+    public void setUserActive(User user) throws SQLException, DAOException {
+        userDAO.setActive(user);
+    }
+
+    public void save(Point point) throws DAOException {
+        pointDAO.insert(point);
+    }
 }

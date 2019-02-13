@@ -1,35 +1,40 @@
 package org.laeq;
 
+import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.model.User;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class MenuController extends AbstractGriffonController {
-    private MenuModel model;
+    @MVCMember @Nonnull private MenuModel model;
+    @MVCMember @Nonnull private MenuView view;
 
     private FileChooser fileChooser;
 
-    @MVCMember
-    public void setModel(@Nonnull MenuModel model) {
-        this.model = model;
-    }
-
-    @MVCMember @Nonnull
-    private MenuView view;
-
     @Inject private DialogService dialogService;
+
+    @Override
+    public void mvcGroupInit(@Nonnull Map<String, Object> args) {
+        getApplication().getEventRouter().addEventListener(listeners());
+    }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
@@ -126,5 +131,29 @@ public class MenuController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void backupDB() {
         dialogService.dialog();
+    }
+
+    private Map<String, RunnableWithArgs> listeners(){
+        Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        list.put("menu.user.init", objects -> {
+            List<User> userList = (List<User>) objects[0];
+            userList.forEach(user -> {
+                     view.getUserComboBox().getItems().add(user);
+                     if(user.getIsActive()){
+                         view.getUserComboBox().getSelectionModel().select(user);
+                     }
+                }
+            );
+        });
+
+
+
+        return list;
+    }
+
+
+    public void setActiveUser(User selectedItem) {
+        getApplication().getEventRouter().publishEventAsync("database.user.active", Arrays.asList(selectedItem));
     }
 }

@@ -21,9 +21,8 @@ import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
-import org.laeq.icon.VideoPointService;
-import org.laeq.model.CategoryCollection;
-import org.laeq.model.Video;
+import org.laeq.icon.IconService;
+import org.laeq.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,16 +33,6 @@ import java.io.IOException;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {
-    private final String[] icons = new String[]{
-            "icons/truck-mvt-blk-64.png",
-            "icons/truck-mvt-red-64.png",
-            "icons/icon-bicycle-mvt-64.png",
-            "icons/icon-car-co2-black-64.png",
-            "icons/icon-constr-black-64.png",
-            "icons/iconmonstr-car-23-64.png",
-            "icons/icon-car-elec-blk-64.png",
-    };
-
     private static int REWIND_VALUE = 10;
 
     @MVCMember @Nonnull
@@ -77,7 +66,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private Duration duration;
 
     @Inject private VideoService videoService;
-    @Inject private VideoPointService videoPointService;
+    @Inject private IconService iconService;
 
     @MVCMember
     public void setController(@Nonnull PlayerController controller) {
@@ -106,7 +95,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
        subInit();
 
-       setMedia("C:\\Users\\David\\Desktop\\inrs-videa\\ID2_MG_2018-06-19_TRAJET13.mp4");
+//       setMedia("C:\\Users\\David\\Desktop\\inrs-videa\\ID2_MG_2018-06-19_TRAJET13.mp4");
     }
 
     private void subInit(){
@@ -178,7 +167,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
                 initPlayer();
 
-
             } catch (IOException | MediaException e) {
                 getLog().error(String.format("MediaException: %s\n", e.toString()));
             } catch (Exception e){
@@ -218,17 +206,15 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     @FXML
     public void playerPaneMouseClicked(MouseEvent mouseEvent) {
-        try {
-            int rand = (int)(Math.random() * 10) % icons.length;
-            Point2D point = new Point2D(mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth(), mouseEvent.getY() / iconPane.getBoundsInLocal().getHeight());
+        Point point = new Point();
+        point.setX(mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth());
+        point.setY(mouseEvent.getY() / iconPane.getBoundsInLocal().getHeight());
+        point.setCategory(model.getCategory("1").get());
+        point.setVideo(model.getVideo());
+        point.setUser(model.getUser());
+        point.setStart(mediaPlayer.getCurrentTime());
 
-            videoService.addVideoIcon(point, mediaPlayer.getCurrentTime());
-
-
-
-        } catch (FileNotFoundException e) {
-//            getLog().error(String.format("Icon file not found: %s"));
-        }
+        model.addPoint(point);
     }
 
     public void setVolume() {

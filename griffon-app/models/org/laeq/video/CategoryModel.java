@@ -32,11 +32,10 @@ public class CategoryModel extends AbstractGriffonModel {
         categoryPropertyList = new HashMap<>();
 
         videoUser.getVideo().getCategoryCollection().getCategorySet().forEach(category -> {
-
             long total = videoUser.getPoints().stream().filter(point -> {
-                System.out.println(point.getCategory() + ": " + category + " : " + point.getCategory().equals(category));
                 return point.getCategory().equals(category);
             }).count();
+
             categoryPropertyList.put(category, new SimpleLongProperty(this, category.getName(), total));
             SimpleLongProperty test = new SimpleLongProperty(this, category.getName(), total);
         });

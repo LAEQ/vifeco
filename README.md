@@ -20,5 +20,5 @@ java -classpath lib/hsqldb.jar org.hsqldb.server.Server
  
 https://examples.javacodegeeks.com/enterprise-java/sql-enterprise-java/jdbc-hsqldb-tutorial/#howtoaccess
  
-java -classpath lib/hsqldb.jar org.hsqldb.server.Server --database.1 file:hsqldb/vifecodb --dbname.1 vifecodb
+java -classpath lib/hsqldb.jar org.hsqldb.server.Server --database.0 file:hsqldb/vifecodb --dbname.0 vifecodb
 

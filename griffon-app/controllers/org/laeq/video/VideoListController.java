@@ -30,10 +30,9 @@ public class VideoListController extends AbstractGriffonController {
         getApplication().getEventRouter().addEventListener(listeners());
 
 //        getApplication().getEventRouter().addEventListener("database.video.created", videos -> {
-////            Video video = (Video) videos[0];
-//
+//            Video video = (Video) videos[0];
 //            runInsideUISync(() -> {
-////                this.model.addVideo(video);
+//                this.model.addVideo(video);
 //            });
 //        });
     }
@@ -49,7 +48,6 @@ public class VideoListController extends AbstractGriffonController {
     }
 
     public void editVideo(VideoUser videoUser) {
-        System.out.println("Edit video");
         getApplication().getEventRouter().publishEvent("database.video_user.load", Arrays.asList(videoUser));
     }
 

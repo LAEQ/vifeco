@@ -78,12 +78,7 @@ public class User extends Entity{
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName=" + firstName +
-                ", lastName=" + lastName +
-                ", email=" + email +
-                '}';
+        return getName().getValue();
     }
 
     @Override

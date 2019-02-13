@@ -1,34 +1,30 @@
 package org.laeq.model;
 
 import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
-import java.util.Objects;
+public class VideoPoint implements Comparable<VideoPoint>{
+    private  int size;
+    private  int duration;
+    private  Duration start;
+    private  Duration end;
+    private  Category category;
+    private  CategoryIcon icon;
+    private Point point;
 
-public class VideoPoint {
-    private final Point2D point;
-    private final int size;
-    private final int duration;
-    private final Duration start;
-    private final Duration end;
-    private final Category category;
-    private final CategoryIcon icon;
-
-    public VideoPoint(Point2D point, int size, int duration, Duration start, Category category, CategoryIcon icon) {
+    public VideoPoint(int size, int duration, CategoryIcon icon, Point point) {
         this.point = point;
         this.size = size;
         this.duration = duration;
-        this.start = start;
-        this.end = Duration.seconds(start.toSeconds() + duration);
-        this.category = category;
         this.icon = icon;
+        this.point = point;
+        this.start = point.getStart();
+        this.end = Duration.seconds(start.toSeconds() + duration);
     }
 
     public double getIconX(Bounds bounds){
         return point.getX() * bounds.getWidth() - (icon.getWidth() / 2);
     }
-
     public double getIconY(Bounds bounds){
         return point.getY() * bounds.getHeight() - (icon.getHeight() / 2);
     }
@@ -36,7 +32,6 @@ public class VideoPoint {
     public CategoryIcon getIcon() {
         return icon;
     }
-
     public Boolean isValid(Duration now){
         return this.end.greaterThanOrEqualTo(now) && this.start.lessThanOrEqualTo(now);
     }
@@ -49,27 +44,12 @@ public class VideoPoint {
                 ", category=" + category +
                 '}';
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        VideoPoint that = (VideoPoint) o;
-        return size == that.size &&
-                duration == that.duration &&
-                point.equals(that.point) &&
-                start.equals(that.start) &&
-                Objects.equals(end, that.end) &&
-                category.equals(that.category) &&
-                Objects.equals(icon, that.icon);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(point, start, category);
-    }
-
     public Category getCategory() {
-        return category;
+        return point.getCategory();
+    }
+
+    @Override
+    public int compareTo(VideoPoint vp) {
+       return this.point.compareTo(vp.point);
     }
 }

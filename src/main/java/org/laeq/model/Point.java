@@ -88,7 +88,7 @@ public class Point extends Entity implements Comparable<Point> {
 
         double positionCompare = this.x - o.x;
 
-        return (positionCompare < 0)? -1 : 1;
+        return (positionCompare <= 0)? -1 : 1;
     }
 
     @Override

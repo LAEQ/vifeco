@@ -1,44 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<MenuBar maxHeight="31.0" minHeight="31.0" prefHeight="31.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.MenuController">
-    <menus>
-        <Menu mnemonicParsing="false" text="Video">
-            <items>
-                <MenuItem fx:id="openActionTarget" mnemonicParsing="false" text="Open" />
-                <MenuItem fx:id="closeActionTarget" mnemonicParsing="false" text="Close" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <Menu mnemonicParsing="false" text="Open Recent" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem fx:id="saveActionTarget" mnemonicParsing="false" text="Save" />
-                <MenuItem mnemonicParsing="false" text="Save As…" fx:id="saveAsActionTarget"/>
-                <MenuItem mnemonicParsing="false" text="Send To…" fx:id="sendToActionTarget"/>
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Preferences…" fx:id="PreferencesActionTarget" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem fx:id="quitActionTarget" mnemonicParsing="false" text="Quit" />
-            </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Category" styleClass="fa-database">
-            <items>
-                <MenuItem mnemonicParsing="false" text="New" fx:id="newCategoryActionTarget"/>
-                <MenuItem mnemonicParsing="false" text="List" fx:id="listCategoryActionTarget"/>
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Export" fx:id="exportCategoryActionTarget" />
-                <MenuItem mnemonicParsing="false" text="Import" fx:id="importCategoryActionTarget" />
-            </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Database" fx:id="DBActionTarget">
-            <items>
-                <MenuItem mnemonicParsing="false" text="Export" fx:id="exportDBActionTarget"/>
-                <MenuItem mnemonicParsing="false" text="Import" fx:id="importDBActionTarget"/>
-            </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-            <items>
-                <MenuItem fx:id="aboutActionTarget" mnemonicParsing="false" text="About" />
-                <MenuItem fx:id="helpActionTarget" mnemonicParsing="false" text="Help" />
-            </items>
-        </Menu>
-    </menus>
-</MenuBar>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.MenuController">
+   <children>
+      <MenuBar maxHeight="31.0" minHeight="31.0" prefHeight="31.0" prefWidth="1366.0">
+          <menus>
+              <Menu mnemonicParsing="false" text="Video">
+                  <items>
+                      <MenuItem fx:id="openActionTarget" mnemonicParsing="false" text="Open" />
+                      <MenuItem fx:id="closeActionTarget" mnemonicParsing="false" text="Close" />
+                      <SeparatorMenuItem mnemonicParsing="false" />
+                      <Menu mnemonicParsing="false" text="Open Recent" />
+                      <SeparatorMenuItem mnemonicParsing="false" />
+                      <MenuItem fx:id="saveActionTarget" mnemonicParsing="false" text="Save" />
+                      <MenuItem fx:id="saveAsActionTarget" mnemonicParsing="false" text="Save As…" />
+                      <MenuItem fx:id="sendToActionTarget" mnemonicParsing="false" text="Send To…" />
+                      <SeparatorMenuItem mnemonicParsing="false" />
+                      <MenuItem fx:id="PreferencesActionTarget" mnemonicParsing="false" text="Preferences…" />
+                      <SeparatorMenuItem mnemonicParsing="false" />
+                      <MenuItem fx:id="quitActionTarget" mnemonicParsing="false" text="Quit" />
+                  </items>
+              </Menu>
+              <Menu mnemonicParsing="false" styleClass="fa-database" text="Category">
+                  <items>
+                      <MenuItem fx:id="newCategoryActionTarget" mnemonicParsing="false" text="New" />
+                      <MenuItem fx:id="listCategoryActionTarget" mnemonicParsing="false" text="List" />
+                      <SeparatorMenuItem mnemonicParsing="false" />
+                      <MenuItem fx:id="exportCategoryActionTarget" mnemonicParsing="false" text="Export" />
+                      <MenuItem fx:id="importCategoryActionTarget" mnemonicParsing="false" text="Import" />
+                  </items>
+              </Menu>
+              <Menu fx:id="DBActionTarget" mnemonicParsing="false" text="Database">
+                  <items>
+                      <MenuItem fx:id="exportDBActionTarget" mnemonicParsing="false" text="Export" />
+                      <MenuItem fx:id="importDBActionTarget" mnemonicParsing="false" text="Import" />
+                  </items>
+              </Menu>
+              <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                      <MenuItem fx:id="aboutActionTarget" mnemonicParsing="false" text="About" />
+                      <MenuItem fx:id="helpActionTarget" mnemonicParsing="false" text="Help" />
+                  </items>
+              </Menu>
+          </menus>
+      </MenuBar>
+      <AnchorPane prefHeight="69.0" prefWidth="1366.0">
+         <children>
+            <ComboBox fx:id="userComboBox" layoutX="1202.0" layoutY="14.0" onAction="#handleUserCombo" prefWidth="150.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>
