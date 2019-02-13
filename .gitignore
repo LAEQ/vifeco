@@ -33,4 +33,4 @@ out
 target
 
 # HSQLDB #
-hslqdb/
+db/hsqldb/*
