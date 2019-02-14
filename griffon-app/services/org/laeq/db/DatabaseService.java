@@ -126,7 +126,9 @@ public class DatabaseService extends AbstractGriffonService {
         userDAO.setActive(user);
     }
 
-    public void save(Point point) throws DAOException {
+    public void save(Point point) throws DAOException, SQLException {
+        User defaultUser = userDAO.findActive();
+        point.setUser(defaultUser);
         pointDAO.insert(point);
     }
 

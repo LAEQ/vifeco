@@ -32,7 +32,6 @@ public class VideoUserDAO extends AbstractDAO {
             result = getResult(queryResult);
 
         } catch (SQLException e){
-            System.out.println(e.getMessage());
             getLogger().error(e.getMessage());
         }
 

@@ -5,9 +5,8 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.beans.Observable;
+import javafx.collections.*;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
@@ -30,10 +29,10 @@ import org.laeq.model.Point;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {
@@ -64,7 +63,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private EventHandler<KeyEvent> keyListener;
     private EventHandler<? super MouseEvent> mouseMoveListener;
 
-    private ObservableList<VideoPoint> displayPoint;
+    private ObservableSet<VideoPoint> displayPoint;
+    private SetChangeListener<VideoPoint> displayPointListener;
 
     @Override
     public void initUI() {
@@ -79,7 +79,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         };
         currentTimeListener = observable -> { updateValues(); };
         keyListener = event -> { keyValues(event);};
-
         mouseMoveListener = mouseEvent -> {
             mousePosition = new Point2D(
                     mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth(),
@@ -97,19 +96,18 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         test.getTabPane().getTabs().add(tab);
 
-        displayPoint  = FXCollections.observableArrayList();
-        displayPoint.addListener((ListChangeListener<VideoPoint>) c -> {
-            while(c.next()){
-                if(c.wasAdded()){
-                    //@todo check if iconPane est deja present.
-                    c.getAddedSubList().forEach(e -> iconPane.getChildren().add(getPositionedIcon(e)));
-                }
-
-                if(c.wasRemoved()){
-                    c.getRemoved().forEach(e -> iconPane.getChildren().remove(e.getIcon()));
-                }
+        displayPoint  = FXCollections.observableSet();
+        displayPointListener = change -> {
+            if(change.wasAdded()){
+                Icon icon = change.getElementAdded().getIcon();
+                icon.setBounds(iconPane.getBoundsInLocal());
+                iconPane.getChildren().add(icon);
             }
-        });
+
+            if(change.wasRemoved()){
+                iconPane.getChildren().remove(change.getElementRemoved().getIcon());
+            }
+        };
 
         subInit();
     }
@@ -122,7 +120,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
             iconPane.setPrefWidth(newValue.getWidth());
             iconPane.setPrefHeight(newValue.getHeight());
+            repositionIcons();
         });
+    }
+
+    private void repositionIcons() {
+
     }
 
     private void initPlayer() {
@@ -186,33 +189,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 //        point.setUser(model.getUser());
 //        point.setStart(mediaPlayer.getCurrentTime());
 //
-//        model.addPoint(point);
+//        model.addVideoPoint(point);
     }
 
     public void setVolume() {
         getLog().info("set volume");
-    }
-
-    private void updateValues() {
-        Platform.runLater(() -> {
-            Duration currentTime = mediaPlayer.getCurrentTime();
-//            videoService.update(currentTime);
-
-            model.update(currentTime);
-
-            timeSlider.setDisable(duration.isUnknown());
-
-            if (!timeSlider.isDisabled() && duration.greaterThan(Duration.ZERO) && !timeSlider.isValueChanging()) {
-                timeSlider.setValue(currentTime.divide(duration).toMillis() * 100.0);
-            }
-
-            durationLabel.setText(
-                String.format("%s / %s",
-                        videoService.formatDuration(mediaPlayer.getCurrentTime()),
-                        videoService.formatDuration(mediaPlayer.getTotalDuration())
-                )
-            );
-        });
     }
 
     private double rand(double min, double max) {
@@ -224,9 +205,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             playActionTarget.setDisable(true);
             timeSlider.valueProperty().removeListener(sliderTimeListener);
             parentView.getScene().removeEventHandler(KeyEvent.KEY_RELEASED, keyListener);
+            displayPoint.removeListener(displayPointListener);
 
             media = null;
             mediaPlayer = null;
+            iconPane.getChildren().clear();
+            displayPoint.clear();
 
         } catch (Exception e) {
             getLog().error(e.getMessage());
@@ -248,10 +232,21 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
             mediaPlayer.setOnReady(() -> {
                 duration = mediaPlayer.getMedia().getDuration();
+
+                displayPoint.addListener(displayPointListener);
+
+                displayPoints();
             });
+
         } else {
             getLog().error(String.format("PlayerView: file not exits %s", model.videoPathProperty().getValue()));
         }
+    }
+
+    private void displayPoints() {
+        SortedSet<VideoPoint> points = model.display(mediaPlayer.getCurrentTime());
+        displayPoint.retainAll(points);
+        points.parallelStream().filter(videoPoint -> ! displayPoint.contains(videoPoint)).forEach(videoPoint -> displayPoint.add(videoPoint));
     }
 
     public void init() {
@@ -265,7 +260,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
         timeSlider.valueProperty().addListener(sliderTimeListener);
         parentView.getScene().setOnKeyPressed(keyListener);
-//        iconPane.setOnMouseMoved(mouseMoveListener);
 
         iconPane.setOnMouseEntered(event -> {
             iconPane.setOnMouseMoved(mouseMoveListener);
@@ -276,6 +270,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             System.out.println("Mouse exited");
             iconPane.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveListener);
             mousePosition = null;
+        });
+
+        iconPane.widthProperty().addListener(observable -> {
+            iconPane.getChildren().forEach(node -> ((Icon)node).setBounds(iconPane.getBoundsInLocal()));
+        });
+
+        iconPane.heightProperty().addListener(observable -> {
+            iconPane.getChildren().forEach(node -> ((Icon)node).setBounds(iconPane.getBoundsInLocal()));
         });
     }
 
@@ -291,16 +293,26 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             relPoint.setUser(model.getUser());
             relPoint.setStart(mediaPlayer.getCurrentTime());
 
-            model.addPoint(relPoint);
+            controller.savePoint(relPoint);
         }
     }
 
-    public Icon getPositionedIcon(VideoPoint point){
-        Icon icon = (Icon)point.getIcon();
+    private void updateValues() {
+        Platform.runLater(() -> {
+            displayPoints();
 
-        icon.setLayoutX(point.getIconX(iconPane.getBoundsInLocal()));
-        icon.setLayoutY(point.getIconY(iconPane.getBoundsInLocal()));
+            timeSlider.setDisable(duration.isUnknown());
 
-        return icon;
+            if (!timeSlider.isDisabled() && duration.greaterThan(Duration.ZERO) && !timeSlider.isValueChanging()) {
+                timeSlider.setValue(mediaPlayer.getCurrentTime().divide(duration).toMillis() * 100.0);
+            }
+
+            durationLabel.setText(
+                    String.format("%s / %s",
+                            videoService.formatDuration(mediaPlayer.getCurrentTime()),
+                            videoService.formatDuration(mediaPlayer.getTotalDuration())
+                    )
+            );
+        });
     }
 }

@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class User extends Entity{
@@ -39,21 +40,21 @@ public class User extends Entity{
     public String getFirstName() {
         return firstName.get();
     }
-    public void setFirstName(String fName) {
+    public void setFirstName(@Nonnull String fName) {
         firstName.set(fName);
     }
 
     public String getLastName() {
         return lastName.get();
     }
-    public void setLastName(String fName) {
+    public void setLastName(@Nonnull String fName) {
         lastName.set(fName);
     }
 
     public String getEmail() {
         return email.get();
     }
-    public void setEmail(String fName) {
+    public void setEmail(@Nonnull String fName) {
         email.set(fName);
     }
 

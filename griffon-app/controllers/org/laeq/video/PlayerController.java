@@ -73,19 +73,13 @@ public class PlayerController extends AbstractGriffonController {
             view.init();
         }));
 
-        list.put("player.point.not_created", objects -> model.removePoint((VideoPoint) objects[0]));
-
+        list.put("player.point.new", objects -> model.addPoint((Point) objects[0]));
 
         return list;
     }
 
-    public void savePoint(VideoPoint newPoint) {
-        model.addPoint(newPoint);
+    public void savePoint(Point newPoint) {
+//        model.addPoint(newPoint);
         getApplication().getEventRouter().publishEventAsync("database.point.new", Arrays.asList(newPoint));
-    }
-
-
-    public void addPoint(Point relPoint) {
-
     }
 }

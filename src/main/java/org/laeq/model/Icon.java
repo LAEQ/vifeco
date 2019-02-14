@@ -1,6 +1,7 @@
 package org.laeq.model;
 
 
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -19,6 +20,8 @@ public class Icon extends Group implements CategoryIcon{
     private double width;
     private double height;
     private double opacity;
+    private double x;
+    private double y;
 
     public Icon(double size, double opacity, String imagePath) throws FileNotFoundException {
         this.width = size;
@@ -30,6 +33,7 @@ public class Icon extends Group implements CategoryIcon{
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.valueOf(fillColor));
         gc.fillOval(0,0, width, height);
+        canvas.setOpacity(this.opacity);
 
         getChildren().add(canvas);
 
@@ -53,6 +57,7 @@ public class Icon extends Group implements CategoryIcon{
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.valueOf(fillColor));
         gc.fillOval(0,0, width, height);
+        canvas.setOpacity(this.opacity);
 
         getChildren().add(canvas);
 
@@ -60,6 +65,25 @@ public class Icon extends Group implements CategoryIcon{
         label.setFont(Font.font(18));
 
         getChildren().add(label);
+    }
+
+    public void setBounds(Bounds bounds){
+        this.setLayoutX(getIconX(bounds));
+        this.setLayoutY(getIconY(bounds));
+    }
+
+    private double getIconX(Bounds bounds){
+        return this.x * bounds.getWidth() - (this.getWidth() / 2);
+    }
+    private double getIconY(Bounds bounds){
+        return this.y * bounds.getHeight() - (this.getHeight() / 2);
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+    public void setY(double y) {
+        this.y = y;
     }
 
     public String getImagePath() {

@@ -1,47 +1,32 @@
 package org.laeq.model;
 
-import javafx.geometry.Bounds;
-import javafx.util.Duration;
+import java.util.Objects;
 
 public class VideoPoint implements Comparable<VideoPoint>{
     private  int size;
-    private  int duration;
-    private  Duration start;
-    private  Duration end;
-    private  Category category;
-    private  CategoryIcon icon;
+
+    private  Icon icon;
     private Point point;
 
-    public VideoPoint(int size, int duration, CategoryIcon icon, Point point) {
+    public VideoPoint(int size, Icon icon, Point point) {
         this.point = point;
         this.size = size;
-        this.duration = duration;
         this.icon = icon;
         this.point = point;
-        this.start = point.getStart();
-        this.end = Duration.seconds(start.toSeconds() + duration);
     }
 
-    public double getIconX(Bounds bounds){
-        return point.getX() * bounds.getWidth() - (icon.getWidth() / 2);
-    }
-    public double getIconY(Bounds bounds){
-        return point.getY() * bounds.getHeight() - (icon.getHeight() / 2);
-    }
-
-    public CategoryIcon getIcon() {
+    public Icon getIcon() {
         return icon;
     }
-    public Boolean isValid(Duration now){
-        return this.end.greaterThanOrEqualTo(now) && this.start.lessThanOrEqualTo(now);
+
+    public Point getPoint() {
+        return point;
     }
 
     @Override
     public String toString() {
         return "VideoPoint{" +
                 "point=" + point +
-                ", start=" + start +
-                ", category=" + category +
                 '}';
     }
     public Category getCategory() {
@@ -51,5 +36,18 @@ public class VideoPoint implements Comparable<VideoPoint>{
     @Override
     public int compareTo(VideoPoint vp) {
        return this.point.compareTo(vp.point);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VideoPoint that = (VideoPoint) o;
+        return point.equals(that.point);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(point);
     }
 }

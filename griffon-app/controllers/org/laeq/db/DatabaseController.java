@@ -95,7 +95,7 @@ public class DatabaseController extends AbstractGriffonController {
             Point newPoint = (Point) objects[0];
             try {
                 service.save(newPoint);
-            } catch (DAOException e) {
+            } catch (Exception e) {
                 getLog().error("DB controller: cannot save new point %s", newPoint);
                 publishEvent("player.point.not_created", Arrays.asList(newPoint));
             }

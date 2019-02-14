@@ -14,5 +14,5 @@ task startDatabase() {
             "--dbname.0",
             "vifecodb")
     builder.redirectErrorStream(true)
-    def process = builder.start()
+//    def process = builder.start()
 }
