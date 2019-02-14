@@ -3,8 +3,8 @@ package org.laeq.model;
 import java.sql.Timestamp;
 
 abstract class Entity {
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    protected Timestamp createdAt;
+    protected Timestamp updatedAt;
 
     public abstract int getId();
     public Timestamp getCreatedAt() {

@@ -37,7 +37,6 @@ public class PlayerModel extends AbstractGriffonModel {
         this.size = new SimpleIntegerProperty(100);
         this.duration = new SimpleIntegerProperty(10);
         this.opacity = new SimpleDoubleProperty(0.65);
-
     }
 
 
@@ -138,9 +137,10 @@ public class PlayerModel extends AbstractGriffonModel {
     private Icon generateIcon(Category category){
         Icon icon = null;
         try {
-            icon = new Icon(size.getValue(), opacity.getValue(),category.getIcon());
+            String path = getApplication().getResourceHandler().getResourceAsURL(category.getIcon()).getPath();
+            icon = new Icon(size.getValue(), opacity.getValue(), path);
         } catch (FileNotFoundException e) {
-            getLog().error("Icon path not found: %s", category.getIcon());
+            getLog().error(String.format("Icon path not found: %s", category.getIcon()));
             icon = new Icon(size.getValue(), opacity.getValue());
         }
 

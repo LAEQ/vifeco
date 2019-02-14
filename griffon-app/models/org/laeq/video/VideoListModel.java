@@ -15,7 +15,6 @@ import java.util.List;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class VideoListModel extends AbstractGriffonModel {
-
     private ObservableList<VideoUser> videoList = FXCollections.observableArrayList();
 
     public void addVideos(List<VideoUser> list){

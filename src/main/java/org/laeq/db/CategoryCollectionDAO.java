@@ -105,16 +105,36 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
     }
 
     public CategoryCollection findDefault() throws SQLException {
-        String query = "SELECT C.ID as CAT_ID, C.NAME AS CAT_NAME, C.ICON, C.SHORTCUT, CC.ID, CC.NAME, CC.IS_DEFAULT as IS_DEFAULT FROM CATEGORY_COLLECTION as CC" +
-                " LEFT JOIN CATEGORY_COLLECTION_CATEGORY as CCC ON CC.ID = CCC.CATEGORY_COLLECTION_ID " +
-                "JOIN CATEGORY as C ON C.ID = CCC.CATEGORY_ID WHERE CC.IS_DEFAULT = true";
+        String query = "SELECT * FROM CATEGORY_COLLECTION AS CC " +
+                "LEFT JOIN CATEGORY_COLLECTION_CATEGORY AS CCC " +
+                "ON CC.ID = CCC.CATEGORY_COLLECTION_ID " +
+                "LEFT JOIN CATEGORY AS C " +
+                "ON CCC.CATEGORY_ID = C.ID " +
+                "WHERE CC.IS_DEFAULT = true;";
+
+        CategoryCollection categoryCollection = null;
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query);){
 
-            ResultSet queryResult = statement.executeQuery();
+            ResultSet result = statement.executeQuery();
+            categoryCollection = new CategoryCollection();
+            while(result.next()){
+                categoryCollection.setId(result.getInt(1));
+                categoryCollection.setName(result.getString(2));
+                categoryCollection.setIsDefault(result.getBoolean(3));
 
-            return getCategoryResult(queryResult);
+
+                Category category = new Category();
+                category.setId(result.getInt(10));
+                category.setName(result.getString(11));
+                category.setIcon(result.getString(12));
+                category.setShortcut(result.getString(13));
+
+                categoryCollection.addCategory(category);
+            }
+
+            return categoryCollection;
         }
     }
 
@@ -286,7 +306,6 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
             ResultSet queryResult = statement.executeQuery();
 
             return getCategoryResult(queryResult);
-
         }
     }
 

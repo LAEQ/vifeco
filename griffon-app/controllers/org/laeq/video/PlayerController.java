@@ -70,7 +70,7 @@ public class PlayerController extends AbstractGriffonController {
 
         list.put("player.video_user.load", objects -> runInsideUISync(() -> {
             model.setVideoUser((VideoUser) objects[0]);
-
+            view.init();
         }));
 
         list.put("player.point.not_created", objects -> model.removePoint((VideoPoint) objects[0]));
@@ -82,5 +82,10 @@ public class PlayerController extends AbstractGriffonController {
     public void savePoint(VideoPoint newPoint) {
         model.addPoint(newPoint);
         getApplication().getEventRouter().publishEventAsync("database.point.new", Arrays.asList(newPoint));
+    }
+
+
+    public void addPoint(Point relPoint) {
+
     }
 }

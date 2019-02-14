@@ -2,9 +2,13 @@ package org.laeq.db;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
@@ -16,6 +20,7 @@ public class DatabaseService extends AbstractGriffonService {
     private UserDAO userDAO;
     private CategoryCollectionDAO categoryCollectionDAO;
     private PointDAO pointDAO;
+    private VideoDAO videoDAO;
 
     public DatabaseService() {
         DatabaseConfigBean configBean = new DatabaseConfigBean("jdbc:hsqldb:hsql://localhost/vifecodb", "SA", "");
@@ -74,8 +79,8 @@ public class DatabaseService extends AbstractGriffonService {
         }
 
 
-        pointDAO = new PointDAO(manager, "point_id");
-
+        pointDAO = new PointDAO(manager, PointDAO.sequence_name);
+        videoDAO = new VideoDAO(manager, VideoDAO.sequence_name);
     }
 
     public void create(Video video) throws SQLException, DAOException {
@@ -123,5 +128,18 @@ public class DatabaseService extends AbstractGriffonService {
 
     public void save(Point point) throws DAOException {
         pointDAO.insert(point);
+    }
+
+    public VideoUser createVideoUser(File file) throws IOException, SQLException, DAOException {
+        User defaultUser = userDAO.findActive();
+        CategoryCollection defaultCategoryCollection = categoryCollectionDAO.findDefault();
+
+        Media media = new Media(file.getCanonicalFile().toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+        Video video = new Video(file.getPath().toString(), mediaPlayer.getTotalDuration(), defaultCategoryCollection);
+        videoDAO.insert(video);
+
+        return new VideoUser(video, defaultUser);
     }
 }

@@ -49,7 +49,7 @@ public class MenuController extends AbstractGriffonController {
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            getApplication().getEventRouter().publishEventAsync("menu.open.video", Arrays.asList(selectedFile));
+            getApplication().getEventRouter().publishEventAsync("database.video.create", Arrays.asList(selectedFile));
         } else {
             System.out.println("Error loading the file");
         }

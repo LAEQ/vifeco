@@ -13,6 +13,7 @@ import org.laeq.ui.DialogService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -100,7 +101,21 @@ public class DatabaseController extends AbstractGriffonController {
             }
         });
 
+        list.put("database.video.create", objects -> {
+            try {
+                VideoUser videoUser = service.createVideoUser((File) objects[0]);
+
+                publishAsyncEvent("database.video_user.created", videoUser);
+            } catch (Exception e) {
+                getLog().error("DB controller: error while creating video user: %s", e.getMessage());
+            }
+        });
+
         return list;
+    }
+
+    private void publishAsyncEvent(String eventName, Object object){
+        getApplication().getEventRouter().publishEventAsync(eventName, Arrays.asList(object));
     }
 
     private void publishEvent(String eventName, Object object){

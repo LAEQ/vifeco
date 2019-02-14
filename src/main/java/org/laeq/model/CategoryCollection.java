@@ -3,8 +3,6 @@ package org.laeq.model;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,7 +14,6 @@ public class CategoryCollection extends Entity{
     private SimpleIntegerProperty id;
     private SimpleStringProperty name;
     private SimpleBooleanProperty isDefault;
-
     private Set<Category> categorySet;
 
     public CategoryCollection() {
@@ -70,8 +67,7 @@ public class CategoryCollection extends Entity{
         if (o == null || getClass() != o.getClass()) return false;
         CategoryCollection that = (CategoryCollection) o;
         return id.getValue().equals(that.id.getValue()) &&
-                name.getValue().equals(that.name.getValue()) &&
-                categorySet.size() == that.categorySet.size();
+                name.getValue().equals(that.name.getValue());
     }
 
     @Override

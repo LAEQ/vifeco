@@ -28,13 +28,6 @@ public class VideoListController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listeners());
-
-//        getApplication().getEventRouter().addEventListener("database.video.created", videos -> {
-//            Video video = (Video) videos[0];
-//            runInsideUISync(() -> {
-//                this.model.addVideo(video);
-//            });
-//        });
     }
 
     public void exportVideo(VideoUser videoUser) {
@@ -55,8 +48,6 @@ public class VideoListController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> result = new HashMap<>();
 
         result.put("database.video_user.findAll", objects -> {
-            System.out.println("database.video_user.findAll");
-
             runInsideUISync(()->{
                 this.model.addVideos((List<VideoUser>) objects[0]);
             });
@@ -64,7 +55,7 @@ public class VideoListController extends AbstractGriffonController {
 
         result.put("database.video_user.created", objects -> {
             runInsideUISync(()->{
-
+                this.model.addVideo((VideoUser) objects[0]);
             });
         });
 

@@ -126,7 +126,7 @@ class DatabaseManagerTest extends Specification {
         def javaBin = javaHome + File.separator + "bin" + File.separator + "java"
         def hslqdbPath = this.class.getClassLoader().getResource("db/lib/hsqldb.jar")
 
-        def builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),  "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/demodb",  "--dbname.0", " testdb")
+        def builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),  "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/testdb",  "--dbname.0", " testdb")
         builder.redirectErrorStream(true)
 
         return builder
