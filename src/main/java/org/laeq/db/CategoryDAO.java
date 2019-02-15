@@ -1,8 +1,6 @@
 package org.laeq.db;
 
-import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 import org.laeq.model.Category;
-import org.laeq.model.User;
 
 import javax.annotation.Nonnull;
 import java.sql.*;
@@ -22,7 +20,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
         Integer nextId = getNextValue();
 
         if(nextId == null){
-            throw new DAOException("Cannot generate the next user id from the database.");
+            throw new DAOException("Cannot generate the next org.laeq.user id from the database.");
         }
 
         String query = "INSERT INTO CATEGORY (ID, NAME, ICON, SHORTCUT) VALUES (?, ?, ?, ?);";

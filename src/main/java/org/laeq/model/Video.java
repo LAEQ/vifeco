@@ -3,12 +3,9 @@ package org.laeq.model;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.util.Duration;
-import java.nio.file.Path;
+
 import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.temporal.Temporal;
-import java.util.Calendar;
 import java.util.Objects;
 
 public class Video extends Entity{

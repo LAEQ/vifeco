@@ -6,9 +6,9 @@ import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
-import org.laeq.icon.VideoPointService;
+import org.laeq.icon.IconService;
 import org.laeq.model.VideoPoint;
-import org.laeq.model.VideoPointList;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.FileNotFoundException;
@@ -18,9 +18,8 @@ import java.util.Arrays;
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
 public final class VideoService extends AbstractGriffonService {
-    @Inject private VideoPointService videoPointService;
+    @Inject private IconService iconService;
 
-    private VideoPointList videoPointList;
     private Pane pane;
 
     public void setUp(@Nonnull Pane pane){
@@ -29,22 +28,19 @@ public final class VideoService extends AbstractGriffonService {
 
     public void init(){
         tearDown();
-        videoPointList = new VideoPointList();
-        videoPointList.init(pane);
+
     }
 
     public void tearDown(){
-        videoPointList = null;
+
         this.pane.getChildren().clear();
     }
 
-    public void update(@Nonnull Duration now){
-        videoPointList.update(now);
-    }
+
 
     public void addVideoIcon(Point2D point, Duration start) throws FileNotFoundException {
-        VideoPoint vp = videoPointService.generatePoint(point, start);
-        videoPointList.addVideoPoint(vp);
+        VideoPoint vp = iconService.generatePoint(point, start);
+
         getApplication().getEventRouter().publishEventAsync("video.point.create", Arrays.asList(vp));
 
     }
@@ -71,7 +67,7 @@ public final class VideoService extends AbstractGriffonService {
     }
 
     public void addVideoIconDebug(Point2D point, Duration start) throws FileNotFoundException {
-        VideoPoint vp = videoPointService.generatePoint(point, start);
-        videoPointList.addVideoPointTest(vp);
+        VideoPoint vp = iconService.generatePoint(point, start);
+
     }
 }

@@ -7,12 +7,12 @@ task startDatabase() {
     def builder = new ProcessBuilder(
             javaBin,
             "-classpath",
-            "./griffon-app/resources/db/lib/hsqldb.jar",
+            "./db/lib/hsqldb.jar",
             "org.hsqldb.server.Server",
-            "--database.1",
+            "--database.0",
             "file:hsqldb/vifecodb",
-            "--dbname.1",
+            "--dbname.0",
             "vifecodb")
     builder.redirectErrorStream(true)
-    def process = builder.start()
+//    def process = builder.start()
 }

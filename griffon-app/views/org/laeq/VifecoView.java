@@ -23,6 +23,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     private VBox top;
     private SplitPane middlePane;
     private HBox bottom;
+    private Scene scene;
 
     @Nonnull
     public VBox getTop() {
@@ -60,7 +61,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     }
 
     private Scene init() {
-        Scene scene = new Scene(new Group());
+        scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
         scene.setRoot(generateView());
         scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
@@ -74,7 +75,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
 
         top = new VBox();
         top.setPrefWidth(900);
-        top.setPrefHeight(102);
+        top.setPrefHeight(100);
         root.setVgrow(top, Priority.NEVER);
 
         middlePane = new SplitPane();
@@ -93,5 +94,9 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         root.getChildren().addAll(top, middlePane, bottom);
 
         return root;
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 }

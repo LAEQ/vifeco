@@ -86,7 +86,7 @@ class VideoPointListTest extends Specification {
     }
 
     def VideoPoint generatePoint(double x, double y, int size, int duration, Duration start, Category cat){
-        PointIcon icon = new PointIcon(10, 10, "path/mock/image");
+        Icon icon = new Icon(10, 10, "path/mock/image");
         return new VideoPoint(new Point2D(x, y), size, duration, start, cat, icon)
     }
 }

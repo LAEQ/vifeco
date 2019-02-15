@@ -80,7 +80,7 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
     }
 
     public SortedSet<Point> findByVideoAndUser(Video video, User user){
-        String query = "SELECT P.ID, P.X, P.Y, P.START, C.ICON  FROM POINT AS P LEFT JOIN CATEGORY AS C ON P.CATEGORY_ID = C.ID WHERE VIDEO_ID = ? AND USER_ID = ? ORDER BY P.START;";
+        String query = "SELECT P.ID, P.X, P.Y, P.START, C.ICON, C.ID AS C_ID, C.NAME AS C_NAME FROM POINT AS P LEFT JOIN CATEGORY AS C ON P.CATEGORY_ID = C.ID WHERE VIDEO_ID = ? AND USER_ID = ? ORDER BY P.START;";
 
         SortedSet<Point> result = new TreeSet<>();
 
@@ -126,6 +126,8 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
             point.setStart(Duration.millis(datas.getDouble("START")));
             Category category = new Category();
             category.setIcon(datas.getString("ICON"));
+            category.setId(datas.getInt("C_ID"));
+            category.setName(datas.getString("C_NAME"));
 
             point.setCategory(category);
             point.setVideo(video);

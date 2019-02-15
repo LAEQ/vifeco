@@ -25,8 +25,6 @@ public class CategoryGroup extends AnchorPane {
     public CategoryGroup(String filePath) throws FileNotFoundException {
         Pane background = new Pane();
 
-
-
         setLeftAnchor(background, 10d);
         setRightAnchor(background, 10d);
 
@@ -48,16 +46,12 @@ public class CategoryGroup extends AnchorPane {
         textLabel.setLayoutY(40);
         textLabel.setTextAlignment(TextAlignment.RIGHT);
 
-
         setRightAnchor(textLabel, 15d);
-
-
 
         Canvas canvas = new Canvas(63, 63);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.valueOf(fillColor));
         gc.fillOval(3,3, 60, 60);
-
 
         getChildren().addAll(background, imageView, textLabel);
     }

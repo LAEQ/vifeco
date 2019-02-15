@@ -1,7 +1,5 @@
 package org.laeq.db;
 
-import org.laeq.model.User;
-
 import java.util.Set;
 
 public interface DAOInterface<T> {

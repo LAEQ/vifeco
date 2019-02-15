@@ -5,11 +5,20 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
+import java.util.SortedSet;
+
 public class VideoUser {
     private Video video;
     private User user;
     private IntegerProperty total;
     private DoubleProperty last;
+    private SortedSet<Point> points;
+
+    public VideoUser(Video video, User user) {
+        this();
+        this.video = video;
+        this.user = user;
+    }
 
     public VideoUser() {
         this.total = new SimpleIntegerProperty(this, "total", 0);
@@ -50,8 +59,15 @@ public class VideoUser {
     public String toString() {
         return "VideoUser{" +
                 "video=" + video.getName() +
-                ", user=" + user.getName() +
-                ", total=" + total +
+                ", org.laeq.user=" + user.getName().getValue() +
+                ", total=" + total.getValue() +
                 '}';
+    }
+
+    public void setPoints(SortedSet<Point> points) {
+        this.points = points;
+    }
+    public SortedSet<Point> getPoints() {
+        return points;
     }
 }
