@@ -45,7 +45,7 @@ class UserDAOTest extends AbstractDAOTest {
 
     }
 
-    def "test insertion with an invalid user (no name, email, ...)"(){
+    def "test insertion with an invalid org.laeq.user (no name, email, ...)"(){
         setup:
         def user = new User("", "Skywalker", "luke@maytheforcebewithyou.com")
 
@@ -81,7 +81,7 @@ class UserDAOTest extends AbstractDAOTest {
         result.size() == 0
     }
 
-    def "test delete the default user"() {
+    def "test delete the default org.laeq.user"() {
         setup:
         try{
             manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
@@ -98,7 +98,7 @@ class UserDAOTest extends AbstractDAOTest {
         thrown DAOException
     }
 
-    def "test delete an existing user"() {
+    def "test delete an existing org.laeq.user"() {
         setup:
         try{
             manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
@@ -115,7 +115,7 @@ class UserDAOTest extends AbstractDAOTest {
         notThrown Exception
     }
 
-    def "test find active user"() {
+    def "test find active org.laeq.user"() {
         setup:
         try{
             manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
@@ -130,7 +130,7 @@ class UserDAOTest extends AbstractDAOTest {
         user == new User(1,"Luck", "Skywalker", "luke@maytheforcebewithyou.com")
     }
 
-    def "test set active user"() {
+    def "test set active org.laeq.user"() {
         setup:
         try {
             manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
@@ -147,7 +147,7 @@ class UserDAOTest extends AbstractDAOTest {
         repository.findById(1).getIsActive() == false
     }
 
-    def "test delete an unknown user"() {
+    def "test delete an unknown org.laeq.user"() {
         setup:
         try{
             manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
@@ -164,7 +164,7 @@ class UserDAOTest extends AbstractDAOTest {
         thrown DAOException
     }
 
-    def "test init user"(){
+    def "test init org.laeq.user"(){
         when:
         repository.init()
 

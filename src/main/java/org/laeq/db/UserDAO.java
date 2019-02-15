@@ -23,10 +23,10 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         Integer nextId = getNextValue();
 
         if(nextId == null){
-            throw new DAOException("Cannot generate the next user id from the database.");
+            throw new DAOException("Cannot generate the next org.laeq.user id from the database.");
         }
 
-        String query = "INSERT INTO user (ID, FIRST_NAME, LAST_NAME, EMAIL) VALUES (?, ?, ?, ?);";
+        String query = "INSERT INTO USER (ID, FIRST_NAME, LAST_NAME, EMAIL) VALUES (?, ?, ?, ?);";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query))
@@ -44,7 +44,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         }
 
         if(result != 1)
-            throw new DAOException("Error during DAO insert user");
+            throw new DAOException("Error during DAO insert USER");
 
     }
 
@@ -53,11 +53,11 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         Integer nextId = getNextValue();
 
         if(nextId > 1){
-            getLogger().info("UserDAO: init - default user exists");
+            getLogger().info("UserDAO: init - default org.laeq.user exists");
             return;
         }
 
-        String query = "INSERT INTO user (ID, FIRST_NAME, LAST_NAME, EMAIL, IS_ACTIVE) VALUES (?, 'default', 'default', 'default@email.com', true); ";
+        String query = "INSERT INTO org.laeq.user (ID, FIRST_NAME, LAST_NAME, EMAIL, IS_ACTIVE) VALUES (?, 'default', 'default', 'default@email.com', true); ";
 
         try(Connection connection = getManager().getConnection();
         PreparedStatement statement = connection.prepareStatement(query)){
@@ -67,9 +67,9 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         }
 
         if(result != 1) {
-            throw new DAOException("UserDAO: cannot create default user");
+            throw new DAOException("UserDAO: cannot create default org.laeq.user");
         } else {
-            getLogger().info("UserDAO: default user created");
+            getLogger().info("UserDAO: default org.laeq.user created");
         }
     }
 
@@ -93,7 +93,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
             user.setIsActive(true);
 
             if(result2 != 1){
-                throw new DAOException("UserDAO: no user is active.");
+                throw new DAOException("UserDAO: no org.laeq.user is active.");
             }
         }
     }
@@ -110,7 +110,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
                return generateUser(result);
             }
 
-            throw new DAOException("UserDAO: no user is active.");
+            throw new DAOException("UserDAO: no org.laeq.user is active.");
         }
     }
 
@@ -127,7 +127,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
                 return generateUser(result);
             }
 
-            throw new DAOException("UserDAO: no user is active.");
+            throw new DAOException("UserDAO: no org.laeq.user is active.");
         }
     }
 
@@ -156,7 +156,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         String query = "DELETE FROM USER WHERE ID=?";
 
         if(user.getId() == 1){
-            throw new DAOException("UserDAO: delete - you cannot delete the default user");
+            throw new DAOException("UserDAO: delete - you cannot delete the default org.laeq.user");
         }
 
         try(Connection connection = getManager().getConnection();
@@ -171,7 +171,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         }
 
         if(result != 1)
-            throw new DAOException("Error deleting a user");
+            throw new DAOException("Error deleting a org.laeq.user");
     }
 
 

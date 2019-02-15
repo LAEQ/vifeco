@@ -59,7 +59,7 @@ public class VideoUser {
     public String toString() {
         return "VideoUser{" +
                 "video=" + video.getName() +
-                ", user=" + user.getName().getValue() +
+                ", org.laeq.user=" + user.getName().getValue() +
                 ", total=" + total.getValue() +
                 '}';
     }

@@ -64,6 +64,13 @@ public class VideoListController extends AbstractGriffonController {
             });
         });
 
+        result.put("org.laeq.user.create", objects -> {
+            String mvcIdentifier = "org.laeq.user.create";
+            runInsideUISync(() -> {
+                createMVCGroup("user_create");
+            });
+        });
+
         return result;
     }
 }

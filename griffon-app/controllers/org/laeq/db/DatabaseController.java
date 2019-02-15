@@ -43,7 +43,7 @@ public class DatabaseController extends AbstractGriffonController {
 
         getApplication().getEventRouter().addEventListener(listeners());
         publishEvent("database.video_user.findAll", service.getVideoUserList());
-        publishEvent("menu.user.init", new ArrayList<User>(service.getUserList()));
+        publishEvent("menu.org.laeq.user.init", new ArrayList<User>(service.getUserList()));
     }
 
     @Override
@@ -85,12 +85,12 @@ public class DatabaseController extends AbstractGriffonController {
             }
         });
 
-        list.put("database.user.active", objects -> {
+        list.put("database.org.laeq.user.active", objects -> {
             User user = (User) objects[0];
             try {
                 service.setUserActive(user);
             } catch (DAOException | SQLException e) {
-                String message = String.format("DatabaseController: failed to set user %s active", user );
+                String message = String.format("DatabaseController: failed to set org.laeq.user %s active", user );
                 getLog().error(message);
                 runInsideUIAsync(() ->{
                     dialogService.dialog(message);
@@ -122,13 +122,26 @@ public class DatabaseController extends AbstractGriffonController {
             }
         });
 
+        list.put("database.user.new", objects -> {
+            try{
+                User user = (User)objects[0];
+                service.save(user);
+                publishEvent("user.created", user );
+            } catch (DAOException e){
+                getLog().error(e.getMessage());
+                runInsideUIAsync(() ->{
+                    dialogService.dialog("Error creating a new user: " + e.getMessage());
+                });
+            }
+        });
+
         list.put("database.video.create", objects -> {
             try {
                 VideoUser videoUser = service.createVideoUser((File) objects[0]);
 
                 publishAsyncEvent("database.video_user.created", videoUser);
             } catch (Exception e) {
-                getLog().error("DB controller: error while creating video user: %s", e.getMessage());
+                getLog().error("DB controller: error while creating video org.laeq.user: %s", e.getMessage());
             }
         });
 
@@ -141,5 +154,8 @@ public class DatabaseController extends AbstractGriffonController {
 
     private void publishEvent(String eventName, Object object){
         getApplication().getEventRouter().publishEvent(eventName, Arrays.asList(object));
+    }
+    private void publishEvent(String eventName){
+        getApplication().getEventRouter().publishEvent(eventName);
     }
 }

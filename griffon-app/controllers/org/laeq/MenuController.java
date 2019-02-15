@@ -74,7 +74,7 @@ public class MenuController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void sendTo(){
-        dialogService.dialog();
+        getApplication().getEventRouter().publishEvent("org.laeq.user.create");
     }
 
     @ControllerAction
@@ -136,7 +136,7 @@ public class MenuController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("menu.user.init", objects -> {
+        list.put("menu.org.laeq.user.init", objects -> {
             List<User> userList = (List<User>) objects[0];
             userList.forEach(user -> {
                      view.getUserComboBox().getItems().add(user);
@@ -147,13 +147,15 @@ public class MenuController extends AbstractGriffonController {
             );
         });
 
-
+        list.put("user.created", objects -> {
+           view.getUserComboBox().getItems().add((User) objects[0]);
+        });
 
         return list;
     }
 
 
     public void setActiveUser(User selectedItem) {
-        getApplication().getEventRouter().publishEventAsync("database.user.active", Arrays.asList(selectedItem));
+        getApplication().getEventRouter().publishEventAsync("database.org.laeq.user.active", Arrays.asList(selectedItem));
     }
 }

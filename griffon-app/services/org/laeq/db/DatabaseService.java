@@ -54,6 +54,12 @@ public class DatabaseService extends AbstractGriffonService {
     }
 
     public void init() {
+        userDAO = new UserDAO(manager, UserDAO.sequence_name);
+        categoryCollectionDAO = new CategoryCollectionDAO(manager, CategoryCollectionDAO.sequence_name);
+        pointDAO = new PointDAO(manager, PointDAO.sequence_name);
+        categoryDAO = new CategoryDAO(manager, CategoryDAO.sequence_name);
+        videoDAO = new VideoDAO(manager, VideoDAO.sequence_name);
+
         try{
             URL tableQuery = getClass().getClassLoader().getResource("sql/create_tables.sql");
             manager.loadFixtures(tableQuery);
@@ -68,26 +74,18 @@ public class DatabaseService extends AbstractGriffonService {
         }
 
         try{
-            userDAO = new UserDAO(manager, UserDAO.sequence_name);
             userDAO.init();
-            getLog().info("DatabaseService: default user created");
+            getLog().info("DatabaseService: default org.laeq.user created");
         } catch (Exception e){
-            getLog().error("DatabaseService: cannot create default user");
+            getLog().error("DatabaseService: cannot create default org.laeq.user");
         }
 
         try{
-            categoryCollectionDAO = new CategoryCollectionDAO(manager, CategoryCollectionDAO.sequence_name);
             categoryCollectionDAO.init();
             getLog().info("DatabaseService: default category collection created");
         } catch (Exception e){
             getLog().error("DatabaseService: cannot create default category collection");
         }
-
-
-
-        pointDAO = new PointDAO(manager, "point_id");
-        categoryDAO = new CategoryDAO(manager, "category_id");
-        videoDAO = new VideoDAO(manager, VideoDAO.sequence_name);
     }
 
     public void create(Video video) throws SQLException, DAOException {
@@ -139,8 +137,13 @@ public class DatabaseService extends AbstractGriffonService {
         pointDAO.insert(point);
     }
 
-    public void save(Category object) throws DAOException {
-        categoryDAO.insert(object);
+
+    public void save(User user) throws DAOException {
+        userDAO.insert(user);
+    }
+
+    public void save(Category category) throws DAOException {
+        categoryDAO.insert(category);
     }
 
     public VideoUser createVideoUser(File file) throws IOException, SQLException, DAOException {
@@ -150,7 +153,7 @@ public class DatabaseService extends AbstractGriffonService {
         Media media = new Media(file.getCanonicalFile().toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
 
-        Video video = new Video(file.getPath().toString(), mediaPlayer.getTotalDuration(), defaultCategoryCollection);
+        Video video = new Video(file.getPath(), mediaPlayer.getTotalDuration(), defaultCategoryCollection);
         videoDAO.insert(video);
 
         return new VideoUser(video, defaultUser);
