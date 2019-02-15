@@ -2,21 +2,22 @@ package org.laeq.video;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
-import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import griffon.transform.Threading;
+import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DatabaseService;
-import org.laeq.model.Video;
 import org.laeq.model.VideoUser;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.CollectionUtils.map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class VideoListController extends AbstractGriffonController {
@@ -28,13 +29,6 @@ public class VideoListController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listeners());
-
-//        getApplication().getEventRouter().addEventListener("database.video.created", videos -> {
-//            Video video = (Video) videos[0];
-//            runInsideUISync(() -> {
-//                this.model.addVideo(video);
-//            });
-//        });
     }
 
     public void exportVideo(VideoUser videoUser) {
@@ -65,6 +59,13 @@ public class VideoListController extends AbstractGriffonController {
         result.put("database.video_user.created", objects -> {
             runInsideUISync(()->{
 
+            });
+        });
+
+        result.put("category.create", objects -> {
+            String mvcIdentifier = "category.create";
+            runInsideUISync(() -> {
+                createMVCGroup("category_create");
             });
         });
 

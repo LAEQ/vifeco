@@ -43,6 +43,26 @@ public class Icon extends Group implements CategoryIcon{
         getChildren().add(imageView);
     }
 
+    public Icon(int size, int opacity, Image image){
+        this.width = size;
+        this.height = size;
+        this.opacity = opacity;
+        this.imagePath = imagePath;
+        Canvas canvas = new Canvas(width, height);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.valueOf(fillColor));
+        gc.fillOval(0,0, width, height);
+
+        getChildren().add(canvas);
+
+        ImageView imageView = new ImageView(image);
+        imageView.setOpacity(opacity);
+        imageView.setX((width- image.getWidth()) / 2);
+        imageView.setY((height - image.getHeight()) / 2);
+
+        getChildren().add(imageView);
+    }
+
     public Icon(double size, double opacity) {
         this.width = size;
         this.height = size;

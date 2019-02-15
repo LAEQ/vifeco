@@ -94,7 +94,9 @@ public class MenuController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void newCategory() {
-        dialogService.dialog();
+//        destroyMVCGroup(getMvcGroup().getMvcId());
+//        dialogService.dialog();
+        getApplication().getEventRouter().publishEvent("category.create");
     }
 
     @ControllerAction

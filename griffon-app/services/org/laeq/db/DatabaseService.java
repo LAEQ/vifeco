@@ -16,6 +16,7 @@ public class DatabaseService extends AbstractGriffonService {
     private UserDAO userDAO;
     private CategoryCollectionDAO categoryCollectionDAO;
     private PointDAO pointDAO;
+    private CategoryDAO categoryDAO;
 
     public DatabaseService() {
         DatabaseConfigBean configBean = new DatabaseConfigBean("jdbc:hsqldb:hsql://localhost/vifecodb", "SA", "");
@@ -75,6 +76,7 @@ public class DatabaseService extends AbstractGriffonService {
 
 
         pointDAO = new PointDAO(manager, "point_id");
+        categoryDAO = new CategoryDAO(manager, "category_id");
 
     }
 
@@ -123,5 +125,9 @@ public class DatabaseService extends AbstractGriffonService {
 
     public void save(Point point) throws DAOException {
         pointDAO.insert(point);
+    }
+
+    public void save(Category object) throws DAOException {
+        categoryDAO.insert(object);
     }
 }

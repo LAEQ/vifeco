@@ -5,6 +5,7 @@ import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
+import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.User;
 import org.laeq.model.VideoUser;
@@ -15,6 +16,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +31,7 @@ public class DatabaseController extends AbstractGriffonController {
 
     private ProcessBuilder builder;
     private Process dbProcess;
+
 
 
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -70,14 +73,17 @@ public class DatabaseController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         list.put("database.video_user.load", objects -> {
-            System.out.println("database.video_user.load");
             VideoUser videoUser = (VideoUser) objects[0];
             try {
                 service.set(videoUser);
                 publishEvent("player.video_user.load", videoUser);
                 publishEvent("category.video_user.load", videoUser);
             } catch (SQLException e) {
-                dialogService.dialog("DBController: Cannot retrieve datas for " + videoUser);
+                String message = String.format("DBController: Cannot retrieve datas for %" , videoUser);
+                getLog().error(message);
+                runInsideUIAsync(() ->{
+                    dialogService.dialog(message);
+                });
             }
         });
 
@@ -85,8 +91,12 @@ public class DatabaseController extends AbstractGriffonController {
             User user = (User) objects[0];
             try {
                 service.setUserActive(user);
-            } catch (Exception e) {
-                getLog().error("DatabaseController: failed to set user %s active", user );
+            } catch (DAOException | SQLException e) {
+                String message = String.format("DatabaseController: failed to set user %s active", user );
+                getLog().error(message);
+                runInsideUIAsync(() ->{
+                    dialogService.dialog(message);
+                });
             }
         });
 
@@ -95,8 +105,22 @@ public class DatabaseController extends AbstractGriffonController {
             try {
                 service.save(newPoint);
             } catch (DAOException e) {
-                getLog().error("DB controller: cannot save new point %s", newPoint);
-                publishEvent("player.point.not_created", Arrays.asList(newPoint));
+                String message = String.format("DB controller: cannot save new point %s", newPoint);
+                getLog().error(message);
+                runInsideUIAsync(() ->{
+                    dialogService.dialog(message);
+                });
+            }
+        });
+
+        list.put("database.category.new", objects -> {
+            try{
+                service.save((Category)objects[0]);
+            } catch (DAOException e){
+                getLog().error(e.getMessage());
+                runInsideUIAsync(() ->{
+                    dialogService.dialog("Error creating a new category: " + e.getMessage());
+                });
             }
         });
 
