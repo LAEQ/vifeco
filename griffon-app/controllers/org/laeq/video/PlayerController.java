@@ -81,4 +81,10 @@ public class PlayerController extends AbstractGriffonController {
 //        model.addPoint(newPoint);
         getApplication().getEventRouter().publishEventAsync("database.point.new", Arrays.asList(newPoint));
     }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void closeTab() {
+        destroyMVCGroup(getMvcGroup().getMvcId());
+    }
 }

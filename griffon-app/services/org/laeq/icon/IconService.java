@@ -98,6 +98,10 @@ public class IconService extends AbstractGriffonService {
         return generateIcon(new Category("", icons[getRandom()], ""), this.size, this.opacity);
     }
 
+    public Icon generateRandomIcon(int size) {
+        return generateIcon(new Category("", icons[getRandom()], ""), size, this.opacity);
+    }
+
     private int getRandom(){
         return ThreadLocalRandom.current().nextInt(0, icons.length - 1);
     }

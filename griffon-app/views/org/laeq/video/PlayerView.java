@@ -8,6 +8,7 @@ import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -51,6 +52,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private PlayerController controller;
     @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private VifecoView parentView;
+
     @FXML private MediaView mediaView;
     @FXML private Pane iconPane;
     @FXML private Button playActionTarget;
@@ -92,7 +94,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             );
         };
 
-        VideoListView test = (VideoListView) getApplication().getMvcGroupManager().findGroup("videoList").getView();
+        VideoListView test = (VideoListView) getApplication().getMvcGroupManager().findGroup("video_list").getView();
 
         connectActions(node, controller);
 
@@ -100,6 +102,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         tab.textProperty().bind(model.videoPathProperty());
         tab.setContent(node);
         tab.setGraphic(new FontIcon(FontAwesome.PLAY_CIRCLE_O));
+
+        tab.setOnClosed(closeTab());
 
         test.getTabPane().getTabs().add(tab);
 
@@ -321,5 +325,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                     )
             );
         });
+    }
+
+    private EventHandler<Event> closeTab(){
+        return event -> controller.closeTab();
     }
 }

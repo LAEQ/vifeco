@@ -72,6 +72,14 @@ public class VideoListController extends AbstractGriffonController {
         result.put("org.laeq.user.list", objects -> {
             createGroup("user_list");
         });
+
+        result.put("video.list", objects -> {
+           createGroup("video_list");
+        });
+
+        result.put("video.player", objects -> {
+            createGroup("video_player");
+        });
         
         return result;
     }
