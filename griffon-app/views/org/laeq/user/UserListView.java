@@ -65,10 +65,10 @@ public class UserListView extends AbstractJavaFXGriffonView {
 
         connectActions(node, controller);
 
-        AnchorPane.setTopAnchor(node, 0.0);
-        AnchorPane.setBottomAnchor(node, 0.0);
-        AnchorPane.setLeftAnchor(node, 0.0);
-        AnchorPane.setRightAnchor(node, 0.0);
+//        AnchorPane.setTopAnchor(node, 0.0);
+//        AnchorPane.setBottomAnchor(node, 0.0);
+//        AnchorPane.setLeftAnchor(node, 0.0);
+//        AnchorPane.setRightAnchor(node, 0.0);
 
         parentPane.getTabs().add(tab);
         parentPane.getSelectionModel().select(tab);

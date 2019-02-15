@@ -87,8 +87,9 @@ public class CategoryController extends AbstractGriffonController {
             Category category = new Category();
             category.setName(model.getName());
             category.setShortcut(model.getShortcut());
-            category.setIcon(model.getShortcut());
+            category.setIcon(model.getIcon());
             getApplication().getEventRouter().publishEventAsync("database.category.new", Arrays.asList(category));
+            view.disableSave(true);
         }
     }
 
@@ -103,8 +104,14 @@ public class CategoryController extends AbstractGriffonController {
 
         list.put("category.create.failed", objects -> {
             dialogService.dialog("Failed to save new category " + ((Exception) objects[0]).getMessage());
+            view.disableSave(false);
         });
 
+        list.put("category.created", objects -> {
+            model.clear();
+            view.disableSave(false);
+            view.clearIcon();
+        });
 
         return list;
     }

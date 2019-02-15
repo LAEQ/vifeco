@@ -103,7 +103,7 @@ public class MenuController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void listCategory() {
-        dialogService.dialog();
+        getApplication().getEventRouter().publishEvent("mvc.category.list");
     }
 
     @ControllerAction

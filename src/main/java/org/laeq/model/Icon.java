@@ -23,6 +23,9 @@ public class Icon extends Group implements CategoryIcon{
     private double x;
     private double y;
 
+    private Image image;
+    private ImageView imageView;
+
     public Icon(double size, double opacity, String imagePath) throws FileNotFoundException {
         this.width = size;
         this.height = size;
@@ -39,7 +42,7 @@ public class Icon extends Group implements CategoryIcon{
 
         FileInputStream inputStream = new FileInputStream(imagePath);
         Image image = new Image(inputStream);
-        ImageView imageView = new ImageView(image);
+        imageView = new ImageView(image);
         imageView.setOpacity(opacity);
         imageView.setX((width- image.getWidth()) / 2);
         imageView.setY((height - image.getHeight()) / 2);
@@ -60,6 +63,19 @@ public class Icon extends Group implements CategoryIcon{
         getChildren().add(canvas);
 
         ImageView imageView = new ImageView(image);
+        imageView.setOpacity(opacity);
+        imageView.setX((width- image.getWidth()) / 2);
+        imageView.setY((height - image.getHeight()) / 2);
+
+        getChildren().add(imageView);
+    }
+
+    public void changeImage(String path) throws FileNotFoundException {
+        getChildren().remove(imageView);
+
+        FileInputStream inputStream = new FileInputStream(imagePath);
+        Image image = new Image(inputStream);
+        imageView = new ImageView(image);
         imageView.setOpacity(opacity);
         imageView.setX((width- image.getWidth()) / 2);
         imageView.setY((height - image.getHeight()) / 2);

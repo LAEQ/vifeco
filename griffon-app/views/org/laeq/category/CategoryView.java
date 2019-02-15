@@ -7,6 +7,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -37,6 +38,8 @@ public class CategoryView extends AbstractJavaFXGriffonView {
     private TabPane parentPane;
     private Icon icon;
 
+    @FXML private Button saveActionTarget;
+
     @MVCMember
     public void setController(@Nonnull CategoryController controller) {
         this.controller = controller;
@@ -66,11 +69,18 @@ public class CategoryView extends AbstractJavaFXGriffonView {
 
         parentPane.getTabs().add(tab);
         parentPane.getSelectionModel().select(tab);
-        System.out.println(model);
-        System.out.println(nameField);
+
         model.nameProperty().bindBidirectional(nameField.textProperty());
         model.shortcutProperty().bindBidirectional(shortcutField.textProperty());
         model.iconProperty().bindBidirectional(filePath.textProperty());
+    }
+
+    public void disableSave(Boolean value){
+        saveActionTarget.setDisable(value);
+    }
+
+    public void clearIcon(){
+        iconView.getChildren().clear();
     }
 
     @Override
@@ -93,5 +103,9 @@ public class CategoryView extends AbstractJavaFXGriffonView {
         } catch (Exception e) {
             getLog().error("Generate icon: " + e.getMessage());
         }
+    }
+
+    public void disableSave() {
+
     }
 }

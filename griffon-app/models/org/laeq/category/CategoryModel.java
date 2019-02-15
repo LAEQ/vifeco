@@ -56,4 +56,10 @@ public class CategoryModel extends AbstractGriffonModel {
     public void setShortcut(String shortcut) {
         this.shortcut.set(shortcut);
     }
+
+    public void clear() {
+        this.setIcon("");
+        this.setName("");
+        this.setShortcut("");
+    }
 }

@@ -12,10 +12,12 @@ import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
+import org.laeq.model.Point;
 import org.laeq.model.VideoPoint;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 @javax.inject.Singleton
@@ -27,6 +29,7 @@ public class IconService extends AbstractGriffonService {
     private int duration = 10;
     private int size = 100;
     private String fillColor = "#EEEEEE";
+    private String defaultPath = "icons/iconmonstr-help-3-64.png";
 
     private final String[] icons = new String[]{
             "icons/truck-mvt-blk-64.png",
@@ -39,7 +42,7 @@ public class IconService extends AbstractGriffonService {
     };
 
     public VideoPoint generatePoint(Point2D point, Duration start) throws FileNotFoundException {
-        int rand = (int)(Math.random() * 10) % icons.length;
+        int rand = (int) (Math.random() * 10) % icons.length;
 
         Icon icon = generateIcon(rand);
 
@@ -50,30 +53,52 @@ public class IconService extends AbstractGriffonService {
         return null;
     }
 
+    public Icon generateIcon(int rand)  {
+        return generateIcon(new Category("", icons[rand], ""), this.size, this.opacity);
+    }
 
-    public Icon generateIcon(int rand) throws FileNotFoundException {
-        Icon icon = new Icon(width, height,icons[rand]);
-        String path = getApplication().getResourceHandler().getResourceAsURL(icon.getImagePath()).getPath();
-        FileInputStream inputStream = new FileInputStream(path);
+    public Icon generateIcon(Category category) {
+      return generateIcon(category, this.size, this.opacity);
+    }
 
-        Image image = new Image(inputStream);
-        ImageView imageView = new ImageView(image);
-        imageView.setOpacity(opacity);
-        imageView.setX((icon.getWidth() - image.getWidth()) / 2);
-        imageView.setY((icon.getHeight() - image.getHeight()) / 2);
+    public Icon generateIcon(Category category, int size, double opacity) {
+        Icon icon = null;
+        String path = getApplication().getResourceHandler().getResourceAsURL(category.getIcon()).getPath();
 
-        Canvas canvas = new Canvas(icon.getWidth(), icon.getHeight());
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.valueOf(fillColor));
-        gc.fillOval(0,0, icon.getWidth(), icon.getHeight());
+        if(path == null){
+            getLog().info("Iconservice: cannot find path: " + category.getIcon());
+            path = getApplication().getResourceHandler().getResourceAsURL(defaultPath).getPath();
+        }
 
-        icon.getChildren().addAll(canvas, imageView);
-        icon.setOpacity(opacity);
+        try{
+            icon = new Icon(size, opacity, path);
+        } catch (Exception e){
+            getLog().info("Iconservice: cannot find path: " + defaultPath);
+            icon = new Icon(size, opacity);
+        }
 
         return icon;
     }
 
-    public Icon generateIcon(Category category) throws FileNotFoundException {
-        return new Icon(size, opacity, category.getIcon());
+    public Icon generateIcon(String pathIcon, int size) {
+        Icon icon = null;
+        try {
+            String path = getApplication().getResourceHandler().getResourceAsURL(pathIcon).getPath();
+            icon = new Icon(10, 1, path);
+
+        } catch (Exception e) {
+            //@todo for spock test only (category should not be null)
+
+        }
+
+        return icon;
+    }
+
+    public Icon generateRandomIcon() {
+        return generateIcon(new Category("", icons[getRandom()], ""), this.size, this.opacity);
+    }
+
+    private int getRandom(){
+        return ThreadLocalRandom.current().nextInt(0, icons.length - 1);
     }
 }

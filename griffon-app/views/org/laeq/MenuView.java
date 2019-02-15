@@ -16,6 +16,8 @@ public class MenuView extends AbstractJavaFXGriffonView {
     private MenuController controller;
     private MenuModel model;
 
+
+
     @FXML private ComboBox<User> userComboBox;
 
     @MVCMember @Nonnull
@@ -34,6 +36,7 @@ public class MenuView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
+
 
         connectActions(node, controller);
 

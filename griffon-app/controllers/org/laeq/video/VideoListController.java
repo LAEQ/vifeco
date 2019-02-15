@@ -58,27 +58,31 @@ public class VideoListController extends AbstractGriffonController {
         });
 
         result.put("category.create", objects -> {
-            String mvcIdentifier = "category.create";
-            runInsideUISync(() -> {
-                createMVCGroup("category_create");
-            });
+            createGroup("category_create");
+        });
+
+        result.put("mvc.category.list", objects -> {
+            createGroup("category_list");
         });
 
         result.put("org.laeq.user.create", objects -> {
-            String mvcIdentifier = "org.laeq.user.create";
-            runInsideUISync(() -> {
-                createMVCGroup("user_create");
-            });
+            createGroup("user_create");
         });
 
         result.put("org.laeq.user.list", objects -> {
-            String mvcIdentifier = "org.laeq.user.list";
-            runInsideUISync(() -> {
-                createMVCGroup("user_list");
-            });
+            createGroup("user_list");
         });
-
-
+        
         return result;
+    }
+
+    public void createGroup(String groupName){
+        runInsideUISync(() -> {
+            try{
+                createMVCGroup(groupName);
+            } catch (Exception e){
+                getLog().info(String.format("CreateMVCGroup: %s - %s", groupName, e.getMessage()));
+            }
+        });
     }
 }

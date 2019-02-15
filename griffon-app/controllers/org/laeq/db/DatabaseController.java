@@ -112,12 +112,14 @@ public class DatabaseController extends AbstractGriffonController {
         });
 
         list.put("database.category.new", objects -> {
+            Category category = (Category)objects[0];
             try{
-                service.save((Category)objects[0]);
+                service.save(category);
+                publishAsyncEvent("category.created", category);
             } catch (DAOException e){
                 getLog().error(e.getMessage());
                 runInsideUIAsync(() ->{
-                    dialogService.dialog("Error creating a new category: " + e.getMessage());
+                    dialogService.dialog("Error creating a new category: " + category);
                 });
             }
         });
@@ -155,6 +157,20 @@ public class DatabaseController extends AbstractGriffonController {
                 });
             }
         });
+
+
+        list.put("database.category.list", objects -> {
+            try {
+                Set<Category> categorySet = service.findCategories();
+                System.out.println(categorySet.size());
+                publishEvent("find.category.list", categorySet);
+            } catch (Exception e) {
+                runInsideUIAsync(() ->{
+                    dialogService.dialog("Error to find list of categories " + e.getMessage());
+                });
+            }
+        });
+
 
         list.put("database.user.delete", objects -> {
             try {

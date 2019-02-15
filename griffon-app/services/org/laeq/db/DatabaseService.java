@@ -166,4 +166,8 @@ public class DatabaseService extends AbstractGriffonService {
     public void delete(User user) throws DAOException {
         userDAO.delete(user);
     }
+
+    public Set<Category> findCategories() {
+        return categoryDAO.findAll();
+    }
 }
