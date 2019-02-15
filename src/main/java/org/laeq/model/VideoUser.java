@@ -14,6 +14,12 @@ public class VideoUser {
     private DoubleProperty last;
     private SortedSet<Point> points;
 
+    public VideoUser(Video video, User user) {
+        this();
+        this.video = video;
+        this.user = user;
+    }
+
     public VideoUser() {
         this.total = new SimpleIntegerProperty(this, "total", 0);
         this.last = new SimpleDoubleProperty(this, "last", 0.0);

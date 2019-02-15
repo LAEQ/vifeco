@@ -1,8 +1,6 @@
 package org.laeq.db
 
 import org.laeq.model.Category
-import org.laeq.model.User
-import spock.lang.Specification
 
 class CategoryDAOTest extends AbstractDAOTest {
     def repository;

@@ -6,8 +6,6 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
@@ -49,7 +47,7 @@ public class MenuController extends AbstractGriffonController {
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            getApplication().getEventRouter().publishEventAsync("menu.open.video", Arrays.asList(selectedFile));
+            getApplication().getEventRouter().publishEventAsync("database.video.create", Arrays.asList(selectedFile));
         } else {
             System.out.println("Error loading the file");
         }

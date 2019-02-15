@@ -13,8 +13,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
-import java.util.Collections;
 import javax.annotation.Nonnull;
+import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
 public class TestView extends AbstractJavaFXGriffonView {

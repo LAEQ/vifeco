@@ -2,8 +2,6 @@ package org.laeq.db
 
 import org.laeq.model.User
 
-import java.sql.SQLException
-
 class UserDAOTest extends AbstractDAOTest {
     UserDAO repository;
 

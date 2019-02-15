@@ -2,21 +2,15 @@ package org.laeq.video;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
-import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import griffon.transform.Threading;
-import javafx.beans.property.SimpleIntegerProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.model.Point;
-import org.laeq.model.VideoPoint;
 import org.laeq.model.VideoUser;
 import org.laeq.video.category.CategoryView;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonController.class)
 public class CategoryController extends AbstractGriffonController {

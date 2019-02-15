@@ -4,7 +4,6 @@ import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DatabaseService;
 import org.laeq.model.VideoUser;
@@ -16,8 +15,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static griffon.util.CollectionUtils.map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class VideoListController extends AbstractGriffonController {
@@ -49,8 +46,6 @@ public class VideoListController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> result = new HashMap<>();
 
         result.put("database.video_user.findAll", objects -> {
-            System.out.println("database.video_user.findAll");
-
             runInsideUISync(()->{
                 this.model.addVideos((List<VideoUser>) objects[0]);
             });
@@ -58,7 +53,7 @@ public class VideoListController extends AbstractGriffonController {
 
         result.put("database.video_user.created", objects -> {
             runInsideUISync(()->{
-
+                this.model.addVideo((VideoUser) objects[0]);
             });
         });
 

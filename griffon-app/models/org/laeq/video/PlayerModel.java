@@ -3,13 +3,12 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.*;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-import org.laeq.icon.IconService;
 import org.laeq.model.*;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.io.FileNotFoundException;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -36,8 +35,7 @@ public class PlayerModel extends AbstractGriffonModel {
         this.volume = new SimpleDoubleProperty(1.0);
         this.size = new SimpleIntegerProperty(100);
         this.duration = new SimpleIntegerProperty(10);
-        this.opacity = new SimpleDoubleProperty(0.65);
-
+        this.opacity = new SimpleDoubleProperty(0.5);
     }
 
 
@@ -49,12 +47,12 @@ public class PlayerModel extends AbstractGriffonModel {
         videoPoints.clear();
 
         videoUser.getPoints().forEach(point -> {
-            videoPoints.add(new VideoPoint(100, 10, generateIcon(point.getCategory()), point));
+            videoPoints.add(new VideoPoint(this.size.getValue(), generateIcon(point), point));
         });
     }
 
     public void addPoint(Point point) {
-        videoPoints.add(new VideoPoint(getSize(), getDuration(), generateIcon(point.getCategory()), point));
+        videoPoints.add(new VideoPoint(getSize(), generateIcon(point), point));
     }
 
     public Optional<Category> getCategory(String shortcut) {
@@ -68,9 +66,11 @@ public class PlayerModel extends AbstractGriffonModel {
         return videoUser.getUser();
     }
 
-    public void removePoint(VideoPoint newPoint) { videoPoints.remove(newPoint);
+    public void removePoint(Point point) {
+        videoPoints.removeIf(videoPoint -> videoPoint.getPoint().equals(point));
     }
-    public void addPoint(VideoPoint newPoint) {
+
+    public void addVideoPoint(VideoPoint newPoint) {
         videoPoints.add(newPoint);
     }
 
@@ -135,15 +135,37 @@ public class PlayerModel extends AbstractGriffonModel {
         this.opacity.set(opacity);
     }
 
-    private Icon generateIcon(Category category){
+    private Icon generateIcon(Point point){
         Icon icon = null;
         try {
-            icon = new Icon(size.getValue(), opacity.getValue(),category.getIcon());
-        } catch (FileNotFoundException e) {
-            getLog().error("Icon path not found: %s", category.getIcon());
-            icon = new Icon(size.getValue(), opacity.getValue());
+            String path = getApplication().getResourceHandler().getResourceAsURL(point.getCategory().getIcon()).getPath();
+            icon = new Icon(size.getValue(), opacity.getValue(), path);
+            icon.setX(point.getX());
+            icon.setY(point.getY());
+        } catch (Exception e) {
+            //@todo for spock test only (category should not be null)
+            if(point.getCategory() != null){
+                getLog().error(String.format("Icon path not found: %s", point.getCategory().getIcon()));
+                icon = new Icon(size.getValue(), opacity.getValue());
+                icon.setX(point.getX());
+                icon.setY(point.getY());
+            }
         }
 
         return icon;
+    }
+
+    public Iterator<VideoPoint> displayIter(Duration currentTime) {
+        return display(currentTime).iterator();
+    }
+
+    public SortedSet<VideoPoint> display(Duration currentTime){
+        VideoPoint start = new VideoPoint(this.size.getValue(), null, new Point(0, 0, currentTime.subtract(Duration.seconds(this.duration.getValue())), null, null, null));
+        VideoPoint end = new VideoPoint(this.size.getValue(), null, new Point(0, 0, currentTime, null, null, null));
+        return videoPoints.subSet(start, end);
+    }
+
+    public SortedSet<VideoPoint> getVideoPoints() {
+        return videoPoints;
     }
 }

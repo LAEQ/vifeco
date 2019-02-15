@@ -1,7 +1,5 @@
 package org.laeq.db
 
-import spock.lang.Specification
-
 class VideoUserDAOTest extends AbstractDAOTest {
     def repository
     def setup(){

@@ -167,6 +167,21 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
 
     }
 
+    def "test findDefault"(){
+        setup:
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+        } catch (Exception e){
+            println e
+        }
+
+        when:
+        CategoryCollection result = repository.findDefault()
+
+        then:
+        result == new CategoryCollection(1, "Default", true)
+    }
+
     def "test findAll but empty"() {
         setup:
         try{

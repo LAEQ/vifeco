@@ -4,7 +4,6 @@ import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.User;
@@ -16,7 +15,6 @@ import javax.inject.Inject;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,7 +102,7 @@ public class DatabaseController extends AbstractGriffonController {
             Point newPoint = (Point) objects[0];
             try {
                 service.save(newPoint);
-            } catch (DAOException e) {
+            } catch (DAOException | SQLException e) {
                 String message = String.format("DB controller: cannot save new point %s", newPoint);
                 getLog().error(message);
                 runInsideUIAsync(() ->{
@@ -124,7 +122,21 @@ public class DatabaseController extends AbstractGriffonController {
             }
         });
 
+        list.put("database.video.create", objects -> {
+            try {
+                VideoUser videoUser = service.createVideoUser((File) objects[0]);
+
+                publishAsyncEvent("database.video_user.created", videoUser);
+            } catch (Exception e) {
+                getLog().error("DB controller: error while creating video user: %s", e.getMessage());
+            }
+        });
+
         return list;
+    }
+
+    private void publishAsyncEvent(String eventName, Object object){
+        getApplication().getEventRouter().publishEventAsync(eventName, Arrays.asList(object));
     }
 
     private void publishEvent(String eventName, Object object){

@@ -80,15 +80,16 @@ public class Point extends Entity implements Comparable<Point> {
 
     @Override
     public int compareTo(Point o) {
-        int compare = this.start.compareTo(o.start);
-
-        if(compare != 0){
-            return compare;
+        if(id == o.id && id != 0){
+            return 0;
         }
 
-        double positionCompare = this.x - o.x;
+        int compare = this.start.compareTo(o.start);
+        if(compare == 0){
+            return id - o.id;
+        }
 
-        return (positionCompare <= 0)? -1 : 1;
+        return compare;
     }
 
     @Override
@@ -108,6 +109,7 @@ public class Point extends Entity implements Comparable<Point> {
     public String toString() {
         return "Point{" +
                 "id=" + id +
+                "start=" + start +
                 '}';
     }
 }

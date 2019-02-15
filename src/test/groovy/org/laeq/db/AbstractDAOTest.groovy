@@ -1,9 +1,10 @@
-package org.laeq.db;
+package org.laeq.db
 
-import spock.lang.Shared;
+import spock.lang.Shared
 import spock.lang.Specification
+
 import java.sql.Connection
-import java.sql.Statement;
+import java.sql.Statement
 
 class AbstractDAOTest extends Specification {
     @Shared def process

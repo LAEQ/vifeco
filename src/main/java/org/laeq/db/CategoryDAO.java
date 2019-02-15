@@ -1,8 +1,6 @@
 package org.laeq.db;
 
-import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 import org.laeq.model.Category;
-import org.laeq.model.User;
 
 import javax.annotation.Nonnull;
 import java.sql.*;

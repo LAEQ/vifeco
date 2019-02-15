@@ -1,6 +1,9 @@
 package org.laeq.db;
 
-import org.laeq.model.*;
+import org.laeq.model.CategoryCollection;
+import org.laeq.model.User;
+import org.laeq.model.Video;
+import org.laeq.model.VideoUser;
 
 import javax.annotation.Nonnull;
 import java.sql.Connection;
@@ -8,9 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class VideoUserDAO extends AbstractDAO {
 
@@ -32,7 +33,6 @@ public class VideoUserDAO extends AbstractDAO {
             result = getResult(queryResult);
 
         } catch (SQLException e){
-            System.out.println(e.getMessage());
             getLogger().error(e.getMessage());
         }
 

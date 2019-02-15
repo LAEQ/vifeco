@@ -10,7 +10,6 @@ import javafx.scene.input.KeyEvent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.model.VideoPoint;
 import org.laeq.model.VideoUser;
 import org.laeq.ui.DialogService;
 
@@ -70,17 +69,16 @@ public class PlayerController extends AbstractGriffonController {
 
         list.put("player.video_user.load", objects -> runInsideUISync(() -> {
             model.setVideoUser((VideoUser) objects[0]);
-
+            view.init();
         }));
 
-        list.put("player.point.not_created", objects -> model.removePoint((VideoPoint) objects[0]));
-
+        list.put("player.point.new", objects -> model.addPoint((Point) objects[0]));
 
         return list;
     }
 
-    public void savePoint(VideoPoint newPoint) {
-        model.addPoint(newPoint);
+    public void savePoint(Point newPoint) {
+//        model.addPoint(newPoint);
         getApplication().getEventRouter().publishEventAsync("database.point.new", Arrays.asList(newPoint));
     }
 }

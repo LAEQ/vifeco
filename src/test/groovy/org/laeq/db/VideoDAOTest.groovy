@@ -1,9 +1,8 @@
 package org.laeq.db
 
-import org.laeq.model.Category
+import javafx.util.Duration
 import org.laeq.model.CategoryCollection
 import org.laeq.model.Video
-import javafx.util.Duration;
 
 class VideoDAOTest extends AbstractDAOTest {
     DAOInterface<Video> repository

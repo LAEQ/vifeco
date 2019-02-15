@@ -2,7 +2,6 @@ package org.laeq.category;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
