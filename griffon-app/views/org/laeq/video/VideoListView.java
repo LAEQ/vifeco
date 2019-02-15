@@ -35,6 +35,8 @@ public class VideoListView extends AbstractJavaFXGriffonView {
 
     @FXML private TabPane tabPane;
 
+    @FXML private Tab videoListTab;
+
     @Nonnull
     public TabPane getTabPane() {
         return tabPane;
@@ -43,6 +45,8 @@ public class VideoListView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
+
+        videoListTab.setGraphic(new FontIcon(FontAwesome.LIST));
 
         TableColumn<VideoUser, String> dateColumn = new TableColumn<>("Created At");
         TableColumn<VideoUser, String> pathColumn = new TableColumn("Name");

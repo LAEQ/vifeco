@@ -158,4 +158,12 @@ public class DatabaseService extends AbstractGriffonService {
 
         return new VideoUser(video, defaultUser);
     }
+
+    public Set<User> findUsers() {
+        return userDAO.findAll();
+    }
+
+    public void delete(User user) throws DAOException {
+        userDAO.delete(user);
+    }
 }

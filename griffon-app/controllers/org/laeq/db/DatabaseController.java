@@ -16,10 +16,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
 public class DatabaseController extends AbstractGriffonController {
@@ -85,10 +82,13 @@ public class DatabaseController extends AbstractGriffonController {
             }
         });
 
-        list.put("database.org.laeq.user.active", objects -> {
+        list.put("database.user.active", objects -> {
             User user = (User) objects[0];
             try {
                 service.setUserActive(user);
+
+                publishAsyncEvent("user.active", user);
+
             } catch (DAOException | SQLException e) {
                 String message = String.format("DatabaseController: failed to set org.laeq.user %s active", user );
                 getLog().error(message);
@@ -142,6 +142,30 @@ public class DatabaseController extends AbstractGriffonController {
                 publishAsyncEvent("database.video_user.created", videoUser);
             } catch (Exception e) {
                 getLog().error("DB controller: error while creating video org.laeq.user: %s", e.getMessage());
+            }
+        });
+
+        list.put("database.user.list", objects -> {
+            try {
+                Set<User> userSet = service.findUsers();
+                publishEvent("user.list", userSet);
+            } catch (Exception e) {
+                runInsideUIAsync(() ->{
+                    dialogService.dialog("Error to find list of users " + e.getMessage());
+                });
+            }
+        });
+
+        list.put("database.user.delete", objects -> {
+            try {
+
+                User user = (User)(objects[0]);
+                service.delete(user);
+                publishEvent("user.delete", user);
+            } catch (DAOException e) {
+                runInsideUIAsync(() -> {
+                    dialogService.dialog("Error to delete user  " + e.getMessage());
+                });
             }
         });
 

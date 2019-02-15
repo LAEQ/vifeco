@@ -47,6 +47,27 @@ public class User extends Entity{
     public String getLastName() {
         return lastName.get();
     }
+
+    public SimpleIntegerProperty idProperty() {
+        return id;
+    }
+
+    public SimpleStringProperty firstNameProperty() {
+        return firstName;
+    }
+
+    public SimpleStringProperty lastNameProperty() {
+        return lastName;
+    }
+
+    public SimpleStringProperty emailProperty() {
+        return email;
+    }
+
+    public boolean isIsActive() {
+        return isActive.get();
+    }
+
     public void setLastName(@Nonnull String fName) {
         lastName.set(fName);
     }

@@ -67,6 +67,11 @@ public class Config extends AbstractMapResourceBundle {
                         .e("view", "org.laeq.user.UserView")
                         .e("controller", "org.laeq.user.UserController")
                 )
+                .e("user_list", map()
+                        .e("model", "org.laeq.user.UserListModel")
+                        .e("view", "org.laeq.user.UserListView")
+                        .e("controller", "org.laeq.user.UserListController")
+                )
             );
     }
 }

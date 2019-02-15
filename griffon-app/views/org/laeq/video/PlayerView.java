@@ -25,6 +25,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.laeq.VifecoView;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
@@ -97,6 +99,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         Tab tab = new Tab();
         tab.textProperty().bind(model.videoPathProperty());
         tab.setContent(node);
+        tab.setGraphic(new FontIcon(FontAwesome.PLAY_CIRCLE_O));
 
         test.getTabPane().getTabs().add(tab);
 
