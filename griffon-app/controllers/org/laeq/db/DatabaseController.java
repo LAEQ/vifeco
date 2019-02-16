@@ -4,10 +4,7 @@ import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.model.Category;
-import org.laeq.model.Point;
-import org.laeq.model.User;
-import org.laeq.model.VideoUser;
+import org.laeq.model.*;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -163,7 +160,7 @@ public class DatabaseController extends AbstractGriffonController {
             try {
                 Set<Category> categorySet = service.findCategories();
                 System.out.println(categorySet.size());
-                publishEvent("find.category.list", categorySet);
+                publishEvent("category.list", categorySet);
             } catch (Exception e) {
                 runInsideUIAsync(() ->{
                     dialogService.dialog("Error to find list of categories " + e.getMessage());
@@ -185,7 +182,24 @@ public class DatabaseController extends AbstractGriffonController {
             }
         });
 
+        list.put("database.category_collection.create", objects -> {
+            CategoryCollection entity = (CategoryCollection) objects[0];
+            try {
+                service.save(entity);
+                publishAsyncEvent("category_collection.created", entity);
+            } catch (DAOException e) {
+                dialog("Error creating category collection: " + e.getMessage());
+                publishEvent("category_collection.created_fail", entity);
+            }
+        });
+
         return list;
+    }
+
+    private void dialog(String message){
+        runInsideUIAsync(() -> {
+            dialogService.dialog(message);
+        });
     }
 
     private void publishAsyncEvent(String eventName, Object object){

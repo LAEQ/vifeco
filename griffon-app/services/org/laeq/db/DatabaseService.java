@@ -170,4 +170,8 @@ public class DatabaseService extends AbstractGriffonService {
     public Set<Category> findCategories() {
         return categoryDAO.findAll();
     }
+
+    public void save(CategoryCollection entity) throws DAOException {
+        categoryCollectionDAO.insert(entity);
+    }
 }

@@ -80,6 +80,10 @@ public class VideoListController extends AbstractGriffonController {
         result.put("video.player", objects -> {
             createGroup("video_player");
         });
+
+        result.put("category_collection.create", objects -> {
+            createGroup("category_collection_create");
+        });
         
         return result;
     }

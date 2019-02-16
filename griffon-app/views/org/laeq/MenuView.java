@@ -53,7 +53,8 @@ public class MenuView extends AbstractJavaFXGriffonView {
                 "org.laeq.user.list",
                 "org.laeq.user.create",
                 "mvc.category.list",
-                "category.create"
+                "category.create",
+                "category_collection.create"
         };
 
         FontAwesome[] icons = new FontAwesome[]{
@@ -62,7 +63,9 @@ public class MenuView extends AbstractJavaFXGriffonView {
                 FontAwesome.USERS,
                 FontAwesome.USER_PLUS,
                 FontAwesome.LIST,
-                FontAwesome.PLUS_SQUARE_O
+                FontAwesome.PLUS_SQUARE_O,
+                FontAwesome.CART_PLUS,
+                FontAwesome.FILE
         };
 
         Map<Group, String> buttons = new HashMap<>();
