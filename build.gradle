@@ -86,7 +86,7 @@ dependencies {
     testCompile "org.spockframework:spock-core:${spockVersion}"
     testCompile 'org.hsqldb:hsqldb:2.4.1'
 
-    compile files('db/hsqldb-2.4.1/hsqldb/lib/hsqldb.jar')
+    compile files('db/lib/hsqldb.jar')
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }

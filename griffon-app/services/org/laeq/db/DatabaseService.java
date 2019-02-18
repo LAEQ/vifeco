@@ -174,4 +174,8 @@ public class DatabaseService extends AbstractGriffonService {
     public void save(CategoryCollection entity) throws DAOException {
         categoryCollectionDAO.insert(entity);
     }
+
+    public UserDAO getUserDAO() {
+        return new UserDAO(manager, UserDAO.sequence_name);
+    }
 }

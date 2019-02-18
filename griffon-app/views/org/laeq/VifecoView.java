@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -22,6 +23,7 @@ import java.util.Map;
 public class VifecoView extends AbstractJavaFXGriffonView {
     private VBox top;
     private SplitPane middlePane;
+//    private AnchorPane
     private HBox bottom;
     private Scene scene;
 
@@ -43,10 +45,11 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
         createMVCGroup("menu");
-        createMVCGroup("controls");
-        createMVCGroup("video_list");
-        createMVCGroup("video_player");
-        createMVCGroup("category");
+        createMVCGroup("middle");
+//        createMVCGroup("controls");
+//        createMVCGroup("video_list");
+//        createMVCGroup("video_player");
+//        createMVCGroup("category");
         createMVCGroup("bottom");
         createMVCGroup("database");
     }
@@ -78,11 +81,11 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         top.setPrefHeight(100);
         root.setVgrow(top, Priority.NEVER);
 
+
         middlePane = new SplitPane();
         middlePane.prefHeight(-1);
         middlePane.prefWidth(-1);
-        middlePane.setDividerPositions(0.3, 0.7);
-//        middlePane.setStyle("-fx-border-color: black");
+        middlePane.setStyle("-fx-border-color: black");
         root.setVgrow(middlePane, Priority.ALWAYS);
 
 

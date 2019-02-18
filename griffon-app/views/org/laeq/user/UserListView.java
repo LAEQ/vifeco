@@ -72,8 +72,6 @@ public class UserListView extends AbstractJavaFXGriffonView {
 
         parentPane.getTabs().add(tab);
         parentPane.getSelectionModel().select(tab);
-
-        init();
     }
 
     private EventHandler<Event> closeTab(){
@@ -87,7 +85,7 @@ public class UserListView extends AbstractJavaFXGriffonView {
         });
     }
 
-    private void init(){
+    public void init(){
 
         TableColumn<User, String> firstNameColumn = new TableColumn("First name");
         TableColumn<User, String> lastNameColumn = new TableColumn<>("Last name");

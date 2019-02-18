@@ -268,28 +268,28 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         setUp();
 
         //Add Listeners
-        mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
-        timeSlider.valueProperty().addListener(sliderTimeListener);
-        parentView.getScene().setOnKeyPressed(keyListener);
-
-        iconPane.setOnMouseEntered(event -> {
-            iconPane.setOnMouseMoved(mouseMoveListener);
-            System.out.println("Mouse entered");
-        });
-
-        iconPane.setOnMouseExited(event -> {
-            System.out.println("Mouse exited");
-            iconPane.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveListener);
-            mousePosition = null;
-        });
-
-        iconPane.widthProperty().addListener(observable -> {
-            iconPane.getChildren().forEach(node -> ((Icon)node).setBounds(iconPane.getBoundsInLocal()));
-        });
-
-        iconPane.heightProperty().addListener(observable -> {
-            iconPane.getChildren().forEach(node -> ((Icon)node).setBounds(iconPane.getBoundsInLocal()));
-        });
+//        mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
+//        timeSlider.valueProperty().addListener(sliderTimeListener);
+//        parentView.getScene().setOnKeyPressed(keyListener);
+//
+//        iconPane.setOnMouseEntered(event -> {
+//            iconPane.setOnMouseMoved(mouseMoveListener);
+//            System.out.println("Mouse entered");
+//        });
+//
+//        iconPane.setOnMouseExited(event -> {
+//            System.out.println("Mouse exited");
+//            iconPane.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveListener);
+//            mousePosition = null;
+//        });
+//
+//        iconPane.widthProperty().addListener(observable -> {
+//            iconPane.getChildren().forEach(node -> ((Icon)node).setBounds(iconPane.getBoundsInLocal()));
+//        });
+//
+//        iconPane.heightProperty().addListener(observable -> {
+//            iconPane.getChildren().forEach(node -> ((Icon)node).setBounds(iconPane.getBoundsInLocal()));
+//        });
     }
 
     private void keyValues(KeyEvent event) {

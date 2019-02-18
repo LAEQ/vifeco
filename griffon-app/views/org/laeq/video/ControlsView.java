@@ -63,14 +63,6 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         initDurationPoint();
         initOpacityPoint();
 
-        volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-//                getLog().info(String.format("%d : %f\n", model.getVolume(), model.getVolumeRate()));
-//                System.out.println(model.getVolume());
-            }
-        });
-
         parentView.getMiddlePane().getItems().add(node);
     }
 

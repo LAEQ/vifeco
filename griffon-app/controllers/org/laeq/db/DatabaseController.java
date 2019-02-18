@@ -159,7 +159,6 @@ public class DatabaseController extends AbstractGriffonController {
         list.put("database.category.list", objects -> {
             try {
                 Set<Category> categorySet = service.findCategories();
-                System.out.println(categorySet.size());
                 publishEvent("category.list", categorySet);
             } catch (Exception e) {
                 runInsideUIAsync(() ->{

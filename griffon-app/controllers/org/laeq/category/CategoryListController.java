@@ -8,10 +8,12 @@ import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import griffon.transform.Threading;
+import org.laeq.db.DatabaseService;
 import org.laeq.model.Category;
 import org.laeq.model.User;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -21,10 +23,16 @@ public class CategoryListController extends AbstractGriffonController {
     @MVCMember @Nonnull private CategoryListModel model;
     @MVCMember @Nonnull private CategoryListView view;
 
+    @Inject
+    private DatabaseService service;
+
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
-        getApplication().getEventRouter().publishEvent("database.category.list");
+//        getApplication().getEventRouter().publishEvent("database.category.list");
+        model.getCategoryList().addAll(service.findCategories());
+        view.init();
+
     }
 
     @ControllerAction
@@ -36,11 +44,11 @@ public class CategoryListController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listenerList() {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("find.category.list", objects -> runInsideUISync(() -> {
-            Set<Category> categorySet = (Set<Category>) objects[0];
-            model.add(categorySet);
-            view.init();
-        }));
+//        list.put("category.list", objects -> runInsideUISync(() -> {
+//            Set<Category> categorySet = (Set<Category>) objects[0];
+//            model.add(categorySet);
+//            view.init();
+//        }));
 
         list.put("category.created", objects -> {
             Category category = (Category) objects[0];
