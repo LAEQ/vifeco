@@ -20,13 +20,13 @@ public class CategoryService extends AbstractGriffonService {
         };
 
         Category[] categories = new Category[icons.length];
-
-        for (int i = 0; i < icons.length; i++) {
-            String name = icons[i].substring(6, icons[i].lastIndexOf('.') - 1);
-            String path = getApplication().getResourceHandler().getResourceAsURL(icons[i]).getPath();
-            Category category = new Category(name, path, "1");
-            categories[i] = category;
-        }
+//
+//        for (int i = 0; i < icons.length; i++) {
+//            String name = icons[i].substring(6, icons[i].lastIndexOf('.') - 1);
+//            String path = getApplication().getResourceHandler().getResourceAsURL(icons[i]).getPath();
+//            Category category = new Category(name, path, "1");
+//            categories[i] = category;
+//        }
 
         return categories;
     }

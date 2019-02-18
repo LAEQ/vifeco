@@ -23,7 +23,7 @@ public class ContainerModel extends AbstractGriffonModel {
     private SimpleStringProperty name = new SimpleStringProperty(this, "name", "");
     private SimpleStringProperty shortCut = new SimpleStringProperty(this, "shortCut", "");
     private SimpleStringProperty svgPath = new SimpleStringProperty(this, "svgPath", "");
-    private SimpleStringProperty color = new SimpleStringProperty(this, "color", "");
+    private SimpleStringProperty color = new SimpleStringProperty(this, "color", "#000000");
     private String errors = "";
 
     public ObservableList<Category> getCategoryList() {
@@ -111,5 +111,20 @@ public class ContainerModel extends AbstractGriffonModel {
         }
 
         return result;
+    }
+
+    public Category generateEntity() {
+        Category category = new Category();
+        category.setName(getName());
+        category.setIcon(getSvgPath());
+        category.setColor(getColor());
+        category.setShortcut(getShortCut());
+
+
+        return category;
+    }
+
+    public void addCategory(Category category) {
+        categoryList.add(category);
     }
 }

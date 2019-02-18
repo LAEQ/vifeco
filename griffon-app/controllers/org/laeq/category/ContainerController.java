@@ -9,7 +9,9 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import griffon.transform.Threading;
 import org.laeq.db.CategoryDAO;
+import org.laeq.db.DAOException;
 import org.laeq.db.DatabaseService;
+import org.laeq.model.Category;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -35,15 +37,22 @@ public class ContainerController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void save(){
         if(model.valid()){
-            if(model.getId() == 0) {
-//                createUser();
-            }else {
-//                updateUser();
-            }
+           createCategory();
         } else {
             alert(String.format("Some fields are invalid: \n%s", model.getErrors()));
         }
     }
+
+    private void createCategory() {
+        Category category = model.generateEntity();
+        try {
+            categoryDAO.insert(category);
+            model.addCategory(category);
+        } catch (DAOException e) {
+            alert("Failed to create category: " + category);
+        }
+    }
+
 
     private Map<String, RunnableWithArgs> listeners() {
         Map<String, RunnableWithArgs> list = new HashMap<>();

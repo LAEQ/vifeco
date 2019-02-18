@@ -48,13 +48,13 @@ public class IconService extends AbstractGriffonService {
 
         String name = icons[rand].substring(6, icons[rand].lastIndexOf('.') - 1);
         String path = getApplication().getResourceHandler().getResourceAsURL(icons[rand]).getPath();
-        Category category = new Category(name, path, "1");
+        Category category = new Category(name, path, "F000000", "1");
 
         return null;
     }
 
     public Icon generateIcon(int rand)  {
-        return generateIcon(new Category("", icons[rand], ""), this.size, this.opacity);
+        return generateIcon(new Category("", icons[rand], "#000000", ""), this.size, this.opacity);
     }
 
     public Icon generateIcon(Category category) {
@@ -95,11 +95,11 @@ public class IconService extends AbstractGriffonService {
     }
 
     public Icon generateRandomIcon() {
-        return generateIcon(new Category("", icons[getRandom()], ""), this.size, this.opacity);
+        return generateIcon(new Category("", icons[getRandom()], "#000000", ""), this.size, this.opacity);
     }
 
     public Icon generateRandomIcon(int size) {
-        return generateIcon(new Category("", icons[getRandom()], ""), size, this.opacity);
+        return generateIcon(new Category("", icons[getRandom()], "#000000", ""), size, this.opacity);
     }
 
     private int getRandom(){

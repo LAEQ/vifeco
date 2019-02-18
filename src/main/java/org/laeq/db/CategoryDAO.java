@@ -23,7 +23,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             throw new DAOException("Cannot generate the next org.laeq.user id from the database.");
         }
 
-        String query = "INSERT INTO CATEGORY (ID, NAME, ICON, SHORTCUT) VALUES (?, ?, ?, ?);";
+        String query = "INSERT INTO CATEGORY (ID, NAME, ICON, COLOR SHORTCUT) VALUES (?, ?, ?, ?, ?);";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
@@ -31,7 +31,8 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             statement.setInt(1, nextId);
             statement.setString(2, category.getName());
             statement.setString(3, category.getIcon());
-            statement.setString(4, category.getShortcut());
+            statement.setString(4, category.getColor());
+            statement.setString(5, category.getShortcut());
 
             result = statement.executeUpdate();
 
@@ -71,6 +72,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             category.setId(datas.getInt("ID"));
             category.setName(datas.getString("NAME"));
             category.setIcon(datas.getString("ICON"));
+            category.setColor(datas.getString("COLOR"));
             category.setShortcut(datas.getString("SHORTCUT"));
             category.setCreatedAt(datas.getTimestamp("CREATED_AT"));
             category.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));

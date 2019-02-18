@@ -17,9 +17,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Category;
 import org.laeq.model.Category;
+import org.laeq.model.Icon;
 import org.laeq.template.MiddlePaneView;
 
 import java.util.Collections;
@@ -67,14 +69,12 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         TableColumn<Category, Void> iconColumn = new TableColumn<>("Icon");
         TableColumn<Category, String> nameColumn = new TableColumn("Name");
         TableColumn<Category, String> shortCut = new TableColumn<>("Shortcut");
-        TableColumn<Category, String> pathColumn = new TableColumn("path");
         TableColumn<Category, Void> actionColumn = new TableColumn<>("Actions");
 
-        categoryTable.getColumns().addAll(iconColumn, nameColumn, shortCut, pathColumn, actionColumn);
+        categoryTable.getColumns().addAll(iconColumn, nameColumn, shortCut, actionColumn);
 
         nameColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getName()));
         shortCut.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getShortcut()));
-        pathColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getIcon()));
 
 
         model.nameProperty().bindBidirectional(nameField.textProperty());
@@ -92,6 +92,38 @@ public class ContainerView extends AbstractJavaFXGriffonView {
                 System.out.println("HERE");
             }
         });
+
+        iconColumn.setCellFactory(iconAction());
         categoryTable.setItems(this.model.getCategoryList());
+    }
+
+    private Callback<TableColumn<Category, Void>, TableCell<Category, Void>> iconAction() {
+        return  param -> {
+            final TableCell<Category, Void> cell = new TableCell<Category, Void>() {
+
+                SVGPath icon = new SVGPath();
+
+                @Override
+                public void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    try{
+                        Category category = categoryTable.getItems().get(getIndex());
+                        icon.setContent(category.getIcon());
+                    } catch (Exception e){
+
+                    }
+
+                    if (empty
+                    ) {
+                        System.out.println("empty");
+                        setGraphic(null);
+                    } else {
+                        setGraphic(icon);
+                    }
+                }
+            };
+
+            return cell;
+        };
     }
 }
