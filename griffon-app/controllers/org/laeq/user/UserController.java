@@ -20,14 +20,7 @@ import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class UserController extends AbstractGriffonController {
-    private UserModel model;
-
-    @MVCMember
-    public void setModel(@Nonnull UserModel model) {
-        this.model = model;
-    }
-
-
+    @MVCMember @Nonnull private UserModel model;
     @Inject private DialogService dialogService;
 
     @Override
@@ -43,13 +36,6 @@ public class UserController extends AbstractGriffonController {
 
     private Map<String, RunnableWithArgs> listeners() {
         Map<String, RunnableWithArgs> list = new HashMap<>();
-
-        list.put("user.created", objects -> {
-            model.setFirstName("");
-            model.setLastName("");
-            model.setEmail("");
-        });
-
 
         return list;
     }

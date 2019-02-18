@@ -24,6 +24,9 @@ public class ContainerModel extends AbstractGriffonModel {
     private SimpleStringProperty email = new SimpleStringProperty(this, "email", "");
     private String errors = "";
 
+    private User selectedUser;
+
+
     public ObservableList<User> getUserList() {
         return userList;
     }
@@ -98,14 +101,12 @@ public class ContainerModel extends AbstractGriffonModel {
     }
 
     public User generateUser() {
-        Optional<User> user = userList.stream().filter(u -> u.getId() == getId()).findFirst();
-
-        return user.isPresent()? user.get() : createUser();
+        return createUser();
     }
 
     private User createUser() {
         User user = new User();
-
+        user.setId(getId());
         user.setFirstName(getFirstName());
         user.setLastName(getLastName());
         user.setIsActive(false);
@@ -127,10 +128,24 @@ public class ContainerModel extends AbstractGriffonModel {
     }
 
     public void setSelectedUser(User selectedUser) {
-        System.out.println("ICIT");
+        this.selectedUser = selectedUser;
         setId(selectedUser.getId());
         setFirstName(selectedUser.getFirstName());
         setLastName(selectedUser.getLastName());
         setEmail(selectedUser.getEmail());
+    }
+
+    public User getUser() {
+        return userList.stream().filter(u -> u.getId() == getId()).findFirst().get();
+    }
+
+    public void addUser(User user) {
+        userList.add(user);
+    }
+
+    public void update(User user) {
+        selectedUser.setFirstName(user.getFirstName());
+        selectedUser.setLastName(user.getLastName());
+        selectedUser.setEmail(user.getEmail());
     }
 }

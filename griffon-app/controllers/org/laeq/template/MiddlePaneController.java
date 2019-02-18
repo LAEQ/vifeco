@@ -25,9 +25,9 @@ public class MiddlePaneController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listenerList(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("user.section", objects -> {
-            createGroup("user_container");
-        });
+        list.put("user.section", objects -> createGroup("user_container"));
+        list.put("category.section", objects -> createGroup("category_container"));
+        list.put("collection.section", objects -> createGroup("collection_container"));
 
         return list;
     }

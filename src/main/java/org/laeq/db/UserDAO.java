@@ -197,4 +197,23 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
 
         return user;
     }
+
+    public void update(User user) throws SQLException, DAOException {
+        try(Connection connection = getManager().getConnection())
+        {
+            String query = "UPDATE USER SET FIRST_NAME=?, LAST_NAME=?, EMAIL=? WHERE ID = ?;";
+            PreparedStatement statement2 = connection.prepareStatement(query);
+
+            statement2.setString(1, user.getFirstName());
+            statement2.setString(2, user.getLastName());
+            statement2.setString(3, user.getEmail());
+            statement2.setInt(4, user.getId());
+
+            int result2 = statement2.executeUpdate();
+
+            if(result2 != 1){
+                throw new DAOException("UserDAO: no org.laeq.user is active.");
+            }
+        }
+    }
 }

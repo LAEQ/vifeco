@@ -178,4 +178,12 @@ public class DatabaseService extends AbstractGriffonService {
     public UserDAO getUserDAO() {
         return new UserDAO(manager, UserDAO.sequence_name);
     }
+
+    public CategoryDAO getCategoryDAO() {
+        return new CategoryDAO(manager, CategoryDAO.sequence_name);
+    }
+
+    public CategoryCollectionDAO getCategoryCollectionDAO() {
+        return new CategoryCollectionDAO(manager, CategoryCollectionDAO.sequence_name);
+    }
 }

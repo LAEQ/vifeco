@@ -1,14 +1,8 @@
 package org.laeq;
 
-import com.pepperonas.fxiconics.FxIconicsButton;
-import com.pepperonas.fxiconics.FxIconicsLabel;
-import com.pepperonas.fxiconics.MaterialColor;
-import com.pepperonas.fxiconics.cmd.FxFontCommunity;
-import com.pepperonas.fxiconics.gmd.FxFontGoogleMaterial;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -16,14 +10,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
-import javafx.stage.PopupWindow;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -31,11 +21,8 @@ import org.laeq.graphic.IconSVG;
 import org.laeq.icon.IconService;
 import org.laeq.menu.Button;
 import org.laeq.model.User;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,10 +43,6 @@ public class MenuView extends AbstractJavaFXGriffonView {
         Node node = loadFromFXML();
 
         connectActions(node, controller);
-
-
-
-
 
 
         String[] events = new String[]{
