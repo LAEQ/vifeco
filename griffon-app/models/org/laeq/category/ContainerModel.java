@@ -120,7 +120,6 @@ public class ContainerModel extends AbstractGriffonModel {
         category.setColor(getColor());
         category.setShortcut(getShortCut());
 
-
         return category;
     }
 

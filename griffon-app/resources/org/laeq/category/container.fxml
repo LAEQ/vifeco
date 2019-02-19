@@ -49,8 +49,7 @@
                         <ColorPicker fx:id="colorPickerField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                     </children>
                 </GridPane>
-                <Pane style="fx-background-color: #dddddd;" fx:id="svgDisplayPane" layoutX="123.0" layoutY="257.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="56.0" AnchorPane.rightAnchor="31.0" />
-            </children>
+                <Pane fx:id="svgDisplayPane" layoutX="125.0" layoutY="281.0" prefHeight="98.0" prefWidth="98.0" style="-fx-border-color: gray;" AnchorPane.bottomAnchor="134.0" AnchorPane.rightAnchor="131.0" /></children>
         </AnchorPane>
     </items>
 </SplitPane>

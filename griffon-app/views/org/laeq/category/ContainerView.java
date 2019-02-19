@@ -83,14 +83,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 //        model.colorProperty().bindBidirectional(Bindings.createObjectBinding(colorPickerField.getValue().toString()));
 
         pathField.textProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                svgPath.setContent(newValue);
-
-
-                System.out.println(svgPath.isManaged());
-            } catch (Exception e) {
-                System.out.println("HERE");
-            }
+           svgPath.setContent(newValue);
         });
 
         iconColumn.setCellFactory(iconAction());

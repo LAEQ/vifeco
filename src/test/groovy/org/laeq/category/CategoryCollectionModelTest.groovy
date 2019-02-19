@@ -16,10 +16,10 @@ class CategoryCollectionModelTest extends Specification {
         model.setName("Mock collection")
         model.setIsDefault(true)
 
-        Set<Category> categories = new HashSet<>();
+        Set<Category> categories = new HashSet<>()
 
         1.upto(10, {
-            def cat = new Category(it, "name_", "A", "icon_")
+            def cat = new Category(it, "name_", "A", "F000000", "icon_")
             categories.add(cat)
             model.addCategory(cat)
             model.categories.add(cat)
@@ -47,7 +47,7 @@ class CategoryCollectionModelTest extends Specification {
         List<Category> selectedCat = []
 
         1.upto(10, {
-            def cat = new Category(it, "name_", "A", "icon_")
+            def cat = new Category(it, "name_", "A", "F00000","icon_")
             categories.add(cat)
 
             model.categories.add(cat)

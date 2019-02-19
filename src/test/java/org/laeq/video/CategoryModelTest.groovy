@@ -12,7 +12,7 @@ class CategoryModelTest extends Specification {
         Set<Category> set = new HashSet<>();
 
         for (int i = 0; i < c.length; i++) {
-            set.add(new Category(c[i],c[i],c[i]))
+            set.add(new Category(c[i],c[i], "F000000", c[i]))
         }
 
         when:
