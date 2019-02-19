@@ -153,7 +153,7 @@ public class DatabaseService extends AbstractGriffonService {
         Media media = new Media(file.getCanonicalFile().toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
 
-        Video video = new Video(file.getPath(), mediaPlayer.getTotalDuration(), defaultCategoryCollection);
+        Video video = new Video(file.getPath(), mediaPlayer.getTotalDuration(), defaultUser, defaultCategoryCollection);
         videoDAO.insert(video);
 
         return new VideoUser(video, defaultUser);

@@ -16,20 +16,23 @@ public class Video extends Entity{
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
     private Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
     private CategoryCollection categoryCollection;
+    private User user;
 
 
-    public Video(Integer id, String path, Duration duration, CategoryCollection categoryCollection) {
+    public Video(Integer id, String path, Duration duration, User user, CategoryCollection categoryCollection) {
         this.id = id;
         this.path = new SimpleStringProperty(this, "path", path);
         this.name = new SimpleStringProperty(this, "name", pathToName(path));
         this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
+        this.user = user;
         this.categoryCollection = categoryCollection;
     }
 
-    public Video(String path, Duration duration, CategoryCollection categoryCollection) {
+    public Video(String path, Duration duration, User user, CategoryCollection categoryCollection) {
         this.path = new SimpleStringProperty(this, "test", path);
         this.name = new SimpleStringProperty(this, "name", pathToName(path));
         this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
+        this.user = user;
         this.categoryCollection = categoryCollection;
     }
 
@@ -80,6 +83,13 @@ public class Video extends Entity{
     }
     public void setCategoryCollection(CategoryCollection categoryCollection) {
         this.categoryCollection = categoryCollection;
+    }
+
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

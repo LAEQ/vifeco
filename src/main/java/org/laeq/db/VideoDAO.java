@@ -11,11 +11,13 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
     public static String sequence_name = "video_id";
 
     private CategoryCollectionDAO categoryCollectionDAO;
+    private UserDAO userDAO;
 
     public VideoDAO(@Nonnull DatabaseManager manager, String sequenceName) {
         super(manager, sequenceName);
 
         categoryCollectionDAO = new CategoryCollectionDAO(manager, CategoryCollectionDAO.sequence_name);
+        userDAO = new UserDAO(manager, UserDAO.sequence_name);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             throw new DAOException("Cannot generate the next video id from the database.");
         }
 
-        String query = "INSERT INTO VIDEO (ID, PATH, DURATION, CATEGORY_COLLECTION_ID) VALUES (?, ?, ?, ?);";
+        String query = "INSERT INTO VIDEO (ID, PATH, DURATION, USER_ID, CATEGORY_COLLECTION_ID) VALUES (?, ?, ?, ?, ?);";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
@@ -35,7 +37,8 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             statement.setInt(1, nextId);
             statement.setString(2, video.getPath());
             statement.setDouble(3, video.getDuration());
-            statement.setInt(4, video.getCategoryCollection().getId());
+            statement.setInt(4, video.getUser().getId());
+            statement.setInt(5, video.getCategoryCollection().getId());
 
             result = statement.executeUpdate();
 
@@ -60,14 +63,14 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             ResultSet queryResult = statement.executeQuery();
             result = getResult(queryResult);
 
-        } catch (SQLException e){
+        } catch (SQLException | DAOException e){
             getLogger().error(e.getMessage());
         }
 
         return result;
     }
 
-    private Set<Video> getResult(ResultSet datas) throws SQLException {
+    private Set<Video> getResult(ResultSet datas) throws SQLException, DAOException {
         Set<Video> result = new HashSet<>();
 
         while(datas.next()){
@@ -77,13 +80,14 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
         return result;
     }
 
-    private Video generateVideo(ResultSet datas) throws SQLException {
+    private Video generateVideo(ResultSet datas) throws SQLException, DAOException {
         Video video = new Video();
         video.setId(datas.getInt("ID"));
         video.setPath(datas.getString("PATH"));
         video.setDuration((datas.getDouble("DURATION")));
         video.setCreatedAt(datas.getTimestamp("CREATED_AT"));
         video.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
+        video.setUser(userDAO.findById(datas.getInt("USER_ID")));
         video.setCategoryCollection(categoryCollectionDAO.findByID(datas.getInt("CATEGORY_COLLECTION_ID")));
 
         return video;

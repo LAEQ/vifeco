@@ -2,12 +2,14 @@ package org.laeq.db
 
 import javafx.util.Duration
 import org.laeq.model.CategoryCollection
+import org.laeq.model.User
 import org.laeq.model.Video
 
 class VideoDAOTest extends AbstractDAOTest {
     DAOInterface<Video> repository
 
-    CategoryCollection categoryCollection;
+    CategoryCollection categoryCollection
+    User user
 
     def setup() {
         repository = new VideoDAO(manager, "category_id")
@@ -18,7 +20,9 @@ class VideoDAOTest extends AbstractDAOTest {
             println e
         }
 
-        categoryCollection = new CategoryCollection(1, "test", false);
+        categoryCollection = new CategoryCollection(1, "test", false)
+        user = new User(1,"test", "test", "test")
+
     }
 
     def "test get next id"() {
@@ -33,20 +37,28 @@ class VideoDAOTest extends AbstractDAOTest {
 
     def "test insertion"() {
         setup:
-        Video video = new Video("path/to/video/name.mp4", Duration.millis(3600000), categoryCollection)
+        Video video = generateVideo("path/to/video/name.mp4")
 
         when:
         repository.insert(video)
 
         then:
-        video == new Video(5, "path/to/video/name.mp4", Duration.millis(3600000), categoryCollection)
+        video == generateVideo(5, "path/to/video/name.mp4")
     }
+
+    Video generateVideo(String path){
+        return new Video(path, Duration.millis(3600000), user, categoryCollection)
+    }
+    Video generateVideo(int id, String path){
+        return new Video(id, path, Duration.millis(3600000), user, categoryCollection)
+    }
+
 
     def "test findAll"(){
         setup:
-        Video video1 = new Video("path/to/video/name.mp4", Duration.millis(3600000), categoryCollection)
-        Video video2 = new Video("path/to/video/name2.mp4", Duration.millis(3600000), categoryCollection)
-        Video video3 = new Video("path/to/video/name3.mp4", Duration.millis(3600000), categoryCollection)
+        Video video1 = generateVideo("path/to/video/name.mp4")
+        Video video2 = generateVideo("path/to/video/name2.mp4")
+        Video video3 = generateVideo("path/to/video/name3.mp4")
 
         repository.insert(video1)
         repository.insert(video2)
@@ -75,7 +87,7 @@ class VideoDAOTest extends AbstractDAOTest {
             println e
         }
 
-        Video video = new Video(1, "path/to/video.mp4", Duration.millis(3600000), categoryCollection)
+        Video video = generateVideo(1, "path/to/video.mp4")
 
         when:
         repository.delete(video)
@@ -92,7 +104,7 @@ class VideoDAOTest extends AbstractDAOTest {
             println e
         }
 
-        def video = new Video(-1, "path/to/video.mp4", Duration.millis(3600000), categoryCollection)
+        def video = generateVideo(-1, "path/to/video.mp4")
 
         when:
         repository.delete(video)
