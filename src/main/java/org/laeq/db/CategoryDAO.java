@@ -1,6 +1,7 @@
 package org.laeq.db;
 
 import org.laeq.model.Category;
+import org.laeq.model.CategoryCollection;
 
 import javax.annotation.Nonnull;
 import java.sql.*;
@@ -101,4 +102,24 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             throw new DAOException("Error deleting a category");
     }
 
+    //@todo write unit test
+    public Set<Category> findByCollection(CategoryCollection categoryCollection) {
+        String query = "select * from category_collection_category as ccc join category as c on ccc.category_id = c.id where ccc.category_collection_id = ?;";
+
+        Set<Category> result = new HashSet<>();
+
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query)){
+
+            statement.setInt(1, categoryCollection.getId());
+
+            ResultSet queryResult = statement.executeQuery();
+            result = getResult(queryResult);
+
+        } catch (SQLException e){
+            getLogger().error(e.getMessage());
+        }
+
+        return result;
+    }
 }

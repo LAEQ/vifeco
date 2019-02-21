@@ -42,7 +42,7 @@ public class DatabaseManager {
             result = stmt.executeUpdate(content);
         }
 
-        return result == 0;
+        return result == 1;
     }
 
     public boolean loadFixtures(URL fixtures) throws IOException, SQLException, URISyntaxException {

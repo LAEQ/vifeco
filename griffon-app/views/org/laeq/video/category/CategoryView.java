@@ -12,8 +12,10 @@ import javafx.scene.text.Text;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 import org.laeq.model.Category;
+import org.laeq.model.Video;
 import org.laeq.video.CategoryController;
 import org.laeq.video.CategoryModel;
+import org.laeq.video.Player2View;
 
 import javax.annotation.Nonnull;
 import java.io.FileNotFoundException;
@@ -27,7 +29,8 @@ import static javafx.scene.layout.AnchorPane.setRightAnchor;
 public class CategoryView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private CategoryController controller;
     @MVCMember @Nonnull private CategoryModel model;
-    @MVCMember @Nonnull private VifecoView parentView;
+    @MVCMember @Nonnull private Player2View parentView;
+    @MVCMember @Nonnull private Video video;
 
     @FXML private Pane categoryPane;
     @FXML private Text totalLabel;
@@ -46,7 +49,7 @@ public class CategoryView extends AbstractJavaFXGriffonView {
 //        });
 //        totalLabel.textProperty().bind(model.totalProperty().asString());
 
-        parentView.getMiddlePane().getItems().add(parent);
+        parentView.getCategoryPane().getChildren().add(parent);
     }
 
     public void clearView(){
@@ -60,55 +63,22 @@ public class CategoryView extends AbstractJavaFXGriffonView {
         categoryList.clear();
     }
 
-    private CategoryGroup generateCategoryGroup(Category category, int index) throws FileNotFoundException {
-        CategoryGroup group = new CategoryGroup(category.getIcon());
-        group.setStyle("-fx-background-color: rgb(250,250,250);");
-
-        group.setMaxWidth(Control.USE_COMPUTED_SIZE);
-        group.setMinWidth(Control.USE_COMPUTED_SIZE);
-        group.setPrefWidth(Control.USE_COMPUTED_SIZE);
-        group.setPrefHeight(60);
-
-        group.setLayoutX(10);
-        group.setLayoutY(65 * index + 44);
-
-        setLeftAnchor(group, 1d);
-        setRightAnchor(group, 1d);
-
-        return group;
-    }
-
     public void initView() {
         clearView();
 
         int i = 0;
         for (Category category: model.getCategorySet()) {
-            try {
-                URL path = getApplication().getResourceHandler().getResourceAsURL(category.getIcon());
-
-                if(path == null){
-                    path = getApplication().getResourceHandler().getResourceAsURL("icons/truck-mvt-blk-64.png");
-                }
-
-                CategoryGroup group = new CategoryGroup(path.getPath());
-                group.setStyle("-fx-background-color: rgb(250,250,250);");
-                group.setMaxWidth(Control.USE_COMPUTED_SIZE);
-                group.setMinWidth(Control.USE_COMPUTED_SIZE);
-                group.setPrefWidth(Control.USE_COMPUTED_SIZE);
-                group.setPrefHeight(60);
-                group.setLayoutX(10);
-                group.setLayoutY(65 * i + 44);
-                setLeftAnchor(group, 1d);
-                setRightAnchor(group, 1d);
-                categoryList.put(category, group);
-                ++i;
-
-            } catch (FileNotFoundException e) {
-                getLog().error(String.format("CategoryView: cannot load file for %s.", category));
-            }
+            CategoryGroup group = new CategoryGroup(category, 60);
+            group.setStyle("-fx-background-color: rgb(250,250,250);");
+            group.setLayoutX(10);
+            group.setLayoutY(61 * i + 44);
+            setLeftAnchor(group, 1d);
+            setRightAnchor(group, 1d);
+            categoryList.put(category, group);
+            ++i;
         }
 
-        ((AnchorPane)parent).getChildren().addAll(categoryList.values());
+        ((AnchorPane) parent).getChildren().addAll(categoryList.values());
 
         categoryList.forEach((k, v) -> {
             v.getTextLabel().textProperty().bind(model.getCategoryProperty(k).asString());

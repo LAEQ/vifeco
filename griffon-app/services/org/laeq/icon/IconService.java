@@ -62,37 +62,12 @@ public class IconService extends AbstractGriffonService {
     }
 
     public Icon generateIcon(Category category, int size, double opacity) {
-        Icon icon = null;
-        String path = getApplication().getResourceHandler().getResourceAsURL(category.getIcon()).getPath();
 
-        if(path == null){
-            getLog().info("Iconservice: cannot find path: " + category.getIcon());
-            path = getApplication().getResourceHandler().getResourceAsURL(defaultPath).getPath();
-        }
 
-        try{
-            icon = new Icon(size, opacity, path);
-        } catch (Exception e){
-            getLog().info("Iconservice: cannot find path: " + defaultPath);
-            icon = new Icon(size, opacity);
-        }
 
-        return icon;
+        return new Icon(category, size);
     }
 
-    public Icon generateIcon(String pathIcon, int size) {
-        Icon icon = null;
-        try {
-            String path = getApplication().getResourceHandler().getResourceAsURL(pathIcon).getPath();
-            icon = new Icon(10, 1, path);
-
-        } catch (Exception e) {
-            //@todo for spock test only (category should not be null)
-
-        }
-
-        return icon;
-    }
 
     public Icon generateRandomIcon() {
         return generateIcon(new Category("", icons[getRandom()], "#000000", ""), this.size, this.opacity);

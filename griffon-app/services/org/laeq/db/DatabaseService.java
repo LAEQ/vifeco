@@ -105,23 +105,11 @@ public class DatabaseService extends AbstractGriffonService {
     }
 
 
-    public SortedSet<Point> getVideoPoint(VideoUser videoUser){
-        PointDAO pointDAO = new PointDAO(manager, PointDAO.sequence_name);
-
-        return pointDAO.findByVideoAndUser(videoUser.getVideo(), videoUser.getUser());
-    }
 
     public CategoryCollection getCategoryCollection(int id) throws SQLException {
         return categoryCollectionDAO.findByID(id);
     }
 
-    public void set(VideoUser videoUser) throws SQLException {
-        videoUser.setPoints(pointDAO.findByVideoAndUser(videoUser.getVideo(), videoUser.getUser()));
-
-        int categoryCollectionId = videoUser.getVideo().getCategoryCollection().getId();
-
-        videoUser.getVideo().setCategoryCollection(categoryCollectionDAO.findByID(categoryCollectionId));
-    }
 
     public Set<User> getUserList() {
         return userDAO.findAll();
@@ -132,8 +120,6 @@ public class DatabaseService extends AbstractGriffonService {
     }
 
     public void save(Point point) throws DAOException, SQLException {
-        User defaultUser = userDAO.findActive();
-        point.setUser(defaultUser);
         pointDAO.insert(point);
     }
 
@@ -146,17 +132,16 @@ public class DatabaseService extends AbstractGriffonService {
         categoryDAO.insert(category);
     }
 
-    public VideoUser createVideoUser(File file) throws IOException, SQLException, DAOException {
+    public Video createVideo(File file) throws IOException, SQLException, DAOException {
         User defaultUser = userDAO.findActive();
         CategoryCollection defaultCategoryCollection = categoryCollectionDAO.findDefault();
 
         Media media = new Media(file.getCanonicalFile().toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
 
-        Video video = new Video(file.getPath(), mediaPlayer.getTotalDuration(), defaultUser, defaultCategoryCollection);
+        Video video = new Video(file.getPath(), media.getDuration(), defaultUser, defaultCategoryCollection);
         videoDAO.insert(video);
 
-        return new VideoUser(video, defaultUser);
+        return video;
     }
 
     public Set<User> findUsers() {
@@ -185,5 +170,13 @@ public class DatabaseService extends AbstractGriffonService {
 
     public CategoryCollectionDAO getCategoryCollectionDAO() {
         return new CategoryCollectionDAO(manager, CategoryCollectionDAO.sequence_name);
+    }
+
+    public PointDAO getPointDAO() {
+        return new PointDAO(manager, PointDAO.sequence_name);
+    }
+
+    public VideoDAO getVideDAO() {
+        return new VideoDAO(manager, VideoDAO.sequence_name);
     }
 }

@@ -41,14 +41,16 @@ public class MenuController extends AbstractGriffonController {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Video Files", "*.mp4", "*.wav", "*.mkv", "*.avi")
-                );
+            new FileChooser.ExtensionFilter(
+                    "Video Files",
+                    "*.mp4", "*.wav", "*.mkv", "*.avi")
+        );
 
         Stage stage = (Stage) getApplication().getWindowManager().findWindow("mainWindow");
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            getApplication().getEventRouter().publishEventAsync("database.video.create", Arrays.asList(selectedFile));
+            getApplication().getEventRouter().publishEvent("video.add", Arrays.asList(selectedFile));
         } else {
             System.out.println("Error loading the file");
         }
@@ -164,6 +166,10 @@ public class MenuController extends AbstractGriffonController {
             }
 
             view.getUserComboBox().getItems().remove(user);
+        });
+
+        list.put("video.open", objects -> {
+            open();
         });
 
         return list;

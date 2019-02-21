@@ -104,8 +104,4 @@ public class CategoryView extends AbstractJavaFXGriffonView {
             getLog().error("Generate icon: " + e.getMessage());
         }
     }
-
-    public void disableSave() {
-
-    }
 }

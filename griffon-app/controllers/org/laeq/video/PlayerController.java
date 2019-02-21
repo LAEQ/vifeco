@@ -8,11 +8,12 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.scene.input.KeyEvent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.db.DAOException;
+import org.laeq.db.DatabaseService;
+import org.laeq.db.PointDAO;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.model.VideoUser;
 import org.laeq.ui.DialogService;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -23,11 +24,17 @@ import java.util.Map;
 public class PlayerController extends AbstractGriffonController {
     @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private PlayerView view;
+    @MVCMember @Nonnull private Video video;
     @Inject private DialogService dialogService;
+    @Inject private DatabaseService dbService;
+
+    private PointDAO pointDAO;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
+
+        pointDAO = dbService.getPointDAO();
     }
 
     public void dispatchVideoCreated(Video video){
@@ -67,19 +74,13 @@ public class PlayerController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listenerList(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("player.video_user.load", objects -> runInsideUISync(() -> {
-            model.setVideoUser((VideoUser) objects[0]);
-            view.init();
-        }));
-
-        list.put("player.point.new", objects -> model.addPoint((Point) objects[0]));
 
         return list;
     }
 
     public void savePoint(Point newPoint) {
 //        model.addPoint(newPoint);
-        getApplication().getEventRouter().publishEventAsync("database.point.new", Arrays.asList(newPoint));
+//        getApplication().getEventRouter().publishEventAsync("database.point.new", Arrays.asList(newPoint));
     }
 
     @ControllerAction
@@ -87,4 +88,21 @@ public class PlayerController extends AbstractGriffonController {
     public void closeTab() {
         destroyMVCGroup(getMvcGroup().getMvcId());
     }
+
+
+    @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
+    public void addPoint(Point point) {
+        try {
+            pointDAO.insert(point);
+            model.addPoint(point);
+            publishEvent("point.added", point);
+        } catch (DAOException e) {
+            getLog().error(String.format("PlayerCtrl: cannot save new point: %s : %s", point, e.getMessage()));
+        }
+    }
+
+    private void publishEvent(String eventName, Object obj){
+        getApplication().getEventRouter().publishEventAsync(eventName, Arrays.asList(obj));
+    }
+
 }

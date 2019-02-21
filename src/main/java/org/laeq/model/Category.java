@@ -2,7 +2,7 @@ package org.laeq.model;
 
 import java.util.Objects;
 
-public class Category extends Entity{
+public class Category extends BaseEntity {
     private Integer id;
     private String name;
     private String icon;

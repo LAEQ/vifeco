@@ -53,4 +53,9 @@ public class MiddlePaneView extends AbstractJavaFXGriffonView {
 
         this.mvcGroupId = mvcGroupId;
     }
+
+    @Nonnull
+    public MiddlePaneModel getModel() {
+        return model;
+    }
 }

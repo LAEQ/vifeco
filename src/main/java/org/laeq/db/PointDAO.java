@@ -28,7 +28,7 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
             throw new DAOException("Cannot generate the next point id from the database.");
         }
 
-        String query = "INSERT INTO point(ID, X, Y, VIDEO_ID, USER_ID, CATEGORY_ID, START) VALUES(?, ?, ?, ?, ?, ?, ?);";
+        String query = "INSERT INTO point(ID, X, Y, VIDEO_ID, CATEGORY_ID, START) VALUES(?, ?, ?, ?, ?, ?);";
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
         {
@@ -36,9 +36,8 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
             statement.setDouble(2, point.getX());
             statement.setDouble(3, point.getY());
             statement.setInt(4, point.getVideo().getId());
-            statement.setInt(5, point.getUser().getId());
-            statement.setInt(6, point.getCategory().getId());
-            statement.setDouble(7, point.getStart().toMillis());
+            statement.setInt(5, point.getCategory().getId());
+            statement.setDouble(6, point.getStart().toMillis());
 
             result = statement.executeUpdate();
 
@@ -79,8 +78,8 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
         return result;
     }
 
-    public SortedSet<Point> findByVideoAndUser(Video video, User user){
-        String query = "SELECT P.ID, P.X, P.Y, P.START, C.ICON, C.ID AS C_ID, C.NAME AS C_NAME FROM POINT AS P LEFT JOIN CATEGORY AS C ON P.CATEGORY_ID = C.ID WHERE VIDEO_ID = ? AND USER_ID = ? ORDER BY P.START;";
+    public SortedSet<Point> findByVideo(Video video){
+        String query = "SELECT P.ID, P.X, P.Y, P.START, C.ICON, C.ID AS C_ID, C.NAME AS C_NAME, C.COLOR AS C_COLOR FROM POINT AS P LEFT JOIN CATEGORY AS C ON P.CATEGORY_ID = C.ID WHERE VIDEO_ID = ?  ORDER BY P.START;";
 
         SortedSet<Point> result = new TreeSet<>();
 
@@ -88,10 +87,9 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
             PreparedStatement statement = connection.prepareStatement(query)){
 
             statement.setInt(1, video.getId());
-            statement.setInt(2, user.getId());
 
             ResultSet queryResult = statement.executeQuery();
-            result = getResult(queryResult, video, user);
+            result = getResult(queryResult, video);
 
         } catch (SQLException e){
             getLogger().error(e.getMessage());
@@ -115,7 +113,7 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
         return result;
     }
 
-    private SortedSet<Point> getResult(ResultSet datas, Video video, User user) throws SQLException {
+    private SortedSet<Point> getResult(ResultSet datas, Video video) throws SQLException {
         SortedSet<Point> result = new TreeSet<>();
 
         while(datas.next()){
@@ -128,10 +126,10 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
             category.setIcon(datas.getString("ICON"));
             category.setId(datas.getInt("C_ID"));
             category.setName(datas.getString("C_NAME"));
+            category.setColor(datas.getString("C_COLOR"));
 
             point.setCategory(category);
             point.setVideo(video);
-            point.setUser(user);
 
             result.add(point);
         }

@@ -33,7 +33,7 @@ class PointDAOTest extends AbstractDAOTest {
         then:
         point.getId() == 11
         repository.count() == 11
-        repository.findByVideoAndUser(video, user).size() == 6
+        repository.findByVideo(video, user).size() == 6
     }
 
     def "test get next id"() {
@@ -97,7 +97,7 @@ class PointDAOTest extends AbstractDAOTest {
         def video = new Video(1, "/path/to/video.mp4", Duration.millis(60000), categoryCollection)
 
         when:
-        def result = repository.findByVideoAndUser(video, user)
+        def result = repository.findByVideo(video, user)
 
 
         then:
@@ -118,7 +118,7 @@ class PointDAOTest extends AbstractDAOTest {
         def video = new Video(1, "/path/to/video.mp4", Duration.millis(60000), categoryCollection)
 
         when:
-        def result = repository.findByVideoAndUser(video, user)
+        def result = repository.findByVideo(video, user)
 
 
         then:

@@ -6,23 +6,21 @@ import org.laeq.model.User
 import org.laeq.model.Video
 
 class VideoDAOTest extends AbstractDAOTest {
-    DAOInterface<Video> repository
-
+    VideoDAO repository
     CategoryCollection categoryCollection
-    User user
 
     def setup() {
-        repository = new VideoDAO(manager, "category_id")
+        repository = new VideoDAO(manager, VideoDAO.sequence_name)
+        def result = false
 
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            result = manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
             println e
         }
 
-        categoryCollection = new CategoryCollection(1, "test", false)
-        user = new User(1,"test", "test", "test")
-
+        if(! result)
+            throw new Exception("VideoDAOTest: cannot load the fixtures")
     }
 
     def "test get next id"() {
@@ -41,16 +39,24 @@ class VideoDAOTest extends AbstractDAOTest {
 
         when:
         repository.insert(video)
+        Video expexted = generateVideo(5, "path/to/video/name.mp4")
 
         then:
-        video == generateVideo(5, "path/to/video/name.mp4")
+        video == expexted
     }
 
     Video generateVideo(String path){
-        return new Video(path, Duration.millis(3600000), user, categoryCollection)
+        return new Video(path, Duration.millis(3600000),
+                new User(1, "test", "test", "test"),
+                new CategoryCollection(1, "test", false)
+        )
     }
+
     Video generateVideo(int id, String path){
-        return new Video(id, path, Duration.millis(3600000), user, categoryCollection)
+        return new Video(id, path, Duration.millis(3600000),
+                new User(1, "test", "test", "test"),
+                new CategoryCollection(1, "test", false)
+        )
     }
 
 
@@ -60,33 +66,33 @@ class VideoDAOTest extends AbstractDAOTest {
         Video video2 = generateVideo("path/to/video/name2.mp4")
         Video video3 = generateVideo("path/to/video/name3.mp4")
 
-        repository.insert(video1)
-        repository.insert(video2)
-        repository.insert(video3)
 
         when:
         def result = repository.findAll()
+        Video video = result.find{ it.id == 1}
 
         then:
-        result.size() == 7
+        result.size() == 4
+        video.total == 8
+        video.user.id == 1
+        video.user.firstName == "Luck"
+        video.user.lastName == "Skywalker"
+        video.categoryCollection.id == 1
+        video.categoryCollection.name == "Default"
     }
 
     def "test findAll but empty"() {
         when:
         def result = repository.findAll()
 
+        Video expected = generateVideo(1, "path/to/video/name.mp4")
+
         then:
         result.size() == 4
+
     }
 
     def "test delete an existing video"() {
-        setup:
-        try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
-        } catch (Exception e){
-            println e
-        }
-
         Video video = generateVideo(1, "path/to/video.mp4")
 
         when:
@@ -97,12 +103,6 @@ class VideoDAOTest extends AbstractDAOTest {
     }
 
     def "test delete an unknown video" (){
-        setup:
-        try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
-        } catch (Exception e){
-            println e
-        }
 
         def video = generateVideo(-1, "path/to/video.mp4")
 

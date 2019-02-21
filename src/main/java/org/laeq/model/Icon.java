@@ -7,142 +7,64 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class Icon extends Group implements CategoryIcon{
-    private String fillColor = "#EEEEEE";
-    private String imagePath;
-    private double width;
-    private double height;
-    private double opacity;
-    private double x;
-    private double y;
+public class Icon extends Group {
+    private double size;
+    private final String path;
+    private final String color;
+    private final SVGPath svg;
+    private final float svgRatio;
 
-    private Image image;
-    private ImageView imageView;
+    public Icon(Category category, double size)  {
+        this.path = category.getIcon();
+        this.size = size;
+        this.color = category.getColor();
+        this.svg = new SVGPath();
+        this.svgRatio = 0.50f;
+        svg.setContent(path);
+        svg.setLayoutX(getX());
+        svg.setLayoutY(getY());
+        svg.setScaleX(getScale());
+        svg.setScaleY(getScale());
 
-    public Icon(double size, double opacity, String imagePath) throws FileNotFoundException {
-        this.width = size;
-        this.height = size;
-        this.opacity = opacity;
-        this.imagePath = imagePath;
+        getChildren().addAll(getCanvas(), svg);
+    }
 
-        Canvas canvas = new Canvas(width, height);
+    private Canvas getCanvas(){
+        Canvas canvas = new Canvas(size, size);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.valueOf(fillColor));
-        gc.fillOval(0,0, width, height);
-        canvas.setOpacity(this.opacity);
+        gc.setFill(Color.valueOf("#efefef"));
+        gc.fillOval(0,0, size, size);
+        canvas.setOpacity(1);
 
-        getChildren().add(canvas);
-
-        FileInputStream inputStream = new FileInputStream(imagePath);
-        Image image = new Image(inputStream);
-        imageView = new ImageView(image);
-        imageView.setOpacity(opacity);
-        imageView.setX((width- image.getWidth()) / 2);
-        imageView.setY((height - image.getHeight()) / 2);
-
-        getChildren().add(imageView);
+        return canvas;
     }
 
-    public Icon(int size, int opacity, Image image){
-        this.width = size;
-        this.height = size;
-        this.opacity = opacity;
-        this.imagePath = imagePath;
-        Canvas canvas = new Canvas(width, height);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.valueOf(fillColor));
-        gc.fillOval(0,0, width, height);
-
-        getChildren().add(canvas);
-
-        ImageView imageView = new ImageView(image);
-        imageView.setOpacity(opacity);
-        imageView.setX((width- image.getWidth()) / 2);
-        imageView.setY((height - image.getHeight()) / 2);
-
-        getChildren().add(imageView);
+    private double getScale(){
+        return svgRatio / (svg.getLayoutBounds().getHeight() / size);
     }
 
-    public void changeImage(String path) throws FileNotFoundException {
-        getChildren().remove(imageView);
-
-        FileInputStream inputStream = new FileInputStream(imagePath);
-        Image image = new Image(inputStream);
-        imageView = new ImageView(image);
-        imageView.setOpacity(opacity);
-        imageView.setX((width- image.getWidth()) / 2);
-        imageView.setY((height - image.getHeight()) / 2);
-
-        getChildren().add(imageView);
+    private double getX(){
+        return size / 2 - svg.getLayoutBounds().getWidth() / 2;
     }
 
-    public Icon(double size, double opacity) {
-        this.width = size;
-        this.height = size;
-        this.opacity = opacity;
-        this.imagePath = imagePath;
-
-        Canvas canvas = new Canvas(width, height);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.valueOf(fillColor));
-        gc.fillOval(0,0, width, height);
-        canvas.setOpacity(this.opacity);
-
-        getChildren().add(canvas);
-
-        Text label = new Text("?");
-        label.setFont(Font.font(18));
-
-        getChildren().add(label);
+    public double getY(){
+        return size / 2 - svg.getLayoutBounds().getHeight() / 2;
     }
 
-    public void setBounds(Bounds bounds){
-        this.setLayoutX(getIconX(bounds));
-        this.setLayoutY(getIconY(bounds));
+    public void setPath(String s) {
+        this.svg.setContent(s);
     }
 
-    private double getIconX(Bounds bounds){
-        return this.x * bounds.getWidth() - (this.getWidth() / 2);
-    }
-    private double getIconY(Bounds bounds){
-        return this.y * bounds.getHeight() - (this.getHeight() / 2);
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
-    public double getWidth() {
-        return width;
-    }
-
-    public void setWidth(double width) {
-        this.width = width;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public void setHeight(double height) {
-        this.height = height;
+    public void setSize(double s){
+        this.size = s;
     }
 }

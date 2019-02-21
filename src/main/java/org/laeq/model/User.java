@@ -9,7 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class User extends Entity{
+public class User extends BaseEntity {
     private SimpleIntegerProperty id;
     private SimpleStringProperty firstName;
     private SimpleStringProperty lastName;

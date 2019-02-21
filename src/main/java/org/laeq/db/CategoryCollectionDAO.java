@@ -127,12 +127,12 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
                 categoryCollection.setName(result.getString(2));
                 categoryCollection.setIsDefault(result.getBoolean(3));
 
-
                 Category category = new Category();
                 category.setId(result.getInt(10));
                 category.setName(result.getString(11));
                 category.setIcon(result.getString(12));
-                category.setShortcut(result.getString(13));
+                category.setColor(result.getString(13));
+                category.setShortcut(result.getString(14));
 
                 categoryCollection.addCategory(category);
             }

@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<VBox prefHeight="622.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="622.0" prefWidth="1043.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <VBox prefHeight="102.0" prefWidth="900.0">
          <children>
@@ -73,43 +64,12 @@
       <items>
         <AnchorPane prefHeight="545.0" prefWidth="898.0" style="-fx-background-color: lightcyan;">
                <children>
-                  <SplitPane dividerPositions="0.6004464285714286" layoutY="7.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <SplitPane layoutY="7.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                           <children>
-                              <TableView fx:id="userTable" layoutX="40.0" layoutY="82.0" prefHeight="200.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                           </children>
-                        </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="-Infinity" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <Text fx:id="title" layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create a new category" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="14.0" />
-                              <Separator layoutX="10.0" layoutY="33.0" prefWidth="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="33.0" />
-                              <GridPane layoutX="10.0" layoutY="47.0" prefHeight="186.0" prefWidth="334.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="50.0">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="160.0" minWidth="10.0" prefWidth="110.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="224.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="107.7294921875" />
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Shortcut" wrappingWidth="109.56396484375" GridPane.rowIndex="1" />
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Path" wrappingWidth="110.0673828125" GridPane.rowIndex="2" />
-                                    <TextField fx:id="nameField" GridPane.columnIndex="1" />
-                                    <TextField fx:id="shortCutField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <TextField fx:id="pathField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <Button mnemonicParsing="false" onAction="#saveActionTarget" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Color" wrappingWidth="110.0673828125" GridPane.rowIndex="3" />
-                                    <ColorPicker fx:id="colorPickerField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                 </children>
-                              </GridPane>
-                              <Pane fx:id="svgDisplayPane" layoutX="125.0" layoutY="281.0" prefHeight="98.0" prefWidth="98.0" style="-fx-border-color: gray;" AnchorPane.bottomAnchor="134.0" AnchorPane.rightAnchor="131.0" />
-                              <Text layoutX="6.0" layoutY="292.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Preview" wrappingWidth="110.0673828125" />
+                              <SplitPane prefHeight="416.0" prefWidth="896.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Pane maxHeight="100.0" minHeight="100.0" prefHeight="100.0" prefWidth="896.0" style="-fx-background-color: yellow;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                     </items>

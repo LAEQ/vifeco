@@ -1,5 +1,7 @@
 package org.laeq.db;
 
+import org.laeq.model.CategoryCollection;
+import org.laeq.model.User;
 import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
@@ -53,7 +55,15 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
 
     @Override
     public Set<Video> findAll() {
-        String query = "SELECT * FROM VIDEO;";
+        String query = "select v.id as video_id,  V.path as path,  V.duration as duration, V.user_id AS user_id, \n" +
+                        "V.CREATED_AT AS CREATED_AT, \n" +
+                        "U.first_name AS first_name, " +
+                        "U.last_name AS last_name, CC.ID AS cc_id, CC.name AS cc_name, " +
+                        "count(P.video_id) as total_point, CC.Name as c_name from video AS V \n" +
+                        "left join user AS U on V.user_id = U.id \n" +
+                        "left join Point as P ON P.video_id = V.id  \n" +
+                        "left join Category_Collection AS CC on CC.id = V.category_collection_id \n" +
+                        "GROUP BY P.video_id, V.user_id, V.id, V.created_at, CC.id, U.first_name, U.last_name, CC.ID, CC.name;";
 
         Set<Video> result = new HashSet<>();
 
@@ -70,6 +80,8 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
         return result;
     }
 
+
+
     private Set<Video> getResult(ResultSet datas) throws SQLException, DAOException {
         Set<Video> result = new HashSet<>();
 
@@ -82,13 +94,19 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
 
     private Video generateVideo(ResultSet datas) throws SQLException, DAOException {
         Video video = new Video();
-        video.setId(datas.getInt("ID"));
+
+        video.setId(datas.getInt("VIDEO_ID"));
         video.setPath(datas.getString("PATH"));
         video.setDuration((datas.getDouble("DURATION")));
         video.setCreatedAt(datas.getTimestamp("CREATED_AT"));
-        video.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
-        video.setUser(userDAO.findById(datas.getInt("USER_ID")));
-        video.setCategoryCollection(categoryCollectionDAO.findByID(datas.getInt("CATEGORY_COLLECTION_ID")));
+        video.setTotal(datas.getInt("TOTAL_POINT"));
+
+        User user = ResultHelper.generateUser(datas);
+        video.setUser(user);
+
+        CategoryCollection categoryCollection = ResultHelper.generateCategoryCollection(datas);
+
+        video.setCategoryCollection(categoryCollection);
 
         return video;
     }
@@ -110,5 +128,9 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
 
         if(result !=1)
             throw new DAOException("Error deleting a video");
+    }
+
+    public void editVideo(Video video) {
+
     }
 }
