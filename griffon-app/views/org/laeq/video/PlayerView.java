@@ -6,7 +6,6 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.event.Event;
@@ -31,6 +30,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {
@@ -40,7 +40,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private MediaPlayer mediaPlayer;
     private Duration duration;
 
-    private ObservableMap<Point, Icon> pointObservableMap;
+
     private ObservableSet<Icon> iconObservableSet;
 
     @MVCMember @Nonnull private PlayerController controller;
@@ -71,11 +71,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     @Override
     public void initUI() {
-        pointObservableMap = FXCollections.synchronizedObservableMap(model.getObservableMap());
         iconObservableSet = FXCollections.observableSet();
-
-
-        System.out.println(video);
 
 
         Node node = loadFromFXML();
@@ -88,7 +84,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 //                mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
 //            }
 //        };
-//        currentTimeListener = observable -> { updateValues(); };
+        currentTimeListener = observable -> { updateValues(); };
 //        keyListener = event -> { keyValues(event);};
 //        mouseMoveListener = mouseEvent -> {
 //            mousePosition = new Point2D(
@@ -186,37 +182,24 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     @FXML
     public void playerPaneMouseClicked(MouseEvent mouseEvent) {
-        System.out.println("mouse clicked");
+
+        runOutsideUI(() -> {
+            Point point = new Point();
+            point.setX(mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth());
+            point.setY(mouseEvent.getY() / iconPane.getBoundsInLocal().getHeight());
+            point.setStart(mediaPlayer.getCurrentTime());
 
 
-        Point point = new Point();
-        point.setX(mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth());
-        point.setY(mouseEvent.getY() / iconPane.getBoundsInLocal().getHeight());
-        point.setStart(mediaPlayer.getCurrentTime());
+            controller.addPoint(point, "A");
+        });
 
-
-        Category category = model.debugCategory();
-        point.setCategory(category);
-        point.setVideo(video);
-
-        Icon icon = new Icon(category, 100);
-
-        icon.setLayoutX(point.getX() * iconPane.getBoundsInLocal().getWidth());
-        icon.setLayoutY(point.getY() * iconPane.getBoundsInLocal().getHeight());
-
-        controller.addPoint(point);
-
-
-
-
-//        point.setCategory(model.getCategory("1").get());
-//        point.setVideo(model.getVideo());
-//        point.setUser(model.getUser());
-//        point.setStart(mediaPlayer.getCurrentTime());
-//
-//        model.addVideoPoint(point);
+//        System.out.println("mouse clicked");
+//        String[] chars = new String[]{"A", "S", "D", "F"};
+//        Icon icon = new Icon(category, 100);
+//        icon.setLayoutX(point.getX() * iconPane.getBoundsInLocal().getWidth());
+//        icon.setLayoutY(point.getY() * iconPane.getBoundsInLocal().getHeight());
+//        controller.addPoint(point);
     }
-
 
 
     public void setVolume() {
@@ -261,11 +244,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             mediaPlayer.setOnReady(() -> {
                 duration = mediaPlayer.getMedia().getDuration();
                 updateValues();
-
-//                displayPoint.addListener(displayPointListener);
-//                displayPoints();
             });
 
+            mediaPlayer.play();
 
         } else {
             getLog().error(String.format("PlayerView: file not exits %s", video));
@@ -273,7 +254,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     private void displayPoints() {
-//        SortedSet<VideoPoint> points = model.display(mediaPlayer.getCurrentTime());
+        Collection<Icon> points = model.displayPoints(mediaPlayer.getCurrentTime());
+
+        System.out.println("Points to show: " + points.size());
+
 //        displayPoint.retainAll(points);
 //        points.parallelStream().filter(videoPoint -> ! displayPoint.contains(videoPoint)).forEach(videoPoint -> displayPoint.add(videoPoint));
     }
@@ -286,7 +270,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         setUp();
 
         //Add Listeners
-//        mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
+        mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
 //        timeSlider.valueProperty().addListener(sliderTimeListener);
 //        parentView.getScene().setOnKeyPressed(keyListener);
 //

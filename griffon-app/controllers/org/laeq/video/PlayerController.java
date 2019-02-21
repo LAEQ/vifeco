@@ -11,6 +11,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DAOException;
 import org.laeq.db.DatabaseService;
 import org.laeq.db.PointDAO;
+import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.ui.DialogService;
@@ -89,12 +90,18 @@ public class PlayerController extends AbstractGriffonController {
         destroyMVCGroup(getMvcGroup().getMvcId());
     }
 
-
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
-    public void addPoint(Point point) {
+//
+    @Threading(Threading.Policy.OUTSIDE_UITHREAD)
+    public void addPoint(Point point, String letter) {
         try {
+
+
+            Category category = model.debugCategory();
+            point.setCategory(category);
+            point.setVideo(video);
             pointDAO.insert(point);
             model.addPoint(point);
+
             publishEvent("point.added", point);
         } catch (DAOException e) {
             getLog().error(String.format("PlayerCtrl: cannot save new point: %s : %s", point, e.getMessage()));

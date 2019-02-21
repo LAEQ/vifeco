@@ -43,7 +43,7 @@ public class CategoryModel extends AbstractGriffonModel {
 
             categoryPropertyList.put(category, new SimpleLongProperty(this, category.getName(), total));
         });
-//
+
         total = new SimpleIntegerProperty(this, "total", video.getPointSet().size());
     }
 
