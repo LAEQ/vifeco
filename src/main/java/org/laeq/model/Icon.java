@@ -56,6 +56,22 @@ public class Icon extends Group {
         getChildren().addAll(svg);
     }
 
+    public Icon(String path, String color, int size){
+        this.path = path;
+        this.size = size;
+        this.color = color;
+        this.svgRatio = 0.7f;
+
+        svg = new SVGPath();
+        svg.setContent(path);
+        svg.setSmooth(true);
+        svg.setFill(Paint.valueOf(color));
+        svg.setScaleX(getScale());
+        svg.setScaleY(getScale());
+
+        getChildren().addAll(svg);
+    }
+
     private Canvas getCanvas(){
         Canvas canvas = new Canvas(size, size);
         GraphicsContext gc = canvas.getGraphicsContext2D();

@@ -4,27 +4,22 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Category;
+import org.laeq.graphic.Color;
+import org.laeq.graphic.IconSVG;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
+import org.laeq.model.User;
 import org.laeq.template.MiddlePaneView;
 
-import java.util.Collections;
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -79,7 +74,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
         model.nameProperty().bindBidirectional(nameField.textProperty());
         model.shortCutProperty().bindBidirectional(shortCutField.textProperty());
-        model.svgPathProperty().bindBidirectional(pathField.textProperty());
+        model.iconProperty().bindBidirectional(pathField.textProperty());
 //        model.colorProperty().bindBidirectional(Bindings.createObjectBinding(colorPickerField.getValue().toString()));
 
         pathField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -87,7 +82,48 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         });
 
         iconColumn.setCellFactory(iconAction());
+        actionColumn.setCellFactory(addActions());
         categoryTable.setItems(this.model.getCategoryList());
+    }
+
+    private Callback<TableColumn<Category, Void>, TableCell<Category, Void>> addActions() {
+        return param -> {
+            final  TableCell<Category, Void> cell = new TableCell<Category, Void>(){
+                Button edit = new Button("");
+                Button delete = new Button("");
+
+                Group btnGroup = new Group();
+                {
+                    edit.setLayoutX(5);
+                    delete.setLayoutX(55);
+
+                    btnGroup.getChildren().addAll(edit, delete);
+                    Icon icon = new Icon(IconSVG.edit, org.laeq.graphic.Color.gray_dark);
+                    edit.setGraphic(icon);
+                    edit.setOnAction(event -> {
+                        model.setSelectedCategory(categoryTable.getItems().get(getIndex()));
+                    });
+
+
+                    delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));
+                    delete.setOnAction(event -> {
+                        controller.delete(categoryTable.getItems().get(getIndex()));
+                    });
+                }
+
+                @Override
+                public void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(btnGroup);
+                    }
+                }
+            };
+
+            return cell;
+        };
     }
 
     private Callback<TableColumn<Category, Void>, TableCell<Category, Void>> iconAction() {

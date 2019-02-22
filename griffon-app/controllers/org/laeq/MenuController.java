@@ -141,32 +141,6 @@ public class MenuController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("menu.org.laeq.user.init", objects -> {
-            List<User> userList = (List<User>) objects[0];
-            userList.forEach(user -> {
-                     view.getUserComboBox().getItems().add(user);
-                     if(user.getIsActive()){
-                         view.getUserComboBox().getSelectionModel().select(user);
-                     }
-                }
-            );
-        });
-
-        list.put("user.created", objects -> {
-           view.getUserComboBox().getItems().add((User) objects[0]);
-        });
-
-        list.put("user.delete", objects -> {
-            User user = (User) objects[0];
-
-            int index = view.getUserComboBox().getItems().indexOf(user);
-
-            if(view.getUserComboBox().getSelectionModel().isSelected(index)){
-                System.out.println("");
-            }
-
-            view.getUserComboBox().getItems().remove(user);
-        });
 
         list.put("video.open", objects -> {
             open();

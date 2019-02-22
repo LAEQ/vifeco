@@ -25,7 +25,6 @@ public class MenuView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private MenuController controller;
     @MVCMember @Nonnull private MenuModel model;
 
-    @FXML private ComboBox<User> userComboBox;
     @FXML private AnchorPane subMenuPane;
 
     @MVCMember @Nonnull private VifecoView parentView;
@@ -79,14 +78,5 @@ public class MenuView extends AbstractJavaFXGriffonView {
 
     private void publishEvent(String eventName){
         getApplication().getEventRouter().publishEvent(eventName);
-    }
-
-    @FXML
-    private void handleUserCombo(){
-        controller.setActiveUser(userComboBox.getSelectionModel().getSelectedItem());
-    }
-
-    public ComboBox<User> getUserComboBox() {
-        return userComboBox;
     }
 }

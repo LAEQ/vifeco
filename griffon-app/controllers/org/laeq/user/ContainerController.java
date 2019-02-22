@@ -70,4 +70,18 @@ public class ContainerController extends AbstractGriffonController {
     private void alert(String alertMsg){
         dialogService.simpleAlert(alertMsg);
     }
+
+    public void delete(User user) {
+        String message = String.format("Cannot save user: \n%s", user);
+        Boolean confirmation = dialogService.confirm(message);
+
+        if(confirmation){
+            try {
+                userDAO.delete(user);
+                model.delete(user);
+            } catch (DAOException e) {
+                getLog().error(String.format("UserDAO: failed to delete %s.", user));
+            }
+        }
+    }
 }

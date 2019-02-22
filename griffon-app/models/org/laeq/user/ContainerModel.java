@@ -148,4 +148,8 @@ public class ContainerModel extends AbstractGriffonModel {
         selectedUser.setLastName(user.getLastName());
         selectedUser.setEmail(user.getEmail());
     }
+
+    public void delete(User user) {
+        userList.remove(user);
+    }
 }

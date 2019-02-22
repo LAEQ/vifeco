@@ -3,7 +3,7 @@ package org.laeq.ui;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonBar.*;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class DialogService extends AbstractGriffonService {
 
     public void dialog(){
-        ButtonType btn = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        ButtonType btn = new ButtonType("OK", ButtonData.OK_DONE);
         Dialog<ButtonType> dialog = new Dialog<>();
 
         dialog.setContentText("Not implemented yet");
@@ -24,13 +24,10 @@ public class DialogService extends AbstractGriffonService {
         dialog.getDialogPane().lookupButton(btn).setDisable(disabled);
 
         Optional<ButtonType> result = dialog.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            formatSystem();
-        }
     }
 
     public void dialog(String text){
-        ButtonType btn = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        ButtonType btn = new ButtonType("OK", ButtonData.OK_DONE);
         Dialog<ButtonType> dialog = new Dialog<>();
 
         dialog.setContentText(text);
@@ -39,9 +36,25 @@ public class DialogService extends AbstractGriffonService {
         dialog.getDialogPane().lookupButton(btn).setDisable(disabled);
 
         Optional<ButtonType> result = dialog.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            formatSystem();
+    }
+
+    public Boolean confirm(String text) {
+        ButtonType ok = new ButtonType("OK", ButtonData.OK_DONE);
+        ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setHeaderText("Confirmation");
+        dialog.setContentText(text);
+        dialog.getDialogPane().getButtonTypes().addAll(cancel, ok);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+
+
+        if(result.isPresent() && result.get() == ok){
+            return true;
         }
+
+        return false;
     }
 
     public void simpleAlert(String text){
@@ -51,10 +64,6 @@ public class DialogService extends AbstractGriffonService {
         alert.setHeaderText(null);
         alert.setContentText(text);
         alert.showAndWait();
-    }
-
-    private void formatSystem() {
-        System.out.println("Format system");
     }
 
 }
