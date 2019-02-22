@@ -9,9 +9,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.laeq.graphic.IconSVG;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,6 +38,22 @@ public class Icon extends Group {
         svg.setScaleY(getScale());
 
         getChildren().addAll(getCanvas(), svg);
+    }
+
+    public Icon(String path, String color){
+        this.path = path;
+        this.size = 1;
+        this.color = color;
+        this.svgRatio = 0.5f;
+
+        svg = new SVGPath();
+        svg.setContent(path);
+        svg.setSmooth(true);
+        svg.setFill(Paint.valueOf(color));
+        svg.setScaleX(1);
+        svg.setScaleY(1);
+
+        getChildren().addAll(svg);
     }
 
     private Canvas getCanvas(){
@@ -66,5 +84,9 @@ public class Icon extends Group {
 
     public void setSize(double s){
         this.size = s;
+    }
+
+    public void setContent(String content) {
+        this.svg.setContent(content);
     }
 }

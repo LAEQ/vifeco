@@ -1,5 +1,8 @@
 package org.laeq.model;
 
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.util.Duration;
 
 import java.util.Objects;
@@ -11,6 +14,7 @@ public class Point extends BaseEntity implements Comparable<Point> {
     private Duration start;
     private Category category;
     private Video video;
+    private Icon icon;
 
     public Point() {
     }
@@ -102,6 +106,42 @@ public class Point extends BaseEntity implements Comparable<Point> {
                 "id=" + id +
                 "start=" + start +
                 '}';
+    }
+
+    public Icon getIcon(Bounds bounds) {
+        if(this.icon == null){
+            this.icon = new Icon(category, 100);
+        }
+
+        this.icon.setLayoutX(getX() * bounds.getWidth() - 100 / 2);
+        this.icon.setLayoutY(getY() * bounds.getHeight() - 100 / 2);
+
+        return icon;
+    }
+
+
+    private double getIconX(Double value){
+        return getX() * value - 100 / 2;
+    }
+
+    private double getIconY(Double value){
+        return getY() * value - 100 / 2;
+    }
+
+    public Icon getIcon() {
+        if(this.icon == null){
+            this.icon = new Icon(category, 100);
+        }
+
+        return icon;
+    }
+
+    public void repositionY(Double newValue) {
+        this.icon.setLayoutY(getY() * newValue - 100 / 2);
+    }
+
+    public void repositionX(Double newValue) {
+        this.icon.setLayoutX(getX() * newValue - 100 / 2);
     }
 }
 

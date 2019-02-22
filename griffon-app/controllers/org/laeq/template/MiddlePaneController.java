@@ -11,6 +11,7 @@ import org.laeq.db.DAOException;
 import org.laeq.db.DatabaseService;
 import org.laeq.db.PointDAO;
 import org.laeq.model.Video;
+import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -25,6 +26,7 @@ public class MiddlePaneController extends AbstractGriffonController {
     @MVCMember @Nonnull private MiddlePaneModel model;
     @MVCMember @Nonnull private MiddlePaneView view;
     @Inject private DatabaseService dbService;
+    @Inject private DialogService dialogService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -54,6 +56,8 @@ public class MiddlePaneController extends AbstractGriffonController {
                 createGroup("player", args);
 
             } catch (SQLException | IOException | DAOException e){
+                String message = String.format("Error createing the video: %s", videoFile.toString());
+                dialogService.simpleAlert(message);
                 getLog().error("Error creating and saving video in db: ", videoFile);
             }
         });

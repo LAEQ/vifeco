@@ -35,32 +35,7 @@ public class MenuView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-
         connectActions(node, controller);
-
-
-        String[] events = new String[]{
-                "video.list",
-                "video.player",
-                "org.laeq.user.list",
-                "org.laeq.user.create",
-                "mvc.category.list",
-                "category.create",
-                "category_collection.create"
-        };
-
-        FontAwesome[] icons = new FontAwesome[]{
-                FontAwesome.FILE_MOVIE_O,
-                FontAwesome.PLAY_CIRCLE,
-                FontAwesome.USERS,
-                FontAwesome.USER_PLUS,
-                FontAwesome.LIST,
-                FontAwesome.PLUS_SQUARE_O,
-                FontAwesome.PLUS_CIRCLE,
-                FontAwesome.FILE
-        };
-
-        Map<Group, String> buttons = new HashMap<>();
 
         parentView.getTop().getChildren().add(node);
 

@@ -43,7 +43,7 @@ public class MenuController extends AbstractGriffonController {
         fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter(
                     "Video Files",
-                    "*.mp4", "*.wav", "*.mkv", "*.avi")
+                    "*.mp4", "*.wav", "*.mkv", "*.avi", "*.wmv", "*.mov")
         );
 
         Stage stage = (Stage) getApplication().getWindowManager().findWindow("mainWindow");

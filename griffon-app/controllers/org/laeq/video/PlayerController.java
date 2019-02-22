@@ -43,8 +43,9 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
+
         view.play();
     }
 
@@ -94,13 +95,13 @@ public class PlayerController extends AbstractGriffonController {
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void addPoint(Point point, String letter) {
         try {
-
-
             Category category = model.debugCategory();
             point.setCategory(category);
             point.setVideo(video);
             pointDAO.insert(point);
             model.addPoint(point);
+
+            view.addPoint(point);
 
             publishEvent("point.added", point);
         } catch (DAOException e) {

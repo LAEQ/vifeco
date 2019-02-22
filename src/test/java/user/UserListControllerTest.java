@@ -4,7 +4,6 @@ import griffon.core.test.GriffonUnitRule;
 import griffon.core.test.TestFor;
 import org.junit.Rule;
 import org.junit.Test;
-import org.laeq.user.UserListController;
 
 import static org.junit.Assert.fail;
 

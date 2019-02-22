@@ -46,7 +46,8 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
 
             video.setId(nextId);
         } catch (Exception e){
-            getLogger().error(e.getMessage());
+            String message = String.format("VideoDAO: insert - %s - $s", video, e.getMessage());
+            getLogger().error(message);
         }
 
         if(result != 1)

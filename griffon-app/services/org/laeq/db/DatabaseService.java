@@ -94,10 +94,6 @@ public class DatabaseService extends AbstractGriffonService {
         dao.insert(video);
     }
 
-    public List<VideoUser> getVideoUserList(){
-        return new VideoUserDAO(manager, "not_applicable").findAll();
-    }
-
     public Set<Video> findAll(VideoUser videoUser) {
         VideoDAO dao = new VideoDAO(manager, "video_id");
 

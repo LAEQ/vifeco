@@ -12,11 +12,11 @@ import java.util.*;
 public class PlayerModel extends AbstractGriffonModel {
     private Boolean isPlaying = false;
     private Video video;
-    private SortedMap<Point, Icon> pointToIcons;
+//    private SortedMap<Point, Icon> pointToIcons;
     private Duration duration;
 
     public PlayerModel(){
-        pointToIcons = new TreeMap<>();
+//        pointToIcons = new TreeMap<>();
         duration = Duration.millis(10000);
     }
 
@@ -24,15 +24,15 @@ public class PlayerModel extends AbstractGriffonModel {
         this.duration = Duration.millis(duree);
     }
 
-    public SortedMap<Point, Icon> getPointToIcons() {
-        return pointToIcons;
-    }
+//    public SortedMap<Point, Icon> getPointToIcons() {
+//        return pointToIcons;
+//    }
 
     public void setVideo(Video video) {
         this.video = video;
-        this.video.getPointSet().forEach(point -> {
-            pointToIcons.put(point, generateIcon(point));
-        });
+//        this.video.getPointSet().forEach(point -> {
+//            pointToIcons.put(point, generateIcon(point));
+//        });
     }
 
     private Icon generateIcon(Point point){
@@ -40,7 +40,7 @@ public class PlayerModel extends AbstractGriffonModel {
     }
 
     public void addPoint(Point point) {
-        pointToIcons.put(point,generateIcon(point));
+//        pointToIcons.put(point,generateIcon(point));
         video.addPoint(point);
     }
 
@@ -61,15 +61,16 @@ public class PlayerModel extends AbstractGriffonModel {
     public Category debugCategory() {
         return video.getCategoryCollection().getCategorySet().iterator().next();
     }
-    public Iterator<Icon> displayIter(Duration currentTime) {
-        return displayPoints(currentTime).iterator();
-    }
-    public Collection<Icon> displayPoints(Duration currentTime){
+
+//    public Iterator<Icon> displayIter(Duration currentTime) {
+//        return displayPoints(currentTime).iterator();
+//    }
+    public SortedSet<Point> displayPoints(Duration currentTime){
         Point start = new Point();
         start.setStart(currentTime.subtract(duration));
         Point end = new Point();
         end.setStart(currentTime);
 
-        return pointToIcons.subMap(start, end).values();
+        return video.getPointSet().subSet(start, end);
     }
 }
