@@ -45,30 +45,29 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
-
         view.play();
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void rewind() {
-        dialogService.dialog();
+        view.backward();
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void forward() {
-        dialogService.dialog();
+        view.forward();
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void backVideo() {
-        dialogService.dialog();
+        view.reload();
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void test(KeyEvent keyEvent) {
         System.out.println("test");
     }
@@ -112,5 +111,7 @@ public class PlayerController extends AbstractGriffonController {
     private void publishEvent(String eventName, Object obj){
         getApplication().getEventRouter().publishEventAsync(eventName, Arrays.asList(obj));
     }
+
+
 
 }
