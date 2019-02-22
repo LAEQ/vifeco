@@ -9,6 +9,7 @@ import griffon.transform.Threading;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.db.DatabaseService;
 import org.laeq.model.User;
 import org.laeq.ui.DialogService;
 
@@ -40,14 +41,16 @@ public class MenuController extends AbstractGriffonController {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Video Files", "*.mp4", "*.wav", "*.mkv", "*.avi")
-                );
+            new FileChooser.ExtensionFilter(
+                    "Video Files",
+                    "*.mp4", "*.wav", "*.mkv", "*.avi", "*.wmv", "*.mov")
+        );
 
         Stage stage = (Stage) getApplication().getWindowManager().findWindow("mainWindow");
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            getApplication().getEventRouter().publishEventAsync("database.video.create", Arrays.asList(selectedFile));
+            getApplication().getEventRouter().publishEvent("video.add", Arrays.asList(selectedFile));
         } else {
             System.out.println("Error loading the file");
         }
@@ -75,6 +78,8 @@ public class MenuController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void sendTo(){
         getApplication().getEventRouter().publishEvent("org.laeq.user.create");
+
+        getApplication().getEventRouter().publishEvent("org.laeq.user.list");
     }
 
     @ControllerAction
@@ -100,7 +105,7 @@ public class MenuController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void listCategory() {
-        dialogService.dialog();
+        getApplication().getEventRouter().publishEvent("mvc.category.list");
     }
 
     @ControllerAction
@@ -151,11 +156,26 @@ public class MenuController extends AbstractGriffonController {
            view.getUserComboBox().getItems().add((User) objects[0]);
         });
 
+        list.put("user.delete", objects -> {
+            User user = (User) objects[0];
+
+            int index = view.getUserComboBox().getItems().indexOf(user);
+
+            if(view.getUserComboBox().getSelectionModel().isSelected(index)){
+                System.out.println("");
+            }
+
+            view.getUserComboBox().getItems().remove(user);
+        });
+
+        list.put("video.open", objects -> {
+            open();
+        });
+
         return list;
     }
 
-
     public void setActiveUser(User selectedItem) {
-        getApplication().getEventRouter().publishEventAsync("database.org.laeq.user.active", Arrays.asList(selectedItem));
+        getApplication().getEventRouter().publishEventAsync("database.user.active", Arrays.asList(selectedItem));
     }
 }

@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.Group?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+<VBox prefHeight="622.0" prefWidth="1043.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <VBox prefHeight="102.0" prefWidth="900.0">
          <children>
@@ -52,86 +60,25 @@
             <HBox prefHeight="52.0" prefWidth="900.0" />
          </children>
       </VBox>
-    <SplitPane dividerPositions="0.1492204899777283, 0.8340757238307349" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane focusTraversable="true" VBox.vgrow="ALWAYS">
       <items>
-        <AnchorPane>
-          <children>
-            <Label alignment="CENTER" layoutX="3.0" layoutY="14.0" minWidth="60.0" prefHeight="16.0" prefWidth="71.0" style="&#10;" text="Controls" wrapText="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-              <textFill>
-                <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
-              </textFill>
-            </Label>
-                  <Group layoutX="12.0" layoutY="62.0">
-                     <children>
-                        <Label alignment="CENTER" layoutY="5.0" minWidth="36.0" prefHeight="16.0" prefWidth="50.0" style="&#10;" text="Speed" wrapText="true">
-                           <textFill>
-                              <Color blue="0.624" green="0.624" red="0.624" fx:id="x21" />
-                           </textFill>
-                           <font>
-                              <Font size="11.0" />
-                           </font>
-                        </Label>
-                        <Spinner layoutX="83.0" prefHeight="26.0" prefWidth="67.0" />
-                     </children>
-                  </Group>
-                  <Group layoutX="13.0" layoutY="103.0">
-                     <children>
-                        <Label alignment="CENTER" layoutY="5.0" minWidth="36.0" prefHeight="16.0" prefWidth="57.0" style="&#10;" text="Volume" wrapText="true">
-                           <textFill>
-                              <Color blue="0.624" green="0.624" red="0.624" fx:id="x211" />
-                           </textFill>
-                           <font>
-                              <Font size="11.0" />
-                           </font>
-                        </Label>
-                        <Spinner layoutX="83.0" prefHeight="26.0" prefWidth="67.0" />
-                     </children>
-                  </Group>
-          </children>
-        </AnchorPane>
-      <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0">
+        <AnchorPane prefHeight="545.0" prefWidth="898.0" style="-fx-background-color: lightcyan;">
                <children>
-                  <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <tabs>
-                      <Tab text="Untitled Tab 1">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                 <children>
-                                    <TableView prefHeight="480.0" prefWidth="607.0">
-                                      <columns>
-                                        <TableColumn prefWidth="75.0" text="C1" />
-                                        <TableColumn prefWidth="75.0" text="C2" />
-                                      </columns>
-                                    </TableView>
-                                 </children></AnchorPane>
-                        </content>
-                      </Tab>
-                      <Tab text="Untitled Tab 2">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                 <children>
-                                    <Pane layoutX="14.0" layoutY="23.0" prefHeight="380.0" prefWidth="578.0" style="-fx-background-color: grey;" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0" />
-                                    <Button layoutX="14.0" layoutY="432.0" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="10.0" />
-                                    <Slider layoutX="14.0" layoutY="405.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                                    <Button layoutX="86.0" layoutY="440.0" mnemonicParsing="false" text="&lt;&lt;" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="86.0" />
-                                    <Button layoutX="137.0" layoutY="440.0" mnemonicParsing="false" text="&gt;&gt;" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="130.0" />
-                                    <Label layoutX="495.0" layoutY="432.0" prefHeight="39.0" prefWidth="127.0" text="12:00 / 1:23:00" textAlignment="RIGHT" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                                 </children>
-                          </AnchorPane>
-                        </content>
-                      </Tab>
-                    </tabs>
-                  </TabPane>
+                  <SplitPane layoutY="7.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="-Infinity" prefHeight="160.0" prefWidth="100.0">
+                           <children>
+                              <SplitPane prefHeight="416.0" prefWidth="896.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Pane maxHeight="100.0" minHeight="100.0" prefHeight="100.0" prefWidth="896.0" style="-fx-background-color: yellow;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
                </children>
-      </AnchorPane>
-        <AnchorPane>
-          <children>
-            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Categories" textAlignment="CENTER" textFill="$x2" wrapText="false" />
-          </children>
         </AnchorPane>
       </items>
     </SplitPane>
-    <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
+    <HBox id="HBox" alignment="CENTER_LEFT" prefHeight="63.0" prefWidth="900.0" spacing="5.0" VBox.vgrow="NEVER">
       <children>
         <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
           <font>
@@ -141,7 +88,7 @@
             <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
           </textFill>
         </Label>
-        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Pane prefHeight="31.0" prefWidth="758.0" HBox.hgrow="ALWAYS" />
         <Label font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4" HBox.hgrow="NEVER" />
       </children>
       <padding>

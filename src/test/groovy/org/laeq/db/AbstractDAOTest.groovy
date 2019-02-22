@@ -20,7 +20,7 @@ class AbstractDAOTest extends Specification {
     }
 
     def setup(){
-        def sqlArray = ["sql/drop_tables.sql", "sql/create_tables.sql", "sql/create_sequences.sql"] as String[]
+        def sqlArray = ["sql/drop_tables.sql", "sql/create_tables.sql"] as String[]
 
         manager = new DatabaseManager(new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", ""))
 

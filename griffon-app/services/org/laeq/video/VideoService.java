@@ -22,20 +22,13 @@ public final class VideoService extends AbstractGriffonService {
 
     private Pane pane;
 
-    public void setUp(@Nonnull Pane pane){
-        this.pane = pane;
-    }
-
     public void init(){
         tearDown();
-
     }
 
     public void tearDown(){
-
         this.pane.getChildren().clear();
     }
-
 
 
     public void addVideoIcon(Point2D point, Duration start) throws FileNotFoundException {
@@ -43,6 +36,13 @@ public final class VideoService extends AbstractGriffonService {
 
         getApplication().getEventRouter().publishEventAsync("video.point.create", Arrays.asList(vp));
 
+    }
+
+    public String getDurationText(Duration now, Duration total){
+        return String.format("%s / %s",
+                formatDuration(now),
+                formatDuration(total)
+        );
     }
 
     public Double getPositionSecondsBefore(Duration totalDuration, Duration currentDuration, int rewindSeconds) {

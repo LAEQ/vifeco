@@ -2,25 +2,27 @@ package org.laeq.model;
 
 import java.util.Objects;
 
-public class Category extends Entity{
+public class Category extends BaseEntity {
     private Integer id;
     private String name;
     private String icon;
+    private String color;
     private String shortcut;
 
     public Category() {
 
     }
 
-    public Category(Integer id, String name, String icon, String shortcut) {
-        this(name, icon, shortcut);
+    public Category(Integer id, String name, String icon, String color, String shortcut) {
+        this(name, icon, color, shortcut);
         this.id = id;
     }
 
-    public Category(String name, String icon, String shortcut) {
+    public Category(String name, String icon, String color, String shortcut) {
         this.name = name;
         this.icon = icon;
         this.shortcut = shortcut;
+        this.color = color;
     }
 
     public int getId() {
@@ -49,6 +51,14 @@ public class Category extends Entity{
     }
     public void setShortcut(String shortcut) {
         this.shortcut = shortcut;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     @Override

@@ -57,7 +57,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
             return;
         }
 
-        String query = "INSERT INTO org.laeq.user (ID, FIRST_NAME, LAST_NAME, EMAIL, IS_ACTIVE) VALUES (?, 'default', 'default', 'default@email.com', true); ";
+        String query = "INSERT INTO USER (ID, FIRST_NAME, LAST_NAME, EMAIL, IS_ACTIVE) VALUES (?, 'default', 'default', 'default@email.com', true); ";
 
         try(Connection connection = getManager().getConnection();
         PreparedStatement statement = connection.prepareStatement(query)){
@@ -93,7 +93,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
             user.setIsActive(true);
 
             if(result2 != 1){
-                throw new DAOException("UserDAO: no org.laeq.user is active.");
+                throw new DAOException("UserDAO: no Useris active.");
             }
         }
     }
@@ -110,7 +110,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
                return generateUser(result);
             }
 
-            throw new DAOException("UserDAO: no org.laeq.user is active.");
+            throw new DAOException("UserDAO: no Useris active.");
         }
     }
 
@@ -127,7 +127,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
                 return generateUser(result);
             }
 
-            throw new DAOException("UserDAO: no org.laeq.user is active.");
+            throw new DAOException("UserDAO: no Useris active.");
         }
     }
 
@@ -196,5 +196,24 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         user.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
 
         return user;
+    }
+
+    public void update(User user) throws SQLException, DAOException {
+        try(Connection connection = getManager().getConnection())
+        {
+            String query = "UPDATE USER SET FIRST_NAME=?, LAST_NAME=?, EMAIL=? WHERE ID = ?;";
+            PreparedStatement statement2 = connection.prepareStatement(query);
+
+            statement2.setString(1, user.getFirstName());
+            statement2.setString(2, user.getLastName());
+            statement2.setString(3, user.getEmail());
+            statement2.setInt(4, user.getId());
+
+            int result2 = statement2.executeUpdate();
+
+            if(result2 != 1){
+                throw new DAOException("UserDAO: no Useris active.");
+            }
+        }
     }
 }

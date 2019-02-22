@@ -2,23 +2,25 @@ package org.laeq.db
 
 import javafx.util.Duration
 import org.laeq.model.CategoryCollection
+import org.laeq.model.User
 import org.laeq.model.Video
 
 class VideoDAOTest extends AbstractDAOTest {
-    DAOInterface<Video> repository
-
-    CategoryCollection categoryCollection;
+    VideoDAO repository
+    CategoryCollection categoryCollection
 
     def setup() {
-        repository = new VideoDAO(manager, "category_id")
+        repository = new VideoDAO(manager, VideoDAO.sequence_name)
+        def result = false
 
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            result = manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
         } catch (Exception e){
             println e
         }
 
-        categoryCollection = new CategoryCollection(1, "test", false);
+        if(! result)
+            throw new Exception("VideoDAOTest: cannot load the fixtures")
     }
 
     def "test get next id"() {
@@ -33,49 +35,65 @@ class VideoDAOTest extends AbstractDAOTest {
 
     def "test insertion"() {
         setup:
-        Video video = new Video("path/to/video/name.mp4", Duration.millis(3600000), categoryCollection)
+        Video video = generateVideo("path/to/video/name.mp4")
 
         when:
         repository.insert(video)
+        Video expexted = generateVideo(5, "path/to/video/name.mp4")
 
         then:
-        video == new Video(5, "path/to/video/name.mp4", Duration.millis(3600000), categoryCollection)
+        video == expexted
     }
+
+    Video generateVideo(String path){
+        return new Video(path, Duration.millis(3600000),
+                new User(1, "test", "test", "test"),
+                new CategoryCollection(1, "test", false)
+        )
+    }
+
+    Video generateVideo(int id, String path){
+        return new Video(id, path, Duration.millis(3600000),
+                new User(1, "test", "test", "test"),
+                new CategoryCollection(1, "test", false)
+        )
+    }
+
 
     def "test findAll"(){
         setup:
-        Video video1 = new Video("path/to/video/name.mp4", Duration.millis(3600000), categoryCollection)
-        Video video2 = new Video("path/to/video/name2.mp4", Duration.millis(3600000), categoryCollection)
-        Video video3 = new Video("path/to/video/name3.mp4", Duration.millis(3600000), categoryCollection)
+        Video video1 = generateVideo("path/to/video/name.mp4")
+        Video video2 = generateVideo("path/to/video/name2.mp4")
+        Video video3 = generateVideo("path/to/video/name3.mp4")
 
-        repository.insert(video1)
-        repository.insert(video2)
-        repository.insert(video3)
 
         when:
         def result = repository.findAll()
+        Video video = result.find{ it.id == 1}
 
         then:
-        result.size() == 7
+        result.size() == 4
+        video.total == 8
+        video.user.id == 1
+        video.user.firstName == "Luck"
+        video.user.lastName == "Skywalker"
+        video.categoryCollection.id == 1
+        video.categoryCollection.name == "Default"
     }
 
     def "test findAll but empty"() {
         when:
         def result = repository.findAll()
 
+        Video expected = generateVideo(1, "path/to/video/name.mp4")
+
         then:
         result.size() == 4
+
     }
 
     def "test delete an existing video"() {
-        setup:
-        try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
-        } catch (Exception e){
-            println e
-        }
-
-        Video video = new Video(1, "path/to/video.mp4", Duration.millis(3600000), categoryCollection)
+        Video video = generateVideo(1, "path/to/video.mp4")
 
         when:
         repository.delete(video)
@@ -85,14 +103,8 @@ class VideoDAOTest extends AbstractDAOTest {
     }
 
     def "test delete an unknown video" (){
-        setup:
-        try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
-        } catch (Exception e){
-            println e
-        }
 
-        def video = new Video(-1, "path/to/video.mp4", Duration.millis(3600000), categoryCollection)
+        def video = generateVideo(-1, "path/to/video.mp4")
 
         when:
         repository.delete(video)

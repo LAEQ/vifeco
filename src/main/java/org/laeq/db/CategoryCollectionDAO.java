@@ -38,19 +38,20 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
 
             categoryCollection.setId(nextId);
 
-            String query2 = "INSERT INTO category_collection_category(CATEGORY_COLLECTION_ID, CATEGORY_ID) VALUES(?, ?)";
+            if(! categoryCollection.getCategorySet().isEmpty()){
+                String query2 = "INSERT INTO category_collection_category(CATEGORY_COLLECTION_ID, CATEGORY_ID) VALUES(?, ?)";
 
-            PreparedStatement statement1 = connection.prepareStatement(query2);
+                PreparedStatement statement1 = connection.prepareStatement(query2);
 
-            for (Category category: categoryCollection.getCategorySet()) {
-                statement1.setInt(1, nextId);
-                statement1.setInt(2, category.getId());
+                for (Category category: categoryCollection.getCategorySet()) {
+                    statement1.setInt(1, nextId);
+                    statement1.setInt(2, category.getId());
 
-                statement1.addBatch();
+                    statement1.addBatch();
+                }
+
+                statement1.executeBatch();
             }
-
-            statement1.executeBatch();
-
         } catch (Exception e){
             getLogger().error(e.getMessage());
             throw new DAOException("Error insert CategoryCollection: " + e.getMessage());
@@ -126,12 +127,12 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
                 categoryCollection.setName(result.getString(2));
                 categoryCollection.setIsDefault(result.getBoolean(3));
 
-
                 Category category = new Category();
                 category.setId(result.getInt(10));
                 category.setName(result.getString(11));
                 category.setIcon(result.getString(12));
-                category.setShortcut(result.getString(13));
+                category.setColor(result.getString(13));
+                category.setShortcut(result.getString(14));
 
                 categoryCollection.addCategory(category);
             }

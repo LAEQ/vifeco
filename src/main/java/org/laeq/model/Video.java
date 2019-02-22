@@ -1,14 +1,20 @@
 package org.laeq.model;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.util.Duration;
 
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 
-public class Video extends Entity{
+public class Video extends BaseEntity {
     private Integer id;
     private SimpleStringProperty path;
     private SimpleStringProperty name;
@@ -16,20 +22,26 @@ public class Video extends Entity{
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
     private Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
     private CategoryCollection categoryCollection;
+    private User user;
+    private SimpleLongProperty total;
+    private SortedSet<Point> pointSet = new ConcurrentSkipListSet<>();
 
-
-    public Video(Integer id, String path, Duration duration, CategoryCollection categoryCollection) {
+    public Video(Integer id, String path, Duration duration, User user, CategoryCollection categoryCollection) {
         this.id = id;
         this.path = new SimpleStringProperty(this, "path", path);
         this.name = new SimpleStringProperty(this, "name", pathToName(path));
         this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
+        this.total = new SimpleLongProperty(this, "total", 0);
+        this.user = user;
         this.categoryCollection = categoryCollection;
     }
 
-    public Video(String path, Duration duration, CategoryCollection categoryCollection) {
+    public Video(String path, Duration duration, User user, CategoryCollection categoryCollection) {
         this.path = new SimpleStringProperty(this, "test", path);
         this.name = new SimpleStringProperty(this, "name", pathToName(path));
         this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
+        this.total = new SimpleLongProperty(this, "total", 0);
+        this.user = user;
         this.categoryCollection = categoryCollection;
     }
 
@@ -37,6 +49,7 @@ public class Video extends Entity{
         this.path = new SimpleStringProperty(this, "test", "");
         this.name = new SimpleStringProperty(this, "name", "");
         this.duration = new SimpleDoubleProperty(this, "duration", 0.0);
+        this.total = new SimpleLongProperty(this, "total", 0);
     }
 
     public String getPath() {
@@ -82,6 +95,34 @@ public class Video extends Entity{
         this.categoryCollection = categoryCollection;
     }
 
+    public long getTotal() {
+        return total.get();
+    }
+    public SimpleLongProperty totalProperty() {
+        return total;
+    }
+    public void setTotal(long total) {
+        this.total.set(total);
+    }
+
+    @Override
+    public String toString() {
+        return "Video{" +
+                "id=" + id +
+                ", path=" + path.getValue() +
+                ", name=" + name.getValue() +
+                ", categoryCollection=" + categoryCollection +
+                ", user=" + user +
+                '}';
+    }
+
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public int getId() {
         return id;
@@ -90,20 +131,32 @@ public class Video extends Entity{
         this.id = id;
     }
 
+    public void addPoint(Point point){
+        pointSet.add(point);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Video video = (Video) o;
-        return path.getValue().equals(video.path.getValue());
+        return id.equals(video.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(path.getValue());
+        return Objects.hash(id);
     }
 
     private String pathToName(String path){
         return Paths.get(path).getFileName().toString();
+    }
+
+    public SortedSet<Point> getPointSet() {
+        return pointSet;
+    }
+
+    public long totalPoints() {
+        return pointSet.size();
     }
 }

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
-public class CategoryCollection extends Entity{
+public class CategoryCollection extends BaseEntity {
     public final static String sequence_name = "category_collection_id";
 
     private SimpleIntegerProperty id;

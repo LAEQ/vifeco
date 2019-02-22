@@ -3,16 +3,14 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.VifecoView;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -24,7 +22,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     private ControlsModel model;
 
     @MVCMember @Nonnull
-    private VifecoView parentView;
+    private Player2View parentView;
 
     @FXML private Pane sliderPanel;
 
@@ -63,15 +61,15 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         initDurationPoint();
         initOpacityPoint();
 
-        volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-//                getLog().info(String.format("%d : %f\n", model.getVolume(), model.getVolumeRate()));
-//                System.out.println(model.getVolume());
-            }
-        });
+        Pane pane = new Pane();
+        pane.getChildren().add(node);
 
-        parentView.getMiddlePane().getItems().add(node);
+        AnchorPane.setLeftAnchor(pane, 0d);
+        AnchorPane.setRightAnchor(pane, 0d);
+        AnchorPane.setBottomAnchor(pane, 0d);
+        AnchorPane.setTopAnchor(pane, 0d);
+
+        parentView.getControlPane().getChildren().add(pane);
     }
 
     private Group generateSlider(){

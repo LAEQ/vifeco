@@ -38,10 +38,10 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
         def entity = new CategoryCollection()
         entity.setName("Mock NAME")
         entity.setIsDefault(false)
-        entity.addCategory(new Category(1, "Moving truck", "icon/icon1.png", "A"))
-        entity.addCategory(new Category(2, "Moving car", "icon/icon2.png", "B"))
-        entity.addCategory(new Category(3, "Moving bike", "icon/icon3.png", "C"))
-        entity.addCategory(new Category(4, "Moving bus", "icon/icon4.png", "D"))
+        entity.addCategory(new Category(1, "Moving truck", "icon/icon1.png", "#FFFFFF","A"))
+        entity.addCategory(new Category(2, "Moving car", "icon/icon2.png", "#FFFFFF","B"))
+        entity.addCategory(new Category(3, "Moving bike", "icon/icon3.png", "#FFFFFF","C"))
+        entity.addCategory(new Category(4, "Moving bus", "icon/icon4.png",  "#FFFFFF","D"))
 
 
         when:
@@ -105,8 +105,8 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
 
         println entity.categorySet.size()
 
-        entity.addCategory(new Category(1, "Moving", "Moving", "A"))
-        entity.addCategory(new Category(4, "Moving", "Moving", "A"))
+        entity.addCategory(new Category(1, "Moving", "Moving","F000000" , "A"))
+        entity.addCategory(new Category(4, "Moving", "Moving", "F000000","A"))
 
 
         when:
@@ -136,7 +136,7 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
         setup:
         CategoryCollection entity = new CategoryCollection()
         entity.setName("mock")
-        entity.addCategory(new Category(-1, "test", "test", "A"))
+        entity.addCategory(new Category(-1, "test", "test", "", "A"))
 
         when:
         repository.insert(entity)
@@ -157,10 +157,10 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
         CategoryCollection result = repository.findByID(1)
 
         def expected = new CategoryCollection(1, "Default", false)
-        expected.addCategory(new Category(1, "Moving truck", "icon/icon1.png", "A"))
-        expected.addCategory(new Category(2, "Moving car", "icon/icon2.png", "B"))
-        expected.addCategory(new Category(3, "Moving bike", "icon/icon3.png", "C"))
-        expected.addCategory(new Category(4, "Moving bus", "icon/icon4.png", "D"))
+        expected.addCategory(new Category(1, "Moving truck", "icon/icon1.png",  "#FFFFFF","A"))
+        expected.addCategory(new Category(2, "Moving car", "icon/icon2.png", "#FFFFFF","B"))
+        expected.addCategory(new Category(3, "Moving bike", "icon/icon3.png",  "#FFFFFF","C"))
+        expected.addCategory(new Category(4, "Moving bus", "icon/icon4.png",  "#FFFFFF","D"))
 
         then:
         result == expected
@@ -212,7 +212,7 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
         repository.delete(categoryCollection)
 
         then:
-        notThrown DAOException
+        thrown DAOException
     }
 
     def "test delete default category collection"() {
@@ -231,12 +231,12 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
             println e
         }
 
-        CategoryCollection categoryCollection = new CategoryCollection(1, "mock", false)
+        CategoryCollection categoryCollection = new CategoryCollection(100, "mock", false)
 
         when:
         repository.delete(categoryCollection)
 
         then:
-        notThrown DAOException
+        thrown DAOException
     }
 }

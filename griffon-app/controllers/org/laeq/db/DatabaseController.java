@@ -4,10 +4,7 @@ import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.model.Category;
-import org.laeq.model.Point;
-import org.laeq.model.User;
-import org.laeq.model.VideoUser;
+import org.laeq.model.*;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -16,10 +13,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
 public class DatabaseController extends AbstractGriffonController {
@@ -42,8 +36,6 @@ public class DatabaseController extends AbstractGriffonController {
         }
 
         getApplication().getEventRouter().addEventListener(listeners());
-        publishEvent("database.video_user.findAll", service.getVideoUserList());
-        publishEvent("menu.org.laeq.user.init", new ArrayList<User>(service.getUserList()));
     }
 
     @Override
@@ -70,82 +62,13 @@ public class DatabaseController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("database.video_user.load", objects -> {
-            VideoUser videoUser = (VideoUser) objects[0];
-            try {
-                service.set(videoUser);
-                publishEvent("player.video_user.load", videoUser);
-                publishEvent("category.video_user.load", videoUser);
-            } catch (SQLException e) {
-                String message = String.format("DBController: Cannot retrieve datas for %" , videoUser);
-                getLog().error(message);
-                runInsideUIAsync(() ->{
-                    dialogService.dialog(message);
-                });
-            }
-        });
-
-        list.put("database.org.laeq.user.active", objects -> {
-            User user = (User) objects[0];
-            try {
-                service.setUserActive(user);
-            } catch (DAOException | SQLException e) {
-                String message = String.format("DatabaseController: failed to set org.laeq.user %s active", user );
-                getLog().error(message);
-                runInsideUIAsync(() ->{
-                    dialogService.dialog(message);
-                });
-            }
-        });
-
-        list.put("database.point.new", objects -> {
-            Point newPoint = (Point) objects[0];
-            try {
-                service.save(newPoint);
-            } catch (DAOException | SQLException e) {
-                String message = String.format("DB controller: cannot save new point %s", newPoint);
-                getLog().error(message);
-                runInsideUIAsync(() ->{
-                    dialogService.dialog(message);
-                });
-            }
-        });
-
-        list.put("database.category.new", objects -> {
-            try{
-                service.save((Category)objects[0]);
-            } catch (DAOException e){
-                getLog().error(e.getMessage());
-                runInsideUIAsync(() ->{
-                    dialogService.dialog("Error creating a new category: " + e.getMessage());
-                });
-            }
-        });
-
-        list.put("database.user.new", objects -> {
-            try{
-                User user = (User)objects[0];
-                service.save(user);
-                publishEvent("user.created", user );
-            } catch (DAOException e){
-                getLog().error(e.getMessage());
-                runInsideUIAsync(() ->{
-                    dialogService.dialog("Error creating a new user: " + e.getMessage());
-                });
-            }
-        });
-
-        list.put("database.video.create", objects -> {
-            try {
-                VideoUser videoUser = service.createVideoUser((File) objects[0]);
-
-                publishAsyncEvent("database.video_user.created", videoUser);
-            } catch (Exception e) {
-                getLog().error("DB controller: error while creating video org.laeq.user: %s", e.getMessage());
-            }
-        });
-
         return list;
+    }
+
+    private void dialog(String message){
+        runInsideUIAsync(() -> {
+            dialogService.dialog(message);
+        });
     }
 
     private void publishAsyncEvent(String eventName, Object object){

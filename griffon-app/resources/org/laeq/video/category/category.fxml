@@ -4,34 +4,35 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<AnchorPane maxWidth="380" minHeight="200" minWidth="200" prefHeight="297.0" prefWidth="319.0" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.video.CategoryController">
+<AnchorPane maxWidth="380" minHeight="200" minWidth="200" prefHeight="297.0" prefWidth="319.0"
+            style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/10.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.laeq.video.CategoryController"
+            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0">
     <children>
-        <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Categories" textAlignment="CENTER" wrapText="false" />
-        <Text fx:id="totalLabel" layoutX="211.0" layoutY="276.0" strokeType="OUTSIDE" strokeWidth="0.0" text="546" textAlignment="RIGHT" wrappingWidth="91.99998730421066" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="16.000012695789337">
-         <font>
-            <Font name="System Bold" size="20.0" />
-         </font></Text>
-        <Pane fx:id="categoryPane" layoutY="43.0" maxWidth="380" minHeight="154.0" minWidth="200" prefHeight="209.0" prefWidth="319.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="43.0" />
-      <!--<AnchorPane prefHeight="69.0" prefWidth="319.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0">-->
-         <!--<children>-->
-            <!--<Pane prefHeight="50.0" prefWidth="299.0" style="-fx-border-color: rgb(250,250,250); -fx-background-color: rgb(250,250,250);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />-->
-            <!--<Pane layoutX="217.0" layoutY="3.0" prefHeight="39.0" prefWidth="100.0" style="-fx-background-color: white; -fx-border-color: white;" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="5.0">-->
-               <!--<children>-->
-                  <!--<Text layoutX="-1.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="150" textAlignment="CENTER" wrappingWidth="101.99998730421066">-->
-                     <!--<font>-->
-                        <!--<Font size="22.0" />-->
-                     <!--</font>-->
-                  <!--</Text>-->
-               <!--</children>-->
-            <!--</Pane>-->
-            <!--<Pane layoutX="6.0" layoutY="3.0" prefHeight="42.0" prefWidth="65.0" style="-fx-background-color: white; -fx-border-color: white;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="5.0" />-->
-         <!--</children>-->
-      <!--</AnchorPane>-->
-      <Label layoutX="9.0" layoutY="274.0" prefHeight="16.0" prefWidth="51.0" text="Total" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="9.0">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </Label>
-        
+        <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Categories" textAlignment="CENTER"
+               wrapText="false"/>
+        <Text fx:id="totalLabel" layoutX="211.0" layoutY="276.0" strokeType="OUTSIDE" strokeWidth="0.0" text="546"
+              textAlignment="RIGHT"
+              wrappingWidth="91.99998730421066" AnchorPane.bottomAnchor="10.0"
+              AnchorPane.rightAnchor="16.000012695789337">
+            <font>
+                <Font name="System Bold" size="20.0"/>
+            </font>
+        </Text>
+        <Pane fx:id="categoryPane" layoutY="43.0" maxWidth="380" minHeight="154.0" minWidth="200" prefHeight="209.0"
+              prefWidth="319.0"
+              style="-fx-background-color: white;" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="43.0"
+        />
+
+        <Label layoutX="9.0" layoutY="274.0" prefHeight="16.0" prefWidth="51.0" text="Total"
+               AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="9.0">
+            <font>
+                <Font size="12.0"/>
+            </font>
+        </Label>
+
     </children>
 </AnchorPane>

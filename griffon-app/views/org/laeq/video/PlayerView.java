@@ -5,17 +5,16 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableSet;
-import javafx.collections.SetChangeListener;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.*;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.Tab;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -23,32 +22,32 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.VifecoView;
-import org.laeq.model.Category;
-import org.laeq.model.Icon;
-import org.laeq.model.Point;
-import org.laeq.model.VideoPoint;
+import org.laeq.graphic.Color;
+import org.laeq.graphic.IconSVG;
+import org.laeq.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
-import java.util.SortedSet;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {
-    private static int REWIND_VALUE = 10;
     private Point2D mousePosition;
     private Media media;
     private MediaPlayer mediaPlayer;
     private Duration duration;
+    private ObservableSet<Point> pointsDisplayed;
 
     @MVCMember @Nonnull private PlayerController controller;
     @MVCMember @Nonnull private PlayerModel model;
-    @MVCMember @Nonnull private VifecoView parentView;
+    @MVCMember @Nonnull private Player2View parentView;
+    @MVCMember @Nonnull private Video video;
+
     @FXML private MediaView mediaView;
     @FXML private Pane iconPane;
     @FXML private Button playActionTarget;
@@ -56,33 +55,44 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private Button forwardActionTarget;
     @FXML private Button backVideoActionTarget;
     @FXML private Slider timeSlider;
-    @FXML private Label durationLabel;
+    @FXML private Text durationLabel;
     @Inject private VideoService videoService;
 
     private ControlsModel controlsModel;
 
+    private int index = 1;
+
     //Listeners
-    private InvalidationListener sliderTimeListener;
-    private InvalidationListener currentTimeListener;
     private EventHandler<KeyEvent> keyListener;
     private EventHandler<? super MouseEvent> mouseMoveListener;
 
-    private ObservableSet<VideoPoint> displayPoint;
-    private SetChangeListener<VideoPoint> displayPointListener;
+
+    private Map<String, Icon> playerIcons;
+    private static final String playStr = "play";
+    private static final String pauseStr = "pause";
+    private static final String backwardStr = "backward";
+    private static final String forwardStr = "forward";
+    private static final String backStr = "back";
 
     @Override
     public void initUI() {
+        pointsDisplayed = FXCollections.observableSet();
+        pointsDisplayed.addListener(new SetChangeListener<Point>() {
+            @Override
+            public void onChanged(Change<? extends Point> change) {
+                if(change.wasAdded()){
+                    iconPane.getChildren().add(((Point)change.getElementAdded()).getIcon(iconPane.getBoundsInLocal()));
+                }
+
+                if(change.wasRemoved()){
+                    iconPane.getChildren().remove(change.getElementRemoved().getIcon());
+                }
+            }
+        });
+
         Node node = loadFromFXML();
 
-        sliderTimeListener = observable -> {
-            if(timeSlider.isPressed() && mediaPlayer != null){
-                mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100));
-            } else if (timeSlider.isValueChanging() && mediaPlayer != null) {
-                mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
-            }
-        };
-        currentTimeListener = observable -> { updateValues(); };
-        keyListener = event -> { keyValues(event);};
+//        keyListener = event -> { keyValues(event);};
         mouseMoveListener = mouseEvent -> {
             mousePosition = new Point2D(
                     mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth(),
@@ -90,81 +100,26 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             );
         };
 
-        VideoListView test = (VideoListView) getApplication().getMvcGroupManager().findGroup("videoList").getView();
-
         connectActions(node, controller);
 
-        Tab tab = new Tab();
-        tab.textProperty().bind(model.videoPathProperty());
-        tab.setContent(node);
+        init();
+        subInitUI();
 
-        test.getTabPane().getTabs().add(tab);
-
-        displayPoint  = FXCollections.observableSet();
-        displayPointListener = change -> {
-            if(change.wasAdded()){
-                Icon icon = change.getElementAdded().getIcon();
-                icon.setBounds(iconPane.getBoundsInLocal());
-                iconPane.getChildren().add(icon);
-            }
-
-            if(change.wasRemoved()){
-                iconPane.getChildren().remove(change.getElementRemoved().getIcon());
-            }
-        };
-
-        subInit();
+        parentView.getPlayerPane().getChildren().add(node);
     }
-
-    private void subInit() {
-        rewindActionTarget.setText("");
-        forwardActionTarget.setText("");
-        backVideoActionTarget.setText("");
-
-        mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
-            iconPane.setPrefWidth(newValue.getWidth());
-            iconPane.setPrefHeight(newValue.getHeight());
-            repositionIcons();
-        });
-    }
-
-    private void repositionIcons() {
-
-    }
-
-    private void initPlayer() {
-        timeSlider.valueProperty().addListener(observable -> {
-            if (timeSlider.isValueChanging()) {
-                if (mediaPlayer != null) {
-                    mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
-                }
-            }
-        });
-    }
-
-    public void debug() {
-//        for(int i = 0; i < 2000; i ++){
-//            double x = rand(100, 800);
-//            double y = rand(100, 600);
-//            Point2D point = new Point2D(x / iconPane.getBoundsInLocal().getWidth(), y / iconPane.getBoundsInLocal().getHeight());
-//           try {
-//               videoService.addVideoIcon(point, Duration.seconds(rand(20, 1000)));
-//           } catch (FileNotFoundException e) {
-//               e.printStackTrace();
-//           }
-//        }
-    }
-
 
     public void play() {
-//        debug();
         if (model.isIsPlaying()) {
+            Icon icon = (Icon) playActionTarget.getGraphic();
+            icon.setPath(IconSVG.btnPlay);
             mediaPlayer.pause();
+            model.setIsPlaying(false);
         } else {
+            Icon icon = (Icon) playActionTarget.getGraphic();
+            icon.setPath(IconSVG.btnPlay);
             mediaPlayer.play();
+            model.setIsPlaying(true);
         }
-
-        model.setIsPlaying(!model.isIsPlaying());
     }
 
     @FXML
@@ -184,139 +139,187 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     @FXML
     public void playerPaneMouseClicked(MouseEvent mouseEvent) {
-        System.out.println("mouse clicked");
-//        Point point = new Point();
-//        point.setX(mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth());
-//        point.setY(mouseEvent.getY() / iconPane.getBoundsInLocal().getHeight());
-//        point.setCategory(model.getCategory("1").get());
-//        point.setVideo(model.getVideo());
-//        point.setUser(model.getUser());
-//        point.setStart(mediaPlayer.getCurrentTime());
-//
-//        model.addVideoPoint(point);
+        runOutsideUI(() -> {
+            Point point = new Point();
+            point.setX(mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth());
+            point.setY(mouseEvent.getY() / iconPane.getBoundsInLocal().getHeight());
+            point.setStart(mediaPlayer.getCurrentTime());
+
+
+            controller.addPoint(point, "A");
+        });
     }
 
     public void setVolume() {
         getLog().info("set volume");
     }
 
-    private double rand(double min, double max) {
-        return min + Math.random() * (max - min);
+    public void addPoint(Point point) {
+        runInsideUISync(() -> {
+            pointsDisplayed.add(point);
+        });
     }
 
-    private void clear() {
-        try {
-            playActionTarget.setDisable(true);
-            timeSlider.valueProperty().removeListener(sliderTimeListener);
-            parentView.getScene().removeEventHandler(KeyEvent.KEY_RELEASED, keyListener);
-            displayPoint.removeListener(displayPointListener);
+    private void subInitUI() {
+        playerIcons = new HashMap<>();
+        playerIcons.put(playStr, generatePlayerIcon(IconSVG.btnPlay, Color.gray_dark));
+        playerIcons.put(pauseStr, generatePlayerIcon(IconSVG.btnPause, Color.gray_dark));
+        playerIcons.put(backwardStr, generatePlayerIcon(IconSVG.backward30, Color.gray_dark));
+        playerIcons.put(forwardStr, generatePlayerIcon(IconSVG.forward30, Color.gray_dark));
+        playerIcons.put(backStr, generatePlayerIcon(IconSVG.btnBack, Color.gray_dark));
 
-            media = null;
-            mediaPlayer = null;
-            iconPane.getChildren().clear();
-            displayPoint.clear();
+        playActionTarget.setText("");
+        playActionTarget.setGraphic(playerIcons.get(playStr));
+        rewindActionTarget.setText("");
+        rewindActionTarget.setGraphic(playerIcons.get(backwardStr));
+        forwardActionTarget.setText("");
+        forwardActionTarget.setGraphic(playerIcons.get(forwardStr));
+        backVideoActionTarget.setText("");
+        backVideoActionTarget.setGraphic(playerIcons.get(backStr));
 
-        } catch (Exception e) {
-            getLog().error(e.getMessage());
-        }
+        playActionTarget.setLayoutX(10);
+        backVideoActionTarget.setLayoutX(60);
+        rewindActionTarget.setLayoutX(110);
+        forwardActionTarget.setLayoutX(160);
+
+        mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
+            iconPane.setPrefWidth(newValue.getWidth());
+            iconPane.setPrefHeight(newValue.getHeight());
+            repositionIcons();
+        });
+    }
+
+    private void repositionIcons() {
+
+
     }
 
     private void setUp() {
-        File file = new File(model.videoPathProperty().getValue());
+        File file = new File(video.getPath());
 
         if (file.exists()) {
             try {
                 media = new Media(file.getCanonicalFile().toURI().toString());
             } catch (IOException e) {
-                getLog().error(String.format("PlayerView: file not exits %s", model.videoPathProperty().getValue()));
+                getLog().error(String.format("PlayerView: video does not exits %s", video));
             }
+
             mediaPlayer = new MediaPlayer(media);
             mediaView.setMediaPlayer(mediaPlayer);
             playActionTarget.setDisable(false);
 
             mediaPlayer.setOnReady(() -> {
                 duration = mediaPlayer.getMedia().getDuration();
-
-                displayPoint.addListener(displayPointListener);
-
-                displayPoints();
+                updateValues();
             });
-
         } else {
-            getLog().error(String.format("PlayerView: file not exits %s", model.videoPathProperty().getValue()));
+            getLog().error(String.format("PlayerView: file not exits %s", video));
         }
     }
 
     private void displayPoints() {
-        SortedSet<VideoPoint> points = model.display(mediaPlayer.getCurrentTime());
-        displayPoint.retainAll(points);
-        points.parallelStream().filter(videoPoint -> ! displayPoint.contains(videoPoint)).forEach(videoPoint -> displayPoint.add(videoPoint));
+        SortedSet<Point> newPoint = model.displayPoints(mediaPlayer.getCurrentTime());
+
+        pointsDisplayed.retainAll(newPoint);
+
+        newPoint.forEach(p ->{
+            if(!pointsDisplayed.contains(p)){
+                pointsDisplayed.add(p);
+            }
+        });
     }
 
-    public void init() {
-        //Remove listeners
-        clear();
-
+    private void init() {
         //Create media
         setUp();
 
         //Add Listeners
-        mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
-        timeSlider.valueProperty().addListener(sliderTimeListener);
-        parentView.getScene().setOnKeyPressed(keyListener);
+        mediaPlayer.currentTimeProperty().addListener(currentTimeListener());
+        timeSlider.valueProperty().addListener(sliderListener());
 
-        iconPane.setOnMouseEntered(event -> {
+        displayPoints();
+
+//        parentView.getScene().setOnKeyPressed(keyListener);
+
+        iconPane.setOnMouseExited(mouseExitListener());
+        iconPane.setOnMouseEntered(mouseEnterListener());
+        iconPane.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                pointsDisplayed.forEach(point -> {
+                    point.repositionX((Double) newValue);
+                });
+            }
+        });
+        iconPane.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                pointsDisplayed.forEach(point -> {
+                    point.repositionY((Double) newValue);
+                });
+            }
+        });
+
+    }
+
+    //Mouse move: icon pane
+    private EventHandler<? super MouseEvent> mouseEnterListener() {
+        return event -> {
             iconPane.setOnMouseMoved(mouseMoveListener);
-            System.out.println("Mouse entered");
-        });
-
-        iconPane.setOnMouseExited(event -> {
-            System.out.println("Mouse exited");
-            iconPane.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveListener);
+        };
+    }
+    private EventHandler<MouseEvent> mouseExitListener(){
+        return event -> {
             mousePosition = null;
-        });
+            iconPane.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveListener);
+        };
+    }
 
-        iconPane.widthProperty().addListener(observable -> {
-            iconPane.getChildren().forEach(node -> ((Icon)node).setBounds(iconPane.getBoundsInLocal()));
+    private InvalidationListener currentTimeListener(){
+        return (observable -> {
+            updateValues();
         });
-
-        iconPane.heightProperty().addListener(observable -> {
-            iconPane.getChildren().forEach(node -> ((Icon)node).setBounds(iconPane.getBoundsInLocal()));
-        });
+    }
+    private InvalidationListener sliderListener(){
+        return  observable -> {
+            if(timeSlider.isPressed() && mediaPlayer != null){
+                mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100));
+            } else if (timeSlider.isValueChanging() && mediaPlayer != null) {
+                mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
+            }
+        };
     }
 
     private void keyValues(KeyEvent event) {
-        Optional<Category> category = model.getCategory(event.getCode().getName());
-
-        if(mediaPlayer != null && category.isPresent() && mousePosition != null){
-            Point relPoint = new Point();
-            relPoint.setX(mousePosition.getX());
-            relPoint.setY(mousePosition.getY());
-            relPoint.setCategory(category.get());
-            relPoint.setVideo(model.getVideo());
-            relPoint.setUser(model.getUser());
-            relPoint.setStart(mediaPlayer.getCurrentTime());
-
-            controller.savePoint(relPoint);
-        }
+//        Optional<Category> category = model.getCategory(event.getCode().getName());:
+//
+//        if(mediaPlayer != null && category.isPresent() && mousePosition != null){
+//            Point relPoint = new Point();
+//            relPoint.setX(mousePosition.getX());
+//            relPoint.setY(mousePosition.getY());
+//            relPoint.setCategory(category.get());
+//            relPoint.setVideo(model.getVideo());
+//            relPoint.setStart(mediaPlayer.getCurrentTime());
+//
+//            controller.savePoint(relPoint);
+//        }
     }
-
     private void updateValues() {
         Platform.runLater(() -> {
             displayPoints();
 
             timeSlider.setDisable(duration.isUnknown());
 
-            if (!timeSlider.isDisabled() && duration.greaterThan(Duration.ZERO) && !timeSlider.isValueChanging()) {
+            System.out.println("HERE");
+
+            if (!timeSlider.isDisabled() && duration.greaterThanOrEqualTo(Duration.ZERO) && !timeSlider.isValueChanging()) {
                 timeSlider.setValue(mediaPlayer.getCurrentTime().divide(duration).toMillis() * 100.0);
             }
 
-            durationLabel.setText(
-                    String.format("%s / %s",
-                            videoService.formatDuration(mediaPlayer.getCurrentTime()),
-                            videoService.formatDuration(mediaPlayer.getTotalDuration())
-                    )
-            );
+            durationLabel.setText(videoService.getDurationText(mediaPlayer.getCurrentTime(), duration));
         });
+    }
+    private Icon generatePlayerIcon(String path, String color){
+        return new Icon(path, color);
     }
 }

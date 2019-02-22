@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<SplitPane layoutY="7.0" prefHeight="677.0" prefWidth="1034.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.video.Player2Controller">
+    <items>
+        <AnchorPane minHeight="0.0" minWidth="-Infinity" prefHeight="160.0" prefWidth="100.0">
+            <children>
+                <SplitPane fx:id="splitPane" dividerPositions="0.2, 0.6" prefHeight="416.0" prefWidth="896.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                        <AnchorPane fx:id="controlPane" maxWidth="350.0" minHeight="0.0" minWidth="250.0" prefHeight="472.0" prefWidth="250.0" />
+                        <AnchorPane fx:id="playerPane" minWidth="500.0" prefHeight="379.0" prefWidth="500.0" />
+                        <AnchorPane fx:id="categoryPane" maxWidth="350.0" minWidth="250.0" prefWidth="300.0" />
+                    </items>
+                </SplitPane>
+                <Pane maxHeight="100.0" minHeight="100.0" prefHeight="100.0" prefWidth="896.0" style="-fx-background-color: yellow;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            </children>
+        </AnchorPane>
+    </items>
+</SplitPane>

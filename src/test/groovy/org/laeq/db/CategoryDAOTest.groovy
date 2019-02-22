@@ -21,18 +21,18 @@ class CategoryDAOTest extends AbstractDAOTest {
 
     def "test insertion"() {
         setup:
-        Category category = new Category("mock name", "mock icon", "A")
+        Category category = new Category("mock name", "mock icon", "#FFFFFF", "A")
 
         when:
         repository.insert(category)
 
         then:
-        category == new Category(1, "mock name", "mock icon", "A")
+        category == new Category(1, "mock name", "mock icon", "#FFFFFF", "A")
     }
 
     def "test insertion with an invalid category"(){
         setup:
-        Category category = new Category("", "mock icon", "A")
+        Category category = new Category("", "mock icon", "#FFFFFF", "A")
 
         when:
         repository.insert(category)
@@ -43,8 +43,8 @@ class CategoryDAOTest extends AbstractDAOTest {
 
     def "test findAll"() {
         setup:
-        Category user1 = new Category("mock name A", "mock icon A", "A")
-        Category user2 = new Category("mock name B", "mock icon B", "B")
+        Category user1 = new Category("mock name A", "mock icon", "#FFFFFF", "A")
+        Category user2 = new Category("mock name B", "mock icon", "#FFFFFF", "B")
 
         repository.insert(user1)
         repository.insert(user2)
@@ -54,8 +54,8 @@ class CategoryDAOTest extends AbstractDAOTest {
 
         then:
         result.size() == 2
-        result.contains(new Category(1, "mock name A", "mock icon A", "A")) == true
-        result.contains(new Category(2,"mock name B", "mock icon B", "B")) == true
+        result.contains(new Category(1, "mock name A", "mock icon A", "#FFFFFF", "A")) == true
+        result.contains(new Category(2,"mock name B", "mock icon B", "#FFFFFF", "B")) == true
     }
 
     def "test findAll but empty"() {
@@ -74,7 +74,7 @@ class CategoryDAOTest extends AbstractDAOTest {
             println e
         }
 
-        Category category = new Category(1, "mock", "mock", "A")
+        Category category = new Category(1, "mock", "mock", "#FFFFFF","A")
 
         when:
         repository.delete(category)
@@ -91,7 +91,7 @@ class CategoryDAOTest extends AbstractDAOTest {
             println e
         }
 
-        Category category = new Category(-1, "mock", "mock", "A")
+        Category category = new Category(-1, "mock", "mock", "#000000", "A")
         when:
         repository.delete(category)
 

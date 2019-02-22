@@ -2,6 +2,7 @@ package org.laeq.ui;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -43,6 +44,14 @@ public class DialogService extends AbstractGriffonService {
         }
     }
 
+    public void simpleAlert(String text){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Invalid form");
+
+        alert.setHeaderText(null);
+        alert.setContentText(text);
+        alert.showAndWait();
+    }
 
     private void formatSystem() {
         System.out.println("Format system");

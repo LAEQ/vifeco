@@ -1,6 +1,7 @@
 package org.laeq.db;
 
 import org.laeq.model.Category;
+import org.laeq.model.CategoryCollection;
 
 import javax.annotation.Nonnull;
 import java.sql.*;
@@ -23,7 +24,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             throw new DAOException("Cannot generate the next org.laeq.user id from the database.");
         }
 
-        String query = "INSERT INTO CATEGORY (ID, NAME, ICON, SHORTCUT) VALUES (?, ?, ?, ?);";
+        String query = "INSERT INTO CATEGORY (ID, NAME, ICON, COLOR, SHORTCUT) VALUES (?, ?, ?, ?, ?);";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
@@ -31,7 +32,8 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             statement.setInt(1, nextId);
             statement.setString(2, category.getName());
             statement.setString(3, category.getIcon());
-            statement.setString(4, category.getShortcut());
+            statement.setString(4, category.getColor());
+            statement.setString(5, category.getShortcut());
 
             result = statement.executeUpdate();
 
@@ -71,6 +73,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             category.setId(datas.getInt("ID"));
             category.setName(datas.getString("NAME"));
             category.setIcon(datas.getString("ICON"));
+            category.setColor(datas.getString("COLOR"));
             category.setShortcut(datas.getString("SHORTCUT"));
             category.setCreatedAt(datas.getTimestamp("CREATED_AT"));
             category.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
@@ -99,4 +102,24 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             throw new DAOException("Error deleting a category");
     }
 
+    //@todo write unit test
+    public Set<Category> findByCollection(CategoryCollection categoryCollection) {
+        String query = "select * from category_collection_category as ccc join category as c on ccc.category_id = c.id where ccc.category_collection_id = ?;";
+
+        Set<Category> result = new HashSet<>();
+
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query)){
+
+            statement.setInt(1, categoryCollection.getId());
+
+            ResultSet queryResult = statement.executeQuery();
+            result = getResult(queryResult);
+
+        } catch (SQLException e){
+            getLogger().error(e.getMessage());
+        }
+
+        return result;
+    }
 }
