@@ -18,22 +18,26 @@ public class ControlsModel extends AbstractGriffonModel {
     private SimpleIntegerProperty pointDuration;
     private SimpleDoubleProperty pointOpacity;
 
+    private Double defaultRate = 1.0;
+    private Double defaultVolume = 1.0;
+    private Integer defaultSize = 60;
+    private Integer defaultDuration = 5;
+    private Double defaultOpacity = 0.65;
+
     public ControlsModel(){
-        this.rate = new SimpleDoubleProperty(this, "rate", 1.0);
-        this.volume = new SimpleDoubleProperty(this, "volume", 1.0);
-        this.pointSize = new SimpleIntegerProperty(this, "pointSize", 60);
-        this.pointDuration = new SimpleIntegerProperty(this, "pointDuration", 5);
-        this.pointOpacity = new SimpleDoubleProperty(this, "pointOpacity", 0.65);
+        this.rate = new SimpleDoubleProperty(this, "rate", defaultRate);
+        this.volume = new SimpleDoubleProperty(this, "volume", defaultVolume);
+        this.pointSize = new SimpleIntegerProperty(this, "pointSize", defaultSize);
+        this.pointDuration = new SimpleIntegerProperty(this, "pointDuration", defaultDuration);
+        this.pointOpacity = new SimpleDoubleProperty(this, "pointOpacity", defaultOpacity);
     }
 
-    @Nonnull
     public final SimpleDoubleProperty rateProperty() {return rate;}
     public Double getRate() {return rate.get(); }
     public void setRate(Double rate) {
         this.rate.set(rate);
     }
 
-    @Nonnull
     public SimpleDoubleProperty volumeProperty() {
         return volume;
     }
@@ -45,7 +49,6 @@ public class ControlsModel extends AbstractGriffonModel {
     }
 
 
-    @Nonnull
     public SimpleIntegerProperty pointSizeProperty() {
         return pointSize;
     }
@@ -56,7 +59,6 @@ public class ControlsModel extends AbstractGriffonModel {
         this.pointSize.set(pointSize);
     }
 
-    @Nonnull
     public SimpleDoubleProperty pointOpacityProperty() {
         return pointOpacity;
     }
@@ -77,6 +79,22 @@ public class ControlsModel extends AbstractGriffonModel {
         this.pointDuration.set(pointDuration);
     }
 
+    public Double getDefaultRate() {
+        return defaultRate;
+    }
+    public Double getDefaultVolume() {
+        return defaultVolume;
+    }
+    public Integer getDefaultSize() {
+        return defaultSize;
+    }
+    public Integer getDefaultDuration() {
+        return defaultDuration;
+    }
+    public Double getDefaultOpacity() {
+        return defaultOpacity;
+    }
+
     public void increaseVolume(){
 //        if(getVolume() < VOLUME_MAX){
 //            setVolume(getVolume() + 1);
@@ -91,7 +109,7 @@ public class ControlsModel extends AbstractGriffonModel {
     public void increaseRate() {
         if(getRate() < 10){
             BigDecimal bg = new BigDecimal(rate.add(0.1).doubleValue());
-            setRate(bg.setScale(1, RoundingMode.HALF_EVEN).doubleValue());
+            this.setRate(bg.setScale(1, RoundingMode.HALF_EVEN).doubleValue());
         }
     }
     public void decreateRate() {
@@ -99,9 +117,5 @@ public class ControlsModel extends AbstractGriffonModel {
             BigDecimal bg = new BigDecimal(getRate() - 0.1);
             this.setRate(bg.setScale(1, RoundingMode.HALF_EVEN).doubleValue());
         }
-    }
-
-    public double getVolumeRatio() {
-        return getVolume() / 10.0;
     }
 }

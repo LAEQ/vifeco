@@ -43,23 +43,27 @@ public class MenuView extends AbstractJavaFXGriffonView {
         subMenuPane.getChildren().add(videoListBtn);
 
         Button videoAddBtn = generateButton(IconSVG.video_plus,"video add", "Add a new video", "video.open");
-        videoAddBtn.setLayoutX(60);
+        videoAddBtn.setLayoutX(55);
         subMenuPane.getChildren().add(videoAddBtn);
 
         Button userBtn = generateButton(IconSVG.user, "user", "Open user section", "user.section");
-        userBtn.setLayoutX(120);
+        userBtn.setLayoutX(115);
         subMenuPane.getChildren().add(userBtn);
 
         Button categoryBtn  = generateButton(IconSVG.category, "category", "Open category section", "category.section");
-        categoryBtn.setLayoutX(180);
+        categoryBtn.setLayoutX(175);
         subMenuPane.getChildren().add(categoryBtn);
 
         Button collectionBtn = generateButton(IconSVG.collection, "collection", "Open collection section", "collection.section");
-        collectionBtn.setLayoutX(230);
+        collectionBtn.setLayoutX(235);
         subMenuPane.getChildren().add(collectionBtn);
 
+        Button databaseBtn = generateButton(IconSVG.db, "database", "Open databse section", "database.section");
+        databaseBtn.setLayoutX(295);
+        subMenuPane.getChildren().add(databaseBtn);
+
         Button statisticBtn = generateButton(IconSVG.statistic, "statistic", "Open statistic section", "statistic.section");
-        statisticBtn.setLayoutX(290);
+        statisticBtn.setLayoutX(355);
         subMenuPane.getChildren().add(statisticBtn);
     }
 

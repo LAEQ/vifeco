@@ -5,5 +5,5 @@
 <AnchorPane prefHeight="60.0" prefWidth="200.0"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.laeq.BottomController">
-    <Button text="test" fx:id="bottomTestActionTarget" />
+
 </AnchorPane>

@@ -3,6 +3,7 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -410,5 +411,37 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         } else {
             mediaPlayer.seek(mediaPlayer.getStartTime());
         }
+    }
+
+    public void rate() {
+        mediaPlayer.setRate(model.getRate());
+    }
+
+    public void size(Double size){
+        runInsideUISync(() -> {
+            iconPane.getChildren().forEach(n -> {
+
+                ScaleTransition transition = new ScaleTransition(Duration.millis(100), n);
+                transition.setInterpolator(Interpolator.LINEAR);
+                transition.setToX(size / 100);
+                transition.setToY(size / 100);
+                transition.setCycleCount(1);
+                transition.play();
+            });
+        });
+    }
+
+    public void opacity(Double oldvalue, Double newValue) {
+        runInsideUISync(() -> {
+            iconPane.getChildren().forEach(n -> {
+
+                FadeTransition transition = new FadeTransition(Duration.millis(100), n);
+                transition.setInterpolator(Interpolator.LINEAR);
+                transition.setFromValue(oldvalue);
+                transition.setToValue(newValue);
+                transition.setCycleCount(1);
+                transition.play();
+            });
+        });
     }
 }

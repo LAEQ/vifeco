@@ -38,10 +38,6 @@ public class PlayerController extends AbstractGriffonController {
         pointDAO = dbService.getPointDAO();
     }
 
-    public void dispatchVideoCreated(Video video){
-        getApplication().getEventRouter().publishEventAsync("database.model.created", Arrays.asList(video));
-    }
-
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
@@ -72,25 +68,12 @@ public class PlayerController extends AbstractGriffonController {
         System.out.println("test");
     }
 
-    private Map<String, RunnableWithArgs> listenerList(){
-        Map<String, RunnableWithArgs> list = new HashMap<>();
-
-
-        return list;
-    }
-
-    public void savePoint(Point newPoint) {
-//        model.addPoint(newPoint);
-//        getApplication().getEventRouter().publishEventAsync("database.point.new", Arrays.asList(newPoint));
-    }
-
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void closeTab() {
         destroyMVCGroup(getMvcGroup().getMvcId());
     }
 
-//
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void addPoint(Point point, String letter) {
         try {
@@ -112,6 +95,38 @@ public class PlayerController extends AbstractGriffonController {
         getApplication().getEventRouter().publishEventAsync(eventName, Arrays.asList(obj));
     }
 
+    private Map<String, RunnableWithArgs> listenerList(){
+        Map<String, RunnableWithArgs> list = new HashMap<>();
 
+        list.put("controls.rate", objects -> {
+            System.out.println("Playercontroller: " + System.currentTimeMillis());
+            Double value = (Double) objects[0];
+            model.setRate(value);
+            view.rate();
 
+        });
+
+        list.put("controls.volume", objects -> {
+            Double value = (Double) objects[0];
+            System.out.println("volume: " + value);
+        });
+
+        list.put("controls.size", objects -> {
+            Double size = (Double) objects[0];
+            view.size(size);
+            model.setSize(size);
+        });
+
+        list.put("controls.opacity", objects -> {
+            view.opacity((Double)objects[0], (Double)objects[1]);
+            model.setOpacity((Double)objects[1]);
+        });
+
+        list.put("controls.duration", objects -> {
+            Double value = (Double) objects[0];
+            System.out.println("duration: " + value);
+        });
+
+        return list;
+    }
 }
