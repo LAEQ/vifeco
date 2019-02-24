@@ -53,9 +53,7 @@
           </menus>
       </MenuBar>
       <AnchorPane prefHeight="69.0" prefWidth="1366.0" maxHeight="69.0" fx:id="subMenuPane">
-         <children>
-            <ComboBox fx:id="userComboBox" layoutX="1202.0" layoutY="14.0" onAction="#handleUserCombo" prefWidth="150.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
-            </children>
+         <children></children>
       </AnchorPane>
    </children>
 </VBox>

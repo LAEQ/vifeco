@@ -3,19 +3,11 @@ package org.laeq.icon;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
-import org.laeq.model.Point;
-import org.laeq.model.VideoPoint;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -41,17 +33,6 @@ public class IconService extends AbstractGriffonService {
             "icons/icon-car-elec-blk-64.png",
     };
 
-    public VideoPoint generatePoint(Point2D point, Duration start) throws FileNotFoundException {
-        int rand = (int) (Math.random() * 10) % icons.length;
-
-        Icon icon = generateIcon(rand);
-
-        String name = icons[rand].substring(6, icons[rand].lastIndexOf('.') - 1);
-        String path = getApplication().getResourceHandler().getResourceAsURL(icons[rand]).getPath();
-        Category category = new Category(name, path, "F000000", "1");
-
-        return null;
-    }
 
     public Icon generateIcon(int rand)  {
         return generateIcon(new Category("", icons[rand], "#000000", ""), this.size, this.opacity);

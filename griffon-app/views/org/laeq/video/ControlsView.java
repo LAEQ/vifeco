@@ -3,53 +3,54 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.laeq.graphic.Color;
+import org.laeq.graphic.IconSVG;
+import org.laeq.model.Icon;
+import org.laeq.model.IconButton;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ControlsView extends AbstractJavaFXGriffonView {
-    private ControlsController controller;
-    private ControlsModel model;
-
-    @MVCMember @Nonnull
-    private Player2View parentView;
-
-    @FXML private Pane sliderPanel;
+    @MVCMember @Nonnull private ControlsController controller;
+    @MVCMember @Nonnull private ControlsModel model;
+    @MVCMember @Nonnull private Player2View parentView;
 
     @FXML private Slider rateSlider;
     @FXML private Text rateValue;
+    @FXML private Pane rateIcon;
 
     @FXML private Slider volumeSlider;
     @FXML private Text volumeValue;
+    @FXML private Pane volumeIcon;
 
-    @FXML private Slider sizePointSlider;
-    @FXML private Text sizePointValue;
+    @FXML private Slider sizeSlider;
+    @FXML private Text sizeValue;
+    @FXML private Pane sizeIcon;
 
-    @FXML private Slider durationPointSlider;
-    @FXML private Text durationPointValue;
+    @FXML private Slider durationSlider;
+    @FXML private Text durationValue;
+    @FXML private Pane durationIcon;
 
-    @FXML private Slider opacityPointSlider;
-    @FXML private Text opacityPointValue;
+    @FXML private Slider opacitySlider;
+    @FXML private Text opacityValue;
+    @FXML private Pane opacityIcon;
 
-    @MVCMember
-    public void setController(@Nonnull ControlsController controller) {
-        this.controller = controller;
-    }
-
-    @MVCMember
-    public void setModel(@Nonnull ControlsModel model) {
-        this.model = model;
-    }
+    private Map<String, ChangeListener<Number>> listenerMap;
+    private Map<String, EventHandler<MouseEvent>> clickListener;
 
     @Override
     public void initUI() {
@@ -61,62 +62,107 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         initDurationPoint();
         initOpacityPoint();
 
-        Pane pane = new Pane();
-        pane.getChildren().add(node);
+        parentView.getControlPane().getChildren().add(node);
 
-        AnchorPane.setLeftAnchor(pane, 0d);
-        AnchorPane.setRightAnchor(pane, 0d);
-        AnchorPane.setBottomAnchor(pane, 0d);
-        AnchorPane.setTopAnchor(pane, 0d);
+        listenerMap = initListener();
+        rateSlider.valueProperty().addListener(listenerMap.get("rate"));
+        volumeSlider.valueProperty().addListener(listenerMap.get("volume"));
+        opacitySlider.valueProperty().addListener(listenerMap.get("opacity"));
+        durationSlider.valueProperty().addListener(listenerMap.get("duration"));
+        sizeSlider.valueProperty().addListener(listenerMap.get("size"));
 
-        parentView.getControlPane().getChildren().add(pane);
+        clickListener = clickListener();
+        rateIcon.setOnMouseClicked(clickListener.get("rate"));
+        volumeIcon.setOnMouseClicked(clickListener.get("volume"));
+        sizeIcon.setOnMouseClicked(clickListener.get("size"));
+        opacityIcon.setOnMouseClicked(clickListener.get("opacity"));
+        durationIcon.setOnMouseClicked(clickListener.get("duration"));
     }
 
-    private Group generateSlider(){
-        Group group = new Group();
-
-        return group;
+    public void mvcGroupDestroy() {
+        runInsideUISync(() -> {
+            destroy();
+        });
     }
 
-    private void setSliderOptions(Slider slider, Double value){
-//        slider.setValue(value);
-//        DoubleProperty integerProperty = new SimpleDoubleProperty(model.getVolume() / 10);
-//        ObjectProperty<Integer> objectProperty = new SimpleObjectProperty<>(2);
-//        // Need to keep the reference as bidirectional binding uses weak references
-//        IntegerProperty objectAsInteger = IntegerProperty.integerProperty(objectProperty);
-//        integerProperty.bindBidirectional(objectAsInteger);
+    public Text getRateValue() {
+        return rateValue;
     }
 
-    private void initOpacityPoint() {
-        opacityPointSlider.valueProperty().bindBidirectional(model.pointOpacityProperty());
-        opacityPointValue.textProperty().bind(model.pointOpacityProperty().asString());
+    public Text getVolumeValue() {
+        return volumeValue;
+    }
 
-        opacityPointSlider.valueProperty().addListener((obs, oldval, newVal) -> {
-            BigDecimal bd = new BigDecimal((newVal.toString()));
-            bd = bd.setScale(1, RoundingMode.HALF_EVEN);
-            opacityPointSlider.setValue(bd.doubleValue());
+    public Text getSizeValue() {
+        return sizeValue;
+    }
+
+    public Text getDurationValue() {
+        return durationValue;
+    }
+
+    public Text getOpacityValue() {
+        return opacityValue;
+    }
+
+    private void destroy(){
+        rateSlider.valueProperty().removeListener(listenerMap.get("rate"));
+        volumeSlider.valueProperty().removeListener(listenerMap.get("volume"));
+        sizeSlider.valueProperty().removeListener(listenerMap.get("size"));
+        opacitySlider.valueProperty().removeListener(listenerMap.get("opacity"));
+        durationSlider.valueProperty().removeListener(listenerMap.get("duration"));
+
+        rateIcon.removeEventHandler(MouseEvent.MOUSE_CLICKED, clickListener.get("rate"));
+        volumeIcon.removeEventHandler(MouseEvent.MOUSE_CLICKED, clickListener.get("volume"));
+        sizeIcon.removeEventHandler(MouseEvent.MOUSE_CLICKED, clickListener.get("size"));
+        opacityIcon.removeEventHandler(MouseEvent.MOUSE_CLICKED, clickListener.get("opacity"));
+        durationIcon.removeEventHandler(MouseEvent.MOUSE_CLICKED, clickListener.get("duration"));
+
+        listenerMap.clear();
+    }
+
+    private Map<String, EventHandler<MouseEvent>>  clickListener(){
+        Map<String, EventHandler<MouseEvent>> list = new HashMap<>();
+
+        list.put("rate",  event -> controller.changeRate(model.setDefaultRate()));
+        list.put("volume",  event -> controller.changeVolume(model.setDefaultVolume()));
+        list.put("opacity",  event -> controller.changeOpacity(0.5, model.setDefaultOpacity()));
+        list.put("size",  event -> controller.changeSize(model.setDefaultSize()));
+        list.put("duration",  event -> controller.changeDuration(model.setDefaultDuration()));
+
+        return list;
+    }
+
+    private Map<String, ChangeListener<Number>> initListener(){
+        Map<String, ChangeListener<Number>> list = new HashMap<>();
+
+        list.put("rate", (observable, oldValue, newValue) -> {
+            controller.changeRate(newValue);
         });
 
-    }
-
-    private void initDurationPoint() {
-        durationPointSlider.valueProperty().bindBidirectional(model.pointDurationProperty());
-        durationPointValue.textProperty().bind(model.pointDurationProperty().asString());
-
-        durationPointSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            BigDecimal bd = new BigDecimal(newValue.toString());
-            bd = bd.setScale(0, RoundingMode.HALF_EVEN);
-            durationPointSlider.setValue(bd.intValueExact());
+        list.put("volume", (observable, oldValue, newValue) -> {
+            controller.changeVolume(newValue);
         });
 
-    }
+        list.put("size", (observable, oldValue, newValue) -> {
+            controller.changeSize(newValue);
+        });
 
-    private void initSizePoint() {
-        sizePointSlider.valueProperty().bindBidirectional(model.pointSizeProperty());
-        sizePointValue.textProperty().bind(model.pointSizeProperty().asString());
+        list.put("duration", (observable, oldValue, newValue) -> {
+            System.out.println("duration:" + newValue);
+            controller.changeDuration(newValue);
+        });
+
+        list.put("opacity", (observable, oldValue, newValue) -> {
+            controller.changeOpacity(oldValue, newValue);
+        });
+
+        return list;
     }
 
     private void initRateSlider(){
+        Icon icon = new IconButton(IconSVG.rate, Color.gray_dark);
+        rateIcon.getChildren().add(icon);
         rateSlider.valueProperty().bindBidirectional(model.rateProperty());
         rateValue.textProperty().bind(model.rateProperty().asString());
 
@@ -125,8 +171,17 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             bd = bd.setScale(1, RoundingMode.HALF_EVEN);
             rateSlider.setValue(bd.doubleValue());
         });
+
+        rateSlider.setMin(0.1);
+        rateSlider.setMax(10);
+        rateSlider.setMajorTickUnit(1);
+        rateSlider.setShowTickMarks(true);
+        rateSlider.setShowTickLabels(true);
     }
+
     private void initVolumeSpinner(){
+        Icon icon = new IconButton(IconSVG.volume, Color.gray_dark);
+        volumeIcon.getChildren().add(icon);
         volumeSlider.valueProperty().bindBidirectional(model.volumeProperty());
         volumeValue.textProperty().bind(model.volumeProperty().asString());
 
@@ -135,5 +190,70 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             bd = bd.setScale(1, RoundingMode.HALF_EVEN);
             volumeSlider.setValue(bd.doubleValue());
         });
+
+        volumeSlider.setMin(0);
+        volumeSlider.setMax(1);
+        volumeSlider.setMajorTickUnit(0.2);
+        volumeSlider.setShowTickMarks(true);
+        volumeSlider.setShowTickLabels(true);
+    }
+
+    private void initSizePoint() {
+        Icon icon = new IconButton(IconSVG.size, Color.gray_dark);
+        sizeIcon.getChildren().add(icon);
+        sizeSlider.valueProperty().bindBidirectional(model.sizeProperty());
+        sizeValue.textProperty().bind(model.sizeProperty().asString());
+
+        sizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            BigDecimal bd = new BigDecimal(newValue.toString());
+            bd = bd.setScale(0, RoundingMode.HALF_EVEN);
+            sizeSlider.setValue(bd.intValueExact());
+        });
+
+        sizeSlider.setMin(10);
+        sizeSlider.setMax(100);
+        sizeSlider.setMajorTickUnit(20);
+        sizeSlider.setSnapToTicks(true);
+        sizeSlider.setShowTickMarks(true);
+        sizeSlider.setShowTickLabels(true);
+    }
+
+    private void initOpacityPoint() {
+        Icon icon = new IconButton(IconSVG.opacity, Color.gray_dark);
+        opacityIcon.getChildren().add(icon);
+        opacitySlider.valueProperty().bindBidirectional(model.opacityProperty());
+        opacityValue.textProperty().bind(model.opacityProperty().asString());
+
+        opacitySlider.valueProperty().addListener((obs, oldval, newVal) -> {
+            BigDecimal bd = new BigDecimal((newVal.toString()));
+            bd = bd.setScale(1, RoundingMode.HALF_EVEN);
+            opacitySlider.setValue(bd.doubleValue());
+        });
+
+        opacitySlider.setMin(0.1);
+        opacitySlider.setMax(1);
+        opacitySlider.setMajorTickUnit(0.1);
+        opacitySlider.setShowTickMarks(true);
+        opacitySlider.setShowTickLabels(true);
+
+    }
+
+    private void initDurationPoint() {
+        Icon icon = new IconButton(IconSVG.duration, Color.gray_dark);
+        durationIcon.getChildren().add(icon);
+        durationSlider.valueProperty().bindBidirectional(model.durationProperty());
+        durationValue.textProperty().bind(model.durationProperty().asString());
+
+        durationSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            BigDecimal bd = new BigDecimal(newValue.toString());
+            bd = bd.setScale(0, RoundingMode.HALF_EVEN);
+            durationSlider.setValue(bd.intValueExact());
+        });
+
+        durationSlider.setMin(1);
+        durationSlider.setMax(10);
+        durationSlider.setMajorTickUnit(2);
+        durationSlider.setShowTickMarks(true);
+        durationSlider.setShowTickLabels(true);
     }
 }

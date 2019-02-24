@@ -6,7 +6,6 @@ import org.laeq.model.CategoryCollection
 import org.laeq.model.Point
 import org.laeq.model.User
 import org.laeq.model.Video
-import org.laeq.model.VideoPoint
 import spock.lang.Specification
 
 class PlayerModelTest extends Specification {

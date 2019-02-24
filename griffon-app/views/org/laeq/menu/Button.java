@@ -1,8 +1,10 @@
 package org.laeq.menu;
 
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 import org.laeq.graphic.Color;
@@ -14,6 +16,9 @@ public class Button extends Group {
     private String name;
     private String help;
     private String eventName;
+
+    private final EventHandler<MouseEvent> mouseEnter;
+    private final EventHandler<MouseEvent> mouseExited;
 
     /**
      * Constructs a group.
@@ -40,10 +45,30 @@ public class Button extends Group {
         svg.setLayoutX(7);
         svg.setLayoutY(7);
 
+        mouseEnter = event -> {
+            svg.setFill(Paint.valueOf(org.laeq.graphic.Color.cyan));
+        };
+
+        mouseExited = event -> {
+            svg.setFill(Paint.valueOf(org.laeq.graphic.Color.gray_dark));
+        };
+
+
         getChildren().addAll(canvas, svg);
+        listen();
     }
 
     public String getEventName() {
         return eventName;
+    }
+
+    public void listen(){
+        setOnMouseEntered(mouseEnter);
+        setOnMouseExited(mouseExited);
+    }
+
+    public void destroy(){
+        removeEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnter);
+        removeEventHandler(MouseEvent.MOUSE_EXITED, mouseExited);
     }
 }

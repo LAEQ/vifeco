@@ -74,8 +74,11 @@ public class MiddlePaneController extends AbstractGriffonController {
         return list;
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void createGroup(String groupName, Map<String, Object> args){
+        destroyMVCGroup("player");
+
+
         try{
             createMVCGroup(groupName, args);
         } catch (Exception e){

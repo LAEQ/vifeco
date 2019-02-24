@@ -12,20 +12,8 @@ import java.util.Arrays;
 
 @ArtifactProviderFor(GriffonController.class)
 public class BottomController extends AbstractGriffonController {
-    private BottomModel model;
+    @MVCMember @Nonnull private BottomModel model;
+    @MVCMember @Nonnull private BottomView view;
 
-    @MVCMember
-    public void setModel(@Nonnull BottomModel model) {
-        this.model = model;
-    }
 
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void bottomTest() {
-        System.out.println("bottomTest");
-
-        String a[] = new String[]{"abc","klm","xyz","pqr"};
-
-        getApplication().getEventRouter().publishEventAsync("Ping", Arrays.asList(a));
-    }
 }

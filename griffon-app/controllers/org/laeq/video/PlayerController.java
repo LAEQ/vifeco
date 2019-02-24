@@ -38,51 +38,34 @@ public class PlayerController extends AbstractGriffonController {
         pointDAO = dbService.getPointDAO();
     }
 
-    public void dispatchVideoCreated(Video video){
-        getApplication().getEventRouter().publishEventAsync("database.model.created", Arrays.asList(video));
-    }
-
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
-
         view.play();
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void rewind() {
-        dialogService.dialog();
+        view.backward();
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void forward() {
-        dialogService.dialog();
+        view.forward();
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void backVideo() {
-        dialogService.dialog();
+        view.reload();
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void test(KeyEvent keyEvent) {
         System.out.println("test");
-    }
-
-    private Map<String, RunnableWithArgs> listenerList(){
-        Map<String, RunnableWithArgs> list = new HashMap<>();
-
-
-        return list;
-    }
-
-    public void savePoint(Point newPoint) {
-//        model.addPoint(newPoint);
-//        getApplication().getEventRouter().publishEventAsync("database.point.new", Arrays.asList(newPoint));
     }
 
     @ControllerAction
@@ -91,7 +74,6 @@ public class PlayerController extends AbstractGriffonController {
         destroyMVCGroup(getMvcGroup().getMvcId());
     }
 
-//
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void addPoint(Point point, String letter) {
         try {
@@ -113,4 +95,38 @@ public class PlayerController extends AbstractGriffonController {
         getApplication().getEventRouter().publishEventAsync(eventName, Arrays.asList(obj));
     }
 
+    private Map<String, RunnableWithArgs> listenerList(){
+        Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        list.put("controls.rate", objects -> {
+            view.rate((Double) objects[0]);
+            model.setRate((Double) objects[0]);
+
+        });
+
+        list.put("controls.volume", objects -> {
+            Double value = (Double) objects[0];
+            view.volume(value);
+            model.setVolume(value);
+        });
+
+        list.put("controls.size", objects -> {
+            Double size = (Double) objects[0];
+            view.size(size);
+            model.setSize(size);
+        });
+
+        list.put("controls.opacity", objects -> {
+            view.opacity((Double)objects[0], (Double)objects[1]);
+            model.setOpacity((Double)objects[1]);
+        });
+
+        list.put("controls.duration", objects -> {
+            Double value = (Double) objects[0];
+            System.out.println("duration player: " + value);
+            model.setDuration(value);
+        });
+
+        return list;
+    }
 }

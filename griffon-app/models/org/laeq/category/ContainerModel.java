@@ -3,14 +3,12 @@ package org.laeq.category;
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
 @ArtifactProviderFor(GriffonModel.class)
@@ -19,10 +17,11 @@ public class ContainerModel extends AbstractGriffonModel {
     private ObservableList<Category> categoryList = FXCollections.observableArrayList();
 
     // Form Section
+    private Category selectedCategory;
     private SimpleIntegerProperty id = new SimpleIntegerProperty(this, "id", 0);
     private SimpleStringProperty name = new SimpleStringProperty(this, "name", "");
     private SimpleStringProperty shortCut = new SimpleStringProperty(this, "shortCut", "");
-    private SimpleStringProperty svgPath = new SimpleStringProperty(this, "svgPath", "");
+    private SimpleStringProperty icon = new SimpleStringProperty(this, "icon", "");
     private SimpleStringProperty color = new SimpleStringProperty(this, "color", "#000000");
     private String errors = "";
 
@@ -63,14 +62,14 @@ public class ContainerModel extends AbstractGriffonModel {
         this.shortCut.set(shortCut);
     }
 
-    public String getSvgPath() {
-        return svgPath.get();
+    public String getIcon() {
+        return icon.get();
     }
-    public SimpleStringProperty svgPathProperty() {
-        return svgPath;
+    public SimpleStringProperty iconProperty() {
+        return icon;
     }
-    public void setSvgPath(String svgPath) {
-        this.svgPath.set(svgPath);
+    public void setIcon(String icon) {
+        this.icon.set(icon);
     }
 
     public String getColor() {
@@ -116,7 +115,7 @@ public class ContainerModel extends AbstractGriffonModel {
     public Category generateEntity() {
         Category category = new Category();
         category.setName(getName());
-        category.setIcon(getSvgPath());
+        category.setIcon(getIcon());
         category.setColor(getColor());
         category.setShortcut(getShortCut());
 
@@ -125,5 +124,14 @@ public class ContainerModel extends AbstractGriffonModel {
 
     public void addCategory(Category category) {
         categoryList.add(category);
+    }
+
+    public void setSelectedCategory(Category category) {
+        this.selectedCategory = category;
+
+        setId(category.getId());
+        setName(category.getName());
+        setIcon(category.getIcon());
+        setShortCut(category.getShortcut());
     }
 }
