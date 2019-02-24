@@ -1,4 +1,4 @@
-package org.laeq.video;
+package org.laeq.video.player;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
@@ -8,13 +8,15 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.template.MiddlePaneView;
+import org.laeq.video.player.ContainerController;
+import org.laeq.video.player.ContainerModel;
 
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
-public class Player2View extends AbstractJavaFXGriffonView {
-    @MVCMember @Nonnull private Player2Controller controller;
-    @MVCMember @Nonnull private Player2Model model;
+public class ContainerView extends AbstractJavaFXGriffonView {
+    @MVCMember @Nonnull private ContainerController controller;
+    @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
     @FXML private AnchorPane controlPane;

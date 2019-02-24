@@ -1,10 +1,11 @@
-package org.laeq.video;
+package org.laeq.video.player;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.*;
+import org.laeq.video.ControlsDefault;
 
 import java.util.Optional;
 import java.util.SortedSet;

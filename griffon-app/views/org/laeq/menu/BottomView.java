@@ -1,10 +1,11 @@
-package org.laeq;
+package org.laeq.menu;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.scene.Node;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.laeq.VifecoView;
 
 import javax.annotation.Nonnull;
 

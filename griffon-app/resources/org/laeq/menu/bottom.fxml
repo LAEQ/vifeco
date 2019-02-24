@@ -3,6 +3,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane prefHeight="60.0" prefWidth="200.0"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.laeq.BottomController">
+            fx:controller="org.laeq.menu.BottomController">
 
 </AnchorPane>

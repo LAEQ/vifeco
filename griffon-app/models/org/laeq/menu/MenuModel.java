@@ -1,4 +1,4 @@
-package org.laeq;
+package org.laeq.menu;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;

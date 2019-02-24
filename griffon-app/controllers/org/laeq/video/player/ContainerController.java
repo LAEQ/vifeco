@@ -1,4 +1,4 @@
-package org.laeq.video;
+package org.laeq.video.player;
 
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
@@ -18,8 +18,8 @@ import java.util.Map;
 import java.util.Set;
 
 @ArtifactProviderFor(GriffonController.class)
-public class Player2Controller extends AbstractGriffonController {
-    @MVCMember @Nonnull private Player2Model model;
+public class ContainerController extends AbstractGriffonController {
+    @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private Video video;
 
     @Inject private DatabaseService dbService;

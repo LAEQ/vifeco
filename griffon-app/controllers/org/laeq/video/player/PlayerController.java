@@ -1,4 +1,4 @@
-package org.laeq.video;
+package org.laeq.video.player;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;

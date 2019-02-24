@@ -13,7 +13,7 @@ import org.laeq.model.Category;
 import org.laeq.model.Video;
 import org.laeq.video.CategoryController;
 import org.laeq.video.CategoryModel;
-import org.laeq.video.Player2View;
+import org.laeq.video.player.ContainerView;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import static javafx.scene.layout.AnchorPane.setRightAnchor;
 public class CategoryView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private CategoryController controller;
     @MVCMember @Nonnull private CategoryModel model;
-    @MVCMember @Nonnull private Player2View parentView;
+    @MVCMember @Nonnull private ContainerView parentView;
     @MVCMember @Nonnull private Video video;
 
     @FXML private Pane categoryPane;

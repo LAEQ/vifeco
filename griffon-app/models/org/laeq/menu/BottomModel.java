@@ -1,4 +1,4 @@
-package org.laeq;
+package org.laeq.menu;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
@@ -9,7 +9,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class SubMenuModel extends AbstractGriffonModel {
+public class BottomModel extends AbstractGriffonModel {
     private StringProperty clickCount;
 
     @Nonnull

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.layout.*?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <AnchorPane fx:id="menu1" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="NEVER" />
-      <AnchorPane fx:id="menu2" prefHeight="80.0" prefWidth="800.0" VBox.vgrow="NEVER" />
-   </children>
-</VBox>

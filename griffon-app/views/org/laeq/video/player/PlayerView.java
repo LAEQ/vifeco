@@ -1,4 +1,4 @@
-package org.laeq.video;
+package org.laeq.video.player;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
@@ -34,6 +34,8 @@ import org.laeq.model.Category;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.video.ControlsModel;
+import org.laeq.video.VideoService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -54,7 +56,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     @MVCMember @Nonnull private PlayerController controller;
     @MVCMember @Nonnull private PlayerModel model;
-    @MVCMember @Nonnull private Player2View parentView;
+    @MVCMember @Nonnull private ContainerView parentView;
     @MVCMember @Nonnull private Video video;
 
     VifecoView rootView;

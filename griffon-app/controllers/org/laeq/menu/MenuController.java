@@ -1,4 +1,4 @@
-package org.laeq;
+package org.laeq.menu;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;

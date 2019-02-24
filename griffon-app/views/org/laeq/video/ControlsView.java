@@ -16,6 +16,7 @@ import org.laeq.graphic.Color;
 import org.laeq.graphic.IconSVG;
 import org.laeq.model.Icon;
 import org.laeq.model.IconButton;
+import org.laeq.video.player.ContainerView;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -27,7 +28,7 @@ import java.util.Map;
 public class ControlsView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private ControlsController controller;
     @MVCMember @Nonnull private ControlsModel model;
-    @MVCMember @Nonnull private Player2View parentView;
+    @MVCMember @Nonnull private ContainerView parentView;
 
     @FXML private Slider rateSlider;
     @FXML private Text rateValue;
