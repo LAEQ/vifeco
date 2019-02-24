@@ -13,20 +13,24 @@ public class PlayerModel extends AbstractGriffonModel {
     private Boolean isPlaying = false;
     private Video video;
 
-    private Double rate = 1.0;
-    private Double volume = 1.0;
-    private Double size = 100.0;
-    private Double opacity = 0.6;
-    private Integer duration = 10;
+    private Double rate;
+    private Double volume;
+    private Double size;
+    private Double opacity;
+    private Double duration;
 
     public PlayerModel(){
-
+        rate = ControlsDefault.rate;
+        volume = ControlsDefault.volume;
+        size = ControlsDefault.size;
+        duration = ControlsDefault.duration;
+        opacity = ControlsDefault.opacity;
     }
 
-    public Integer getDuration() {
+    public Double getDuration() {
         return duration;
     }
-    public void setDuration(Integer duration) {
+    public void setDuration(Double duration) {
         this.duration = duration;
     }
     public Double getRate() {
@@ -41,23 +45,18 @@ public class PlayerModel extends AbstractGriffonModel {
     public void setVolume(Double volume) {
         this.volume = volume;
     }
-
     public double getSize() {
         return size;
     }
-
     public void setSize(Double size) {
         this.size = size;
     }
-
     public Double getOpacity() {
         return opacity;
     }
-
     public void setOpacity(Double opacity) {
         this.opacity = opacity;
     }
-
     public void setVideo(Video video) {
         this.video = video;
     }

@@ -21,18 +21,6 @@ public class ControlsController extends AbstractGriffonController {
         this.model = model;
     }
 
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void sizePointActionTarget(Event event){
-        System.out.println(event);
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void volumeChangeEvent() {
-//        Integer volume[] = new Integer[]{model.getVolume()};
-        getApplication().getEventRouter().publishEventAsync("controls.volume.change");
-    }
 
     public void changeRate(Number newValue) {
         dispatchEvent("controls.rate", newValue);

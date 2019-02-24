@@ -3,14 +3,9 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
@@ -20,6 +15,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.graphic.Color;
 import org.laeq.graphic.IconSVG;
 import org.laeq.model.Icon;
+import org.laeq.model.IconButton;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -128,21 +124,11 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     private Map<String, EventHandler<MouseEvent>>  clickListener(){
         Map<String, EventHandler<MouseEvent>> list = new HashMap<>();
 
-        list.put("rate",  event -> {
-            controller.changeRate(model.getDefaultRate());
-        });
-        list.put("volume",  event -> {
-            controller.changeVolume(model.getDefaultVolume());
-        });
-//        list.put("opacity",  event -> {
-//            controller.changeOpacity(model.getDefaultOpacity());
-//        });
-        list.put("size",  event -> {
-            controller.changeSize(model.getDefaultSize());
-        });
-        list.put("duration",  event -> {
-            controller.changeDuration(model.getDefaultDuration());
-        });
+        list.put("rate",  event -> controller.changeRate(model.setDefaultRate()));
+        list.put("volume",  event -> controller.changeVolume(model.setDefaultVolume()));
+        list.put("opacity",  event -> controller.changeOpacity(0.5, model.setDefaultOpacity()));
+        list.put("size",  event -> controller.changeSize(model.setDefaultSize()));
+        list.put("duration",  event -> controller.changeDuration(model.setDefaultDuration()));
 
         return list;
     }
@@ -163,6 +149,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         });
 
         list.put("duration", (observable, oldValue, newValue) -> {
+            System.out.println("duration:" + newValue);
             controller.changeDuration(newValue);
         });
 
@@ -174,7 +161,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initRateSlider(){
-        Icon icon = new Icon(IconSVG.rate, Color.gray_dark);
+        Icon icon = new IconButton(IconSVG.rate, Color.gray_dark);
         rateIcon.getChildren().add(icon);
         rateSlider.valueProperty().bindBidirectional(model.rateProperty());
         rateValue.textProperty().bind(model.rateProperty().asString());
@@ -193,7 +180,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initVolumeSpinner(){
-        Icon icon = new Icon(IconSVG.volume, Color.gray_dark);
+        Icon icon = new IconButton(IconSVG.volume, Color.gray_dark);
         volumeIcon.getChildren().add(icon);
         volumeSlider.valueProperty().bindBidirectional(model.volumeProperty());
         volumeValue.textProperty().bind(model.volumeProperty().asString());
@@ -212,15 +199,15 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initSizePoint() {
-        Icon icon = new Icon(IconSVG.size, Color.gray_dark);
+        Icon icon = new IconButton(IconSVG.size, Color.gray_dark);
         sizeIcon.getChildren().add(icon);
-        sizeSlider.valueProperty().bindBidirectional(model.pointSizeProperty());
-        sizeValue.textProperty().bind(model.pointSizeProperty().asString());
+        sizeSlider.valueProperty().bindBidirectional(model.sizeProperty());
+        sizeValue.textProperty().bind(model.sizeProperty().asString());
 
         sizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             BigDecimal bd = new BigDecimal(newValue.toString());
             bd = bd.setScale(0, RoundingMode.HALF_EVEN);
-            durationSlider.setValue(bd.intValueExact());
+            sizeSlider.setValue(bd.intValueExact());
         });
 
         sizeSlider.setMin(10);
@@ -232,10 +219,10 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initOpacityPoint() {
-        Icon icon = new Icon(IconSVG.opacity, Color.gray_dark);
+        Icon icon = new IconButton(IconSVG.opacity, Color.gray_dark);
         opacityIcon.getChildren().add(icon);
-        opacitySlider.valueProperty().bindBidirectional(model.pointOpacityProperty());
-        opacityValue.textProperty().bind(model.pointOpacityProperty().asString());
+        opacitySlider.valueProperty().bindBidirectional(model.opacityProperty());
+        opacityValue.textProperty().bind(model.opacityProperty().asString());
 
         opacitySlider.valueProperty().addListener((obs, oldval, newVal) -> {
             BigDecimal bd = new BigDecimal((newVal.toString()));
@@ -252,10 +239,10 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initDurationPoint() {
-        Icon icon = new Icon(IconSVG.duration, Color.gray_dark);
+        Icon icon = new IconButton(IconSVG.duration, Color.gray_dark);
         durationIcon.getChildren().add(icon);
-        durationSlider.valueProperty().bindBidirectional(model.pointDurationProperty());
-        durationValue.textProperty().bind(model.pointDurationProperty().asString());
+        durationSlider.valueProperty().bindBidirectional(model.durationProperty());
+        durationValue.textProperty().bind(model.durationProperty().asString());
 
         durationSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             BigDecimal bd = new BigDecimal(newValue.toString());

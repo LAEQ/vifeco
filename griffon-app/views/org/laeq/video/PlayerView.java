@@ -10,6 +10,7 @@ import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -65,6 +66,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private ControlsModel controlsModel;
 
     private int index = 1;
+    private final Duration FADE_DURATION = Duration.millis(200);
 
     //Listeners
     private EventHandler<KeyEvent> keyListener;
@@ -93,6 +95,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             @Override
             public void onChanged(Change<? extends Point> change) {
                 if(change.wasAdded()){
+                    Icon icon = change.getElementAdded().getIcon(iconPane.getBoundsInLocal());
+                    icon.setOpacity(model.getOpacity());
+                    icon.setScaleX(model.getSize() / 100);
+                    icon.setScaleY(model.getSize() / 100);
                     iconPane.getChildren().add(((Point)change.getElementAdded()).getIcon(iconPane.getBoundsInLocal()));
                 }
 
@@ -302,7 +308,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         iconPane.getChildren().clear();
         pointsDisplayed.clear();
 
-//        mediaPlayer.stop();
         mediaPlayer.dispose();
         mediaPlayer = null;
     }
@@ -413,14 +418,17 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         }
     }
 
-    public void rate() {
-        mediaPlayer.setRate(model.getRate());
+    public void rate(Double newValue) {
+        if(mediaPlayer != null){
+           final Timeline rateTimeline = new Timeline(new KeyFrame(FADE_DURATION, new KeyValue(mediaPlayer.rateProperty(), newValue)));
+           rateTimeline.setCycleCount(1);
+           rateTimeline.play();
+        }
     }
 
     public void size(Double size){
         runInsideUISync(() -> {
             iconPane.getChildren().forEach(n -> {
-
                 ScaleTransition transition = new ScaleTransition(Duration.millis(100), n);
                 transition.setInterpolator(Interpolator.LINEAR);
                 transition.setToX(size / 100);
@@ -443,5 +451,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 transition.play();
             });
         });
+    }
+
+    public void volume(Double value) {
+        if(mediaPlayer != null){
+            final Timeline volumeTimeline = new Timeline(new KeyFrame(FADE_DURATION, new KeyValue(mediaPlayer.volumeProperty(), value)));
+            volumeTimeline.setCycleCount(1);
+            volumeTimeline.play();
+        }
     }
 }

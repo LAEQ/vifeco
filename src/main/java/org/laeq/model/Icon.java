@@ -1,29 +1,18 @@
 package org.laeq.model;
 
-
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import org.laeq.graphic.IconSVG;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 public class Icon extends Group {
-    private double size;
-    private final String path;
-    private final String color;
-    private final SVGPath svg;
-    private final float svgRatio;
+    protected double size;
+    protected final String path;
+    protected final String color;
+    protected final SVGPath svg;
+    protected final float svgRatio;
 
     public Icon(Category category, double size)  {
         this.path = category.getIcon();
@@ -53,7 +42,7 @@ public class Icon extends Group {
         svg.setScaleX(1);
         svg.setScaleY(1);
 
-        getChildren().addAll(svg);
+        getChildren().add(svg);
     }
 
     public Icon(String path, String color, int size){
@@ -69,13 +58,13 @@ public class Icon extends Group {
         svg.setScaleX(getScale());
         svg.setScaleY(getScale());
 
-        getChildren().addAll(svg);
+        getChildren().add(svg);
     }
 
     private Canvas getCanvas(){
         Canvas canvas = new Canvas(size, size);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.valueOf("#efefef"));
+        gc.setFill(Color.valueOf(org.laeq.graphic.Color.light));
         gc.fillOval(0,0, size, size);
         canvas.setOpacity(1);
 

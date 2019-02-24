@@ -99,16 +99,15 @@ public class PlayerController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         list.put("controls.rate", objects -> {
-            System.out.println("Playercontroller: " + System.currentTimeMillis());
-            Double value = (Double) objects[0];
-            model.setRate(value);
-            view.rate();
+            view.rate((Double) objects[0]);
+            model.setRate((Double) objects[0]);
 
         });
 
         list.put("controls.volume", objects -> {
             Double value = (Double) objects[0];
-            System.out.println("volume: " + value);
+            view.volume(value);
+            model.setVolume(value);
         });
 
         list.put("controls.size", objects -> {
@@ -124,7 +123,8 @@ public class PlayerController extends AbstractGriffonController {
 
         list.put("controls.duration", objects -> {
             Double value = (Double) objects[0];
-            System.out.println("duration: " + value);
+            System.out.println("duration player: " + value);
+            model.setDuration(value);
         });
 
         return list;
