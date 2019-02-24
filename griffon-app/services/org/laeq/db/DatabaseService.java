@@ -3,7 +3,6 @@ package org.laeq.db;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.*;
 
@@ -11,9 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)

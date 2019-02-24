@@ -7,7 +7,6 @@ import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.model.VideoUser;
 import org.laeq.video.category.CategoryView;
 
 import javax.annotation.Nonnull;

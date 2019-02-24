@@ -1,23 +1,12 @@
 package org.laeq.video.category;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 public class CategoryGroup extends AnchorPane {
 

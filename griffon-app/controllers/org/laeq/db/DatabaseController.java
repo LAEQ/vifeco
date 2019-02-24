@@ -4,7 +4,6 @@ import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.model.*;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -12,8 +11,9 @@ import javax.inject.Inject;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class DatabaseController extends AbstractGriffonController {

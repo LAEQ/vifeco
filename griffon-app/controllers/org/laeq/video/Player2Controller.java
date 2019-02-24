@@ -5,8 +5,7 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-
-import org.laeq.db.*;
+import org.laeq.db.DatabaseService;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
@@ -14,9 +13,6 @@ import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

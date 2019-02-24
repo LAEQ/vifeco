@@ -16,7 +16,6 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.laeq.model.Video;
-import org.laeq.model.VideoUser;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;

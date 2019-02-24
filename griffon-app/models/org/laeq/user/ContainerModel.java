@@ -10,7 +10,6 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.User;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {

@@ -2,13 +2,10 @@ package org.laeq.icon;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.geometry.Point2D;
-import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
 
-import java.io.FileNotFoundException;
 import java.util.concurrent.ThreadLocalRandom;
 
 

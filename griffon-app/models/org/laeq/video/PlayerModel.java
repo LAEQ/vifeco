@@ -6,7 +6,8 @@ import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.*;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class PlayerModel extends AbstractGriffonModel {

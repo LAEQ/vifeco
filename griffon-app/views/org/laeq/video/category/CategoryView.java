@@ -5,12 +5,10 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Control;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.VifecoView;
 import org.laeq.model.Category;
 import org.laeq.model.Video;
 import org.laeq.video.CategoryController;
@@ -18,8 +16,6 @@ import org.laeq.video.CategoryModel;
 import org.laeq.video.Player2View;
 
 import javax.annotation.Nonnull;
-import java.io.FileNotFoundException;
-import java.net.URL;
 import java.util.HashMap;
 
 import static javafx.scene.layout.AnchorPane.setLeftAnchor;

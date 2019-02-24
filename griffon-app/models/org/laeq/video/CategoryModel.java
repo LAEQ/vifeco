@@ -3,15 +3,12 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonModel;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.LongBinding;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.model.VideoUser;
 import org.laeq.video.category.CategoryGroup;
 
 import javax.annotation.Nonnull;

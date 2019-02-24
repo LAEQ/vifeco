@@ -2,15 +2,8 @@ package org.laeq.video;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.geometry.Point2D;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
-import org.laeq.icon.IconService;
-
-import javax.inject.Inject;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
 
 
 @javax.inject.Singleton

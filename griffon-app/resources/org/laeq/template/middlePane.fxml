@@ -3,5 +3,5 @@
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.laeq.template.MiddlePaneController"
             prefHeight="545.0" prefWidth="898.0" style="-fx-background-color: lightcyan;"
-    fx:id="middlePane"
+            fx:id="middlePane"
 />

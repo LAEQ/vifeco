@@ -4,21 +4,16 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.laeq.graphic.IconSVG;
 import org.laeq.icon.IconService;
 import org.laeq.menu.Button;
-import org.laeq.model.User;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
 public class MenuView extends AbstractJavaFXGriffonView {

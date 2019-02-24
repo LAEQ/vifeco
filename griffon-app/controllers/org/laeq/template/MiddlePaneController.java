@@ -4,12 +4,10 @@ import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-
 import griffon.transform.Threading;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DAOException;
 import org.laeq.db.DatabaseService;
-import org.laeq.db.PointDAO;
 import org.laeq.model.Video;
 import org.laeq.ui.DialogService;
 
