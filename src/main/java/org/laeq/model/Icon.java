@@ -37,7 +37,6 @@ public class Icon extends Group {
 
         svg = new SVGPath();
         svg.setContent(path);
-        svg.setSmooth(true);
         svg.setFill(Paint.valueOf(color));
         svg.setScaleX(1);
         svg.setScaleY(1);

@@ -35,8 +35,6 @@ public class CategoryGroup extends Group {
         }
     }
 
-
-
     public CategoryGroup() {
 
     }

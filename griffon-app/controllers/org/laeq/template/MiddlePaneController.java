@@ -55,7 +55,7 @@ public class MiddlePaneController extends AbstractGriffonController {
 
             } catch (SQLException | IOException | DAOException e){
                 String message = String.format("Error createing the video: %s", videoFile.toString());
-                dialogService.simpleAlert(message);
+                dialogService.simpleAlert("key.to_implement", message);
                 getLog().error("Error creating and saving video in db: ", videoFile);
             }
         });

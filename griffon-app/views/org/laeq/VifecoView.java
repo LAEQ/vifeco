@@ -15,6 +15,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -45,10 +46,6 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
         createMVCGroup("menu");
         createMVCGroup("middle");
-//        createMVCGroup("controls");
-//        createMVCGroup("video_list");
-//        createMVCGroup("video_player");
-//        createMVCGroup("category");
         createMVCGroup("bottom");
         createMVCGroup("database");
     }

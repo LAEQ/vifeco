@@ -57,9 +57,10 @@ public class DialogService extends AbstractGriffonService {
         return false;
     }
 
-    public void simpleAlert(String text){
+    public void simpleAlert(String title, String text){
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Invalid form");
+        alert.setTitle(title);
+        alert.setWidth(250);
 
         alert.setHeaderText(null);
         alert.setContentText(text);

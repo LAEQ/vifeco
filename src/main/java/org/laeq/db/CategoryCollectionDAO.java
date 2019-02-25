@@ -334,11 +334,36 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
 
 
     @Override
-    public void delete(CategoryCollection category) throws DAOException {
-        if(category.getId() == 1){
+    public void delete(CategoryCollection categoryCollection) throws DAOException {
+        if(categoryCollection.getId() == 1){
             throw new DAOException("CategoryCollectionDAO: You cannot delete the default category collection");
         }
 
-        throw new DAOException("To be implemented");
+        int result = 0;
+        String query = "DELETE FROM CATEGORY_COLLECTION WHERE ID=?";
+
+
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);)
+        {
+            statement.setInt(1, categoryCollection.getId());
+
+            result = statement.executeUpdate();
+
+        } catch (Exception e){
+            getLogger().error(e.getMessage());
+        }
+
+        if(result != 1)
+            throw new DAOException(String.format("Cannot delete %s", categoryCollection));
+
+    }
+
+    public void save(CategoryCollection selectedCollection) throws DAOException {
+        if(selectedCollection.getId() == 0){
+            insert(selectedCollection);
+        } else {
+            update(selectedCollection);
+        }
     }
 }

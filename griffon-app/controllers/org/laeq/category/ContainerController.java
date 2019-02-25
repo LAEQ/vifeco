@@ -60,7 +60,7 @@ public class ContainerController extends AbstractGriffonController {
     }
 
     private void alert(String alertMsg){
-        dialogService.simpleAlert(alertMsg);
+        dialogService.simpleAlert("key.to_implement",alertMsg);
     }
 
     public void delete(Category category) {

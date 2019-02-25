@@ -6,10 +6,7 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -28,8 +25,12 @@ import javax.annotation.Nonnull;
 public class ContainerView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private ContainerController controller;
     @MVCMember @Nonnull private ContainerModel model;
-
     @MVCMember @Nonnull private MiddlePaneView parentView;
+
+    @FXML private Text nameText;
+    @FXML private TextField nameField;
+    @FXML private CheckBox defaultBox;
+    @FXML private Group categoryContainer;
 
     @FXML private TableView<CategoryCollection> collectionTable;
 
@@ -39,20 +40,49 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
         connectActions(node, controller);
         init();
+        initForm();
     }
 
     private void init(){
         TableColumn<CategoryCollection, String> nameColumn = new TableColumn("Name");
         TableColumn<CategoryCollection, Void> categoryListColumn = new TableColumn("Categories");
+        TableColumn<CategoryCollection, Void> isDefaultColumn = new TableColumn<>("Default");
         TableColumn<CategoryCollection, Void> actionColumn = new TableColumn<>("Actions");
 
 
-        collectionTable.getColumns().addAll(nameColumn, categoryListColumn, actionColumn);
+        collectionTable.getColumns().addAll(nameColumn, categoryListColumn, isDefaultColumn, actionColumn);
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         categoryListColumn.setCellFactory(iconAction());
+//        isDefaultColumn.setCellFactory(isDefault());
         actionColumn.setCellFactory(addActions());
 
         collectionTable.setItems(this.model.getCollections());
+    }
+
+
+
+    public void initForm(){
+        model.nameProperty().bindBidirectional(nameField.textProperty());
+        model.isDefaultProperty().bindBidirectional(defaultBox.selectedProperty());
+
+        double x = 0;
+        double y = 0;
+        double index = 0;
+        for (Category category: model.getCategories()) {
+            CategoryCheckedBox checkedBox = new CategoryCheckedBox(category);
+            checkedBox.setLayoutX(x);
+            checkedBox.setLayoutY(y);
+            x += checkedBox.getWidth() + 20;
+            index++;
+
+            if(index != 0 && index % 3 == 0) {
+                x = 0;
+                y += 45;
+            }
+
+            categoryContainer.getChildren().add(checkedBox);
+            checkedBox.getBox().selectedProperty().bindBidirectional(model.getSBP(category));
+        }
     }
 
     private Callback<TableColumn<CategoryCollection, Void>, TableCell<CategoryCollection, Void>> addActions() {
@@ -70,13 +100,13 @@ public class ContainerView extends AbstractJavaFXGriffonView {
                     Icon icon = new Icon(IconSVG.edit, org.laeq.graphic.Color.gray_dark);
                     edit.setGraphic(icon);
                     edit.setOnAction(event -> {
-//                        model.setSelectedCategory(categoryTable.getItems().get(getIndex()));
+                        model.setSelectedCollection(collectionTable.getItems().get(getIndex()));
                     });
 
 
                     delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));
                     delete.setOnAction(event -> {
-//                        controller.delete(categoryTable.getItems().get(getIndex()));
+                        controller.delete(collectionTable.getItems().get(getIndex()));
                     });
                 }
 
@@ -109,7 +139,9 @@ public class ContainerView extends AbstractJavaFXGriffonView {
                         CategoryCollection cc = collectionTable.getItems().get(getIndex());
 
                         container = new CategoryGroup(cc.getCategorySet());
-                    }catch (Exception e){
+                    }catch (ArrayIndexOutOfBoundsException e){
+
+                    } catch (Exception e){
 
                     }
 
