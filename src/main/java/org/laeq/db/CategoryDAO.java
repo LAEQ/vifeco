@@ -122,4 +122,24 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
 
         return result;
     }
+
+    public void update(Category category) throws SQLException, DAOException {
+        try(Connection connection = getManager().getConnection())
+        {
+            String query = "UPDATE CATEGORY SET NAME=?, ICON=?, SHORTCUT=?, COLOR=? WHERE ID = ?;";
+            PreparedStatement stmt = connection.prepareStatement(query);
+
+            stmt.setString(1, category.getName());
+            stmt.setString(2, category.getIcon());
+            stmt.setString(3, category.getShortcut());
+            stmt.setString(4, category.getColor());
+            stmt.setInt(5, category.getId());
+
+            int result = stmt.executeUpdate();
+
+            if(result != 1){
+                throw new DAOException(String.format("CategoryDAO: cannot update category", category));
+            }
+        }
+    }
 }

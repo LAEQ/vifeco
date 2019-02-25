@@ -46,20 +46,16 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     private void init(){
         TableColumn<CategoryCollection, String> nameColumn = new TableColumn("Name");
         TableColumn<CategoryCollection, Void> categoryListColumn = new TableColumn("Categories");
-        TableColumn<CategoryCollection, Void> isDefaultColumn = new TableColumn<>("Default");
         TableColumn<CategoryCollection, Void> actionColumn = new TableColumn<>("Actions");
 
 
-        collectionTable.getColumns().addAll(nameColumn, categoryListColumn, isDefaultColumn, actionColumn);
+        collectionTable.getColumns().addAll(nameColumn, categoryListColumn, actionColumn);
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         categoryListColumn.setCellFactory(iconAction());
-//        isDefaultColumn.setCellFactory(isDefault());
         actionColumn.setCellFactory(addActions());
 
         collectionTable.setItems(this.model.getCollections());
     }
-
-
 
     public void initForm(){
         model.nameProperty().bindBidirectional(nameField.textProperty());
@@ -124,7 +120,6 @@ public class ContainerView extends AbstractJavaFXGriffonView {
             return cell;
         };
     }
-
     private Callback<TableColumn<CategoryCollection, Void>, TableCell<CategoryCollection, Void>> iconAction() {
         return  param -> {
             final TableCell<CategoryCollection, Void> cell = new TableCell<CategoryCollection, Void>() {

@@ -3,22 +3,26 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.laeq.model.CategoryCollection;
+import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
+import java.awt.event.ActionEvent;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ContainerView extends AbstractJavaFXGriffonView {
@@ -27,7 +31,8 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
     @FXML private TableView<Video> videoTable;
-
+    @FXML private ComboBox<User> userComboBox;
+    @FXML private ComboBox<CategoryCollection> collectionComboBox;
 
     @Override
     public void initUI() {
@@ -61,6 +66,25 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
         videoTable.setItems(this.model.getVideoList());
 
+        videoTable.getSelectionModel().selectedItemProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                Video v = videoTable.getSelectionModel().getSelectedItem();
+                model.setSelectedVideo(v);
+                model.setUserId(v.getUser().getId());
+                model.setCategoryCollectionId(v.getCategoryCollection().getId());
+                userComboBox.getSelectionModel().select(model.getSelectedVideo().getUser());
+                collectionComboBox.getSelectionModel().select(model.getSelectedVideo().getCategoryCollection());
+            }
+        });
+    }
+
+    public void initForm(){
+        userComboBox.setItems(model.getUserSet());
+        collectionComboBox.setItems(model.getCollectionSet());
+
+        userComboBox.valueProperty().addListener((observable, oldValue, newValue) -> model.setUserId(newValue != null ? newValue.getId() : 0));
+        collectionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> model.setCategoryCollectionId(newValue != null ? newValue.getId() : 0));
     }
 
     private Callback<TableColumn<Video, Void>, TableCell<Video, Void>> addActions() {
@@ -109,5 +133,10 @@ public class ContainerView extends AbstractJavaFXGriffonView {
             };
             return cell;
         };
+    }
+
+    public void resetComboBox() {
+        userComboBox.getSelectionModel().clearSelection();
+        collectionComboBox.getSelectionModel().clearSelection();
     }
 }

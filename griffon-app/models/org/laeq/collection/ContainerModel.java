@@ -144,6 +144,8 @@ public class ContainerModel extends AbstractGriffonModel {
             this.selectedCollection.setIsDefault(categoryCollection.isIsDefault());
             this.selectedCollection.getCategorySet().clear();
             this.selectedCollection.getCategorySet().addAll(categoryCollection.getCategorySet());
+            collections.remove(this.selectedCollection);
+            collections.add(this.selectedCollection);
         } else {
             collections.add(categoryCollection);
         }

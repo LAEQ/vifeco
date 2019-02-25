@@ -88,10 +88,7 @@ public class CategoryCollection extends BaseEntity {
 
     @Override
     public String toString() {
-        return "CategoryCollection{" +
-                "id=" + id.getValue() +
-                ", name=" + name.getValue() +
-                '}';
+        return getName();
     }
 
     public List<Integer> getCategoryIds() {

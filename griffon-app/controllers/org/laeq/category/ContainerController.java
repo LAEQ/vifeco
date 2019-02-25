@@ -15,6 +15,7 @@ import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,9 +37,25 @@ public class ContainerController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void save(){
         if(model.valid()){
-           createCategory();
+            if(model.getId() != 0){
+                updateCategory();
+            } else {
+                createCategory();
+            }
         } else {
             alert(String.format("Some fields are invalid: \n%s", model.getErrors()));
+        }
+    }
+
+    private void updateCategory() {
+        Category category = model.generateEntity();
+
+        try{
+            categoryDAO.update(category);
+            model.updateCategory(category);
+            model.clear();
+        } catch (SQLException | DAOException e) {
+            alert("key to enter");
         }
     }
 
@@ -47,11 +64,17 @@ public class ContainerController extends AbstractGriffonController {
         try {
             categoryDAO.insert(category);
             model.addCategory(category);
+            model.clear();
         } catch (DAOException e) {
             alert("Failed to create category: " + category);
         }
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void clear(){
+        model.clear();
+    }
 
     private Map<String, RunnableWithArgs> listeners() {
         Map<String, RunnableWithArgs> list = new HashMap<>();
@@ -64,6 +87,12 @@ public class ContainerController extends AbstractGriffonController {
     }
 
     public void delete(Category category) {
+        try{
+            categoryDAO.delete(category);
+            model.delete(category);
+        } catch (DAOException e) {
+            dialogService.simpleAlert("key.to_implement", e.getMessage());
+        }
 
     }
 }

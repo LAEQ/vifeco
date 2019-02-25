@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 
+import java.util.Optional;
 import java.util.Set;
 
 @ArtifactProviderFor(GriffonModel.class)
@@ -22,7 +23,7 @@ public class ContainerModel extends AbstractGriffonModel {
     private SimpleStringProperty name = new SimpleStringProperty(this, "name", "");
     private SimpleStringProperty shortCut = new SimpleStringProperty(this, "shortCut", "");
     private SimpleStringProperty icon = new SimpleStringProperty(this, "icon", "");
-    private SimpleStringProperty color = new SimpleStringProperty(this, "color", "#000000");
+    private SimpleStringProperty color = new SimpleStringProperty(this, "color", "#00000000");
     private String errors = "";
 
     public ObservableList<Category> getCategoryList() {
@@ -96,20 +97,37 @@ public class ContainerModel extends AbstractGriffonModel {
 
         if(getName().length() == 0){
             result = false;
-            builder.append(" - name");
+            builder.append(" - name\n");
         }
 
-        if(getName().length() != 1 && getCategoryList().stream().filter(category -> category.getShortcut().equals(getShortCut())).findFirst().isPresent()){
+        if(getName().length() != 1 && validShortCut()){
             result = false;
-            builder.append(" - shortcut");
+            builder.append(" - shortcut\n");
         }
 
-        if(! getColor().matches("^#[A-Z0-9]{6}$")){
+        if(getIcon().length() == 0){
             result = false;
-            builder.append(" - Color");
+            builder.append(" - icon\n");
         }
+
+        if(! getColor().matches("^#[A-Za-z0-9]{8}$")){
+            result = false;
+            builder.append(" - Color\n");
+        }
+
+        errors = builder.toString();
 
         return result;
+    }
+
+    private Boolean validShortCut(){
+        Optional<Category> optionalCategory = getCategoryList().stream().filter(category -> category.getShortcut().equals(getShortCut())).findFirst();
+
+        if(this.selectedCategory == null){
+            return optionalCategory.isPresent();
+        }
+
+        return optionalCategory.isPresent() && (optionalCategory.get().getId() != this.selectedCategory.getId());
     }
 
     public Category generateEntity() {
@@ -118,6 +136,10 @@ public class ContainerModel extends AbstractGriffonModel {
         category.setIcon(getIcon());
         category.setColor(getColor());
         category.setShortcut(getShortCut());
+
+        if(this.selectedCategory != null){
+            category.setId(this.selectedCategory.getId());
+        }
 
         return category;
     }
@@ -133,5 +155,30 @@ public class ContainerModel extends AbstractGriffonModel {
         setName(category.getName());
         setIcon(category.getIcon());
         setShortCut(category.getShortcut());
+        setColor(category.getColor());
+    }
+
+    public void updateCategory(Category category) {
+        if(this.selectedCategory !=null){
+            this.selectedCategory.setName(category.getName());
+            this.selectedCategory.setIcon(category.getIcon());
+            this.selectedCategory.setColor(category.getColor());
+            this.selectedCategory.setShortcut(category.getShortcut());
+        }
+
+        clear();
+    }
+
+    public void delete(Category category) {
+        categoryList.remove(category);
+    }
+
+    public void clear() {
+        setName("");
+        setShortCut("");
+        setColor("");
+        setIcon("");
+        setId(0);
+        this.selectedCategory = null;
     }
 }
