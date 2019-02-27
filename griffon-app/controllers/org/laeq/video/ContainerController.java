@@ -3,9 +3,11 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import javafx.scene.control.TableColumn;
 import org.laeq.CRUDController;
 import org.laeq.db.*;
+import org.laeq.model.CategoryCollection;
+import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.ui.DialogService;
 
@@ -26,41 +28,33 @@ public class ContainerController extends CRUDController<Video> {
     private VideoDAO videoDAO;
     private UserDAO userDAO;
     private CategoryCollectionDAO ccDAO;
+    private CategoryDAO categoryDAO;
+    private PointDAO pointDAO;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         videoDAO = dbService.getVideDAO();
         ccDAO = dbService.getCategoryCollectionDAO();
         userDAO = dbService.getUserDAO();
+        categoryDAO = dbService.getCategoryDAO();
+        pointDAO = dbService.getPointDAO();
 
         System.out.println(videoDAO.findAll().size());
         model.getVideoList().addAll(videoDAO.findAll());
         model.getUserSet().addAll(userDAO.findAll());
         model.getCollectionSet().addAll(ccDAO.findAll());
+        model.addCategories(categoryDAO.findAll());
+
 
         view.initForm();
     }
-    public void save(){
-        if(model.valid()){
-            try {
-                Video video = model.generateVideo();
-                videoDAO.update(video);
-                runInsideUISync(() -> {
-                    model.update(video);
-                    model.clear();
-                    view.resetComboBox();
-                });
-
-            } catch (SQLException | DAOException e) {
-                alert("key.to_implement", e.getMessage());
-            }
-        } else {
-            alert("org.laeq.video.validation.title_error", model.getErrors());
-        }
-    }
 
     public void clear(){
-        view.resetComboBox();
+        view.reset();
+    }
+
+    public void edit(){
+        publishEvent("video.edit", this.model.getSelectedVideo());
     }
 
     public void editVideo(Video video) {
@@ -69,5 +63,29 @@ public class ContainerController extends CRUDController<Video> {
 
     private void publishEvent(String eventName, Video video){
         getApplication().getEventRouter().publishEventOutsideUI(eventName, Arrays.asList(video));
+    }
+
+    public void updateUser(TableColumn.CellEditEvent<Video, User> event) {
+        try {
+            videoDAO.updateUser(event.getRowValue(), event.getNewValue());
+            event.getRowValue().setUser(event.getNewValue());
+        } catch (SQLException | DAOException e) {
+            alert("key.to_implement", e.getMessage());
+        }
+    }
+
+    public void updateCollection(TableColumn.CellEditEvent<Video, CategoryCollection> event) {
+        try {
+            videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
+            event.getRowValue().setCategoryCollection(event.getNewValue());
+        } catch (SQLException | DAOException e) {
+            alert("key.to_implement", e.getMessage());
+        }
+    }
+
+    public void showDetail() {
+        model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
+        model.getSelectedVideo().getCategoryCollection().getCategorySet().addAll(categoryDAO.findByCollection(model.getSelectedVideo().getCategoryCollection()));
+        view.showDetails();
     }
 }

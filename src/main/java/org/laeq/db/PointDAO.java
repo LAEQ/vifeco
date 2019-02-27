@@ -43,11 +43,11 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
 
             point.setId(nextId);
         } catch (Exception e){
-            getLogger().error(e.getMessage());
+            getLogger().error(String.format("id: %d. %s. %s", nextId, point, e.getMessage()));
         }
 
         if(result != 1)
-            throw new DAOException("Error during DAO insert category");
+            throw new DAOException("PointDAO: cannot create point.");
     }
 
     @Override

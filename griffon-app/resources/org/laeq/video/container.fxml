@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
@@ -22,10 +23,10 @@
          <children>
             <Text fx:id="title" strokeType="OUTSIDE" strokeWidth="0.0" text="Video details" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
             <Separator prefWidth="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="29.0" />
-            <GridPane layoutX="10.0" layoutY="42.0" prefHeight="154.0" prefWidth="375.0">
+            <GridPane layoutX="10.0" layoutY="42.0" prefHeight="129.0" prefWidth="375.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="181.0" minWidth="10.0" prefWidth="114.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="281.0" minWidth="10.0" prefWidth="261.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="209.0" minWidth="10.0" prefWidth="103.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="313.0" minWidth="10.0" prefWidth="272.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -34,14 +35,27 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Text fx:id="nameTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="User" wrappingWidth="108.7294921875" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Collection" wrappingWidth="109.46240234375" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="userComboBox" prefWidth="150.0" GridPane.columnIndex="1" />
-                  <ComboBox fx:id="collectionComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Text fx:id="titleTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" wrappingWidth="58.7294921875" />
+                  <Text fx:id="durationTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Duration" wrappingWidth="72.46240234375" GridPane.rowIndex="1" />
+                  <Text fx:id="titleValue" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="268.7294921875" GridPane.columnIndex="1" />
+                  <Text fx:id="durationValue" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="268.7294921875" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Text fx:id="totalTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Total" wrappingWidth="72.46240234375" GridPane.rowIndex="2" />
+                  <Text fx:id="totalValue" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="268.7294921875" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Text fx:id="lastPointTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Last point" wrappingWidth="72.46240234375" GridPane.rowIndex="3" />
+                  <Text fx:id="lastPointValue" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="268.7294921875" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
                </children>
             </GridPane>
-            <Button fx:id="saveActionTarget" layoutX="319.0" layoutY="458.0" mnemonicParsing="false" styleClass="btn, btn-success" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-            <Button fx:id="clearActionTarget" layoutX="10.0" layoutY="462.0" mnemonicParsing="false" styleClass="btn, btn-default" text="Clear" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+            <Button fx:id="exportActionTarget" layoutX="173.0" layoutY="462.0" minWidth="60.0" mnemonicParsing="false" styleClass="btn, btn-info" text="Export" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="190.0" />
+            <Button fx:id="clearActionTarget" layoutX="10.0" layoutY="462.0" minWidth="60.0" mnemonicParsing="false" styleClass="btn, btn-default" text="Clear" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+            <Button fx:id="deleteActionTarget1" layoutX="84.0" layoutY="462.0" minWidth="60.0" mnemonicParsing="false" styleClass="btn, btn-danger" text="Delete" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" />
+            <Group fx:id="categoryGroup" layoutX="14.0" layoutY="193.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="190.0" />
+            <Button fx:id="editActionTarget" layoutX="320.0" layoutY="462.0" minWidth="80.0" mnemonicParsing="false" text="Edit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
+               <styleClass>
+                  <String fx:value="btn" />
+                  <String fx:value="btn-success" />
+               </styleClass>
+            </Button>
          </children></AnchorPane>
     </items>
 </SplitPane>
