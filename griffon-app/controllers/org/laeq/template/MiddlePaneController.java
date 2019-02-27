@@ -29,7 +29,8 @@ public class MiddlePaneController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
-        getApplication().getEventRouter().publishEvent("database.user.list");
+
+        createGroup("status");
     }
 
     private Map<String, RunnableWithArgs> listenerList(){

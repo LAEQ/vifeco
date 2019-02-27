@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.laeq.template.MiddlePaneController"
-            prefHeight="545.0" prefWidth="898.0" style="-fx-background-color: lightcyan;"
-            fx:id="middlePane"
-/>
+<AnchorPane fx:id="middlePane" prefHeight="545.0" prefWidth="898.0"
+            xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.laeq.template.MiddlePaneController">
+</AnchorPane>

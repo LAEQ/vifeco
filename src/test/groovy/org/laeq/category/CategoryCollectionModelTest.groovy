@@ -1,14 +1,13 @@
 package org.laeq.category
 
-import javafx.beans.property.SimpleBooleanProperty
 import org.laeq.model.CategoryCollection
 import spock.lang.Specification
 import org.laeq.model.Category;
 
 class CategoryCollectionModelTest extends Specification {
-    CategoryCollectionModel model;
+    org.laeq.collection.ContainerModel model;
     void setup() {
-        model = new CategoryCollectionModel();
+        model = new org.laeq.collection.ContainerModel();
     }
 
     def "test entity generation"() {

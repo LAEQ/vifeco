@@ -10,10 +10,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DatabaseManager {
     private Logger logger;
@@ -45,7 +42,30 @@ public class DatabaseManager {
         return result == 1;
     }
 
+
+
     public boolean loadFixtures(URL fixtures) throws IOException, SQLException, URISyntaxException {
         return loadFixtures(fixtures.toURI());
+    }
+
+    public void getTableStatus() throws SQLException, DAOException {
+
+        String query = "SELECT COUNT(*) FROM   INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC';";
+        int result = 0;
+
+        try(Connection connection = getConnection();
+        Statement stmt = connection.createStatement())
+        {
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            if(resultSet.next()){
+                result = resultSet.getInt(1);
+            }
+        }
+
+        if(result != 6){
+            String message = String.format("Table status: failed - %d tables instead of 6.", result);
+            throw new DAOException(message);
+        }
     }
 }

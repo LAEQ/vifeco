@@ -80,6 +80,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         durationIcon.setOnMouseClicked(clickListener.get("duration"));
     }
 
+    @Override
     public void mvcGroupDestroy() {
         runInsideUISync(() -> {
             destroy();

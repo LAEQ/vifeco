@@ -17,13 +17,6 @@ import java.util.Set;
 public class DatabaseService extends AbstractGriffonService {
     private final DatabaseManager manager;
 
-    private UserDAO userDAO;
-    private CategoryCollectionDAO categoryCollectionDAO;
-    private PointDAO pointDAO;
-    private CategoryDAO categoryDAO;
-    private VideoDAO videoDAO;
-
-
     public DatabaseService() {
         DatabaseConfigBean configBean = new DatabaseConfigBean("jdbc:hsqldb:hsql://localhost/vifecodb", "SA", "");
 
@@ -51,11 +44,16 @@ public class DatabaseService extends AbstractGriffonService {
     }
 
     public void init() {
-        userDAO = new UserDAO(manager, UserDAO.sequence_name);
-        categoryCollectionDAO = new CategoryCollectionDAO(manager, CategoryCollectionDAO.sequence_name);
-        pointDAO = new PointDAO(manager, PointDAO.sequence_name);
-        categoryDAO = new CategoryDAO(manager, CategoryDAO.sequence_name);
-        videoDAO = new VideoDAO(manager, VideoDAO.sequence_name);
+        try {
+            manager.getTableStatus();
+        } catch (DAOException | SQLException e) {
+            initTables();
+        }
+    }
+
+    private void initTables(){
+        UserDAO userDAO = new UserDAO(manager, UserDAO.sequence_name);
+        CategoryCollectionDAO categoryCollectionDAO = new CategoryCollectionDAO(manager, CategoryCollectionDAO.sequence_name);
 
         try{
             URL tableQuery = getClass().getClassLoader().getResource("sql/create_tables.sql");
@@ -85,47 +83,11 @@ public class DatabaseService extends AbstractGriffonService {
         }
     }
 
-    public void create(Video video) throws SQLException, DAOException {
-        VideoDAO dao = new VideoDAO(manager, "video_id");
-
-        dao.insert(video);
-    }
-
-    public Set<Video> findAll(VideoUser videoUser) {
-        VideoDAO dao = new VideoDAO(manager, "video_id");
-
-        return dao.findAll();
-    }
-
-
-
-    public CategoryCollection getCategoryCollection(int id) throws SQLException {
-        return categoryCollectionDAO.findByID(id);
-    }
-
-
-    public Set<User> getUserList() {
-        return userDAO.findAll();
-    }
-
-    public void setUserActive(User user) throws SQLException, DAOException {
-        userDAO.setActive(user);
-    }
-
-    public void save(Point point) throws DAOException, SQLException {
-        pointDAO.insert(point);
-    }
-
-
-    public void save(User user) throws DAOException {
-        userDAO.insert(user);
-    }
-
-    public void save(Category category) throws DAOException {
-        categoryDAO.insert(category);
-    }
-
     public Video createVideo(File file) throws IOException, SQLException, DAOException {
+        UserDAO userDAO = getUserDAO();
+        CategoryCollectionDAO categoryCollectionDAO = getCategoryCollectionDAO();
+        VideoDAO videoDAO = getVideDAO();
+
         User defaultUser = userDAO.findActive();
         CategoryCollection defaultCategoryCollection = categoryCollectionDAO.findDefault();
 
@@ -137,39 +99,23 @@ public class DatabaseService extends AbstractGriffonService {
         return video;
     }
 
-    public Set<User> findUsers() {
-        return userDAO.findAll();
-    }
-
-    public void delete(User user) throws DAOException {
-        userDAO.delete(user);
-    }
-
-    public Set<Category> findCategories() {
-        return categoryDAO.findAll();
-    }
-
-    public void save(CategoryCollection entity) throws DAOException {
-        categoryCollectionDAO.insert(entity);
-    }
-
     public UserDAO getUserDAO() {
         return new UserDAO(manager, UserDAO.sequence_name);
     }
-
     public CategoryDAO getCategoryDAO() {
         return new CategoryDAO(manager, CategoryDAO.sequence_name);
     }
-
     public CategoryCollectionDAO getCategoryCollectionDAO() {
         return new CategoryCollectionDAO(manager, CategoryCollectionDAO.sequence_name);
     }
-
     public PointDAO getPointDAO() {
         return new PointDAO(manager, PointDAO.sequence_name);
     }
-
     public VideoDAO getVideDAO() {
         return new VideoDAO(manager, VideoDAO.sequence_name);
+    }
+
+    public void getTableStatus() throws SQLException, DAOException {
+        manager.getTableStatus();
     }
 }

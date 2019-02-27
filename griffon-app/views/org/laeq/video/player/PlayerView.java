@@ -134,6 +134,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         parentView.getPlayerPane().getChildren().add(node);
     }
 
+    @Override
     public void mvcGroupDestroy() {
         runInsideUISync(() -> {
             destroy();
@@ -369,19 +370,19 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private void keyValues(KeyEvent event) {
         Optional<Category> category = model.getCategory(event.getCode().getName());
 
-        System.out.println("key: " + event.getCode().getName() + ":" + category.isPresent());
+        System.out.println("key: " + event.getCode().getName() + ":" + category.isPresent() + ": " + mousePosition);
 
-//
-//        if(mediaPlayer != null && category.isPresent() && mousePosition != null){
-//            Point relPoint = new Point();
-//            relPoint.setX(mousePosition.getX());
-//            relPoint.setY(mousePosition.getY());
-//            relPoint.setCategory(category.get());
-//            relPoint.setVideo(model.getVideo());
-//            relPoint.setStart(mediaPlayer.getCurrentTime());
-//
-//            controller.savePoint(relPoint);
-//        }
+
+        if(mediaPlayer != null && category.isPresent() && mousePosition != null){
+            Point relPoint = new Point();
+            relPoint.setX(mousePosition.getX());
+            relPoint.setY(mousePosition.getY());
+            relPoint.setCategory(category.get());
+            relPoint.setVideo(video);
+            relPoint.setStart(mediaPlayer.getCurrentTime());
+
+            controller.savePoint(relPoint);
+        }
     }
     private void updateValues() {
         Platform.runLater(() -> {

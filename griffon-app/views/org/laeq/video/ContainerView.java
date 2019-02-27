@@ -21,6 +21,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.laeq.collection.CategoryGroup;
+import org.laeq.collection.CollectionMatrice;
 import org.laeq.model.*;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.collection.CategoryIcon;
@@ -121,27 +122,10 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         collectionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
         collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));
 
-        int index = 0;
-        int x = 0;
-        int y = 0;
-        int size = 100;
-        for (Category c: this.model.getCategorySet()) {
-            CategoryIcon group = new CategoryIcon(c, 50);
-            group.setText("0");
+        CollectionMatrice matrice = new CollectionMatrice(170, 60, model.getCategorySet());
+        categoryGroupMap = matrice.getIconMap();
 
-            group.setLayoutX(x);
-            group.setLayoutY(y);
-
-            x += size + 75;
-            index++;
-            if (index != 0 && index % 3 == 0) {
-                x = 0;
-                y += 85;
-            }
-
-            categoryGroup.getChildren().add(group);
-            categoryGroupMap.put(c, group);
-        }
+        categoryGroup.getChildren().addAll(matrice.getIconMap().values());
     }
 
     private Callback<TableColumn<Video, Void>, TableCell<Video, Void>> addActions() {

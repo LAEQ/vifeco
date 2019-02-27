@@ -103,8 +103,10 @@ public class Point extends BaseEntity implements Comparable<Point> {
     @Override
     public String toString() {
         return "Point{" +
-                "id=" + id +
-                "start=" + start +
+                "x=" + x +
+                ", y=" + y +
+                ", category=" + category +
+                ", video=" + video +
                 '}';
     }
 

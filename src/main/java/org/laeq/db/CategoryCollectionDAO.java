@@ -134,7 +134,9 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
                 category.setColor(result.getString(13));
                 category.setShortcut(result.getString(14));
 
-                categoryCollection.addCategory(category);
+                if(category.getName() != null){
+                    categoryCollection.addCategory(category);
+                }
             }
 
             return categoryCollection;
@@ -250,7 +252,7 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
 
         String query = "SELECT C.ID as CAT_ID, C.NAME AS CAT_NAME, C.ICON, C.SHORTCUT, CC.ID, CC.NAME, CC.IS_DEFAULT as IS_DEFAULT FROM CATEGORY_COLLECTION as CC" +
                 " LEFT JOIN CATEGORY_COLLECTION_CATEGORY as CCC ON CC.ID = CCC.CATEGORY_COLLECTION_ID" +
-                " JOIN CATEGORY as C ON C.ID = CCC.CATEGORY_ID  ORDER BY CC.ID ASC;";
+                " LEFT JOIN CATEGORY as C ON C.ID = CCC.CATEGORY_ID  ORDER BY CC.ID ASC;";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query);){
@@ -283,7 +285,10 @@ public class CategoryCollectionDAO extends AbstractDAO implements DAOInterface<C
                     category.setName(queryResult.getString("CAT_NAME"));
                     category.setIcon(queryResult.getString("ICON"));
                     category.setShortcut(queryResult.getString("SHORTCUT"));
-                    categoryCollection.addCategory(category);
+
+                    if(category.getName() != null){
+                        categoryCollection.addCategory(category);
+                    }
 
                     result.add(categoryCollection);
                 }

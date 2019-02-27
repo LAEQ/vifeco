@@ -110,7 +110,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
                return generateUser(result);
             }
 
-            throw new DAOException("UserDAO: no Useris active.");
+            throw new DAOException("UserDAO: no active user.");
         }
     }
 

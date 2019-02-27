@@ -3,6 +3,7 @@ package org.laeq.db
 import spock.lang.Specification
 
 import java.sql.Connection
+import java.sql.SQLException
 import java.sql.Statement
 
 class DatabaseManagerTest extends Specification {
@@ -91,6 +92,39 @@ class DatabaseManagerTest extends Specification {
         process.destroy()
     }
 
+
+    def "test table status"() {
+        setup: "Create a database process"
+        def builder = createProcess()
+        def process = builder.start()
+
+        and:
+        def sqlString = this.class.getClassLoader().getResource("sql/create_tables.sql").text
+
+        when:
+        DatabaseManager manager = new DatabaseManager(new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", ""))
+
+        def result = 1
+
+        try{
+            Connection con = manager.getConnection()
+            Statement stmt = con.createStatement()
+            result = stmt.executeUpdate(sqlString)
+        } catch (Exception e){
+            println e
+        }
+
+        manager.getTableStatus()
+
+
+        then:
+        noExceptionThrown()
+
+        cleanup: "destroy the database process"
+        process.destroy()
+
+    }
+
     def "create sequences"() {
         setup: "Create a database process"
         def builder = createProcess()
@@ -130,4 +164,5 @@ class DatabaseManagerTest extends Specification {
 
         return builder
     }
+
 }

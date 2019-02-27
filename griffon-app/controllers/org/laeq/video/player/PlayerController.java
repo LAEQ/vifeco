@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @ArtifactProviderFor(GriffonController.class)
 public class PlayerController extends AbstractGriffonController {
@@ -76,17 +77,36 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
+    public void savePoint(Point point) {
+        try {
+            pointDAO.insert(point);
+            model.addPoint(point);
+            view.addPoint(point);
+            publishEvent("point.added", point);
+
+        } catch (DAOException e) {
+            getLog().error(String.format("PlayerCtrl: cannot save new point: %s : %s", point, e.getMessage()));
+        }
+    }
+
+    @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void addPoint(Point point, String letter) {
         try {
-            Category category = model.debugCategory();
-            point.setCategory(category);
+            Optional<Category> category = model.getCategory(letter);
+
+            if(category.isPresent()){
+                point.setCategory(category.get());
+            } else {
+                point.setCategory(model.debugCategory());
+            }
+
             point.setVideo(video);
             pointDAO.insert(point);
             model.addPoint(point);
 
             view.addPoint(point);
-
             publishEvent("point.added", point);
+
         } catch (DAOException e) {
             getLog().error(String.format("PlayerCtrl: cannot save new point: %s : %s", point, e.getMessage()));
         }
