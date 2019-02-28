@@ -62,12 +62,21 @@ public class ContainerController extends CRUDController<Video> {
 
     public void export(){
         ObjectMapper objectMapper = new ObjectMapper();
+        Long now = System.currentTimeMillis();
 
         try {
-            objectMapper.writeValue(new File("target/car.json"), this.model.getSelectedVideo());
+            String fileName = String.format("%s_%d", this.model.getSelectedVideo().getName(), now);
+
+            fileName = getPathExport(fileName);
+
+            objectMapper.writeValue(new File(fileName), this.model.getSelectedVideo());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getPathExport(String filename){
+        return String.format("%s/Downloads/%s", System.getProperty("user.home"), filename);
     }
 
     public void editVideo(Video video) {

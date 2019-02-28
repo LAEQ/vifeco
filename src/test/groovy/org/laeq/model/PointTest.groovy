@@ -16,7 +16,7 @@ class PointTest extends Specification {
         when:
         String result = new ObjectMapper().writeValueAsString(point)
 
-        String expected = '{"x":10.0,"y":10.0,"category":{"name":"test","icon":"test","color":"test","shortcut":"A"},"startDouble":10000.0}'
+        String expected = '{"x":10.0,"y":10.0,"categoryId":1,"startDouble":10000.0}'
 
         then:
         result == expected

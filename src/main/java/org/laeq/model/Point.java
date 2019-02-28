@@ -6,7 +6,7 @@ import javafx.geometry.Bounds;
 import javafx.util.Duration;
 
 import java.util.Objects;
-@JsonIgnoreProperties({"id", "video", "icon", "duration", "createdAt", "updatedAt"})
+@JsonIgnoreProperties({"id", "video", "icon", "duration", "createdAt", "updatedAt", "category"})
 public class Point extends BaseEntity implements Comparable<Point> {
     private int id;
     private double x;
@@ -112,6 +112,7 @@ public class Point extends BaseEntity implements Comparable<Point> {
                 '}';
     }
 
+    @JsonIgnore
     public Icon getIcon(Bounds bounds) {
         if(this.icon == null){
             this.icon = new Icon(category, 100);
@@ -123,12 +124,17 @@ public class Point extends BaseEntity implements Comparable<Point> {
         return icon;
     }
 
+    @JsonIgnore
     public Icon getIcon() {
         if(this.icon == null){
             this.icon = new Icon(category, 100);
         }
 
         return icon;
+    }
+
+    public int getCategoryId(){
+        return category.getId();
     }
 
     @JsonIgnore
