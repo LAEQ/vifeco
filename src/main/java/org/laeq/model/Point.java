@@ -1,8 +1,6 @@
 package org.laeq.model;
 
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.util.Duration;
 
 import java.util.Objects;
@@ -103,10 +101,8 @@ public class Point extends BaseEntity implements Comparable<Point> {
     @Override
     public String toString() {
         return "Point{" +
-                "x=" + x +
-                ", y=" + y +
-                ", category=" + category +
-                ", video=" + video +
+                "id=" + id +
+                ", start=" + start +
                 '}';
     }
 

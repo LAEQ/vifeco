@@ -1,21 +1,15 @@
 package org.laeq.collection;
 
 import griffon.core.artifact.GriffonController;
-import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.CRUDController;
 import org.laeq.db.CategoryCollectionDAO;
 import org.laeq.db.CategoryDAO;
 import org.laeq.db.DAOException;
-import org.laeq.db.DatabaseService;
 import org.laeq.model.CategoryCollection;
-import org.laeq.model.User;
-import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)

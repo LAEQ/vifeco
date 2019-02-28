@@ -7,19 +7,21 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.shape.SVGPath;
-import javafx.scene.text.Font;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.graphic.Color;
 import org.laeq.graphic.IconSVG;
+import org.laeq.graphic.icon.CategoryMatrice;
+import org.laeq.graphic.icon.IconType;
 import org.laeq.model.Category;
 import org.laeq.model.CategoryCollection;
 import org.laeq.model.Icon;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ContainerView extends AbstractJavaFXGriffonView {
@@ -45,14 +47,17 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
     private void init(){
         TableColumn<CategoryCollection, String> nameColumn = new TableColumn("Name");
-        TableColumn<CategoryCollection, Void> categoryListColumn = new TableColumn("Categories");
+        TableColumn categoryListColumn = new TableColumn("Categories");
         TableColumn<CategoryCollection, Void> actionColumn = new TableColumn<>("Actions");
 
-
         collectionTable.getColumns().addAll(nameColumn, categoryListColumn, actionColumn);
+
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        categoryListColumn.setCellFactory(iconAction());
         actionColumn.setCellFactory(addActions());
+
+        categoryListColumn.setCellValueFactory(new PropertyValueFactory<CategoryCollection, Boolean>("prout"));
+
+        categoryListColumn.setCellFactory(iconAction());
 
         collectionTable.setItems(this.model.getCollections());
     }
@@ -120,31 +125,36 @@ public class ContainerView extends AbstractJavaFXGriffonView {
             return cell;
         };
     }
-    private Callback<TableColumn<CategoryCollection, Void>, TableCell<CategoryCollection, Void>> iconAction() {
+    private Callback<TableColumn<CategoryCollection, Boolean>, TableCell<CategoryCollection, Boolean>> iconAction() {
         return  param -> {
-            final TableCell<CategoryCollection, Void> cell = new TableCell<CategoryCollection, Void>() {
-
-                Group container = new CategoryGroup();
+            TableCell<CategoryCollection, Boolean> cell = new TableCell<CategoryCollection, Boolean>() {
 
                 @Override
-                public void updateItem(Void item, boolean empty) {
+                protected void updateItem(Boolean item, boolean empty) {
                     super.updateItem(item, empty);
 
+                    Group group = new Group();
+
                     try {
-                        CategoryCollection cc = collectionTable.getItems().get(getIndex());
+                        Set<Category> categorySet = collectionTable.getItems().get(getIndex()).getCategorySet();
 
-                        container = new CategoryGroup(cc.getCategorySet());
-                    }catch (ArrayIndexOutOfBoundsException e){
+                        if(categorySet != null){
+                            CategoryMatrice matrice = new CategoryMatrice(categorySet, IconType.REGULAR);
+                            group.getChildren().addAll(matrice.getIconMap().values());
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
 
-                    } catch (Exception e){
+                    } catch (Exception e) {
 
                     }
 
                     if (empty) {
                         setGraphic(null);
+                        setText(null);
                     } else {
-                        setGraphic(container);
+                        setGraphic(group);
                     }
+
                 }
             };
 

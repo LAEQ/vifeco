@@ -3,8 +3,13 @@ package org.laeq.model;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -15,7 +20,8 @@ public class CategoryCollection extends BaseEntity {
     private SimpleIntegerProperty id;
     private SimpleStringProperty name;
     private SimpleBooleanProperty isDefault;
-    private Set<Category> categorySet;
+    private ObservableSet<Category> categorySet;
+    private SimpleBooleanProperty proutProperty;
 
     public CategoryCollection() {
         this(0, "", false);
@@ -25,7 +31,20 @@ public class CategoryCollection extends BaseEntity {
         this.id = new SimpleIntegerProperty(this, "id", id);
         this.name = new SimpleStringProperty(this, "name", name);
         this.isDefault =  new SimpleBooleanProperty(isDefault);
-        this.categorySet = new HashSet<>();
+        this.categorySet = FXCollections.observableSet();
+        this.proutProperty = new SimpleBooleanProperty(true);
+    }
+
+    public boolean getProut() {
+        return proutProperty.get();
+    }
+
+    public SimpleBooleanProperty proutProperty() {
+        return proutProperty;
+    }
+
+    public void setProut(boolean proutProperty) {
+        this.proutProperty.set(proutProperty);
     }
 
     public int getId() {
@@ -46,11 +65,11 @@ public class CategoryCollection extends BaseEntity {
     public void setName(String name) {
         this.name.set(name);
     }
-    public Set<Category> getCategorySet() {
+    public ObservableSet<Category> getCategorySet() {
         return categorySet;
     }
     public void setCategorySet(Set<Category> categorySet) {
-        this.categorySet = categorySet;
+        this.categorySet.addAll(categorySet);
     }
     public boolean isIsDefault() {
         return isDefault.get();

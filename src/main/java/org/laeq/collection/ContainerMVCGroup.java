@@ -1,9 +1,10 @@
 package org.laeq.collection;
 
-import javax.inject.Named;
 import griffon.core.mvc.MVCGroup;
 import org.codehaus.griffon.runtime.core.mvc.AbstractTypedMVCGroup;
+
 import javax.annotation.Nonnull;
+import javax.inject.Named;
 
 @Named("container")
 public class ContainerMVCGroup extends AbstractTypedMVCGroup<ContainerModel, ContainerView, ContainerController> {

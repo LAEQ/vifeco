@@ -82,8 +82,16 @@ public class PlayerModel extends AbstractGriffonModel {
     }
 
     public SortedSet<Point> displayPoints(Duration currentTime){
+        Duration startDuration = (currentTime.subtract(Duration.millis( duration * 1000)));
+
+        if(startDuration.toMillis() < 0){
+            startDuration = Duration.millis(0);
+        }
+
+        System.out.println(this.duration);
+
         Point start = new Point();
-        start.setStart(currentTime.subtract(Duration.millis( duration * 1000)));
+        start.setStart(startDuration);
         Point end = new Point();
         end.setStart(currentTime);
 

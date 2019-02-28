@@ -1,5 +1,6 @@
 package org.laeq.video.category;
 
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
@@ -27,6 +28,12 @@ public class CategoryGroup extends AnchorPane {
         setLeftAnchor(background, 10d);
         setRightAnchor(background, 10d);
 
+        Label textShortCut = new Label(category.getShortcut());
+//        textShortCut.setFont(new Font("sans", 8));
+        textShortCut.setStyle("-fx-font-family: sans; -fx-fons-size: 9px;");
+        textShortCut.setLayoutX(80);
+        textShortCut.setLayoutY(30);
+
         textLabel = new Text("12 / 123");
         textLabel.setFont(new Font("Arial", 23));
         textLabel.setLayoutY(40);
@@ -36,7 +43,7 @@ public class CategoryGroup extends AnchorPane {
 
         Icon icon = new Icon(category, size);
 
-        getChildren().addAll(background, icon, textLabel);
+        getChildren().addAll(background, icon, textShortCut, textLabel);
     }
 
     public Text getTextLabel() {

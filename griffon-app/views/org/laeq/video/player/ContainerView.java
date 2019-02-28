@@ -8,8 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.template.MiddlePaneView;
-import org.laeq.video.player.ContainerController;
-import org.laeq.video.player.ContainerModel;
 
 import javax.annotation.Nonnull;
 

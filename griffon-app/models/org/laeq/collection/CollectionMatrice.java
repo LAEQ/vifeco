@@ -1,12 +1,9 @@
 package org.laeq.collection;
 
 import javafx.geometry.Point2D;
-
-import java.util.HashMap;
-
-import javafx.geometry.Point2D;
 import org.laeq.model.Category;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 

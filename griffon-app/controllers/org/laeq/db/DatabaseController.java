@@ -26,8 +26,8 @@ public class DatabaseController extends AbstractGriffonController {
 
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         try {
-//            builder = createProcess();
-//            dbProcess = builder.start();
+            builder = createProcess();
+            dbProcess = builder.start();
             service.init();
         } catch (Exception e) {
             getLog().error("Cannot create the database process." + e.getMessage());

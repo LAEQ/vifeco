@@ -20,11 +20,11 @@ import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.laeq.collection.CategoryGroup;
-import org.laeq.collection.CollectionMatrice;
+import org.laeq.graphic.icon.CategoryMatrice;
+import org.laeq.graphic.icon.IconAbstract;
+import org.laeq.graphic.icon.IconType;
 import org.laeq.model.*;
 import org.laeq.template.MiddlePaneView;
-import org.laeq.collection.CategoryIcon;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -48,7 +48,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @FXML private Text lastPointValue;
     @FXML private Group categoryGroup;
 
-    Map<Category, CategoryIcon> categoryGroupMap;
+    Map<Category, IconAbstract> categoryGroupMap;
 
     private TableColumn<Video, User> userColumn;
     private TableColumn<Video, CategoryCollection> collectionColumn;
@@ -96,14 +96,18 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     public void showDetails() {
         Map<Category, Long> pointsByCategory = model.getSelectedVideo().getPointSet().stream().collect(Collectors.groupingBy(Point::getCategory, Collectors.counting()));
 
+        model.getCategorySet().forEach(c -> {
+            System.out.println(c);
+            categoryGroupMap.get(c).setOpacity(0.4);
+        });
+
         categoryGroupMap.forEach((category, categoryIcon) -> {
-            System.out.println(pointsByCategory.containsKey(category) + " : " + category);
             if(pointsByCategory.containsKey(category)){
                 categoryIcon.setText(pointsByCategory.get(category).toString());
                 categoryIcon.setOpacity(1.0);
             } else {
                 categoryIcon.setText("0");
-                categoryIcon.setOpacity(0.4);
+                categoryIcon.setOpacity(0.6);
             }
         });
     }
@@ -122,7 +126,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         collectionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
         collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));
 
-        CollectionMatrice matrice = new CollectionMatrice(170, 60, model.getCategorySet());
+        CategoryMatrice matrice = new CategoryMatrice(model.getCategorySet(), IconType.COUNT);
         categoryGroupMap = matrice.getIconMap();
 
         categoryGroup.getChildren().addAll(matrice.getIconMap().values());

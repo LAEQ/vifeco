@@ -87,5 +87,6 @@ public class ContainerController extends CRUDController<Video> {
         model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
         model.getSelectedVideo().getCategoryCollection().getCategorySet().addAll(categoryDAO.findByCollection(model.getSelectedVideo().getCategoryCollection()));
         view.showDetails();
+
     }
 }

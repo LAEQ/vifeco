@@ -50,7 +50,7 @@ public class DatabaseManager {
 
     public void getTableStatus() throws SQLException, DAOException {
 
-        String query = "SELECT COUNT(*) FROM   INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC';";
+        String query = "SELECT COUNT(*) FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC';";
         int result = 0;
 
         try(Connection connection = getConnection();

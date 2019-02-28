@@ -7,12 +7,14 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 import org.laeq.model.CategoryCollection;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonModel.class)
@@ -144,10 +146,15 @@ public class ContainerModel extends AbstractGriffonModel {
             this.selectedCollection.setIsDefault(categoryCollection.isIsDefault());
             this.selectedCollection.getCategorySet().clear();
             this.selectedCollection.getCategorySet().addAll(categoryCollection.getCategorySet());
-            collections.remove(this.selectedCollection);
-            collections.add(this.selectedCollection);
         } else {
             collections.add(categoryCollection);
+        }
+
+
+        if(this.selectedCollection.getProut()){
+            this.selectedCollection.setProut(false);
+        } else {
+            this.selectedCollection.setProut(true);
         }
 
         clearForm();

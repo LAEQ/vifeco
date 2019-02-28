@@ -4,13 +4,14 @@ import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.scene.media.Media;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
-import org.laeq.model.*;
+import org.laeq.model.CategoryCollection;
+import org.laeq.model.User;
+import org.laeq.model.Video;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Set;
 
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)

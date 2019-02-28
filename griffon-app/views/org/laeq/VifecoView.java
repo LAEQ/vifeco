@@ -15,7 +15,6 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
-import java.util.Locale;
 import java.util.Map;
 
 

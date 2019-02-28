@@ -3,15 +3,12 @@ package org.laeq.model;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.util.Duration;
 
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class Video extends BaseEntity {

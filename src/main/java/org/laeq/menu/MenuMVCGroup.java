@@ -2,9 +2,6 @@ package org.laeq.menu;
 
 import griffon.core.mvc.MVCGroup;
 import org.codehaus.griffon.runtime.core.mvc.AbstractTypedMVCGroup;
-import org.laeq.menu.MenuController;
-import org.laeq.menu.MenuModel;
-import org.laeq.menu.MenuView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Named;
