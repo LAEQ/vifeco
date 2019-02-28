@@ -1,7 +1,10 @@
 package org.laeq.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Objects;
 
+@JsonIgnoreProperties({"createdAt", "updatedAt" })
 public class Category extends BaseEntity {
     private Integer id;
     private String name;

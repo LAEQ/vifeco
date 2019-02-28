@@ -1,5 +1,7 @@
 package org.laeq.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,6 +13,8 @@ import java.util.Objects;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@JsonIgnoreProperties({ "id", "name", "total", "createdAt", "updatedAt"})
+@JsonPropertyOrder({"path", "user", "duration", "categoryCollection", "pointSet"})
 public class Video extends BaseEntity {
     private Integer id;
     private SimpleStringProperty path;

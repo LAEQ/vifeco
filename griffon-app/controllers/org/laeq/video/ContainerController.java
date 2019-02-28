@@ -1,5 +1,6 @@
 package org.laeq.video;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
@@ -13,6 +14,8 @@ import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Map;
@@ -57,6 +60,16 @@ public class ContainerController extends CRUDController<Video> {
         publishEvent("video.edit", this.model.getSelectedVideo());
     }
 
+    public void export(){
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            objectMapper.writeValue(new File("target/car.json"), this.model.getSelectedVideo());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void editVideo(Video video) {
         publishEvent("video.edit", video);
     }
@@ -87,6 +100,5 @@ public class ContainerController extends CRUDController<Video> {
         model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
         model.getSelectedVideo().getCategoryCollection().getCategorySet().addAll(categoryDAO.findByCollection(model.getSelectedVideo().getCategoryCollection()));
         view.showDetails();
-
     }
 }

@@ -17,6 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -110,6 +111,12 @@ public class ContainerView extends AbstractJavaFXGriffonView {
                 categoryIcon.setOpacity(0.6);
             }
         });
+
+        titleValue.setText(model.getSelectedVideo().getName());
+        durationValue.setText(Duration.millis(model.getSelectedVideo().getDuration()).toString());
+        totalValue.setText(String.format("%d", model.getSelectedVideo().totalPoints()));
+        lastPointValue.setText("to do");
+
     }
 
     public void initForm(){

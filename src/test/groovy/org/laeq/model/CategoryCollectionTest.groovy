@@ -1,5 +1,6 @@
 package org.laeq.model
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import spock.lang.Specification
 
 class CategoryCollectionTest extends Specification {
@@ -79,5 +80,26 @@ class CategoryCollectionTest extends Specification {
 
         then:
         result.size() == 3
+    }
+
+    def "serialization"(){
+        setup:
+        Category category1 = new Category(1, "category 1", "icon 1", "color 1", "A")
+        Category category2= new Category(2, "category 2", "icon 2", "color 2", "B")
+        Category category3 = new Category(3, "category 3", "icon 3", "color 3", "C")
+
+        CategoryCollection categoryCollection = new CategoryCollection(1, "collection", false)
+        categoryCollection.addCategory(category1)
+        categoryCollection.addCategory(category2)
+        categoryCollection.addCategory(category3)
+
+        when:
+        String result = new ObjectMapper().writeValueAsString(categoryCollection)
+
+        String expected = '{"id":1,"name":"collection","isDefault":false,"categorySet":[{"id":1,"name":"category 1","icon":"icon 1","color":"color 1","shortcut":"A"},{"id":2,"name":"category 2","icon":"icon 2","color":"color 2","shortcut":"B"},{"id":3,"name":"category 3","icon":"icon 3","color":"color 3","shortcut":"C"}]}'
+
+        then:
+        result == expected
+
     }
 }

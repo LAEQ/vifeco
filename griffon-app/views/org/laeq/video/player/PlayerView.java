@@ -370,9 +370,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private void keyValues(KeyEvent event) {
         Optional<Category> category = model.getCategory(event.getCode().getName());
 
-        System.out.println("key: " + event.getCode().getName() + ":" + category.isPresent() + ": " + mousePosition);
-
-
         if(mediaPlayer != null && category.isPresent() && mousePosition != null){
             Point relPoint = new Point();
             relPoint.setX(mousePosition.getX());
@@ -389,8 +386,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             displayPoints();
 
             timeSlider.setDisable(duration.isUnknown());
-//            System.out.println("HERE" + index);
-//            index++;
 
             if (!timeSlider.isDisabled() && duration.greaterThanOrEqualTo(Duration.ZERO) && !timeSlider.isValueChanging()) {
                 timeSlider.setValue(mediaPlayer.getCurrentTime().divide(duration).toMillis() * 100.0);

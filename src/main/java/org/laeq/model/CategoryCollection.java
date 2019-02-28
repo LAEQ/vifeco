@@ -1,5 +1,7 @@
 package org.laeq.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
+@JsonIgnoreProperties({"proutProperty", "createdAt", "updatedAt"})
 public class CategoryCollection extends BaseEntity {
     public final static String sequence_name = "category_collection_id";
 
@@ -21,6 +24,7 @@ public class CategoryCollection extends BaseEntity {
     private SimpleStringProperty name;
     private SimpleBooleanProperty isDefault;
     private ObservableSet<Category> categorySet;
+
     private SimpleBooleanProperty proutProperty;
 
     public CategoryCollection() {
@@ -35,6 +39,7 @@ public class CategoryCollection extends BaseEntity {
         this.proutProperty = new SimpleBooleanProperty(true);
     }
 
+    @JsonIgnore
     public boolean getProut() {
         return proutProperty.get();
     }
@@ -110,10 +115,12 @@ public class CategoryCollection extends BaseEntity {
         return getName();
     }
 
+    @JsonIgnore
     public List<Integer> getCategoryIds() {
         return categorySet.stream().map(Category::getId).collect(toList());
     }
 
+    @JsonIgnore
     public List<Category> getNewCategories(Collection<Integer> ids){
         return categorySet.stream().filter(category -> ! ids.contains(category.getId())).collect(Collectors.toList());
     }

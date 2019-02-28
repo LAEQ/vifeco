@@ -1,10 +1,12 @@
 package org.laeq.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.geometry.Bounds;
 import javafx.util.Duration;
 
 import java.util.Objects;
-
+@JsonIgnoreProperties({"id", "video", "icon", "duration", "createdAt", "updatedAt"})
 public class Point extends BaseEntity implements Comparable<Point> {
     private int id;
     private double x;
@@ -16,7 +18,6 @@ public class Point extends BaseEntity implements Comparable<Point> {
 
     public Point() {
     }
-
     public Point(int id, double x, double y, Duration start, Video video, Category category) {
         this.id = id;
         this.x = x;
@@ -25,7 +26,6 @@ public class Point extends BaseEntity implements Comparable<Point> {
         this.category = category;
         this.video = video;
     }
-
     public Point(double x, double y, Duration start, Video video,Category category) {
         this.x = x;
         this.y = y;
@@ -58,6 +58,12 @@ public class Point extends BaseEntity implements Comparable<Point> {
     public void setY(double y) {
         this.y = y;
     }
+
+    public double getStartDouble(){
+        return start.toMillis();
+    }
+
+    @JsonIgnore
     public Duration getStart() {
         return start;
     }
@@ -117,15 +123,6 @@ public class Point extends BaseEntity implements Comparable<Point> {
         return icon;
     }
 
-
-    private double getIconX(Double value){
-        return getX() * value - 100 / 2;
-    }
-
-    private double getIconY(Double value){
-        return getY() * value - 100 / 2;
-    }
-
     public Icon getIcon() {
         if(this.icon == null){
             this.icon = new Icon(category, 100);
@@ -134,10 +131,11 @@ public class Point extends BaseEntity implements Comparable<Point> {
         return icon;
     }
 
+    @JsonIgnore
     public void repositionY(Double newValue) {
         this.icon.setLayoutY(getY() * newValue - 100 / 2);
     }
-
+    @JsonIgnore
     public void repositionX(Double newValue) {
         this.icon.setLayoutX(getX() * newValue - 100 / 2);
     }

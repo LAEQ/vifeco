@@ -1,14 +1,18 @@
 package org.laeq.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
+@JsonIgnoreProperties({"createdAt", "updatedAt"})
 public class User extends BaseEntity {
     private SimpleIntegerProperty id;
     private SimpleStringProperty firstName;
@@ -23,12 +27,10 @@ public class User extends BaseEntity {
         this.email = new SimpleStringProperty("");
         this.isActive = new SimpleBooleanProperty(false);
     }
-
     public User(Integer id, String fName, String lastName, String email) {
         this(fName, lastName, email);
         this.id.set(id);
     }
-
     public User(String fName, String lName, String email) {
         this.id = new SimpleIntegerProperty(0);
         this.firstName = new SimpleStringProperty(fName);
@@ -40,7 +42,8 @@ public class User extends BaseEntity {
     public String getFirstName() {
         return firstName.get();
     }
-    public void setFirstName(@Nonnull String fName) {
+
+    public void setFirstName(String fName) {
         firstName.set(fName);
     }
 
@@ -48,18 +51,19 @@ public class User extends BaseEntity {
         return lastName.get();
     }
 
+    @JsonIgnore
     public SimpleIntegerProperty idProperty() {
         return id;
     }
-
+    @JsonIgnore
     public SimpleStringProperty firstNameProperty() {
         return firstName;
     }
-
+    @JsonIgnore
     public SimpleStringProperty lastNameProperty() {
         return lastName;
     }
-
+    @JsonIgnore
     public SimpleStringProperty emailProperty() {
         return email;
     }
@@ -67,35 +71,31 @@ public class User extends BaseEntity {
     public boolean isIsActive() {
         return isActive.get();
     }
-
     public void setLastName(@Nonnull String fName) {
         lastName.set(fName);
     }
-
     public String getEmail() {
         return email.get();
     }
     public void setEmail(@Nonnull String fName) {
         email.set(fName);
     }
-
     public void setId(int id) {
         this.id.set(id);
     }
-
-    @Override
     public int getId() {
         return this.id.getValue();
     }
-
     public boolean getIsActive() {
         return isActive.get();
     }
-    public SimpleBooleanProperty isActiveProperty() {
-        return isActive;
-    }
     public void setIsActive(boolean isActive) {
         this.isActive.set(isActive);
+    }
+
+    @JsonIgnore
+    public SimpleBooleanProperty isActiveProperty() {
+        return isActive;
     }
 
     @Override
@@ -119,6 +119,7 @@ public class User extends BaseEntity {
         return Objects.hash(id.getValue(), firstName.getValue(), lastName.getValue(), email.getValue());
     }
 
+    @JsonIgnore
     public ObservableValue<String> getName() {
         return Bindings.createStringBinding(() -> {
             return String.format("%s %s", getFirstName(), getLastName());
