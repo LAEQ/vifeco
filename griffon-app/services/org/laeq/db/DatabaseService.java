@@ -24,22 +24,6 @@ public class DatabaseService extends AbstractGriffonService {
         manager = new DatabaseManager(configBean);
     }
 
-    public DAOInterface factory(String entity) throws Exception {
-        if (entity.equals("user")) {
-            return new UserDAO(manager, UserDAO.sequence_name);
-        } else if (entity.equals("category")) {
-            return new CategoryDAO(manager, CategoryDAO.sequence_name);
-        } else if (entity.equals("video")) {
-            return new VideoDAO(manager, VideoDAO.sequence_name);
-        } else if (entity.equals("point")) {
-            return new PointDAO(manager, PointDAO.sequence_name);
-        } else if (entity.equals("category_collection")) {
-            return new CategoryCollectionDAO(manager, CategoryCollection.sequence_name);
-        }
-
-        throw new Exception("Database service: cannot instantiate a DAO");
-    }
-
     public DatabaseManager getManager() {
         return manager;
     }

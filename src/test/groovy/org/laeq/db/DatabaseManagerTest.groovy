@@ -1,167 +1,81 @@
 package org.laeq.db
 
+import ch.vorburger.mariadb4j.DB
+import ch.vorburger.mariadb4j.DBConfigurationBuilder
 import spock.lang.Specification
-
 import java.sql.Connection
 import java.sql.Statement
 
 class DatabaseManagerTest extends Specification {
-    def "test the db connection and creation of dummy table"() {
-        setup: "Create a database process"
-        def builder = createProcess()
-        def process = builder.start()
+
+    private String dbName = "vifecodb"
+    private DB db
+    private DatabaseManager manager
+
+    def setup(){
+        DBConfigurationBuilder config = DBConfigurationBuilder.newBuilder();
+        config.setPort(0)
+        db = DB.newEmbeddedDB(config.build())
+
+        db.start()
+        db.createDB(dbName)
+
+        DatabaseConfigInterface configBean = new DatabaseConfigBean(config.getURL(dbName), "root", "")
+        manager = new DatabaseManager(configBean)
+    }
+
+    def cleanup(){
+        db.stop()
+    }
+
+    def "test the db connection and create a table"() {
+        setup:
+        def result = 1
+        def resultSet
 
         when:
-        DatabaseConfigInterface config = new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", "")
-        DatabaseManager manager = new DatabaseManager(config)
-
-        def result = 1
 
         try{
             Connection con = manager.getConnection()
             Statement stmt = con.createStatement()
 
-            result = stmt.executeUpdate(
-                    '''CREATE TABLE tutorials_tbl (
-                    id INT NOT NULL, title VARCHAR(50) NOT NULL,
-                    author VARCHAR(20) NOT NULL, submission_date DATE,
-                    PRIMARY KEY (id));
-                    '''
-            )
+            result = stmt.executeUpdate("CREATE TABLE hello(world VARCHAR(100))")
+            result = stmt.executeUpdate("INSERT INTO hello VALUES('Hello, world');")
+
+            Statement preparedStatement = con.createStatement()
+            resultSet = preparedStatement.executeQuery("Select * from hello")
 
         } catch (Exception e){
             println e
         }
 
         then:
-        result == 0
-
-        cleanup: "destroy the database process"
-        process.destroy()
+        result == 1
+        resultSet.next() == true
     }
-//
-//    def "test loadFixtures"() {
-//        setup: "Create a database process"
-//        def builder = createProcess()
-//        def process = builder.start()
-//
-//        and:
-//        def createSQL = this.class.getClassLoader().getResource("sql/create_tables.sql")
-//
-//        println createSQL
-//
-//        when:
-//        DatabaseManager manager = new DatabaseManager(new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", ""))
-//
-//        def result = manager.loadFixtures(createSQL)
-//
-//        then:
-//        result == true
-//
-//        cleanup: "destroy the database process"
-//        process.destroy()
-//    }
 
-    def "test the create table sql"() {
-        setup: "Create a database process"
-        def builder = createProcess()
-        def process = builder.start()
-
-        and:
-        def createSQL = this.class.getClassLoader().getResource("sql/create_tables.sql").text
+    def "test create tables"() {
+        setup:
+        def createSQL = this.class.getClassLoader().getResource("sql/create_tables.sql")
 
         when:
-        DatabaseManager manager = new DatabaseManager(new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", ""))
-
-        def result = 1
-
-        try{
-            Connection con = manager.getConnection()
-            Statement stmt = con.createStatement()
-            result = stmt.executeUpdate(createSQL)
-        } catch (Exception e){
-            println e
-        }
-
+        def result = manager.loadFixtures(createSQL)
 
         then:
-        result == 0
-
-        cleanup: "destroy the database process"
-        process.destroy()
+        noExceptionThrown()
     }
 
-//
-//    def "test table status"() {
-//        setup: "Create a database process"
-//        def builder = createProcess()
-//        def process = builder.start()
-//
-//        and:
-//        def sqlString = this.class.getClassLoader().getResource("sql/create_tables.sql").text
-//
-//        when:
-//        DatabaseManager manager = new DatabaseManager(new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", ""))
-//
-//        def result = 1
-//
-//        try{
-//            Connection con = manager.getConnection()
-//            Statement stmt = con.createStatement()
-//            result = stmt.executeUpdate(sqlString)
-//        } catch (Exception e){
-//            println e
-//        }
-//
-//        manager.getTableStatus()
-//
-//
-//        then:
-//        noExceptionThrown()
-//
-//        cleanup: "destroy the database process"
-//        process.destroy()
-//
-//    }
+    def "test load fixtures"() {
+        setup:
+        def createSQL = this.class.getClassLoader().getResource("sql/create_tables.sql")
+        def fixturesSQL = this.class.getClassLoader().getResource("sql/fixtures.sql")
 
-    def "create sequences"() {
-        setup: "Create a database process"
-        def builder = createProcess()
-        def process = builder.start()
-
-        and:
-        def sqlString = this.class.getClassLoader().getResource("sql/create_sequences.sql").text
 
         when:
-        DatabaseManager manager = new DatabaseManager(new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", ""))
-
-        def result = 1
-
-        try{
-            Connection con = manager.getConnection()
-            Statement stmt = con.createStatement()
-            result = stmt.executeUpdate(sqlString)
-        } catch (Exception e){
-            println e
-        }
-
+        manager.loadFixtures(createSQL)
+        manager.loadFixtures(fixturesSQL)
 
         then:
-        result == 0
-
-        cleanup: "destroy the database process"
-        process.destroy()
+        noExceptionThrown()
     }
-
-    def ProcessBuilder createProcess(){
-        def javaHome = System.getProperty("java.home")
-        def javaBin = javaHome + File.separator + "bin" + File.separator + "java"
-        def hslqdbPath = this.class.getClassLoader().getResource("db/lib/hsqldb.jar")
-
-        def builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),  "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/testdb",  "--dbname.0", " testdb")
-        builder.redirectErrorStream(true)
-
-        return builder
-    }
-
 }
