@@ -54,13 +54,6 @@ public class DatabaseService extends AbstractGriffonService {
         }
 
         try{
-            userDAO.init();
-            getLog().info("DatabaseService: default org.laeq.user created");
-        } catch (Exception e){
-            getLog().error("DatabaseService: cannot create default org.laeq.user");
-        }
-
-        try{
             categoryCollectionDAO.init();
             getLog().info("DatabaseService: default category collection created");
         } catch (Exception e){
@@ -73,7 +66,7 @@ public class DatabaseService extends AbstractGriffonService {
         CategoryCollectionDAO categoryCollectionDAO = getCategoryCollectionDAO();
         VideoDAO videoDAO = getVideDAO();
 
-        User defaultUser = userDAO.findActive();
+        User defaultUser = userDAO.findDefault();
         CategoryCollection defaultCategoryCollection = categoryCollectionDAO.findDefault();
 
         Media media = new Media(file.getCanonicalFile().toURI().toString());

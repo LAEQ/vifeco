@@ -33,7 +33,6 @@ public class DatabaseManager {
     }
 
     public boolean loadFixtures(URI fixtures) throws IOException, SQLException {
-
         Path path = Paths.get(fixtures);
 
         if( ! Files.exists(path)){
@@ -68,7 +67,6 @@ public class DatabaseManager {
     }
 
     public void getTableStatus() throws SQLException, DAOException {
-
         String query = "SELECT COUNT(*) FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC';";
         int result = 0;
 

@@ -40,7 +40,7 @@ public class StatusController extends AbstractGriffonController {
 
         try{
             UserDAO userDAO = dbService.getUserDAO();
-            User user = userDAO.findActive();
+            User user = userDAO.findDefault();
             if(user == null){
                 throw new DAOException("No active user");
             } else {

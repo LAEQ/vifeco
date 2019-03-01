@@ -7,7 +7,6 @@ import java.sql.Connection
 import java.sql.Statement
 
 class DatabaseManagerTest extends Specification {
-
     private String dbName = "vifecodb"
     private DB db
     private DatabaseManager manager

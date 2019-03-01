@@ -9,16 +9,6 @@ class UserDAOTest extends AbstractDAOTest {
         repository = new UserDAO(manager, "user_id")
     }
 
-    def "test get next id"() {
-        when:
-        repository.getNextValue()
-        repository.getNextValue()
-        int result = repository.getNextValue()
-
-        then:
-        result == 3
-    }
-
     def "test insertion"() {
         setup:
         User user = new User("Luck", "Skywalker", "luke@maytheforcebewithyou.com")
@@ -45,7 +35,7 @@ class UserDAOTest extends AbstractDAOTest {
 
     }
 
-    def "test insertion with an invalid org.laeq.user (no name, email, ...)"(){
+    def "test insertion with an invalid  (no name, email, ...)"(){
         setup:
         def user = new User("", "Skywalker", "luke@maytheforcebewithyou.com")
 
@@ -81,7 +71,7 @@ class UserDAOTest extends AbstractDAOTest {
         result.size() == 0
     }
 
-    def "test delete the default org.laeq.user"() {
+    def "test delete the default "() {
         setup:
         try{
             manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
@@ -98,10 +88,10 @@ class UserDAOTest extends AbstractDAOTest {
         thrown DAOException
     }
 
-    def "test delete an existing org.laeq.user"() {
+    def "test delete an existing "() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -115,42 +105,25 @@ class UserDAOTest extends AbstractDAOTest {
         notThrown Exception
     }
 
-    def "test find active org.laeq.user"() {
+    def "test find default"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
 
         when:
-        User user = repository.findActive()
+        User user = repository.findDefault()
 
         then:
         user == new User(1,"Luck", "Skywalker", "luke@maytheforcebewithyou.com")
     }
 
-    def "test set active org.laeq.user"() {
-        setup:
-        try {
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
-        } catch (Exception e) {
-            println e
-        }
-
-        when:
-        User user = new User(2, 'Darth', 'Vador', 'darth@iamyourfather.com')
-        repository.setActive(user)
-
-        then:
-        user.getIsActive() == true
-        repository.findById(1).getIsActive() == false
-    }
-
-    def "test delete an unknown org.laeq.user"() {
+    def "test delete an unknown "() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -162,13 +135,5 @@ class UserDAOTest extends AbstractDAOTest {
 
         then:
         thrown DAOException
-    }
-
-    def "test init org.laeq.user"(){
-        when:
-        repository.init()
-
-        then:
-        notThrown DAOException
     }
 }

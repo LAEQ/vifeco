@@ -1,5 +1,7 @@
 package org.laeq.db
 
+import ch.vorburger.mariadb4j.DB
+import ch.vorburger.mariadb4j.DBConfigurationBuilder
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -7,42 +9,35 @@ import java.sql.Connection
 import java.sql.Statement
 
 class AbstractDAOTest extends Specification {
-    @Shared def process
-    @Shared def DatabaseManager manager
+    @Shared def dbName = "vifecodb"
+    @Shared def db
+    @Shared DatabaseManager manager
 
     def setupSpec() {
-        def builder = createBuilder()
-        process = builder.start()
+        DBConfigurationBuilder config = DBConfigurationBuilder.newBuilder();
+        config.setPort(0)
+        db = DB.newEmbeddedDB(config.build())
+
+        db.start()
+        db.createDB(dbName)
+
+        DatabaseConfigInterface configBean = new DatabaseConfigBean(config.getURL(dbName), "root", "")
+        manager = new DatabaseManager(configBean)
     }
 
     def cleanupSpec(){
-        process.destroy()
+        db.stop()
     }
 
     def setup(){
         def sqlArray = ["sql/drop_tables.sql", "sql/create_tables.sql"] as String[]
 
-        manager = new DatabaseManager(new DatabaseConfigBean("jdbc:hsqldb:mem:.", "SA", ""))
-
         try{
             sqlArray.each {
-                Connection con = manager.getConnection()
-                Statement stmt = con.createStatement()
-                stmt.executeUpdate(this.class.classLoader.getResource(it).text)
+              manager.loadFixtures(getClass().classLoader.getResource(it))
             }
         } catch (Exception e){
             println e
         }
-    }
-
-    ProcessBuilder createBuilder(){
-        def javaHome = System.getProperty("java.home")
-        def javaBin = javaHome + File.separator + "bin" + File.separator + "java"
-        def hslqdbPath = this.class.getClassLoader().getResource("db/lib/hsqldb.jar")
-
-        def builder = new ProcessBuilder(javaBin, "-classpath",  hslqdbPath.toExternalForm(),  "org.hsqldb.server.Server", "--database.0",  "file:hsqldb/demodb",  "--dbname.0", " testdb")
-        builder.redirectErrorStream(true)
-
-        builder
     }
 }
