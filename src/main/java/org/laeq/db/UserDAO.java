@@ -14,6 +14,10 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         super(manager, sequenceName);
     }
 
+    public UserDAO(@Nonnull DatabaseManager manager) {
+        super(manager);
+    }
+
     @Override
     public void insert(User user) throws DAOException {
         int result = 0;
@@ -72,7 +76,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
                 return generateUser(result);
             }
 
-            throw new DAOException("UserDAO: no Useris active.");
+            throw new DAOException("UserDAO: no default user.");
         }
     }
 

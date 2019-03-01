@@ -7,18 +7,19 @@ import javax.annotation.Nonnull;
 import java.sql.*;
 
 public abstract class AbstractDAO {
-    private Logger logger;
+    private static Logger logger = LoggerFactory.getLogger(AbstractDAO.class.getName());
 
-    @Nonnull
-    private String sequenceName;
+    @Nonnull private String sequenceName;
 
-    @Nonnull
-    private final DatabaseManager manager;
+    @Nonnull private final DatabaseManager manager;
 
     public AbstractDAO(@Nonnull DatabaseManager manager, @Nonnull String sequenceName) {
         this.sequenceName = sequenceName;
         this.manager = manager;
-        logger = LoggerFactory.getLogger(this.getClass().getName());
+    }
+
+    public AbstractDAO(DatabaseManager manager) {
+        this.manager = manager;
     }
 
     /**

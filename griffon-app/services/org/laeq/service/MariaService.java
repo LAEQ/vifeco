@@ -6,8 +6,12 @@ import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
+import org.laeq.db.DAOException;
 import org.laeq.db.DatabaseConfigBean;
 import org.laeq.db.DatabaseManager;
+import org.laeq.db.UserDAO;
+import org.laeq.model.User;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -55,11 +59,31 @@ public class MariaService extends AbstractGriffonService {
         db.createDB(dbName);
 
         URL tableQuery = getClass().getClassLoader().getResource("sql/create_tables.sql");
+
         try {
             manager.loadFixtures(tableQuery);
         } catch (IOException | SQLException | URISyntaxException e) {
             getLog().error(e.getMessage());
         }
+
+        try{
+            UserDAO userDAO = new UserDAO(manager);
+            User defaultUser = userDAO.findDefault();
+
+        } catch (DAOException | SQLException e) {
+            try {
+                loadFixtures();
+            } catch (SQLException | IOException | URISyntaxException e1) {
+                getLog().error(String.format("MariaService cannot load the fixtures. %s", e.getMessage()));
+            }
+        }
+
+    }
+
+    private void loadFixtures() throws SQLException, IOException, URISyntaxException {
+        URL tableQuery = getClass().getClassLoader().getResource("sql/fixtures.sql");
+
+        manager.loadFixtures(tableQuery);
     }
 
     public void stop() throws ManagedProcessException {
