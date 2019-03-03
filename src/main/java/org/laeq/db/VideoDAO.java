@@ -10,16 +10,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
-    public static String sequence_name = "video_id";
-
     private CollectionDAO collectionDAO;
     private UserDAO userDAO;
 
-    public VideoDAO(@Nonnull DatabaseManager manager, String sequenceName) {
-        super(manager, sequenceName);
-
-        collectionDAO = new CollectionDAO(manager, CollectionDAO.sequence_name);
-        userDAO = new UserDAO(manager, UserDAO.sequence_name);
+    public VideoDAO(@Nonnull DatabaseManager manager, CollectionDAO collectionDAO, UserDAO userDAO) {
+        super(manager);
+        this.collectionDAO = collectionDAO;
+        this.userDAO = userDAO;
     }
 
     @Override

@@ -6,10 +6,10 @@ import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.CollectionDAO;
 import org.laeq.db.DAOException;
-import org.laeq.db.DatabaseService;
 import org.laeq.db.UserDAO;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
+import org.laeq.service.MariaService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class StatusController extends AbstractGriffonController {
     @MVCMember @Nonnull private StatusModel model;
     @MVCMember @Nonnull private StatusView view;
-    @Inject private DatabaseService dbService;
+    @Inject private MariaService dbService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -39,8 +39,7 @@ public class StatusController extends AbstractGriffonController {
         }
 
         try{
-            UserDAO userDAO = dbService.getUserDAO();
-            User user = userDAO.findDefault();
+            User user= dbService.getUserDAO().findDefault();
             if(user == null){
                 throw new DAOException("No active user");
             } else {
@@ -51,8 +50,7 @@ public class StatusController extends AbstractGriffonController {
         }
 
         try{
-            CollectionDAO collectionDAO = dbService.getCategoryCollectionDAO();
-            Collection collection = collectionDAO.findDefault();
+            Collection collection = dbService.getCollectionDAO().findDefault();
             if(collection == null){
                 throw new DAOException("No default collection");
             } else{
@@ -61,6 +59,5 @@ public class StatusController extends AbstractGriffonController {
         } catch (DAOException | SQLException e) {
             model.setCollectionStatus("No default collection found or must have at least one.");
         }
-
     }
 }

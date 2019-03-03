@@ -8,19 +8,21 @@ import org.laeq.db.CollectionDAO;
 import org.laeq.db.CategoryDAO;
 import org.laeq.db.DAOException;
 import org.laeq.model.Collection;
+import org.laeq.service.MariaService;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends CRUDController<Collection> {
-
+    @Inject private MariaService dbService;
     private CollectionDAO collectionDAO;
     private CategoryDAO categoryDAO;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        collectionDAO = dbService.getCategoryCollectionDAO();
+        collectionDAO = dbService.getCollectionDAO();
         categoryDAO = dbService.getCategoryDAO();
         model.getCollections().addAll(collectionDAO.findAll());
         model.addCategories(categoryDAO.findAll());

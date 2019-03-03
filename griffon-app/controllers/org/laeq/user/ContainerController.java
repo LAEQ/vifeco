@@ -7,9 +7,9 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DAOException;
-import org.laeq.db.DatabaseService;
 import org.laeq.db.UserDAO;
 import org.laeq.model.User;
+import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -20,7 +20,7 @@ import java.util.Map;
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull private ContainerModel model;
-    @Inject private DatabaseService dbService;
+    @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
 
     private UserDAO userDAO;

@@ -8,12 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UserDAO extends AbstractDAO implements DAOInterface<User> {
-    public static String sequence_name = "user_id";
-
-    public UserDAO(@Nonnull DatabaseManager manager, String sequenceName) {
-        super(manager, sequenceName);
-    }
-
     public UserDAO(@Nonnull DatabaseManager manager) {
         super(manager);
     }

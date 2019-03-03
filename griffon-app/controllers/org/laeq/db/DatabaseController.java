@@ -13,7 +13,7 @@ import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class DatabaseController extends AbstractGriffonController {
-    @Inject private DatabaseService service;
+    @Inject private MariaService service;
     @Inject private MariaService mariaService;
 
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {

@@ -5,13 +5,15 @@ import ch.vorburger.mariadb4j.DB;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.scene.media.Media;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
-import org.laeq.db.DAOException;
-import org.laeq.db.DatabaseConfigBean;
-import org.laeq.db.DatabaseManager;
-import org.laeq.db.UserDAO;
+import org.laeq.db.*;
+import org.laeq.model.Collection;
 import org.laeq.model.User;
+import org.laeq.model.Video;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -23,11 +25,10 @@ import java.sql.SQLException;
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
 public class MariaService extends AbstractGriffonService {
-
     private DB db;
     private DBConfigurationBuilder config;
     private String dbName = "vifecodb";
-    DatabaseManager manager;
+    private DatabaseManager manager;
 
     public MariaService() throws ManagedProcessException {
 
@@ -52,7 +53,6 @@ public class MariaService extends AbstractGriffonService {
         DatabaseConfigBean configBean = new DatabaseConfigBean(config.getURL(dbName), "root", "");
         manager = new DatabaseManager(configBean);
     }
-
 
     public void start() throws ManagedProcessException {
         db.start();
@@ -88,5 +88,47 @@ public class MariaService extends AbstractGriffonService {
 
     public void stop() throws ManagedProcessException {
         db.stop();
+    }
+
+    public UserDAO getUserDAO(){
+        return new UserDAO(manager);
+    }
+
+    public VideoDAO getVideoDAO(){
+        return new VideoDAO(manager, new CollectionDAO(manager), new UserDAO(manager));
+    }
+
+    public CategoryDAO getCategoryDAO(){
+        return new CategoryDAO(manager);
+    }
+
+    public CollectionDAO getCollectionDAO(){
+        return new CollectionDAO(manager);
+    }
+
+    public PointDAO getPointDAO(){
+        return new PointDAO(manager);
+    }
+
+    public Video createVideo(File file, Duration duration) throws IOException, SQLException, DAOException {
+        UserDAO userDAO = getUserDAO();
+        CollectionDAO collectionDAO = getCollectionDAO();
+
+        User defaultUser = userDAO.findDefault();
+        Collection defaultCollection = collectionDAO.findDefault();
+
+        Video video = new Video(file.getPath(), duration, defaultUser, defaultCollection);
+        getVideoDAO().insert(video);
+
+        return video;
+    }
+
+    public DatabaseManager getManager() {
+        return manager;
+    }
+
+    public void getTableStatus() throws SQLException, DAOException {
+        //@todo
+        User defaultUser = new UserDAO(manager).findDefault();
     }
 }

@@ -11,10 +11,8 @@ import java.util.ListIterator;
 import java.util.Set;
 
 public class CollectionDAO extends AbstractDAO implements DAOInterface<Collection> {
-    public static String sequence_name = "category_collection_id";
-
-    public CollectionDAO(@Nonnull DatabaseManager manager, String sequenceName) {
-        super(manager, sequenceName);
+    public CollectionDAO(@Nonnull DatabaseManager manager) {
+        super(manager);
     }
 
     @Override

@@ -5,10 +5,10 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.db.DatabaseService;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -22,7 +22,7 @@ public class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private Video video;
 
-    @Inject private DatabaseService dbService;
+    @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
 
 

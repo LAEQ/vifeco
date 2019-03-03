@@ -12,10 +12,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
-    public static String sequence_name = "point_id";
-
-    public PointDAO(@Nonnull DatabaseManager manager, @Nonnull String sequenceName) {
-        super(manager, sequenceName);
+    public PointDAO(@Nonnull DatabaseManager manager) {
+        super(manager);
     }
 
     @Override

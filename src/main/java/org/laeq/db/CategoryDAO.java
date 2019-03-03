@@ -9,10 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
-    public static String sequence_name = "category_id";
-
-    public CategoryDAO(@Nonnull DatabaseManager manager, String sequenceName) {
-        super(manager, sequenceName);
+    public CategoryDAO(@Nonnull DatabaseManager manager) {
+        super(manager);
     }
 
     @Override

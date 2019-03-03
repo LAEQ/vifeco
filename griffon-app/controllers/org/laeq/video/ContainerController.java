@@ -10,6 +10,7 @@ import org.laeq.db.*;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
+import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -25,7 +26,7 @@ public class ContainerController extends CRUDController<Video> {
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private ContainerView view;
 
-    @Inject private DatabaseService dbService;
+    @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
 
     private VideoDAO videoDAO;
@@ -36,18 +37,16 @@ public class ContainerController extends CRUDController<Video> {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        videoDAO = dbService.getVideDAO();
-        ccDAO = dbService.getCategoryCollectionDAO();
+        videoDAO = dbService.getVideoDAO();
+        ccDAO = dbService.getCollectionDAO();
         userDAO = dbService.getUserDAO();
         categoryDAO = dbService.getCategoryDAO();
         pointDAO = dbService.getPointDAO();
 
-        System.out.println(videoDAO.findAll().size());
         model.getVideoList().addAll(videoDAO.findAll());
         model.getUserSet().addAll(userDAO.findAll());
         model.getCollectionSet().addAll(ccDAO.findAll());
         model.addCategories(categoryDAO.findAll());
-
 
         view.initForm();
     }
