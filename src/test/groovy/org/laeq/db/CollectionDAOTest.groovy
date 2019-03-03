@@ -7,7 +7,7 @@ class CollectionDAOTest extends AbstractDAOTest {
     CollectionDAO repository
 
     def setup(){
-        repository = new CollectionDAO(manager, Collection.sequence_name)
+        repository = new CollectionDAO(manager)
     }
 
     def "test insertion"() {

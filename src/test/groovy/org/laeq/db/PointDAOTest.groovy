@@ -10,7 +10,7 @@ class PointDAOTest extends AbstractDAOTest {
     User user
 
     def setup() {
-        repository = new PointDAO(manager, "point_id")
+        repository = new PointDAO(manager)
         collection = new Collection(1, "mock", false)
         user = new User(1, "test", "test", "test")
     }

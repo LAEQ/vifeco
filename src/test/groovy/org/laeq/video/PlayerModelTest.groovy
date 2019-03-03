@@ -61,27 +61,24 @@ class PlayerModelTest extends Specification {
         model.setDuration(duration)
 
         when:
-        Collection<Point> result = model.displayPoints(Duration.millis(now))
-
-        println result
+        SortedSet<Point> result = model.displayPoints(Duration.millis(now))
 
         then:
         result.size() == expected
 
         where:
         total | duration | now      | expected
-        1000  | 10       | 0        | 0
-        1000  | 10       | 1000     | 1000
-        10000 | 1        | 3        | 3
-//        10000 | 2        | 700      | 2701
-//        10000 | 3        | 10000    | 3
-//        10000 | 3        | 10003    | 1
-//        10000 | 3.77     | 899      | 3
+        1000  | 10       | 0        | 1
+        1000  | 10       | 1000     | 1001
+        10000 | 1        | 3        | 4
+        10000 | 2        | 700      | 701
+        10000 | 3        | 10000    | 3000
+        10000 | 3        | 10003    | 2997
+        10000 | 3.77     | 899      | 900
     }
 
 
     Point generatePoint(int start){
-
         Category category = new Category("test", "M150 0 L75 200 L225 200 Z", "test", "A")
         Point point = new Point(getNextid(), 0, 0, Duration.millis(start), video, category)
 

@@ -100,7 +100,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
 
     //@todo write unit test
     public Set<Category> findByCollection(Collection collection) {
-        String query = "select * from category_collection_category as ccc join category as c on ccc.category_id = c.id where ccc.category_collection_id = ?;";
+        String query = "select * from CATEGORY_COLLECTION as CC join CATEGORY as C on CC.CATEGORY_ID = C.ID where CC.COLLECTION_ID = ?;";
 
         Set<Category> result = new HashSet<>();
 

@@ -7,9 +7,13 @@ import org.laeq.model.Video
 
 class VideoDAOTest extends AbstractDAOTest {
     VideoDAO repository
+    UserDAO userDAO
+    CollectionDAO collectionDAO
 
     def setup() {
-        repository = new VideoDAO(manager, VideoDAO.sequence_name)
+        userDAO = new UserDAO(manager)
+        collectionDAO = new CollectionDAO(manager)
+        repository = new VideoDAO(manager, collectionDAO, userDAO)
         def result = false
 
         try{

@@ -6,7 +6,7 @@ class UserDAOTest extends AbstractDAOTest {
     UserDAO repository;
 
     def setup(){
-        repository = new UserDAO(manager, "user_id")
+        repository = new UserDAO(manager)
     }
 
     def "test insertion"() {
