@@ -66,7 +66,7 @@ public class PlayerModel extends AbstractGriffonModel {
         video.addPoint(point);
     }
     public Optional<Category> getCategory(String shortcut) {
-        return video.getCategoryCollection().getCategorySet().stream().filter(category -> category.getShortcut().equals(shortcut)).findFirst();
+        return video.getCollection().getCategorySet().stream().filter(category -> category.getShortcut().equals(shortcut)).findFirst();
     }
     public User getUser() {
         return video.getUser();
@@ -78,7 +78,7 @@ public class PlayerModel extends AbstractGriffonModel {
         return isPlaying;
     }
     public Category debugCategory() {
-        return video.getCategoryCollection().getCategorySet().iterator().next();
+        return video.getCollection().getCategorySet().iterator().next();
     }
 
     public SortedSet<Point> displayPoints(Duration currentTime){

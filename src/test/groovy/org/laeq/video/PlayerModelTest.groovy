@@ -13,7 +13,7 @@ class PlayerModelTest extends Specification {
     void setup() {
         model = new PlayerModel()
         User user = new User(1, "test", "test", "test")
-        CategoryCollection cc = new CategoryCollection(1, "Default", false)
+        Collection cc = new Collection(1, "Default", false)
         video = new Video(1, "test", Duration.millis(100000), user, cc)
 
         model.setVideo(video)

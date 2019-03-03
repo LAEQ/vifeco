@@ -52,7 +52,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     Map<Category, IconAbstract> categoryGroupMap;
 
     private TableColumn<Video, User> userColumn;
-    private TableColumn<Video, CategoryCollection> collectionColumn;
+    private TableColumn<Video, Collection> collectionColumn;
 
     @Override
     public void initUI() {
@@ -127,8 +127,8 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         userColumn.setCellFactory(ComboBoxTableCell.forTableColumn(users));
         userColumn.setOnEditCommit(event -> controller.updateUser(event));
 
-        ObservableList<CategoryCollection> collections = FXCollections.observableArrayList(model.getCollectionSet());
-        collectionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getCategoryCollection()));
+        ObservableList<Collection> collections = FXCollections.observableArrayList(model.getCollectionSet());
+        collectionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getCollection()));
         collectionColumn.setMinWidth(140);
         collectionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
         collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));

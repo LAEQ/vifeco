@@ -1,41 +1,23 @@
 package org.laeq.db
 
 import org.laeq.model.Category
-import org.laeq.model.CategoryCollection
+import org.laeq.model.Collection
 
-class CategoryCollectionDAOTest extends AbstractDAOTest {
-    CategoryCollectionDAO repository;
+class CollectionDAOTest extends AbstractDAOTest {
+    CollectionDAO repository
 
     def setup(){
-        repository = new CategoryCollectionDAO(manager, CategoryCollection.sequence_name)
-    }
-
-    def "test get next id"() {
-        when:
-        repository.getNextValue()
-        repository.getNextValue()
-        int result = repository.getNextValue()
-
-        then:
-        result == 3
-    }
-
-    def "test init"(){
-        when:
-        repository.init();
-
-        then:
-        notThrown Exception
+        repository = new CollectionDAO(manager, Collection.sequence_name)
     }
 
     def "test insertion"() {
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
 
-        def entity = new CategoryCollection()
+        def entity = new Collection()
         entity.setName("Mock NAME")
         entity.setIsDefault(false)
         entity.addCategory(new Category(1, "Moving truck", "icon/icon1.png", "#FFFFFF","A"))
@@ -53,12 +35,12 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
 
     def "test update: modify name"() {
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
 
-        def entity = repository.findByID(1);
+        def entity = repository.findByID(1)
         entity.setName("Mock name")
 
         when:
@@ -70,7 +52,7 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
 
     def "test update: delete 2 categories"() {
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -80,20 +62,18 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
         entity.removeCategory(1)
         entity.removeCategory(3)
 
-        println entity.categorySet.size()
-
-
         when:
         repository.update(entity)
-        repository.findCollectionIdsById(1) == [2,4]
+        def result = repository.findCollectionIdsById(1)
 
         then:
+        result.toArray() == [2, 4]
         notThrown DAOException
     }
 
     def "test update: delete 2 categories add 2 new ones"() {
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -111,16 +91,17 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
 
         when:
         repository.update(entity)
-        repository.findCollectionIdsById(2) == [1, 4]
+        def result = repository.findCollectionIdsById(2)
 
         then:
+        result.toArray() == [1, 4]
         notThrown DAOException
     }
 
     def "test: get list of ids of category for a specific collection."(){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -134,7 +115,7 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
 
     def "test insertion with an invalid category"(){
         setup:
-        CategoryCollection entity = new CategoryCollection()
+        Collection entity = new Collection()
         entity.setName("mock")
         entity.addCategory(new Category(-1, "test", "test", "", "A"))
 
@@ -148,15 +129,15 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
     def "test findById"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
 
         when:
-        CategoryCollection result = repository.findByID(1)
+        Collection result = repository.findByID(1)
 
-        def expected = new CategoryCollection(1, "Default", false)
+        def expected = new Collection(1, "Default", false)
         expected.addCategory(new Category(1, "Moving truck", "icon/icon1.png",  "#FFFFFF","A"))
         expected.addCategory(new Category(2, "Moving car", "icon/icon2.png", "#FFFFFF","B"))
         expected.addCategory(new Category(3, "Moving bike", "icon/icon3.png",  "#FFFFFF","C"))
@@ -170,22 +151,23 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
     def "test findDefault"(){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
 
         when:
-        CategoryCollection result = repository.findDefault()
+        Collection result = repository.findDefault()
 
         then:
-        result == new CategoryCollection(1, "Default", true)
+        result == new Collection(1, "Default", true)
+        result.categorySet.size() == 4
     }
 
     def "test findAll but empty"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -198,15 +180,15 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
 
     }
 
-    def "test delete an existing category collection"() {
+    def "test delete default collection fails successfully. You cannot delete it!"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
 
-        CategoryCollection categoryCollection = new CategoryCollection(1, "mock", false)
+        Collection categoryCollection = new Collection(1, "mock", false)
 
         when:
         repository.delete(categoryCollection)
@@ -215,28 +197,20 @@ class CategoryCollectionDAOTest extends AbstractDAOTest {
         thrown DAOException
     }
 
-    def "test delete default category collection"() {
-        when:
-        repository.delete(new CategoryCollection(1, "mock", false))
-
-        then:
-        thrown DAOException
-    }
-
-    def "test delete an unknown category" (){
+    def "test delete a regular collection" (){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
 
-        CategoryCollection categoryCollection = new CategoryCollection(100, "mock", false)
+        Collection categoryCollection = new Collection(2, "mock", false)
 
         when:
         repository.delete(categoryCollection)
 
         then:
-        thrown DAOException
+        notThrown DAOException
     }
 }

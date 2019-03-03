@@ -8,7 +8,7 @@ class PointTest extends Specification {
     def "serialization "(){
         setup:
         User user = new User(1, "test", "test", "test")
-        CategoryCollection categoryCollection = new CategoryCollection()
+        Collection categoryCollection = new Collection()
         Video video = new Video(1, "test", Duration.millis(1000), user, categoryCollection)
         Category category = new Category(1, "test", "test", "test" ,"A")
         Point point = new Point(1, 10,10, Duration.millis(10000), video, category)

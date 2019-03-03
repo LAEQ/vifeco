@@ -1,7 +1,7 @@
 package org.laeq.db;
 
 import org.laeq.model.Category;
-import org.laeq.model.CategoryCollection;
+import org.laeq.model.Collection;
 
 import javax.annotation.Nonnull;
 import java.sql.*;
@@ -18,26 +18,24 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
     @Override
     public void insert(Category category) throws DAOException {
         int result = 0;
-        Integer nextId = getNextValue();
 
-        if(nextId == null){
-            throw new DAOException("Cannot generate the next org.laeq.user id from the database.");
-        }
-
-        String query = "INSERT INTO CATEGORY (ID, NAME, ICON, COLOR, SHORTCUT) VALUES (?, ?, ?, ?, ?);";
+        String query = "INSERT INTO CATEGORY (NAME, ICON, COLOR, SHORTCUT) VALUES (?, ?, ?, ?);";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
         {
-            statement.setInt(1, nextId);
-            statement.setString(2, category.getName());
-            statement.setString(3, category.getIcon());
-            statement.setString(4, category.getColor());
-            statement.setString(5, category.getShortcut());
+            statement.setString(1, category.getName());
+            statement.setString(2, category.getIcon());
+            statement.setString(3, category.getColor());
+            statement.setString(4, category.getShortcut());
 
             result = statement.executeUpdate();
 
-            category.setId(nextId);
+            ResultSet keys = statement.getGeneratedKeys();
+
+            if(keys.next()){
+                category.setId(keys.getInt(1));
+            }
         } catch (Exception e){
             getLogger().error(e.getMessage());
         }
@@ -103,7 +101,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
     }
 
     //@todo write unit test
-    public Set<Category> findByCollection(CategoryCollection categoryCollection) {
+    public Set<Category> findByCollection(Collection collection) {
         String query = "select * from category_collection_category as ccc join category as c on ccc.category_id = c.id where ccc.category_collection_id = ?;";
 
         Set<Category> result = new HashSet<>();
@@ -111,7 +109,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query)){
 
-            statement.setInt(1, categoryCollection.getId());
+            statement.setInt(1, collection.getId());
 
             ResultSet queryResult = statement.executeQuery();
             result = getResult(queryResult);

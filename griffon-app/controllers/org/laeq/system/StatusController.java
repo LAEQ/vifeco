@@ -4,11 +4,11 @@ import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.db.CategoryCollectionDAO;
+import org.laeq.db.CollectionDAO;
 import org.laeq.db.DAOException;
 import org.laeq.db.DatabaseService;
 import org.laeq.db.UserDAO;
-import org.laeq.model.CategoryCollection;
+import org.laeq.model.Collection;
 import org.laeq.model.User;
 
 import javax.annotation.Nonnull;
@@ -51,9 +51,9 @@ public class StatusController extends AbstractGriffonController {
         }
 
         try{
-            CategoryCollectionDAO categoryCollectionDAO = dbService.getCategoryCollectionDAO();
-            CategoryCollection categoryCollection = categoryCollectionDAO.findDefault();
-            if(categoryCollection == null){
+            CollectionDAO collectionDAO = dbService.getCategoryCollectionDAO();
+            Collection collection = collectionDAO.findDefault();
+            if(collection == null){
                 throw new DAOException("No default collection");
             } else{
                 model.setCollectionStatus(String.format("OK"));

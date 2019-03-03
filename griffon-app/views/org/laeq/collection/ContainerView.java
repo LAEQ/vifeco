@@ -16,7 +16,7 @@ import org.laeq.graphic.IconSVG;
 import org.laeq.graphic.icon.CategoryMatrice;
 import org.laeq.graphic.icon.IconType;
 import org.laeq.model.Category;
-import org.laeq.model.CategoryCollection;
+import org.laeq.model.Collection;
 import org.laeq.model.Icon;
 import org.laeq.template.MiddlePaneView;
 
@@ -34,7 +34,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @FXML private CheckBox defaultBox;
     @FXML private Group categoryContainer;
 
-    @FXML private TableView<CategoryCollection> collectionTable;
+    @FXML private TableView<Collection> collectionTable;
 
     @Override
     public void initUI() {
@@ -46,16 +46,16 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     }
 
     private void init(){
-        TableColumn<CategoryCollection, String> nameColumn = new TableColumn("Name");
+        TableColumn<Collection, String> nameColumn = new TableColumn("Name");
         TableColumn categoryListColumn = new TableColumn("Categories");
-        TableColumn<CategoryCollection, Void> actionColumn = new TableColumn<>("Actions");
+        TableColumn<Collection, Void> actionColumn = new TableColumn<>("Actions");
 
         collectionTable.getColumns().addAll(nameColumn, categoryListColumn, actionColumn);
 
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         actionColumn.setCellFactory(addActions());
 
-        categoryListColumn.setCellValueFactory(new PropertyValueFactory<CategoryCollection, Boolean>("prout"));
+        categoryListColumn.setCellValueFactory(new PropertyValueFactory<Collection, Boolean>("prout"));
 
         categoryListColumn.setCellFactory(iconAction());
 
@@ -86,9 +86,9 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         }
     }
 
-    private Callback<TableColumn<CategoryCollection, Void>, TableCell<CategoryCollection, Void>> addActions() {
+    private Callback<TableColumn<Collection, Void>, TableCell<Collection, Void>> addActions() {
         return param -> {
-            final  TableCell<CategoryCollection, Void> cell = new TableCell<CategoryCollection, Void>(){
+            final  TableCell<Collection, Void> cell = new TableCell<Collection, Void>(){
                 Button edit = new Button("");
                 Button delete = new Button("");
 
@@ -125,9 +125,9 @@ public class ContainerView extends AbstractJavaFXGriffonView {
             return cell;
         };
     }
-    private Callback<TableColumn<CategoryCollection, Boolean>, TableCell<CategoryCollection, Boolean>> iconAction() {
+    private Callback<TableColumn<Collection, Boolean>, TableCell<Collection, Boolean>> iconAction() {
         return  param -> {
-            TableCell<CategoryCollection, Boolean> cell = new TableCell<CategoryCollection, Boolean>() {
+            TableCell<Collection, Boolean> cell = new TableCell<Collection, Boolean>() {
 
                 @Override
                 protected void updateItem(Boolean item, boolean empty) {

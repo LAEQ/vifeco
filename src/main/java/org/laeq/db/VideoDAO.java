@@ -1,6 +1,6 @@
 package org.laeq.db;
 
-import org.laeq.model.CategoryCollection;
+import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 
@@ -12,13 +12,13 @@ import java.util.Set;
 public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
     public static String sequence_name = "video_id";
 
-    private CategoryCollectionDAO categoryCollectionDAO;
+    private CollectionDAO collectionDAO;
     private UserDAO userDAO;
 
     public VideoDAO(@Nonnull DatabaseManager manager, String sequenceName) {
         super(manager, sequenceName);
 
-        categoryCollectionDAO = new CategoryCollectionDAO(manager, CategoryCollectionDAO.sequence_name);
+        collectionDAO = new CollectionDAO(manager, CollectionDAO.sequence_name);
         userDAO = new UserDAO(manager, UserDAO.sequence_name);
     }
 
@@ -40,7 +40,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             statement.setString(2, video.getPath());
             statement.setDouble(3, video.getDuration());
             statement.setInt(4, video.getUser().getId());
-            statement.setInt(5, video.getCategoryCollection().getId());
+            statement.setInt(5, video.getCollection().getId());
 
             result = statement.executeUpdate();
 
@@ -105,9 +105,9 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
         User user = ResultHelper.generateUser(datas);
         video.setUser(user);
 
-        CategoryCollection categoryCollection = ResultHelper.generateCategoryCollection(datas);
+        Collection collection = ResultHelper.generateCategoryCollection(datas);
 
-        video.setCategoryCollection(categoryCollection);
+        video.setCollection(collection);
 
         return video;
     }
@@ -142,7 +142,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             PreparedStatement stmt = connection.prepareStatement(query);
 
             stmt.setInt(1, video.getUser().getId());
-            stmt.setInt(2, video.getCategoryCollection().getId());
+            stmt.setInt(2, video.getCollection().getId());
             stmt.setInt(3, video.getId());
 
             int result = stmt.executeUpdate();
@@ -171,7 +171,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
         }
     }
 
-    public void updateCollection(Video video, CategoryCollection collection) throws SQLException, DAOException {
+    public void updateCollection(Video video, Collection collection) throws SQLException, DAOException {
         try(Connection connection = getManager().getConnection())
         {
             String query = "UPDATE VIDEO SET CATEGORY_COLLECTION_ID=? WHERE ID = ?;";

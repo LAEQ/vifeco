@@ -6,7 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
-import org.laeq.model.CategoryCollection;
+import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 
@@ -17,7 +17,7 @@ import java.util.Set;
 public class ContainerModel extends AbstractGriffonModel {
     private ObservableList<Video> videoList = FXCollections.observableArrayList();
     private Set<User> userSet = new HashSet<>();
-    private Set<CategoryCollection> collectionSet = new HashSet<>();
+    private Set<Collection> collectionSet = new HashSet<>();
     private Video selectedVideo;
     private String errors = "";
 
@@ -35,7 +35,7 @@ public class ContainerModel extends AbstractGriffonModel {
         this.videoList = videoList;
     }
 
-    public Set<CategoryCollection> getCollectionSet() {
+    public Set<Collection> getCollectionSet() {
         return collectionSet;
     }
 
@@ -55,7 +55,7 @@ public class ContainerModel extends AbstractGriffonModel {
     public void update(Video video) {
         System.out.println(video);
         this.selectedVideo.setUser(video.getUser());
-        this.selectedVideo.setCategoryCollection(video.getCategoryCollection());
+        this.selectedVideo.setCollection(video.getCollection());
     }
 
     public void addCategories(Set<Category> categories) {

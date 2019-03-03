@@ -1,6 +1,6 @@
 package org.laeq.db;
 
-import org.laeq.model.CategoryCollection;
+import org.laeq.model.Collection;
 import org.laeq.model.User;
 
 import java.sql.ResultSet;
@@ -18,12 +18,12 @@ public class ResultHelper {
         return user;
     }
 
-    public static CategoryCollection generateCategoryCollection(ResultSet result) throws SQLException {
-        CategoryCollection categoryCollection = new CategoryCollection();
+    public static Collection generateCategoryCollection(ResultSet result) throws SQLException {
+        Collection collection = new Collection();
 
-        categoryCollection.setId(result.getInt("CC_ID"));
-        categoryCollection.setName(result.getString("CC_NAME"));
+        collection.setId(result.getInt("CC_ID"));
+        collection.setName(result.getString("CC_NAME"));
 
-        return categoryCollection;
+        return collection;
     }
 }

@@ -7,7 +7,7 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.scene.control.TableColumn;
 import org.laeq.CRUDController;
 import org.laeq.db.*;
-import org.laeq.model.CategoryCollection;
+import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.ui.DialogService;
@@ -30,7 +30,7 @@ public class ContainerController extends CRUDController<Video> {
 
     private VideoDAO videoDAO;
     private UserDAO userDAO;
-    private CategoryCollectionDAO ccDAO;
+    private CollectionDAO ccDAO;
     private CategoryDAO categoryDAO;
     private PointDAO pointDAO;
 
@@ -96,10 +96,10 @@ public class ContainerController extends CRUDController<Video> {
         }
     }
 
-    public void updateCollection(TableColumn.CellEditEvent<Video, CategoryCollection> event) {
+    public void updateCollection(TableColumn.CellEditEvent<Video, Collection> event) {
         try {
             videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
-            event.getRowValue().setCategoryCollection(event.getNewValue());
+            event.getRowValue().setCollection(event.getNewValue());
         } catch (SQLException | DAOException e) {
             alert("key.to_implement", e.getMessage());
         }
@@ -107,7 +107,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void showDetail() {
         model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
-        model.getSelectedVideo().getCategoryCollection().getCategorySet().addAll(categoryDAO.findByCollection(model.getSelectedVideo().getCategoryCollection()));
+        model.getSelectedVideo().getCollection().getCategorySet().addAll(categoryDAO.findByCollection(model.getSelectedVideo().getCollection()));
         view.showDetails();
     }
 }

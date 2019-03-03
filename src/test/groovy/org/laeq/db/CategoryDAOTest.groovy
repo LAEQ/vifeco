@@ -3,20 +3,10 @@ package org.laeq.db
 import org.laeq.model.Category
 
 class CategoryDAOTest extends AbstractDAOTest {
-    def repository;
+    def repository
 
     def setup(){
         repository = new CategoryDAO(manager, "category_id")
-    }
-
-    def "test get next id"() {
-        when:
-        repository.getNextValue()
-        repository.getNextValue()
-        int result = repository.getNextValue()
-
-        then:
-        result == 3
     }
 
     def "test insertion"() {
@@ -69,7 +59,7 @@ class CategoryDAOTest extends AbstractDAOTest {
     def "test delete an existing category"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -86,7 +76,7 @@ class CategoryDAOTest extends AbstractDAOTest {
     def "test delete an unknown category" (){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }

@@ -33,7 +33,7 @@ public class CategoryModel extends AbstractGriffonModel {
     public void generateProperties() {
         categoryPropertyList = new HashMap<>();
 
-        video.getCategoryCollection().getCategorySet().forEach(category -> {
+        video.getCollection().getCategorySet().forEach(category -> {
             long total = video.getPointSet().stream().filter(point -> {
                 return point.getCategory().equals(category);
             }).count();
@@ -52,7 +52,7 @@ public class CategoryModel extends AbstractGriffonModel {
     }
 
     public Set<Category> getCategorySet() {
-        return this.video.getCategoryCollection().getCategorySet();
+        return this.video.getCollection().getCategorySet();
     }
     public void setVideo(Video video) {
         this.video = video;

@@ -8,7 +8,7 @@ class VideoTest extends Specification {
     def "serialize"(){
         setup:
         User user = new User(1, "test", "test", "test")
-        CategoryCollection categoryCollection = new CategoryCollection(1, "collection 1", false)
+        Collection categoryCollection = new Collection(1, "collection 1", false)
         Category category1 = new Category(1, "category 1", "icon 1", "color 1", "A")
         Category category2 = new Category(2, "category 2", "icon 2", "color 2", "B")
         categoryCollection.addCategory(category1)
@@ -25,7 +25,7 @@ class VideoTest extends Specification {
         when:
         String result = new ObjectMapper().writeValueAsString(video)
         String expected = '{"path":"path/to/video.mp4","user":{"id":1,"firstName":"test","lastName":"test","email":"test","isActive":false},"duration":10000.0,' +
-                '"categoryCollection":{"id":1,"name":"collection 1","isDefault":false,' +
+                '"collection":{"id":1,"name":"collection 1","isDefault":false,' +
                 '"categorySet":[{"id":1,"name":"category 1","icon":"icon 1","color":"color 1","shortcut":"A"},' +
                 '{"id":2,"name":"category 2","icon":"icon 2","color":"color 2","shortcut":"B"}]},' +
                 '"pointSet":[{"x":10.0,"y":11.0,"categoryId":1,"startDouble":1000.0},' +

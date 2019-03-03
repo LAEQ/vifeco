@@ -1,13 +1,13 @@
 package org.laeq.db
 
 import javafx.util.Duration
-import org.laeq.model.CategoryCollection
+import org.laeq.model.Collection
 import org.laeq.model.User
 import org.laeq.model.Video
 
 class VideoDAOTest extends AbstractDAOTest {
     VideoDAO repository
-    CategoryCollection categoryCollection
+    Collection categoryCollection
 
     def setup() {
         repository = new VideoDAO(manager, VideoDAO.sequence_name)
@@ -48,14 +48,14 @@ class VideoDAOTest extends AbstractDAOTest {
     Video generateVideo(String path){
         return new Video(path, Duration.millis(3600000),
                 new User(1, "test", "test", "test"),
-                new CategoryCollection(1, "test", false)
+                new Collection(1, "test", false)
         )
     }
 
     Video generateVideo(int id, String path){
         return new Video(id, path, Duration.millis(3600000),
                 new User(1, "test", "test", "test"),
-                new CategoryCollection(1, "test", false)
+                new Collection(1, "test", false)
         )
     }
 
@@ -77,8 +77,8 @@ class VideoDAOTest extends AbstractDAOTest {
         video.user.id == 1
         video.user.firstName == "Luck"
         video.user.lastName == "Skywalker"
-        video.categoryCollection.id == 1
-        video.categoryCollection.name == "Default"
+        video.collection.id == 1
+        video.collection.name == "Default"
     }
 
     def "test findAll but empty"() {

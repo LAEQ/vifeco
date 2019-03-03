@@ -1,16 +1,16 @@
 package org.laeq.db
 
-import javafx.util.Duration
+
 import org.laeq.model.*
 
 class PointDAOTest extends AbstractDAOTest {
     PointDAO repository;
-    CategoryCollection categoryCollection
+    Collection categoryCollection
     User user
 
 //    def setup() {
 //        repository = new PointDAO(manager, "point_id")
-//        categoryCollection = new CategoryCollection(1, "mock", false)
+//        collection = new Collection(1, "mock", false)
 //        user = new User(1, "test", "test", "test")
 //    }
 //
@@ -24,7 +24,7 @@ class PointDAOTest extends AbstractDAOTest {
 //
 //        User user = new User(1, 'luck', 'skywalker', 'luke@maytheforcebewithyou.com')
 //        Category category = new Category(1,  'Moving truck', 'icons/icon1.png', '#00000000','A')
-//        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), user, categoryCollection)
+//        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), user, collection)
 //
 //
 //        Point point = new Point(12.0, 12.0, Duration.seconds(1200), video, category)
@@ -96,7 +96,7 @@ class PointDAOTest extends AbstractDAOTest {
 //        }
 //
 //        def user = new User(1, "mock", "mock", "mock@email.mock")
-//        def video = new Video(1, "/path/to/video.mp4", Duration.millis(60000), categoryCollection)
+//        def video = new Video(1, "/path/to/video.mp4", Duration.millis(60000), collection)
 //
 //        when:
 //        def result = repository.findByVideo(video, user)
@@ -117,7 +117,7 @@ class PointDAOTest extends AbstractDAOTest {
 //        }
 //
 //        def user = new User(2, "mock", "mock", "mock@email.mock")
-//        def video = new Video(1, "/path/to/video.mp4", Duration.millis(60000), categoryCollection)
+//        def video = new Video(1, "/path/to/video.mp4", Duration.millis(60000), collection)
 //
 //        when:
 //        def result = repository.findByVideo(video, user)
@@ -140,7 +140,7 @@ class PointDAOTest extends AbstractDAOTest {
 //
 //        User user = new User(1, 'luck', 'skywalker', 'luke@maytheforcebewithyou.com')
 //        Category category = new Category(1,  'Moving truck', 'icons/icon1.png', 'A')
-//        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), categoryCollection)
+//        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), collection)
 //
 //
 //        Point point = new Point(1, 12.0, 12.0, Duration.seconds(1200), video, user, category)
@@ -162,7 +162,7 @@ class PointDAOTest extends AbstractDAOTest {
 //
 //        User user = new User(1, 'luck', 'skywalker', 'luke@maytheforcebewithyou.com')
 //        Category category = new Category(1,  'Moving truck', 'icons/icon1.png', 'A')
-//        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), categoryCollection)
+//        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), collection)
 //
 //
 //        Point point = new Point(-1, 12.0, 12.0, Duration.seconds(1200), video, user, category)

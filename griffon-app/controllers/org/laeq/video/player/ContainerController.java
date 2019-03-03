@@ -66,9 +66,9 @@ public class ContainerController extends AbstractGriffonController {
     }
 
     private void getCategoryList(Video video){
-        Set<Category> categorySet = dbService.getCategoryDAO().findByCollection(video.getCategoryCollection());
+        Set<Category> categorySet = dbService.getCategoryDAO().findByCollection(video.getCollection());
 
-        video.getCategoryCollection().getCategorySet().addAll(categorySet);
+        video.getCollection().getCategorySet().addAll(categorySet);
     }
 
     private void getPoints(Video video){
