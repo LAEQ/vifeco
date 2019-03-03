@@ -21,28 +21,27 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
     @Override
     public void insert(Point point) throws DAOException {
         int result = 0;
-        Integer nextId = getNextValue();
 
-        if(nextId == null){
-            throw new DAOException("Cannot generate the next point id from the database.");
-        }
-
-        String query = "INSERT INTO point(ID, X, Y, VIDEO_ID, CATEGORY_ID, START) VALUES(?, ?, ?, ?, ?, ?);";
+        String query = "INSERT INTO POINT(X, Y, VIDEO_ID, CATEGORY_ID, START) VALUES(?, ?, ?, ?, ?);";
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
         {
-            statement.setInt(1, nextId);
-            statement.setDouble(2, point.getX());
-            statement.setDouble(3, point.getY());
-            statement.setInt(4, point.getVideo().getId());
-            statement.setInt(5, point.getCategory().getId());
-            statement.setDouble(6, point.getStart().toMillis());
+            statement.setDouble(1, point.getX());
+            statement.setDouble(2, point.getY());
+            statement.setInt(3, point.getVideo().getId());
+            statement.setInt(4, point.getCategory().getId());
+            statement.setDouble(5, point.getStart().toMillis());
 
             result = statement.executeUpdate();
 
-            point.setId(nextId);
+            ResultSet keys = statement.getGeneratedKeys();
+
+            if(keys.next()){
+                point.setId(keys.getInt(1));
+            }
+
         } catch (Exception e){
-            getLogger().error(String.format("id: %d. %s. %s", nextId, point, e.getMessage()));
+            getLogger().error(String.format("%s. %s", point, e.getMessage()));
         }
 
         if(result != 1)
