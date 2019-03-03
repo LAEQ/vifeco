@@ -7,30 +7,19 @@ import org.laeq.model.Video
 
 class VideoDAOTest extends AbstractDAOTest {
     VideoDAO repository
-    Collection categoryCollection
 
     def setup() {
         repository = new VideoDAO(manager, VideoDAO.sequence_name)
         def result = false
 
         try{
-            result = manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            result = manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
 
         if(! result)
             throw new Exception("VideoDAOTest: cannot load the fixtures")
-    }
-
-    def "test get next id"() {
-        when:
-        repository.getNextValue()
-        repository.getNextValue()
-        int result = repository.getNextValue()
-
-        then:
-        result == 7
     }
 
     def "test insertion"() {
@@ -59,7 +48,6 @@ class VideoDAOTest extends AbstractDAOTest {
         )
     }
 
-
     def "test findAll"(){
         setup:
         Video video1 = generateVideo("path/to/video/name.mp4")
@@ -81,17 +69,6 @@ class VideoDAOTest extends AbstractDAOTest {
         video.collection.name == "Default"
     }
 
-    def "test findAll but empty"() {
-        when:
-        def result = repository.findAll()
-
-        Video expected = generateVideo(1, "path/to/video/name.mp4")
-
-        then:
-        result.size() == 4
-
-    }
-
     def "test delete an existing video"() {
         Video video = generateVideo(1, "path/to/video.mp4")
 
@@ -99,11 +76,11 @@ class VideoDAOTest extends AbstractDAOTest {
         repository.delete(video)
 
         then:
+        repository.findAll().size() == 3
         notThrown DAOException
     }
 
     def "test delete an unknown video" (){
-
         def video = generateVideo(-1, "path/to/video.mp4")
 
         when:
@@ -111,6 +88,70 @@ class VideoDAOTest extends AbstractDAOTest {
 
         then:
         thrown DAOException
+    }
+
+    def "update video user and category"(){
+        Video video = generateVideo(1, "path/to/video.mp4")
+        def user = new User(2, "test", "test", "test")
+        def collection = new Collection(2, "test", false)
+        video.setUser(user)
+        video.setCollection(collection)
+
+        when:
+        repository.update(video)
+        def videoUpdated = repository.findAll().find { it.id == 1}
+
+        println videoUpdated
+
+        then:
+        noExceptionThrown()
+
+    }
+
+    def "update video"(){
+        Video video = generateVideo(1, "path/to/video.mp4")
+        def user = new User(2, "test", "test", "test")
+        def collection = new Collection(2, "test", false)
+        video.setUser(user)
+        video.setCollection(collection)
+
+        when:
+        repository.update(video)
+        def videoUpdated = repository.findAll().find { it.id == 1}
+
+
+        then:
+        videoUpdated.user.id == 2
+        videoUpdated.collection.id == 2
+        noExceptionThrown()
+
+    }
+
+    def "update video user"(){
+        Video video = generateVideo(1, "path/to/video.mp4")
+        def user = new User(2, "test", "test", "test")
+
+
+        when:
+        repository.updateUser(video, user)
+        def videoUpdated = repository.findAll().find { it.id == 1}
+
+        then:
+        videoUpdated.user.id == 2
+        noExceptionThrown()
+    }
+
+    def "update video collection"(){
+        Video video = generateVideo(1, "path/to/video.mp4")
+        def collection = new Collection(2, "test", false)
+
+        when:
+        repository.updateCollection(video, collection)
+        def videoUpdated = repository.findAll().find { it.id == 1}
+
+        then:
+        videoUpdated.collection.id == 2
+        noExceptionThrown()
     }
 }
 
