@@ -4,23 +4,25 @@ import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.laeq.CRUDController;
-import org.laeq.db.CategoryCollectionDAO;
+import org.laeq.db.CollectionDAO;
 import org.laeq.db.CategoryDAO;
 import org.laeq.db.DAOException;
-import org.laeq.model.CategoryCollection;
+import org.laeq.model.Collection;
+import org.laeq.service.MariaService;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
-public class ContainerController extends CRUDController<CategoryCollection> {
-
-    private CategoryCollectionDAO collectionDAO;
+public class ContainerController extends CRUDController<Collection> {
+    @Inject private MariaService dbService;
+    private CollectionDAO collectionDAO;
     private CategoryDAO categoryDAO;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        collectionDAO = dbService.getCategoryCollectionDAO();
+        collectionDAO = dbService.getCollectionDAO();
         categoryDAO = dbService.getCategoryDAO();
         model.getCollections().addAll(collectionDAO.findAll());
         model.addCategories(categoryDAO.findAll());
@@ -31,11 +33,11 @@ public class ContainerController extends CRUDController<CategoryCollection> {
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void save(){
         if(model.valid()){
-            CategoryCollection categoryCollection = model.generateCollection();
+            Collection collection = model.generateCollection();
 
             try {
-                collectionDAO.save(categoryCollection);
-                model.update(categoryCollection);
+                collectionDAO.save(collection);
+                model.update(collection);
             } catch (DAOException e) {
                 alert("key.to_implement", e.getMessage());
             }
@@ -49,16 +51,17 @@ public class ContainerController extends CRUDController<CategoryCollection> {
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void clear(){
         model.clearForm();
+        view.clear();
     }
 
-    public void delete(CategoryCollection categoryCollection) {
+    public void delete(Collection collection) {
         runInsideUISync(() -> {
             if(confirm("org.laeq.model.collection.delete.confirmation")){
                 try {
-                    collectionDAO.delete(categoryCollection);
-                    this.model.delete(categoryCollection);
+                    collectionDAO.delete(collection);
+                    this.model.delete(collection);
                 } catch (DAOException e) {
-                    alert("org.laeq.dao.error", String.format("Cannot delete %s", categoryCollection));
+                    alert("org.laeq.dao.error", String.format("Cannot delete %s", collection));
                 }
             }
         });

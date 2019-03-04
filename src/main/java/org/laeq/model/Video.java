@@ -1,20 +1,25 @@
 package org.laeq.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.util.Duration;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 
 @JsonIgnoreProperties({ "id", "name", "total", "createdAt", "updatedAt"})
-@JsonPropertyOrder({"path", "user", "duration", "categoryCollection", "pointSet"})
+@JsonPropertyOrder({"path", "user", "duration", "collection", "pointSet"})
 public class Video extends BaseEntity {
     private Integer id;
     private SimpleStringProperty path;
@@ -22,28 +27,28 @@ public class Video extends BaseEntity {
     private SimpleDoubleProperty duration;
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
     private Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
-    private CategoryCollection categoryCollection;
+    private Collection collection;
     private User user;
     private SimpleLongProperty total;
     private SortedSet<Point> pointSet = new ConcurrentSkipListSet<>();
 
-    public Video(Integer id, String path, Duration duration, User user, CategoryCollection categoryCollection) {
+    public Video(Integer id, String path, Duration duration, User user, Collection collection) {
         this.id = id;
         this.path = new SimpleStringProperty(this, "path", path);
         this.name = new SimpleStringProperty(this, "name", pathToName(path));
         this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
         this.total = new SimpleLongProperty(this, "total", 0);
         this.user = user;
-        this.categoryCollection = categoryCollection;
+        this.collection = collection;
     }
 
-    public Video(String path, Duration duration, User user, CategoryCollection categoryCollection) {
+    public Video(String path, Duration duration, User user, Collection collection) {
         this.path = new SimpleStringProperty(this, "test", path);
         this.name = new SimpleStringProperty(this, "name", pathToName(path));
         this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
         this.total = new SimpleLongProperty(this, "total", 0);
         this.user = user;
-        this.categoryCollection = categoryCollection;
+        this.collection = collection;
     }
 
     public Video() {
@@ -89,11 +94,11 @@ public class Video extends BaseEntity {
         this.createdAt = createdAt;
     }
 
-    public CategoryCollection getCategoryCollection() {
-        return categoryCollection;
+    public Collection getCollection() {
+        return collection;
     }
-    public void setCategoryCollection(CategoryCollection categoryCollection) {
-        this.categoryCollection = categoryCollection;
+    public void setCollection(Collection collection) {
+        this.collection = collection;
     }
 
     public long getTotal() {
@@ -106,13 +111,18 @@ public class Video extends BaseEntity {
         this.total.set(total);
     }
 
+    @JsonIgnore
+    public String getDurationFormatted(){
+        return DurationFormatUtils.formatDuration(duration.getValue().longValue(), "H:mm:ss", true);
+    }
+
     @Override
     public String toString() {
         return "Video{" +
                 "id=" + id +
                 ", path=" + path.getValue() +
                 ", name=" + name.getValue() +
-                ", categoryCollection=" + categoryCollection +
+                ", collection=" + collection +
                 ", user=" + user +
                 '}';
     }
@@ -159,5 +169,10 @@ public class Video extends BaseEntity {
 
     public long totalPoints() {
         return pointSet.size();
+    }
+
+    @JsonIgnore
+    public Map<Category, Long> getTotalByCategory() {
+        return pointSet.stream().collect(Collectors.groupingBy(Point::getCategory, Collectors.counting()));
     }
 }

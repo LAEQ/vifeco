@@ -6,10 +6,11 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.CRUDController;
 import org.laeq.db.DAOException;
-import org.laeq.db.DatabaseService;
 import org.laeq.db.UserDAO;
 import org.laeq.model.User;
+import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -18,9 +19,11 @@ import java.sql.SQLException;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
-public class ContainerController extends AbstractGriffonController {
+public class ContainerController extends CRUDController<User> {
     @MVCMember @Nonnull private ContainerModel model;
-    @Inject private DatabaseService dbService;
+    @MVCMember @Nonnull private ContainerView view;
+
+    @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
 
     private UserDAO userDAO;
@@ -42,7 +45,7 @@ public class ContainerController extends AbstractGriffonController {
                 updateUser(user);
             }
         } else {
-            alert(String.format("Some fields are invalid: \n%s", model.getErrors()));
+            alert("key.to_implement", String.format("Some fields are invalid: \n%s", model.getErrors()));
         }
     }
 
@@ -52,7 +55,10 @@ public class ContainerController extends AbstractGriffonController {
             model.addUser(user);
             model.clear();
         } catch (DAOException e) {
-            alert(String.format("Cannot save user: \n%s", user));
+            String message = String.format("Cannot save user: \n%s", user);
+            alert("key.to_implemetent", message);
+
+            getLog().error(message);
         }
     }
 
@@ -62,25 +68,30 @@ public class ContainerController extends AbstractGriffonController {
             model.update(user);
             model.clear();
         } catch (DAOException | SQLException e) {
-            alert(String.format("Cannot save user: \n%s", model.getUser()));
+            String message = String.format("Cannot save user: \n%s", model.getUser());
+            alert("key.to_implement", message);
+
+            getLog().error(message);
         }
     }
 
-    private void alert(String alertMsg){
-        dialogService.simpleAlert("key.to_implement", alertMsg);
-    }
-
     public void delete(User user) {
-        String message = String.format("Cannot save user: \n%s", user);
-        Boolean confirmation = dialogService.confirm(message);
+        Boolean confirmation = confirm("org.laeq.user.delete.confirmation");
 
         if(confirmation){
             try {
                 userDAO.delete(user);
                 model.delete(user);
             } catch (DAOException e) {
+                String message = getMessage("org.laeq.delete.default_user.error");
+                alert("key.to_implement", message);
+
                 getLog().error(String.format("UserDAO: failed to delete %s.", user));
             }
         }
+    }
+
+    public void clear(){
+        model.clear();
     }
 }

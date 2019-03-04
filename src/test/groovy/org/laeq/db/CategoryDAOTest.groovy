@@ -1,22 +1,13 @@
 package org.laeq.db
 
 import org.laeq.model.Category
+import org.laeq.model.Collection
 
 class CategoryDAOTest extends AbstractDAOTest {
-    def repository;
+    def repository
 
     def setup(){
-        repository = new CategoryDAO(manager, "category_id")
-    }
-
-    def "test get next id"() {
-        when:
-        repository.getNextValue()
-        repository.getNextValue()
-        int result = repository.getNextValue()
-
-        then:
-        result == 3
+        repository = new CategoryDAO(manager)
     }
 
     def "test insertion"() {
@@ -69,7 +60,7 @@ class CategoryDAOTest extends AbstractDAOTest {
     def "test delete an existing category"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -86,7 +77,7 @@ class CategoryDAOTest extends AbstractDAOTest {
     def "test delete an unknown category" (){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
         } catch (Exception e){
             println e
         }
@@ -97,5 +88,22 @@ class CategoryDAOTest extends AbstractDAOTest {
 
         then:
         thrown DAOException
+    }
+
+    def "test find by collection"(){
+        setup:
+        try{
+            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+        } catch (Exception e){
+            println e
+        }
+
+        Collection collection = new Collection(1, "default", true)
+        when:
+        Set<Category> result = repository.findByCollection(collection)
+
+        then:
+        result.size() == 4
+        result.collect{it.id}.sort() == [1, 2, 3, 4]
     }
 }

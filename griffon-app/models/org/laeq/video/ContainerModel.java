@@ -4,22 +4,31 @@ import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
-import org.laeq.model.CategoryCollection;
+import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
     private ObservableList<Video> videoList = FXCollections.observableArrayList();
+    private FilteredList<Video> filteredList = new FilteredList<>(videoList, p -> true);
+
     private Set<User> userSet = new HashSet<>();
-    private Set<CategoryCollection> collectionSet = new HashSet<>();
+    private Set<Collection> collectionSet = new HashSet<>();
     private Video selectedVideo;
     private String errors = "";
+
+    public FilteredList<Video> getFilteredList() {
+        return filteredList;
+    }
 
     private Set<Category> categorySet = new HashSet<>();
 
@@ -35,7 +44,7 @@ public class ContainerModel extends AbstractGriffonModel {
         this.videoList = videoList;
     }
 
-    public Set<CategoryCollection> getCollectionSet() {
+    public Set<Collection> getCollectionSet() {
         return collectionSet;
     }
 
@@ -55,7 +64,7 @@ public class ContainerModel extends AbstractGriffonModel {
     public void update(Video video) {
         System.out.println(video);
         this.selectedVideo.setUser(video.getUser());
-        this.selectedVideo.setCategoryCollection(video.getCategoryCollection());
+        this.selectedVideo.setCollection(video.getCollection());
     }
 
     public void addCategories(Set<Category> categories) {
@@ -64,5 +73,18 @@ public class ContainerModel extends AbstractGriffonModel {
 
     public Set<Category> getCategorySet() {
         return categorySet;
+    }
+
+    public Map<Category, Long> getTotalByCategory(){
+        if(this.selectedVideo != null){
+            return this.selectedVideo.getTotalByCategory();
+        } else {
+            return new HashMap<>();
+        }
+    }
+
+    public void deleteVideo() {
+        videoList.remove(this.selectedVideo);
+        this.selectedVideo = null;
     }
 }

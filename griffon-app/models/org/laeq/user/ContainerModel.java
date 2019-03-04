@@ -81,17 +81,17 @@ public class ContainerModel extends AbstractGriffonModel {
 
         if(getFirstName().length() == 0){
             result = false;
-            builder.append("firstName\n");
+            builder.append(" - firstName is empty\n");
         }
 
         if(getLastName().length() == 0){
             result = false;
-            builder.append("lastName\n");
+            builder.append(" - lastName is empty\n");
         }
 
         if(getEmail().length() == 0){
             result = false;
-            builder.append("email\n");
+            builder.append(" - email is empty\n");
         }
 
         errors = builder.toString();
@@ -108,13 +108,14 @@ public class ContainerModel extends AbstractGriffonModel {
         user.setId(getId());
         user.setFirstName(getFirstName());
         user.setLastName(getLastName());
-        user.setIsActive(false);
+        user.setIsDefault(false);
         user.setEmail(getEmail());
 
         return user;
     }
 
     public void clear() {
+        this.selectedUser = null;
         setFirstName("");
         setLastName("");
         setEmail("");
@@ -127,11 +128,18 @@ public class ContainerModel extends AbstractGriffonModel {
     }
 
     public void setSelectedUser(User selectedUser) {
-        this.selectedUser = selectedUser;
-        setId(selectedUser.getId());
-        setFirstName(selectedUser.getFirstName());
-        setLastName(selectedUser.getLastName());
-        setEmail(selectedUser.getEmail());
+        if(selectedUser != null){
+            this.selectedUser = selectedUser;
+            setId(selectedUser.getId());
+            setFirstName(selectedUser.getFirstName());
+            setLastName(selectedUser.getLastName());
+            setEmail(selectedUser.getEmail());
+        } else {
+            setId(0);
+            setFirstName("");
+            setLastName("");
+            setEmail("");
+        }
     }
 
     public User getUser() {

@@ -8,7 +8,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 @JsonIgnoreProperties({"proutProperty", "createdAt", "updatedAt"})
-public class CategoryCollection extends BaseEntity {
+public class Collection extends BaseEntity {
     public final static String sequence_name = "category_collection_id";
 
     private SimpleIntegerProperty id;
@@ -27,11 +26,11 @@ public class CategoryCollection extends BaseEntity {
 
     private SimpleBooleanProperty proutProperty;
 
-    public CategoryCollection() {
+    public Collection() {
         this(0, "", false);
     }
 
-    public CategoryCollection(int id, String name, boolean isDefault) {
+    public Collection(int id, String name, boolean isDefault) {
         this.id = new SimpleIntegerProperty(this, "id", id);
         this.name = new SimpleStringProperty(this, "name", name);
         this.isDefault =  new SimpleBooleanProperty(isDefault);
@@ -90,7 +89,7 @@ public class CategoryCollection extends BaseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CategoryCollection that = (CategoryCollection) o;
+        Collection that = (Collection) o;
         return id.getValue().equals(that.id.getValue()) &&
                 name.getValue().equals(that.name.getValue());
     }
@@ -121,7 +120,7 @@ public class CategoryCollection extends BaseEntity {
     }
 
     @JsonIgnore
-    public List<Category> getNewCategories(Collection<Integer> ids){
+    public List<Category> getNewCategories(java.util.Collection ids){
         return categorySet.stream().filter(category -> ! ids.contains(category.getId())).collect(Collectors.toList());
     }
 }

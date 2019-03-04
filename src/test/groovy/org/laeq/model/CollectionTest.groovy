@@ -3,12 +3,12 @@ package org.laeq.model
 import com.fasterxml.jackson.databind.ObjectMapper
 import spock.lang.Specification
 
-class CategoryCollectionTest extends Specification {
+class CollectionTest extends Specification {
 
-    CategoryCollection entity
+    Collection entity
 
     def setup(){
-        entity = new CategoryCollection(1, "mock", false)
+        entity = new Collection(1, "mock", false)
     }
 
     def "AddCategory"() {
@@ -88,7 +88,7 @@ class CategoryCollectionTest extends Specification {
         Category category2= new Category(2, "category 2", "icon 2", "color 2", "B")
         Category category3 = new Category(3, "category 3", "icon 3", "color 3", "C")
 
-        CategoryCollection categoryCollection = new CategoryCollection(1, "collection", false)
+        Collection categoryCollection = new Collection(1, "collection", false)
         categoryCollection.addCategory(category1)
         categoryCollection.addCategory(category2)
         categoryCollection.addCategory(category3)

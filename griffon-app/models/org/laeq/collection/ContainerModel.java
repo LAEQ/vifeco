@@ -9,7 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
-import org.laeq.model.CategoryCollection;
+import org.laeq.model.Collection;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
-    private ObservableList<CategoryCollection> collections = FXCollections.observableArrayList();
+    private ObservableList<Collection> collections = FXCollections.observableArrayList();
     private Map<Category, SimpleBooleanProperty> categorySBP = new HashMap<>();
     private SimpleBooleanProperty isDefault = new SimpleBooleanProperty(this, "isDefault", false);
     private SimpleStringProperty name = new SimpleStringProperty(this, "name", "");
-    private CategoryCollection selectedCollection;
+    private Collection selectedCollection;
 
     private String errors = "";
 
@@ -38,11 +38,11 @@ public class ContainerModel extends AbstractGriffonModel {
         return categorySBP.get(category);
     }
 
-    public ObservableList<CategoryCollection> getCollections() {
+    public ObservableList<Collection> getCollections() {
         return collections;
     }
 
-    public void addCollections(Set<CategoryCollection> collections) {
+    public void addCollections(Set<Collection> collections) {
         this.collections.addAll(collections);
     }
 
@@ -74,13 +74,13 @@ public class ContainerModel extends AbstractGriffonModel {
         return name;
     }
 
-    public void setSelectedCollection(CategoryCollection categoryCollection) {
+    public void setSelectedCollection(Collection collection) {
         clearForm();;
 
-        this.selectedCollection = categoryCollection;
-        setName(categoryCollection.getName());
-        setIsDefault(categoryCollection.isIsDefault());
-        categoryCollection.getCategorySet().forEach(category -> {
+        this.selectedCollection = collection;
+        setName(collection.getName());
+        setIsDefault(collection.isIsDefault());
+        collection.getCategorySet().forEach(category -> {
             categorySBP.get(category).setValue(true);
         });
     }
@@ -93,7 +93,7 @@ public class ContainerModel extends AbstractGriffonModel {
         errors = "";
     }
 
-    public CategoryCollection getSelectedCollection() {
+    public Collection getSelectedCollection() {
         return selectedCollection;
     }
 
@@ -127,27 +127,27 @@ public class ContainerModel extends AbstractGriffonModel {
         return errors;
     }
 
-    public CategoryCollection generateCollection() {
-        CategoryCollection categoryCollection = new CategoryCollection();
-        categoryCollection.setCategorySet(this.categorySBP.entrySet().stream().filter(x -> x.getValue().getValue() == true).map(map -> map.getKey()).collect(Collectors.toSet()));
-        categoryCollection.setName(getName());
-        categoryCollection.setIsDefault(isIsDefault());
+    public Collection generateCollection() {
+        Collection collection = new Collection();
+        collection.setCategorySet(this.categorySBP.entrySet().stream().filter(x -> x.getValue().getValue() == true).map(map -> map.getKey()).collect(Collectors.toSet()));
+        collection.setName(getName());
+        collection.setIsDefault(isIsDefault());
 
         if(this.selectedCollection != null) {
-            categoryCollection.setId(this.selectedCollection.getId());
+            collection.setId(this.selectedCollection.getId());
         }
 
-        return categoryCollection;
+        return collection;
     }
 
-    public void update(CategoryCollection categoryCollection) {
+    public void update(Collection collection) {
         if(this.selectedCollection != null){
-            this.selectedCollection.setName(categoryCollection.getName());
-            this.selectedCollection.setIsDefault(categoryCollection.isIsDefault());
+            this.selectedCollection.setName(collection.getName());
+            this.selectedCollection.setIsDefault(collection.isIsDefault());
             this.selectedCollection.getCategorySet().clear();
-            this.selectedCollection.getCategorySet().addAll(categoryCollection.getCategorySet());
+            this.selectedCollection.getCategorySet().addAll(collection.getCategorySet());
         } else {
-            collections.add(categoryCollection);
+            collections.add(collection);
         }
 
 
@@ -160,7 +160,7 @@ public class ContainerModel extends AbstractGriffonModel {
         clearForm();
     }
 
-    public void delete(CategoryCollection categoryCollection) {
-        collections.remove(categoryCollection);
+    public void delete(Collection collection) {
+        collections.remove(collection);
     }
 }

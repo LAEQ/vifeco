@@ -1,20 +1,22 @@
 package org.laeq.video.player;
 
 import griffon.core.artifact.GriffonModel;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.*;
 import org.laeq.video.ControlsDefault;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class PlayerModel extends AbstractGriffonModel {
-    private Boolean isPlaying = false;
-    private Video video;
+    @MVCMember @Nonnull private Video video;
 
+    private Boolean isPlaying = false;
     private Double rate;
     private Double volume;
     private Double size;
@@ -66,7 +68,7 @@ public class PlayerModel extends AbstractGriffonModel {
         video.addPoint(point);
     }
     public Optional<Category> getCategory(String shortcut) {
-        return video.getCategoryCollection().getCategorySet().stream().filter(category -> category.getShortcut().equals(shortcut)).findFirst();
+        return video.getCollection().getCategorySet().stream().filter(category -> category.getShortcut().equals(shortcut)).findFirst();
     }
     public User getUser() {
         return video.getUser();
@@ -78,21 +80,13 @@ public class PlayerModel extends AbstractGriffonModel {
         return isPlaying;
     }
     public Category debugCategory() {
-        return video.getCategoryCollection().getCategorySet().iterator().next();
+        return video.getCollection().getCategorySet().iterator().next();
     }
 
     public SortedSet<Point> displayPoints(Duration currentTime){
         Duration startDuration = (currentTime.subtract(Duration.millis( duration * 1000)));
-
-        if(startDuration.toMillis() < 0){
-            startDuration = Duration.millis(0);
-        }
-
-        System.out.println(this.duration);
-
-        Point start = new Point();
-        start.setStart(startDuration);
-        Point end = new Point();
+        Point start = new Point(Integer.MAX_VALUE, startDuration);
+        Point end = new Point(Integer.MAX_VALUE, currentTime);
         end.setStart(currentTime);
 
         return video.getPointSet().subSet(start, end);

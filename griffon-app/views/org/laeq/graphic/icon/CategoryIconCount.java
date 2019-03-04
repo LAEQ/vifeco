@@ -4,6 +4,7 @@ package org.laeq.graphic.icon;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import org.laeq.model.Category;
@@ -15,6 +16,7 @@ public class CategoryIconCount extends IconAbstract{
     private Label label;
     private Icon icon;
     private Category category;
+    private Rectangle rectangle;
 
     public CategoryIconCount(Category category, double width, double height) {
         this.category = category;
@@ -36,14 +38,14 @@ public class CategoryIconCount extends IconAbstract{
         icon.setLayoutY(height / 2 - icon.getLayoutBounds().getHeight() / 2 + 6);
         icon.setLayoutX(25);
 
-        label = new Label("3490");
+        label = new Label("-");
         label.setFont(Font.font("sans", 25));
         label.setLayoutX(85);
         label.setLayoutY(height / 2 - 15);
 
 
-        Rectangle rectangle = new Rectangle(0, 0, width, height);
-        rectangle.setStroke(Color.LIGHTGRAY);
+        rectangle = new Rectangle(0, 0, width, height);
+        rectangle.setStroke(Paint.valueOf(org.laeq.graphic.Color.light));
         rectangle.setStrokeWidth(0);
         rectangle.setFill(Color.WHITE);
 
@@ -69,5 +71,18 @@ public class CategoryIconCount extends IconAbstract{
     public void setPosition(Point2D point) {
         setLayoutX(point.getX());
         setLayoutY(point.getY());
+    }
+
+    @Override
+    public void colorize(String borderColor, String bgColor){
+        rectangle.setFill(Paint.valueOf(bgColor));
+        rectangle.setStroke(Paint.valueOf(borderColor));
+    }
+
+    @Override
+    public void reset() {
+        setText("-");
+        setOpacity(0.4);
+        colorize(org.laeq.graphic.Color.white, org.laeq.graphic.Color.white);
     }
 }

@@ -1,10 +1,9 @@
 package org.laeq.category
 
-import org.laeq.model.Category
-import org.laeq.model.CategoryCollection
+
 import spock.lang.Specification
 
-class CategoryCollectionModelTest extends Specification {
+class CollectionModelTest extends Specification {
     org.laeq.collection.ContainerModel model;
     void setup() {
         model = new org.laeq.collection.ContainerModel();
@@ -26,7 +25,7 @@ class CategoryCollectionModelTest extends Specification {
 //        model.categories(categories)
 //
 //        when:
-//        CategoryCollection result = model.generateEntity();
+//        Collection result = model.generateEntity();
 //
 //        then:
 //        result.name == "Mock collection"
@@ -65,7 +64,7 @@ class CategoryCollectionModelTest extends Specification {
 //        model.categories.addAll(categories)
 //
 //        when:
-//        CategoryCollection result = model.generateEntity()
+//        Collection result = model.generateEntity()
 //
 //        then:
 //        result.name == "Mock collection"

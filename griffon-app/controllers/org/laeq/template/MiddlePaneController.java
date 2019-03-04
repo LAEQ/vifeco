@@ -5,10 +5,13 @@ import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DAOException;
-import org.laeq.db.DatabaseService;
 import org.laeq.model.Video;
+import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -23,7 +26,7 @@ import java.util.Map;
 public class MiddlePaneController extends AbstractGriffonController {
     @MVCMember @Nonnull private MiddlePaneModel model;
     @MVCMember @Nonnull private MiddlePaneView view;
-    @Inject private DatabaseService dbService;
+    @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
 
     @Override
@@ -42,23 +45,35 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.section", objects -> createGroup("video_container"));
 
         list.put("video.add", objects -> {
-
             File videoFile = (File) objects[0];
-            getLog().info(videoFile.toString());
+                if (videoFile.exists()) {
+                    try {
+                        Media media = new Media(videoFile.getCanonicalFile().toURI().toString());
 
-            try {
-                Video video = dbService.createVideo(videoFile);
+                        MediaPlayer mediaPlayer = new MediaPlayer(media);
 
-                Map<String, Object> args = new HashMap<>();
-                args.put("video", video);
+                        mediaPlayer.setOnReady(() -> {
+                            Duration duration = mediaPlayer.getMedia().getDuration();
 
-                createGroup("player", args);
+                            try {
+                                Video video = dbService.createVideo(videoFile, duration);
+                                Map<String, Object> args = new HashMap<>();
+                                args.put("video", video);
 
-            } catch (SQLException | IOException | DAOException e){
-                String message = String.format("Error createing the video: %s", videoFile.toString());
-                dialogService.simpleAlert("key.to_implement", message);
-                getLog().error("Error creating and saving video in db: ", videoFile);
-            }
+                                createGroup("player", args);
+                            } catch (IOException | SQLException | DAOException e) {
+                                String message = String.format("Error createing the video: %s", videoFile.toString());
+                                dialogService.simpleAlert("key.to_implement", message);
+                                getLog().error("Error creating and saving video in db: ", videoFile);
+                            }
+                        });
+
+                    } catch (IOException e) {
+                        getLog().error(String.format("Create video with file %s", videoFile));
+                    }
+                } else {
+                    getLog().error(String.format("PlayerView: file not exits %s", videoFile));
+                }
         });
 
         list.put("video.edit", objects -> {
@@ -76,7 +91,6 @@ public class MiddlePaneController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void createGroup(String groupName, Map<String, Object> args){
         destroyMVCGroup("player");
-
 
         try{
             createMVCGroup(groupName, args);

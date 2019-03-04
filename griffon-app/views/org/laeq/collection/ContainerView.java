@@ -3,20 +3,20 @@ package org.laeq.collection;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.text.Text;
 import javafx.util.Callback;
-import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.laeq.TranslatedView;
 import org.laeq.graphic.Color;
 import org.laeq.graphic.IconSVG;
 import org.laeq.graphic.icon.CategoryMatrice;
 import org.laeq.graphic.icon.IconType;
 import org.laeq.model.Category;
-import org.laeq.model.CategoryCollection;
+import org.laeq.model.Collection;
 import org.laeq.model.Icon;
 import org.laeq.template.MiddlePaneView;
 
@@ -24,17 +24,19 @@ import javax.annotation.Nonnull;
 import java.util.Set;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ContainerView extends AbstractJavaFXGriffonView {
+public class ContainerView extends TranslatedView {
     @MVCMember @Nonnull private ContainerController controller;
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
-    @FXML private Text nameText;
+    @FXML private Label nameLabel;
     @FXML private TextField nameField;
-    @FXML private CheckBox defaultBox;
     @FXML private Group categoryContainer;
-
-    @FXML private TableView<CategoryCollection> collectionTable;
+    @FXML private Label titleLabel;
+    @FXML private Label categoryLabel;
+    @FXML private TableView<Collection> collectionTable;
+    @FXML private Button saveActionTarget;
+    @FXML private Button clearActionTarget;
 
     @Override
     public void initUI() {
@@ -43,28 +45,40 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         connectActions(node, controller);
         init();
         initForm();
+
+        textFields.put(nameLabel, "org.laeq.collection.name");
+        textFields.put(titleLabel, "org.laeq.collection.title_create");
+        textFields.put(categoryLabel, "org.laeq.collection.category_title");
+        textFields.put(saveActionTarget, "org.laeq.collection.save_btn");
+        textFields.put(clearActionTarget, "org.laeq.collection.clear_btn");
+
+        translate();
     }
 
     private void init(){
-        TableColumn<CategoryCollection, String> nameColumn = new TableColumn("Name");
-        TableColumn categoryListColumn = new TableColumn("Categories");
-        TableColumn<CategoryCollection, Void> actionColumn = new TableColumn<>("Actions");
+        TableColumn<Collection, String> nameColumn = new TableColumn("");
+        TableColumn categoryListColumn = new TableColumn("");
+        TableColumn<Collection, Icon>  isDefaultColumn = new TableColumn("");
+        TableColumn<Collection, Void> actionColumn = new TableColumn<>("");
 
-        collectionTable.getColumns().addAll(nameColumn, categoryListColumn, actionColumn);
+        columnsMap.put(nameColumn, "org.laeq.collection.column.name");
+        columnsMap.put(isDefaultColumn, "org.laeq.collection.column.is_default");
+        columnsMap.put(categoryListColumn, "org.laeq.collection.column.categories");
+        columnsMap.put(actionColumn, "org.laeq.collection.column.actions");
 
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        isDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().isIsDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
         actionColumn.setCellFactory(addActions());
-
-        categoryListColumn.setCellValueFactory(new PropertyValueFactory<CategoryCollection, Boolean>("prout"));
-
+        categoryListColumn.setCellValueFactory(new PropertyValueFactory<Collection, Boolean>("prout"));
         categoryListColumn.setCellFactory(iconAction());
 
+        collectionTable.getColumns().addAll(nameColumn, categoryListColumn, isDefaultColumn, actionColumn);
         collectionTable.setItems(this.model.getCollections());
     }
 
     public void initForm(){
         model.nameProperty().bindBidirectional(nameField.textProperty());
-        model.isDefaultProperty().bindBidirectional(defaultBox.selectedProperty());
+        model.isDefaultProperty().setValue(false);
 
         double x = 0;
         double y = 0;
@@ -86,9 +100,9 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         }
     }
 
-    private Callback<TableColumn<CategoryCollection, Void>, TableCell<CategoryCollection, Void>> addActions() {
+    private Callback<TableColumn<Collection, Void>, TableCell<Collection, Void>> addActions() {
         return param -> {
-            final  TableCell<CategoryCollection, Void> cell = new TableCell<CategoryCollection, Void>(){
+            final  TableCell<Collection, Void> cell = new TableCell<Collection, Void>(){
                 Button edit = new Button("");
                 Button delete = new Button("");
 
@@ -100,13 +114,14 @@ public class ContainerView extends AbstractJavaFXGriffonView {
                     btnGroup.getChildren().addAll(edit, delete);
                     Icon icon = new Icon(IconSVG.edit, org.laeq.graphic.Color.gray_dark);
                     edit.setGraphic(icon);
-                    edit.setOnAction(event -> {
+                    edit.setOnMouseClicked(event -> {
                         model.setSelectedCollection(collectionTable.getItems().get(getIndex()));
+                        translate(titleLabel, "org.laeq.collection.title_edit");
                     });
 
 
                     delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));
-                    delete.setOnAction(event -> {
+                    delete.setOnMouseClicked(event -> {
                         controller.delete(collectionTable.getItems().get(getIndex()));
                     });
                 }
@@ -125,9 +140,9 @@ public class ContainerView extends AbstractJavaFXGriffonView {
             return cell;
         };
     }
-    private Callback<TableColumn<CategoryCollection, Boolean>, TableCell<CategoryCollection, Boolean>> iconAction() {
+    private Callback<TableColumn<Collection, Boolean>, TableCell<Collection, Boolean>> iconAction() {
         return  param -> {
-            TableCell<CategoryCollection, Boolean> cell = new TableCell<CategoryCollection, Boolean>() {
+            TableCell<Collection, Boolean> cell = new TableCell<Collection, Boolean>() {
 
                 @Override
                 protected void updateItem(Boolean item, boolean empty) {
@@ -160,5 +175,9 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
             return cell;
         };
+    }
+
+    public void clear() {
+        translate(titleLabel, "org.laeq.collection.title_create");
     }
 }

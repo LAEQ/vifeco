@@ -13,7 +13,7 @@ class UserTest extends Specification {
 
         println result
 
-        String expected = '{"id":1,"firstName":"test","lastName":"test","email":"test@email","isActive":false}'
+        String expected = '{"id":1,"firstName":"test","lastName":"test","email":"test@email","isDefault":false}'
 
         then:
         result == expected

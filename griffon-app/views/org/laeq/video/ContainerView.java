@@ -5,15 +5,14 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
@@ -21,6 +20,8 @@ import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.laeq.TranslatedView;
+import org.laeq.graphic.Color;
 import org.laeq.graphic.icon.CategoryMatrice;
 import org.laeq.graphic.icon.IconAbstract;
 import org.laeq.graphic.icon.IconType;
@@ -33,26 +34,35 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ContainerView extends AbstractJavaFXGriffonView {
+public class ContainerView extends TranslatedView {
     @MVCMember @Nonnull private ContainerController controller;
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
     @FXML private TableView<Video> videoTable;
-    @FXML private Text titleTxt;
-    @FXML private Text durationTxt;
-    @FXML private Text totalTxt;
-    @FXML private Text lastPointTxt;
-    @FXML private Text titleValue;
-    @FXML private Text durationValue;
-    @FXML private Text totalValue;
-    @FXML private Text lastPointValue;
+
+    @FXML private Label titleTxt;
+    @FXML private Label videoTitleTxt;
+    @FXML private Label durationTxt;
+    @FXML private Label totalTxt;
+    @FXML private Label lastPointTxt;
+    @FXML private Label titleValue;
+    @FXML private Label durationValue;
+    @FXML private Label totalValue;
+    @FXML private Label lastPointValue;
     @FXML private Group categoryGroup;
+    @FXML private TextField filterNameField;
+    @FXML private Label filterLabel;
+
+    @FXML private Button exportActionTarget;
+    @FXML private Button clearActionTarget;
+    @FXML private Button deleteActionTarget;
+    @FXML private Button editActionTarget;
 
     Map<Category, IconAbstract> categoryGroupMap;
 
     private TableColumn<Video, User> userColumn;
-    private TableColumn<Video, CategoryCollection> collectionColumn;
+    private TableColumn<Video, Collection> collectionColumn;
 
     @Override
     public void initUI() {
@@ -60,6 +70,19 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
         connectActions(node, controller);
         init();
+
+        textFields.put(titleTxt, "org.laeq.video.title_text");
+        textFields.put(videoTitleTxt, "org.laeq.video.video_title_text");
+        textFields.put(durationTxt, "org.laeq.video.duration_text");
+        textFields.put(totalTxt, "org.laeq.video.total_text");
+        textFields.put(lastPointTxt, "org.laeq.video.last_point_text");
+        textFields.put(filterLabel, "org.laeq.video.filter_label");
+        textFields.put(exportActionTarget, "org.laeq.video.export_btn");
+        textFields.put(clearActionTarget, "org.laeq.video.clear_btn");
+        textFields.put(deleteActionTarget, "org.laeq.video.delete_btn");
+        textFields.put(editActionTarget, "org.laeq.video.edit_btn");
+
+        translate();
     }
 
     private void init(){
@@ -68,6 +91,8 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         categoryGroupMap = new HashMap<>();
         videoTable.setEditable(true);
 
+        TableColumn<Video, Void> selectBox = new TableColumn<>("#");
+        selectBox.setPrefWidth(10);
         TableColumn<Video, String> dateColumn = new TableColumn<>("Created At");
         TableColumn<Video, String> pathColumn = new TableColumn("Name");
         userColumn = new TableColumn<>("User");
@@ -75,48 +100,69 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         collectionColumn = new TableColumn("Collection");
         TableColumn<Video, Number> totalColumn = new TableColumn<>("Total");
         TableColumn<Video, Number> lastPointColumn = new TableColumn<>("Last point");
-        TableColumn<Video, Void> actionColumn = new TableColumn<>("Actions");
 
-        videoTable.getColumns().addAll(dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn, lastPointColumn, actionColumn);
+        columnsMap.put(dateColumn, "org.laeq.video.column.created_at");
+        columnsMap.put(pathColumn, "org.laeq.video.column.name");
+        columnsMap.put(userColumn, "org.laeq.video.column.user");
+        columnsMap.put(durationColumn, "org.laeq.video.column.duration");
+        columnsMap.put(collectionColumn, "org.laeq.video.column.collection");
+        columnsMap.put(totalColumn, "org.laeq.video.column.total");
+        columnsMap.put(lastPointColumn, "org.laeq.video.column.last_point");
+
+        videoTable.getColumns().addAll(selectBox, dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn, lastPointColumn);
 
         dateColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getCreatedFormatted()));
         pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty().asString());
+        durationColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getDurationFormatted()));
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
-//        lastPointColumn.setCellValueFactory(cellData -> cellData.getValue().lastProperty());
 
-        actionColumn.setCellFactory(addActions());
-
-        videoTable.setItems(this.model.getVideoList());
+        videoTable.setItems(this.model.getFilteredList());
         videoTable.getSelectionModel().selectedItemProperty().addListener(observable -> {
             model.setSelectedVideo(videoTable.getSelectionModel().getSelectedItem());
             controller.showDetail();
         });
+
+        filterNameField.textProperty().addListener(filtering());
+    }
+
+    private ChangeListener<String> filtering(){
+        return (observable, oldValue, newValue) -> {
+            model.getFilteredList().setPredicate(video -> {
+                if(newValue == null || newValue.isEmpty()){
+                    return true;
+                }
+
+                String filter = newValue.toLowerCase();
+
+                if(video.getName().toLowerCase().contains(filter)){
+                    return true;
+                }
+
+                return false;
+            });
+        };
     }
 
     public void showDetails() {
-        Map<Category, Long> pointsByCategory = model.getSelectedVideo().getPointSet().stream().collect(Collectors.groupingBy(Point::getCategory, Collectors.counting()));
-
-        model.getCategorySet().forEach(c -> {
-            System.out.println(c);
-            categoryGroupMap.get(c).setOpacity(0.4);
-        });
+        Map<Category, Long> pointsByCategory = this.model.getTotalByCategory();
 
         categoryGroupMap.forEach((category, categoryIcon) -> {
+            categoryIcon.reset();
+
+            if(this.model.getSelectedVideo().getCollection().getCategorySet().contains(category)){
+                categoryIcon.setText("0");
+                categoryIcon.setOpacity(1);
+            }
+
             if(pointsByCategory.containsKey(category)){
                 categoryIcon.setText(pointsByCategory.get(category).toString());
-                categoryIcon.setOpacity(1.0);
-            } else {
-                categoryIcon.setText("0");
-                categoryIcon.setOpacity(0.6);
             }
         });
 
         titleValue.setText(model.getSelectedVideo().getName());
-        durationValue.setText(Duration.millis(model.getSelectedVideo().getDuration()).toString());
+        durationValue.setText(model.getSelectedVideo().getDurationFormatted());
         totalValue.setText(String.format("%d", model.getSelectedVideo().totalPoints()));
         lastPointValue.setText("to do");
-
     }
 
     public void initForm(){
@@ -127,8 +173,8 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         userColumn.setCellFactory(ComboBoxTableCell.forTableColumn(users));
         userColumn.setOnEditCommit(event -> controller.updateUser(event));
 
-        ObservableList<CategoryCollection> collections = FXCollections.observableArrayList(model.getCollectionSet());
-        collectionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getCategoryCollection()));
+        ObservableList<Collection> collections = FXCollections.observableArrayList(model.getCollectionSet());
+        collectionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getCollection()));
         collectionColumn.setMinWidth(140);
         collectionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
         collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));
@@ -163,7 +209,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
                     export.setGraphic(new FontIcon(FontAwesome.ARROW_CIRCLE_UP));
                     export.setOnAction(event -> {
                         Video video = videoTable.getItems().get(getIndex());
-//                        controller.exportVideo(video);
+//                        controller.export(video);
                     });
 
                     delete.setGraphic(new FontIcon(FontAwesome.TRASH));
@@ -192,6 +238,11 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         durationValue.setText("");
         totalValue.setText("");
         lastPointValue.setText("");
-        this.model.setSelectedVideo(null);
+
+        model.getCategorySet().forEach(c -> {
+            categoryGroupMap.get(c).setOpacity(0.4);
+            categoryGroupMap.get(c).colorize(Color.white, Color.white);
+            categoryGroupMap.get(c).setText("-");
+        });
     }
 }

@@ -4,6 +4,8 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -15,6 +17,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.laeq.TranslatedView;
 import org.laeq.graphic.Color;
 import org.laeq.graphic.IconSVG;
 import org.laeq.model.Category;
@@ -22,9 +25,10 @@ import org.laeq.model.Icon;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
+import java.lang.annotation.Retention;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ContainerView extends AbstractJavaFXGriffonView {
+public class ContainerView extends TranslatedView {
     @MVCMember @Nonnull private ContainerController controller;
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
@@ -34,6 +38,15 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @FXML private TextField pathField;
     @FXML private ColorPicker colorPickerField;
     @FXML private Pane svgDisplayPane;
+
+    @FXML private Label titleLabel;
+    @FXML private Label nameLabel;
+    @FXML private Label shortCutLabel;
+    @FXML private Label pathLabel;
+    @FXML private Label colorLabel;
+    @FXML private Label previewLabel;
+    @FXML private Button clearActionTarget;
+    @FXML private Button saveActionTarget;
 
     @FXML private TableView<Category> categoryTable;
 
@@ -46,48 +59,64 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         connectActions(node, controller);
 
         svgPath = new SVGPath();
-//        svg.setCon
         svgPath.setSmooth(true);
         svgPath.setFill(Paint.valueOf("#000000"));
-        svgPath.setContent("M18 15.422v.983c0 .771-1.862 1.396-4 1.396s-4-.625-4-1.396v-.983c.968.695 2.801.902 4 .902 1.202 0 3.035-.208 4-.902zm-4-1.363c-1.202 0-3.035-.209-4-.902v.973c0 .771 1.862 1.396 4 1.396s4-.625 4-1.396v-.973c-.968.695-2.801.902-4 .902zm0-5.86c-2.138 0-4 .625-4 1.396 0 .77 1.862 1.395 4 1.395s4-.625 4-1.395c0-.771-1.862-1.396-4-1.396zm0 3.591c-1.202 0-3.035-.209-4-.902v.977c0 .77 1.862 1.395 4 1.395s4-.625 4-1.395v-.977c-.968.695-2.801.902-4 .902zm-.5-9.79c-5.288 0-9.649 3.914-10.377 9h-3.123l4 5.917 4-5.917h-2.847c.711-3.972 4.174-7 8.347-7 4.687 0 8.5 3.813 8.5 8.5s-3.813 8.5-8.5 8.5c-3.015 0-5.662-1.583-7.171-3.957l-1.2 1.775c1.916 2.536 4.948 4.182 8.371 4.182 5.797 0 10.5-4.702 10.5-10.5s-4.703-10.5-10.5-10.5z");
         svgPath.setScaleX(4);
         svgPath.setScaleY(4);
-        svgPath.setLayoutX(30);
-        svgPath.setLayoutY(30);
+        svgPath.setLayoutX(50);
+        svgPath.setLayoutY(50);
 
         svgDisplayPane.getChildren().add(svgPath);
 
         init();
         initForm();
+
+        textFields.put(titleLabel, "org.laeq.category.title_create");
+        textFields.put(nameLabel, "org.laeq.category.name");
+        textFields.put(shortCutLabel, "org.laeq.category.short_cut");
+        textFields.put(pathLabel, "org.laeq.category.path");
+        textFields.put(colorLabel, "org.laeq.category.color");
+        textFields.put(previewLabel, "org.laeq.category.preview");
+        textFields.put(clearActionTarget, "org.laeq.category.clear_btn");
+        textFields.put(saveActionTarget, "org.laeq.category.save_btn");
+
+        translate();
     }
 
     public void initForm(){
-        colorPickerField.valueProperty().addListener(new ChangeListener<javafx.scene.paint.Color>() {
-            @Override
-            public void changed(ObservableValue<? extends javafx.scene.paint.Color> observable, javafx.scene.paint.Color oldValue, javafx.scene.paint.Color newValue) {
-                String colorStr = "#" + Integer.toHexString(newValue.hashCode());
-                try{
-                    svgPath.setFill(Paint.valueOf(colorStr));
-                }catch (IllegalArgumentException e){
-                    svgPath.setFill(Paint.valueOf("#00000000"));
-                }
+        final String[] colorStr = new String[1];
 
-                model.setColor(colorStr);
+
+        colorPickerField.valueProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(newValue);
+            colorStr[0] = Integer.toHexString(newValue.hashCode());
+
+            while(colorStr[0].length() < 8){
+                colorStr[0] = "0" + colorStr[0];
             }
+
+            colorStr[0] = "#" + colorStr[0];
+            svgPath.setFill(Paint.valueOf(colorStr[0]));
+            model.setColor(colorStr[0]);
         });
     }
 
-    private void init(){
-        TableColumn<Category, Void> iconColumn = new TableColumn<>("Icon");
-        TableColumn<Category, String> nameColumn = new TableColumn("Name");
-        TableColumn<Category, String> shortCut = new TableColumn<>("Shortcut");
-        TableColumn<Category, Void> actionColumn = new TableColumn<>("Actions");
 
-        categoryTable.getColumns().addAll(iconColumn, nameColumn, shortCut, actionColumn);
+    private void init(){
+        TableColumn<Category, Void> iconColumn = new TableColumn<>("");
+        TableColumn<Category, String> nameColumn = new TableColumn("");
+        TableColumn<Category, String> shortCutColumn = new TableColumn<>("");
+        TableColumn<Category, Void> actionColumn = new TableColumn<>("");
+
+        categoryTable.getColumns().addAll(iconColumn, nameColumn, shortCutColumn, actionColumn);
+
+        columnsMap.put(iconColumn, "org.laeq.category.column.icon");
+        columnsMap.put(nameColumn, "org.laeq.category.column.name");
+        columnsMap.put(shortCutColumn, "org.laeq.category.column.short_cut");
+        columnsMap.put(actionColumn, "org.laeq.category.column.actions");
 
         nameColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getName()));
-        shortCut.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getShortcut()));
-
+        shortCutColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getShortcut()));
 
         model.nameProperty().bindBidirectional(nameField.textProperty());
         model.shortCutProperty().bindBidirectional(shortCutField.textProperty());
@@ -141,7 +170,6 @@ public class ContainerView extends AbstractJavaFXGriffonView {
             return cell;
         };
     }
-
     private Callback<TableColumn<Category, Void>, TableCell<Category, Void>> iconAction() {
         return  param -> {
             final TableCell<Category, Void> cell = new TableCell<Category, Void>() {
@@ -154,6 +182,10 @@ public class ContainerView extends AbstractJavaFXGriffonView {
                     try{
                         Category category = categoryTable.getItems().get(getIndex());
                         icon.setContent(category.getIcon());
+                        icon.setFill(Paint.valueOf(category.getColor()));
+
+                        colorPickerField.setValue(javafx.scene.paint.Color.valueOf(category.getColor()));
+
                     } catch (Exception e){
 
                     }

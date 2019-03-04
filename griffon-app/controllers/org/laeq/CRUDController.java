@@ -6,7 +6,7 @@ import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.collection.ContainerModel;
 import org.laeq.collection.ContainerView;
-import org.laeq.db.DatabaseService;
+import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -16,7 +16,7 @@ import java.util.Locale;
 public class CRUDController<T> extends AbstractGriffonController {
     @MVCMember @Nonnull protected ContainerModel model;
     @MVCMember @Nonnull protected ContainerView view;
-    @Inject protected DatabaseService dbService;
+    @Inject protected MariaService dbService;
     @Inject protected DialogService dialogService;
 
     protected void alert(String key, String alertMsg){

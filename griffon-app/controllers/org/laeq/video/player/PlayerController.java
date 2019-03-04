@@ -9,11 +9,11 @@ import griffon.transform.Threading;
 import javafx.scene.input.KeyEvent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DAOException;
-import org.laeq.db.DatabaseService;
 import org.laeq.db.PointDAO;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ public class PlayerController extends AbstractGriffonController {
     @MVCMember @Nonnull private PlayerView view;
     @MVCMember @Nonnull private Video video;
     @Inject private DialogService dialogService;
-    @Inject private DatabaseService dbService;
+    @Inject private MariaService dbService;
 
     private PointDAO pointDAO;
 

@@ -3,42 +3,35 @@ package org.laeq.db;
 import org.laeq.model.User;
 
 import javax.annotation.Nonnull;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public class UserDAO extends AbstractDAO implements DAOInterface<User> {
-    public static String sequence_name = "user_id";
-
-    public UserDAO(@Nonnull DatabaseManager manager, String sequenceName) {
-        super(manager, sequenceName);
+    public UserDAO(@Nonnull DatabaseManager manager) {
+        super(manager);
     }
 
     @Override
     public void insert(User user) throws DAOException {
         int result = 0;
-        Integer nextId = getNextValue();
 
-        if(nextId == null){
-            throw new DAOException("Cannot generate the next org.laeq.user id from the database.");
-        }
-
-        String query = "INSERT INTO USER (ID, FIRST_NAME, LAST_NAME, EMAIL) VALUES (?, ?, ?, ?);";
+        String query = "INSERT INTO USER (FIRST_NAME, LAST_NAME, EMAIL) VALUES (?, ?, ?);";
 
         try(Connection connection = getManager().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query))
+            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
         {
-            statement.setInt(1, nextId);
-            statement.setString(2, user.getFirstName());
-            statement.setString(3, user.getLastName());
-            statement.setString(4, user.getEmail());
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getEmail());
 
             result = statement.executeUpdate();
 
-            user.setId(nextId);
+            ResultSet keys = statement.getGeneratedKeys();
+
+            if(keys.next()){
+                user.setId(keys.getInt(1));
+            }
         } catch (Exception e){
             getLogger().error(e.getMessage());
         }
@@ -48,58 +41,8 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
 
     }
 
-    public void init() throws SQLException, DAOException {
-        int result = 0;
-        Integer nextId = getNextValue();
-
-        if(nextId > 1){
-            getLogger().info("UserDAO: init - default org.laeq.user exists");
-            return;
-        }
-
-        String query = "INSERT INTO USER (ID, FIRST_NAME, LAST_NAME, EMAIL, IS_ACTIVE) VALUES (?, 'default', 'default', 'default@email.com', true); ";
-
-        try(Connection connection = getManager().getConnection();
-        PreparedStatement statement = connection.prepareStatement(query)){
-            statement.setInt(1, nextId);
-
-            result = statement.executeUpdate();
-        }
-
-        if(result != 1) {
-            throw new DAOException("UserDAO: cannot create default org.laeq.user");
-        } else {
-            getLogger().info("UserDAO: default org.laeq.user created");
-        }
-    }
-
-    public void setActive(User user) throws SQLException, DAOException {
-        try(Connection connection = getManager().getConnection())
-        {
-            String query = "UPDATE USER SET IS_ACTIVE = false;";
-            PreparedStatement statement = connection.prepareStatement(query);
-
-            int result = statement.executeUpdate();
-
-            connection.commit();
-
-            String query2 = "UPDATE USER SET IS_ACTIVE = true WHERE ID = ?;";
-            PreparedStatement statement2 = connection.prepareStatement(query2);
-
-            statement2.setInt(1, user.getId());
-
-            int result2 = statement2.executeUpdate();
-
-            user.setIsActive(true);
-
-            if(result2 != 1){
-                throw new DAOException("UserDAO: no Useris active.");
-            }
-        }
-    }
-
-    public User findActive() throws DAOException, SQLException {
-        String query = "SELECT * from USER WHERE IS_ACTIVE = true;";
+    public User findDefault() throws DAOException, SQLException {
+        String query = "SELECT * from USER WHERE IS_DEFAULT = true;";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query))
@@ -127,7 +70,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
                 return generateUser(result);
             }
 
-            throw new DAOException("UserDAO: no Useris active.");
+            throw new DAOException("UserDAO: no default user.");
         }
     }
 
@@ -153,11 +96,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
     @Override
     public void delete(User user) throws DAOException {
         int result = 0;
-        String query = "DELETE FROM USER WHERE ID=?";
-
-        if(user.getId() == 1){
-            throw new DAOException("UserDAO: delete - you cannot delete the default org.laeq.user");
-        }
+        String query = "DELETE FROM USER WHERE ID=? AND IS_DEFAULT = false;";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query);)
@@ -171,7 +110,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         }
 
         if(result != 1)
-            throw new DAOException("Error deleting a org.laeq.user");
+            throw new DAOException(String.format("Error deleting user: %s", user));
     }
 
 
@@ -191,9 +130,9 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         user.setFirstName(datas.getString("FIRST_NAME"));
         user.setLastName(datas.getString("LAST_NAME"));
         user.setEmail(datas.getString("EMAIL"));
-        user.setIsActive(datas.getBoolean("IS_ACTIVE"));
-        user.setCreatedAt(datas.getTimestamp("CREATED_AT"));
-        user.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
+        user.setIsDefault(datas.getBoolean("IS_DEFAULT"));
+//        user.setCreatedAt(datas.getTimestamp("CREATED_AT"));
+//        user.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
 
         return user;
     }

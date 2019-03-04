@@ -69,6 +69,16 @@ jfx {
     vendor            = project.name
 }
 
+task customFatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    baseName = 'all-in-one-jar'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+
 dependencies {
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
     compile 'org.kordamp.bootstrapfx:bootstrapfx-core:0.2.4'
@@ -78,6 +88,12 @@ dependencies {
     compile 'org.hsqldb:hsqldb:2.4.1'
     compile 'de.jensd:fontawesomefx:8.9'
     compile 'com.abercap:mediainfo-java-api:1.0.0.RELEASE'
+    compile group: 'ch.vorburger.mariaDB4j', name: 'mariaDB4j-app', version: '2.2.3'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+
+
 
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
 
@@ -85,8 +101,10 @@ dependencies {
     testCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"
     testCompile "org.spockframework:spock-core:${spockVersion}"
     testCompile 'org.hsqldb:hsqldb:2.4.1'
+    testCompile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 
-    compile files('db/lib/hsqldb.jar')
+
+//    compile files('db/lib/hsqldb.jar')
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }
