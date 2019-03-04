@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Text?>
+
 
 <SplitPane dividerPositions="0.6004464285714286" layoutY="7.0" prefHeight="500.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.user.ContainerController">
     <items>
@@ -25,7 +25,7 @@
         </AnchorPane>
         <AnchorPane fx:id="videoDetailsPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
-            <Text fx:id="titleTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Details" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+            <Label fx:id="titleTxt" text="Details" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
             <Separator prefWidth="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="29.0" />
             <GridPane layoutX="10.0" layoutY="42.0" prefHeight="129.0" prefWidth="375.0">
               <columnConstraints>
@@ -39,15 +39,14 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Text fx:id="videoTitleTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" wrappingWidth="58.7294921875" />
-                  <Text fx:id="durationTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Duration" wrappingWidth="72.46240234375" GridPane.rowIndex="1" />
-                  <Text fx:id="titleValue" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="268.7294921875" GridPane.columnIndex="1" />
-                  <Text fx:id="durationValue" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="268.7294921875" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Text fx:id="totalTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Total" wrappingWidth="72.46240234375" GridPane.rowIndex="2" />
-                  <Text fx:id="totalValue" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="268.7294921875" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Text fx:id="lastPointTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Last point" wrappingWidth="72.46240234375" GridPane.rowIndex="3" />
-                  <Text fx:id="lastPointValue" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="268.7294921875" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
+                  <Label fx:id="videoTitleTxt" text="Title"  />
+                  <Label fx:id="durationTxt"  text="Duration" GridPane.rowIndex="1" />
+                  <Label fx:id="titleValue" GridPane.columnIndex="1" />
+                  <Label fx:id="durationValue"  GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="totalTxt"  GridPane.rowIndex="2" />
+                  <Label fx:id="totalValue"  GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label fx:id="lastPointTxt" GridPane.rowIndex="3" />
+                  <Label fx:id="lastPointValue" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                </children>
             </GridPane>
             <Button fx:id="exportActionTarget" layoutX="173.0" layoutY="462.0" minWidth="60.0" mnemonicParsing="false" styleClass="btn, btn-info" text="Export" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="190.0" />

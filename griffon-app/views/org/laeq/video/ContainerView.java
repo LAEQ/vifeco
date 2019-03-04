@@ -34,24 +34,30 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ContainerView extends AbstractJavaFXGriffonView {
+public class ContainerView extends TranslatedView {
     @MVCMember @Nonnull private ContainerController controller;
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
     @FXML private TableView<Video> videoTable;
 
-    @FXML private Text titleTxt;
-    @FXML private Text durationTxt;
-    @FXML private Text totalTxt;
-    @FXML private Text lastPointTxt;
-    @FXML private Text titleValue;
-    @FXML private Text durationValue;
-    @FXML private Text totalValue;
-    @FXML private Text lastPointValue;
+    @FXML private Label titleTxt;
+    @FXML private Label videoTitleTxt;
+    @FXML private Label durationTxt;
+    @FXML private Label totalTxt;
+    @FXML private Label lastPointTxt;
+    @FXML private Label titleValue;
+    @FXML private Label durationValue;
+    @FXML private Label totalValue;
+    @FXML private Label lastPointValue;
     @FXML private Group categoryGroup;
     @FXML private TextField filterNameField;
     @FXML private Label filterLabel;
+
+    @FXML private Button exportActionTarget;
+    @FXML private Button clearActionTarget;
+    @FXML private Button deleteActionTarget;
+    @FXML private Button editActionTarget;
 
     Map<Category, IconAbstract> categoryGroupMap;
 
@@ -64,6 +70,19 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
         connectActions(node, controller);
         init();
+
+        textFields.put(titleTxt, "org.laeq.video.title_text");
+        textFields.put(videoTitleTxt, "org.laeq.video.video_title_text");
+        textFields.put(durationTxt, "org.laeq.video.duration_text");
+        textFields.put(totalTxt, "org.laeq.video.total_text");
+        textFields.put(lastPointTxt, "org.laeq.video.last_point_text");
+        textFields.put(filterLabel, "org.laeq.video.filter_label");
+        textFields.put(exportActionTarget, "org.laeq.video.export_btn");
+        textFields.put(clearActionTarget, "org.laeq.video.clear_btn");
+        textFields.put(deleteActionTarget, "org.laeq.video.delete_btn");
+        textFields.put(editActionTarget, "org.laeq.video.edit_btn");
+
+        translate();
     }
 
     private void init(){
@@ -81,6 +100,14 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         collectionColumn = new TableColumn("Collection");
         TableColumn<Video, Number> totalColumn = new TableColumn<>("Total");
         TableColumn<Video, Number> lastPointColumn = new TableColumn<>("Last point");
+
+        columnsMap.put(dateColumn, "org.laeq.video.column.created_at");
+        columnsMap.put(pathColumn, "org.laeq.video.column.name");
+        columnsMap.put(userColumn, "org.laeq.video.column.user");
+        columnsMap.put(durationColumn, "org.laeq.video.column.duration");
+        columnsMap.put(collectionColumn, "org.laeq.video.column.collection");
+        columnsMap.put(totalColumn, "org.laeq.video.column.total");
+        columnsMap.put(lastPointColumn, "org.laeq.video.column.last_point");
 
         videoTable.getColumns().addAll(selectBox, dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn, lastPointColumn);
 
