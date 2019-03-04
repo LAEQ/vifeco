@@ -34,12 +34,19 @@ public class MiddlePaneView extends AbstractJavaFXGriffonView {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void addMVCGroup(String mvcGroupId, Node node){
-        this.setMvcGroupId(mvcGroupId);
-        this.middlePane.getChildren().add(node);
+//        destroyMVCGroup("user_container");
+//        destroyMVCGroup("category_container");
+//        destroyMVCGroup("collection_container");
+//        destroyMVCGroup("video_container");
+//        destroyMVCGroup("status");
 
+        this.setMvcGroupId(mvcGroupId);
+        this.middlePane.getChildren().clear();
+        this.middlePane.getChildren().add(node);
     }
 
     private void setMvcGroupId(String mvcGroupId) {
+        System.out.println("MVcgroupID" + this.mvcGroupId);
         if(this.mvcGroupId.length() > 0){
             destroyMVCGroup(this.mvcGroupId);
         }

@@ -101,7 +101,6 @@ public class ContainerView extends TranslatedView {
         });
     }
 
-
     private void init(){
         TableColumn<Category, Void> iconColumn = new TableColumn<>("");
         TableColumn<Category, String> nameColumn = new TableColumn("");

@@ -25,9 +25,9 @@ public class StatusView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-        connectActions(node, controller);
-
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
+
+        connectActions(node, controller);
 
         connectionStatus.textProperty().bind(model.connectionStatusProperty());
         tableStatus.textProperty().bind(model.tableStatusProperty());
@@ -37,6 +37,6 @@ public class StatusView extends AbstractJavaFXGriffonView {
 
     @Override
     public void mvcGroupDestroy(){
-
+        //@todo
     }
 }

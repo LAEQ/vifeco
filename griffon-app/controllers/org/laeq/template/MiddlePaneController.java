@@ -33,7 +33,7 @@ public class MiddlePaneController extends AbstractGriffonController {
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
 
-        createGroup("status");
+//        createGroup("status");
     }
 
     private Map<String, RunnableWithArgs> listenerList(){
@@ -43,6 +43,7 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("category.section", objects -> createGroup("category_container"));
         list.put("collection.section", objects -> createGroup("collection_container"));
         list.put("video.section", objects -> createGroup("video_container"));
+        list.put("database.section", objects -> createGroup("status"));
 
         list.put("video.add", objects -> {
             File videoFile = (File) objects[0];

@@ -53,7 +53,7 @@ public class MenuView extends AbstractJavaFXGriffonView {
         collectionBtn.setLayoutX(235);
         subMenuPane.getChildren().add(collectionBtn);
 
-        Button databaseBtn = generateButton(IconSVG.db, "database", "Open databse section", "database.section");
+        Button databaseBtn = generateButton(IconSVG.db, "database", "Open database section", "database.section");
         databaseBtn.setLayoutX(295);
         subMenuPane.getChildren().add(databaseBtn);
 
