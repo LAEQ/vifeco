@@ -51,6 +51,7 @@ public class ContainerController extends CRUDController<Collection> {
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void clear(){
         model.clearForm();
+        view.clear();
     }
 
     public void delete(Collection collection) {

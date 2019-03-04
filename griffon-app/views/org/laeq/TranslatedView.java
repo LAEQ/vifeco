@@ -10,7 +10,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class TranslatedView extends AbstractJavaFXGriffonView {
-
     protected Map<Labeled, String> textFields = new HashMap<>();
     protected Map<TableColumn, String> columnsMap = new HashMap<>();
     private MessageSource messageSource;
@@ -28,6 +27,10 @@ public class TranslatedView extends AbstractJavaFXGriffonView {
         columnsMap.entrySet().forEach( t -> {
             t.getKey().setText(getTranslation(t.getValue()));
         });
+    }
+
+    protected void translate(Labeled node, String key){
+        node.setText(getTranslation(key));
     }
 
     private String getTranslation(String key){
