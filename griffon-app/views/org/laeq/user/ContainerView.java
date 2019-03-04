@@ -3,6 +3,7 @@ package org.laeq.user;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -40,7 +41,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         TableColumn<User, String> firstNameColumn = new TableColumn("First name");
         TableColumn<User, String> lastNameColumn = new TableColumn<>("Last name");
         TableColumn<User, String> emailColumn = new TableColumn("Email");
-        TableColumn<User, Boolean> defaultColumn = new TableColumn("Is default");
+        TableColumn<User, Icon> defaultColumn = new TableColumn("Is default");
         TableColumn<User, Void> actionsColumn = new TableColumn<>("Actions");
 
         userTable.getColumns().addAll(firstNameColumn, lastNameColumn, emailColumn, defaultColumn, actionsColumn);
@@ -48,13 +49,15 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
         emailColumn.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
-        defaultColumn.setCellValueFactory(cellData -> cellData.getValue().isActiveProperty());
+        defaultColumn.setCellValueFactory(cellData -> {
+            return cellData.getValue().getIsDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null;
+        });
+
         actionsColumn.setCellFactory(addActions());
 
         model.firstNameProperty().bindBidirectional(firstNameField.textProperty());
         model.lastNameProperty().bindBidirectional(lastNameField.textProperty());
         model.emailProperty().bindBidirectional(emailField.textProperty());
-
 
         userTable.setItems(model.getUserList());
     }
@@ -67,16 +70,15 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
                Group btnGroup = new Group();
                {
+                   btnGroup.getChildren().addAll(edit, delete);
                    edit.setLayoutX(5);
                    delete.setLayoutX(55);
 
-                   btnGroup.getChildren().addAll(edit, delete);
                    Icon icon = new Icon(IconSVG.edit, Color.gray_dark);
                    edit.setGraphic(icon);
                    edit.setOnAction(event -> {
                        model.setSelectedUser(userTable.getItems().get(getIndex()));
                    });
-
 
                    delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));
                    delete.setOnAction(event -> {
@@ -97,5 +99,9 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
            return cell;
         };
+    }
+
+    public void reset() {
+
     }
 }

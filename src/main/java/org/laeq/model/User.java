@@ -7,7 +7,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -18,14 +17,14 @@ public class User extends BaseEntity {
     private SimpleStringProperty firstName;
     private SimpleStringProperty lastName;
     private SimpleStringProperty email;
-    private SimpleBooleanProperty isActive;
+    private SimpleBooleanProperty isDefault;
 
     public User() {
         this.id = new SimpleIntegerProperty(0);
         this.firstName = new SimpleStringProperty("");
         this.lastName = new SimpleStringProperty("");
         this.email = new SimpleStringProperty("");
-        this.isActive = new SimpleBooleanProperty(false);
+        this.isDefault = new SimpleBooleanProperty(false);
     }
     public User(Integer id, String fName, String lastName, String email) {
         this(fName, lastName, email);
@@ -36,7 +35,7 @@ public class User extends BaseEntity {
         this.firstName = new SimpleStringProperty(fName);
         this.lastName = new SimpleStringProperty(lName);
         this.email = new SimpleStringProperty(email);
-        this.isActive = new SimpleBooleanProperty(false);
+        this.isDefault = new SimpleBooleanProperty(false);
     }
 
     public String getFirstName() {
@@ -68,8 +67,8 @@ public class User extends BaseEntity {
         return email;
     }
 
-    public boolean isIsActive() {
-        return isActive.get();
+    public boolean getIsDefault() {
+        return isDefault.get();
     }
     public void setLastName(@Nonnull String fName) {
         lastName.set(fName);
@@ -87,15 +86,15 @@ public class User extends BaseEntity {
         return this.id.getValue();
     }
     public boolean getIsActive() {
-        return isActive.get();
+        return isDefault.get();
     }
-    public void setIsActive(boolean isActive) {
-        this.isActive.set(isActive);
+    public void setIsDefault(boolean isDefault) {
+        this.isDefault.set(isDefault);
     }
 
     @JsonIgnore
-    public SimpleBooleanProperty isActiveProperty() {
-        return isActive;
+    public SimpleBooleanProperty isDefaultProperty() {
+        return isDefault;
     }
 
     @Override

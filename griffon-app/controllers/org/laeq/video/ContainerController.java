@@ -11,6 +11,7 @@ import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
+import org.laeq.settings.Settings;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
@@ -55,16 +56,47 @@ public class ContainerController extends CRUDController<Video> {
         view.reset();
     }
 
+    public void delete(){
+
+        if(model.getSelectedVideo() == null){
+            alert("key.to_implement", "org.laeq.video.no_selection");
+            return;
+        }
+
+        runInsideUISync(() -> {
+            Boolean confirmation = confirm("org.laeq.video.delete.confirm");
+            if(confirmation){
+                try {
+                    videoDAO.delete(model.getSelectedVideo());
+                    model.deleteVideo();
+                    view.reset();
+                } catch (DAOException e) {
+                    getLog().error(e.getMessage());
+                }
+            }
+        });
+    }
+
     public void edit(){
+        if(model.getSelectedVideo() == null){
+            alert("key.to_implement", getMessage("org.laeq.video.no_selection"));
+            return;
+        }
+
         publishEvent("video.edit", this.model.getSelectedVideo());
     }
 
     public void export(){
+        if(model.getSelectedVideo() == null){
+            alert("key.to_implement", getMessage("org.laeq.video.no_selection"));
+            return;
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         Long now = System.currentTimeMillis();
 
         try {
-            String fileName = String.format("%s_%d", this.model.getSelectedVideo().getName(), now);
+            String fileName = String.format("%s-%d.json", this.model.getSelectedVideo().getName(), now);
 
             fileName = getPathExport(fileName);
 
@@ -75,10 +107,15 @@ public class ContainerController extends CRUDController<Video> {
     }
 
     private String getPathExport(String filename){
-        return String.format("%s/Downloads/%s", System.getProperty("user.home"), filename);
+        return String.format("%s/%s", Settings.exportPath, filename);
     }
 
     public void editVideo(Video video) {
+        if(model.getSelectedVideo() == null){
+            alert("key.to_implement", getMessage("org.laeq.video.no_selection"));
+            return;
+        }
+
         publishEvent("video.edit", video);
     }
 

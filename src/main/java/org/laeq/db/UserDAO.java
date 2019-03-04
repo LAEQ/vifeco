@@ -42,7 +42,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
     }
 
     public User findDefault() throws DAOException, SQLException {
-        String query = "SELECT * from USER ORDER BY ID LIMIT 1";
+        String query = "SELECT * from USER WHERE IS_DEFAULT = true;";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query))
@@ -96,11 +96,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
     @Override
     public void delete(User user) throws DAOException {
         int result = 0;
-        String query = "DELETE FROM USER WHERE ID=?";
-
-        if(user.getId() == 1){
-            throw new DAOException("UserDAO: delete - you cannot delete the default org.laeq.user");
-        }
+        String query = "DELETE FROM USER WHERE ID=? AND IS_DEFAULT = false;";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query);)
@@ -114,7 +110,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         }
 
         if(result != 1)
-            throw new DAOException("Error deleting a org.laeq.user");
+            throw new DAOException(String.format("Error deleting user: %s", user));
     }
 
 
@@ -134,6 +130,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         user.setFirstName(datas.getString("FIRST_NAME"));
         user.setLastName(datas.getString("LAST_NAME"));
         user.setEmail(datas.getString("EMAIL"));
+        user.setIsDefault(datas.getBoolean("IS_DEFAULT"));
 //        user.setCreatedAt(datas.getTimestamp("CREATED_AT"));
 //        user.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
 

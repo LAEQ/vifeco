@@ -24,7 +24,7 @@ class VideoTest extends Specification {
 
         when:
         String result = new ObjectMapper().writeValueAsString(video)
-        String expected = '{"path":"path/to/video.mp4","user":{"id":1,"firstName":"test","lastName":"test","email":"test","isActive":false},"duration":10000.0,' +
+        String expected = '{"path":"path/to/video.mp4","user":{"id":1,"firstName":"test","lastName":"test","email":"test","isDefault":false},"duration":10000.0,' +
                 '"collection":{"id":1,"name":"collection 1","isDefault":false,' +
                 '"categorySet":[{"id":1,"name":"category 1","icon":"icon 1","color":"color 1","shortcut":"A"},' +
                 '{"id":2,"name":"category 2","icon":"icon 2","color":"color 2","shortcut":"B"}]},' +

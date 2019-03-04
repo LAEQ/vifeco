@@ -41,7 +41,7 @@
             </GridPane>
             <Button fx:id="exportActionTarget" layoutX="173.0" layoutY="462.0" minWidth="60.0" mnemonicParsing="false" styleClass="btn, btn-info" text="Export" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="190.0" />
             <Button fx:id="clearActionTarget" layoutX="10.0" layoutY="462.0" minWidth="60.0" mnemonicParsing="false" styleClass="btn, btn-default" text="Clear" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
-            <Button fx:id="deleteActionTarget1" layoutX="84.0" layoutY="462.0" minWidth="60.0" mnemonicParsing="false" styleClass="btn, btn-danger" text="Delete" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" />
+            <Button fx:id="deleteActionTarget" layoutX="84.0" layoutY="462.0" minWidth="60.0" mnemonicParsing="false" styleClass="btn, btn-danger" text="Delete" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" />
             <Group fx:id="categoryGroup" layoutX="14.0" layoutY="193.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="190.0" />
             <Button fx:id="editActionTarget" layoutX="320.0" layoutY="462.0" minWidth="80.0" mnemonicParsing="false" text="Edit" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
                <styleClass>

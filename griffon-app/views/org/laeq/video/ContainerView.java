@@ -21,6 +21,7 @@ import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.laeq.graphic.Color;
 import org.laeq.graphic.icon.CategoryMatrice;
 import org.laeq.graphic.icon.IconAbstract;
 import org.laeq.graphic.icon.IconType;
@@ -68,6 +69,8 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         categoryGroupMap = new HashMap<>();
         videoTable.setEditable(true);
 
+        TableColumn<Video, Void> selectBox = new TableColumn<>("#");
+        selectBox.setPrefWidth(10);
         TableColumn<Video, String> dateColumn = new TableColumn<>("Created At");
         TableColumn<Video, String> pathColumn = new TableColumn("Name");
         userColumn = new TableColumn<>("User");
@@ -75,17 +78,13 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         collectionColumn = new TableColumn("Collection");
         TableColumn<Video, Number> totalColumn = new TableColumn<>("Total");
         TableColumn<Video, Number> lastPointColumn = new TableColumn<>("Last point");
-        TableColumn<Video, Void> actionColumn = new TableColumn<>("Actions");
 
-        videoTable.getColumns().addAll(dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn, lastPointColumn, actionColumn);
+        videoTable.getColumns().addAll(selectBox, dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn, lastPointColumn);
 
         dateColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getCreatedFormatted()));
         pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty().asString());
+        durationColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getDurationFormatted()));
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
-//        lastPointColumn.setCellValueFactory(cellData -> cellData.getValue().lastProperty());
-
-        actionColumn.setCellFactory(addActions());
 
         videoTable.setItems(this.model.getVideoList());
         videoTable.getSelectionModel().selectedItemProperty().addListener(observable -> {
@@ -95,28 +94,25 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     }
 
     public void showDetails() {
-        Map<Category, Long> pointsByCategory = model.getSelectedVideo().getPointSet().stream().collect(Collectors.groupingBy(Point::getCategory, Collectors.counting()));
-
-        model.getCategorySet().forEach(c -> {
-            System.out.println(c);
-            categoryGroupMap.get(c).setOpacity(0.4);
-        });
+        Map<Category, Long> pointsByCategory = this.model.getTotalByCategory();
 
         categoryGroupMap.forEach((category, categoryIcon) -> {
+            categoryIcon.reset();
+
+            if(this.model.getSelectedVideo().getCollection().getCategorySet().contains(category)){
+                categoryIcon.setText("0");
+                categoryIcon.setOpacity(1);
+            }
+
             if(pointsByCategory.containsKey(category)){
                 categoryIcon.setText(pointsByCategory.get(category).toString());
-                categoryIcon.setOpacity(1.0);
-            } else {
-                categoryIcon.setText("0");
-                categoryIcon.setOpacity(0.6);
             }
         });
 
         titleValue.setText(model.getSelectedVideo().getName());
-        durationValue.setText(Duration.millis(model.getSelectedVideo().getDuration()).toString());
+        durationValue.setText(model.getSelectedVideo().getDurationFormatted());
         totalValue.setText(String.format("%d", model.getSelectedVideo().totalPoints()));
         lastPointValue.setText("to do");
-
     }
 
     public void initForm(){
@@ -192,6 +188,11 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         durationValue.setText("");
         totalValue.setText("");
         lastPointValue.setText("");
-        this.model.setSelectedVideo(null);
+
+        model.getCategorySet().forEach(c -> {
+            categoryGroupMap.get(c).setOpacity(0.4);
+            categoryGroupMap.get(c).colorize(Color.white, Color.white);
+            categoryGroupMap.get(c).setText("-");
+        });
     }
 }

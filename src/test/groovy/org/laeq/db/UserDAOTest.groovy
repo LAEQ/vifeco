@@ -3,7 +3,7 @@ package org.laeq.db
 import org.laeq.model.User
 
 class UserDAOTest extends AbstractDAOTest {
-    UserDAO repository;
+    UserDAO repository
 
     def setup(){
         repository = new UserDAO(manager)
@@ -118,6 +118,7 @@ class UserDAOTest extends AbstractDAOTest {
 
         then:
         user == new User(1,"Luck", "Skywalker", "luke@maytheforcebewithyou.com")
+        user.isDefault == true
     }
 
     def "test delete an unknown "() {

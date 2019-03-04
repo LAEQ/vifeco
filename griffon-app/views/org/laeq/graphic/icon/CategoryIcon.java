@@ -15,6 +15,7 @@ public class CategoryIcon extends IconAbstract {
     private Label label;
     private Icon icon;
     private Category category;
+    private Rectangle rectangle;
 
     public CategoryIcon(Category category, double width, double height) {
         this.category = category;
@@ -25,7 +26,7 @@ public class CategoryIcon extends IconAbstract {
         label.setLayoutX(35);
         label.setLayoutY(8);
 
-        Rectangle rectangle = new Rectangle(0,0,width, height);
+        rectangle = new Rectangle(0,0,width, height);
         rectangle.setFill(Paint.valueOf(Color.light));
         rectangle.setOpacity(0.5);
 
@@ -51,5 +52,16 @@ public class CategoryIcon extends IconAbstract {
     public void setPosition(Point2D point) {
         setLayoutX(point.getX());
         setLayoutY(point.getY());
+    }
+
+    @Override
+    public void colorize(String borderColor, String bgColor){
+        rectangle.setFill(Paint.valueOf(bgColor));
+        rectangle.setStroke(Paint.valueOf(borderColor));
+    }
+
+    @Override
+    public void reset() {
+
     }
 }

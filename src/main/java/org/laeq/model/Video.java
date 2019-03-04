@@ -1,17 +1,22 @@
 package org.laeq.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.util.Duration;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 
 @JsonIgnoreProperties({ "id", "name", "total", "createdAt", "updatedAt"})
 @JsonPropertyOrder({"path", "user", "duration", "collection", "pointSet"})
@@ -106,6 +111,11 @@ public class Video extends BaseEntity {
         this.total.set(total);
     }
 
+    @JsonIgnore
+    public String getDurationFormatted(){
+        return DurationFormatUtils.formatDuration(duration.getValue().longValue(), "H:mm:ss", true);
+    }
+
     @Override
     public String toString() {
         return "Video{" +
@@ -159,5 +169,9 @@ public class Video extends BaseEntity {
 
     public long totalPoints() {
         return pointSet.size();
+    }
+
+    public Map<Category, Long> getTotalByCategory() {
+        return pointSet.stream().collect(Collectors.groupingBy(Point::getCategory, Collectors.counting()));
     }
 }

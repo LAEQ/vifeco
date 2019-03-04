@@ -10,7 +10,9 @@ import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @ArtifactProviderFor(GriffonModel.class)
@@ -64,5 +66,18 @@ public class ContainerModel extends AbstractGriffonModel {
 
     public Set<Category> getCategorySet() {
         return categorySet;
+    }
+
+    public Map<Category, Long> getTotalByCategory(){
+        if(this.selectedVideo != null){
+            return this.selectedVideo.getTotalByCategory();
+        } else {
+            return new HashMap<>();
+        }
+    }
+
+    public void deleteVideo() {
+        videoList.remove(this.selectedVideo);
+        this.selectedVideo = null;
     }
 }

@@ -1,4 +1,4 @@
-INSERT INTO USER(FIRST_NAME, LAST_NAME, EMAIL) VALUES ('Luck', 'Skywalker', 'luke@maytheforcebewithyou.com');
+INSERT INTO USER(FIRST_NAME, LAST_NAME, EMAIL, IS_DEFAULT) VALUES ('Luck', 'Skywalker', 'luke@maytheforcebewithyou.com', true);
 INSERT INTO USER(FIRST_NAME, LAST_NAME, EMAIL) VALUES ('Darth', 'Vador', 'darth@iamyourfather.com');
 INSERT INTO USER(FIRST_NAME, LAST_NAME, EMAIL) VALUES ('Leia', 'Organa', 'leia@areyoualittleshortforastormtrooper.com');
 INSERT INTO USER(FIRST_NAME, LAST_NAME, EMAIL) VALUES ('Han', 'Solo', 'han@bestpilotinthegalaxy.com');

@@ -12,6 +12,7 @@ import org.laeq.db.*;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
+import org.laeq.settings.Settings;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +32,9 @@ public class MariaService extends AbstractGriffonService {
     private DatabaseManager manager;
 
     public MariaService() throws ManagedProcessException {
+        String dbPathStr = Settings.dbPath;
 
-        String dbPathStr = System.getProperty("user.home") + "/vifecoDB";
+        System.out.println(dbPathStr);
 
         Path dbPath = Paths.get(dbPathStr);
 
