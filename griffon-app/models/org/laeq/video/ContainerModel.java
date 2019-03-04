@@ -4,6 +4,7 @@ import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
@@ -18,10 +19,16 @@ import java.util.Set;
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
     private ObservableList<Video> videoList = FXCollections.observableArrayList();
+    private FilteredList<Video> filteredList = new FilteredList<>(videoList, p -> true);
+
     private Set<User> userSet = new HashSet<>();
     private Set<Collection> collectionSet = new HashSet<>();
     private Video selectedVideo;
     private String errors = "";
+
+    public FilteredList<Video> getFilteredList() {
+        return filteredList;
+    }
 
     private Set<Category> categorySet = new HashSet<>();
 

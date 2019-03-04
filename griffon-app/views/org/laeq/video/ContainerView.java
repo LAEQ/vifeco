@@ -5,15 +5,14 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
@@ -21,6 +20,7 @@ import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.laeq.TranslatedView;
 import org.laeq.graphic.Color;
 import org.laeq.graphic.icon.CategoryMatrice;
 import org.laeq.graphic.icon.IconAbstract;
@@ -40,6 +40,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
     @FXML private TableView<Video> videoTable;
+
     @FXML private Text titleTxt;
     @FXML private Text durationTxt;
     @FXML private Text totalTxt;
@@ -49,6 +50,8 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @FXML private Text totalValue;
     @FXML private Text lastPointValue;
     @FXML private Group categoryGroup;
+    @FXML private TextField filterNameField;
+    @FXML private Label filterLabel;
 
     Map<Category, IconAbstract> categoryGroupMap;
 
@@ -86,11 +89,31 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         durationColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getDurationFormatted()));
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
 
-        videoTable.setItems(this.model.getVideoList());
+        videoTable.setItems(this.model.getFilteredList());
         videoTable.getSelectionModel().selectedItemProperty().addListener(observable -> {
             model.setSelectedVideo(videoTable.getSelectionModel().getSelectedItem());
             controller.showDetail();
         });
+
+        filterNameField.textProperty().addListener(filtering());
+    }
+
+    private ChangeListener<String> filtering(){
+        return (observable, oldValue, newValue) -> {
+            model.getFilteredList().setPredicate(video -> {
+                if(newValue == null || newValue.isEmpty()){
+                    return true;
+                }
+
+                String filter = newValue.toLowerCase();
+
+                if(video.getName().toLowerCase().contains(filter)){
+                    return true;
+                }
+
+                return false;
+            });
+        };
     }
 
     public void showDetails() {
