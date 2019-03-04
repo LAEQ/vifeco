@@ -91,6 +91,8 @@ dependencies {
     compile group: 'ch.vorburger.mariaDB4j', name: 'mariaDB4j-app', version: '2.2.3'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+
 
 
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"

@@ -171,6 +171,7 @@ public class Video extends BaseEntity {
         return pointSet.size();
     }
 
+    @JsonIgnore
     public Map<Category, Long> getTotalByCategory() {
         return pointSet.stream().collect(Collectors.groupingBy(Point::getCategory, Collectors.counting()));
     }

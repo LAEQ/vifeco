@@ -23,7 +23,6 @@ public class DatabaseController extends AbstractGriffonController {
                getLog().error("MariaService start failed: " + e.getMessage());
             }
         });
-
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.laeq.video;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
@@ -12,12 +11,9 @@ import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
 import org.laeq.settings.Settings;
-import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Map;
@@ -28,7 +24,7 @@ public class ContainerController extends CRUDController<Video> {
     @MVCMember @Nonnull private ContainerView view;
 
     @Inject private MariaService dbService;
-    @Inject private DialogService dialogService;
+    @Inject private ExportService exportService;
 
     private VideoDAO videoDAO;
     private UserDAO userDAO;
@@ -92,22 +88,7 @@ public class ContainerController extends CRUDController<Video> {
             return;
         }
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        Long now = System.currentTimeMillis();
-
-        try {
-            String fileName = String.format("%s-%d.json", this.model.getSelectedVideo().getName(), now);
-
-            fileName = getPathExport(fileName);
-
-            objectMapper.writeValue(new File(fileName), this.model.getSelectedVideo());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String getPathExport(String filename){
-        return String.format("%s/%s", Settings.exportPath, filename);
+        exportService.export(model.getSelectedVideo());
     }
 
     public void editVideo(Video video) {

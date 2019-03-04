@@ -159,7 +159,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
                     export.setGraphic(new FontIcon(FontAwesome.ARROW_CIRCLE_UP));
                     export.setOnAction(event -> {
                         Video video = videoTable.getItems().get(getIndex());
-//                        controller.exportVideo(video);
+//                        controller.export(video);
                     });
 
                     delete.setGraphic(new FontIcon(FontAwesome.TRASH));

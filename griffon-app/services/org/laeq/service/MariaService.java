@@ -33,9 +33,6 @@ public class MariaService extends AbstractGriffonService {
 
     public MariaService() throws ManagedProcessException {
         String dbPathStr = Settings.dbPath;
-
-        System.out.println(dbPathStr);
-
         Path dbPath = Paths.get(dbPathStr);
 
         if(! Files.exists(dbPath)){
