@@ -1,20 +1,22 @@
 package org.laeq.video.player;
 
 import griffon.core.artifact.GriffonModel;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.*;
 import org.laeq.video.ControlsDefault;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class PlayerModel extends AbstractGriffonModel {
-    private Boolean isPlaying = false;
-    private Video video;
+    @MVCMember @Nonnull private Video video;
 
+    private Boolean isPlaying = false;
     private Double rate;
     private Double volume;
     private Double size;

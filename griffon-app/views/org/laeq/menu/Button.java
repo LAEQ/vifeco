@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import org.laeq.graphic.Color;
 
@@ -16,6 +17,9 @@ public class Button extends Group {
     private String name;
     private String help;
     private String eventName;
+    private GraphicsContext gc;
+    private Canvas canvas;
+    private Rectangle rectangle;
 
     private final EventHandler<MouseEvent> mouseEnter;
     private final EventHandler<MouseEvent> mouseExited;
@@ -30,11 +34,8 @@ public class Button extends Group {
         this.help = help;
         this.eventName = eventName;
 
-        Canvas canvas = new Canvas(40, 40);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(javafx.scene.paint.Color.valueOf(Color.white));
-        gc.fillRect(0,0,40,40);
-        canvas.setOpacity(1);
+        rectangle = new Rectangle(0,0,40,40);
+        rectangle.setFill(Paint.valueOf(Color.white));
 
         SVGPath svg = new SVGPath();
         svg.setContent(svgPath);
@@ -46,15 +47,17 @@ public class Button extends Group {
         svg.setLayoutY(7);
 
         mouseEnter = event -> {
-            svg.setFill(Paint.valueOf(org.laeq.graphic.Color.cyan));
+            svg.setFill(Paint.valueOf(Color.white));
+            rectangle.setFill(Paint.valueOf(Color.cyan));
         };
 
         mouseExited = event -> {
-            svg.setFill(Paint.valueOf(org.laeq.graphic.Color.gray_dark));
+            svg.setFill(Paint.valueOf(Color.gray_dark));
+            rectangle.setFill(Paint.valueOf(Color.white));
         };
 
 
-        getChildren().addAll(canvas, svg);
+        getChildren().addAll(rectangle, svg);
         listen();
     }
 
