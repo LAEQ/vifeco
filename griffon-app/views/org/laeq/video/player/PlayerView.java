@@ -17,9 +17,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -144,7 +142,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     public void play() {
         if (model.isIsPlaying()) {
             Icon icon = (Icon) playActionTarget.getGraphic();
-            icon.setPath(IconSVG.btnPlay);
+            icon.setPath(IconSVG.btnPause);
             mediaPlayer.pause();
             model.setIsPlaying(false);
         } else {
@@ -172,15 +170,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     @FXML
     public void playerPaneMouseClicked(MouseEvent mouseEvent) {
-        runOutsideUI(() -> {
-            Point point = new Point();
-            point.setX(mouseEvent.getX() / iconPane.getBoundsInLocal().getWidth());
-            point.setY(mouseEvent.getY() / iconPane.getBoundsInLocal().getHeight());
-            point.setStart(mediaPlayer.getCurrentTime());
-
-
-            controller.addPoint(point, "A");
-        });
+        if(mouseEvent.getButton().equals(MouseButton.SECONDARY)){
+            forward(5);
+        } else if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+            backward(5);
+        }
     }
 
     public void setVolume() {
@@ -370,6 +364,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private void keyValues(KeyEvent event) {
         Optional<Category> category = model.getCategory(event.getCode().getName());
 
+        if(event.getCode().equals(KeyCode.SPACE)){
+            controller.play();
+        }
+
         if(mediaPlayer != null && category.isPresent() && mousePosition != null){
             Point relPoint = new Point();
             relPoint.setX(mousePosition.getX());
@@ -380,6 +378,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
             controller.savePoint(relPoint);
         }
+
+        System.out.println(event);
     }
     private void updateValues() {
         Platform.runLater(() -> {
@@ -417,6 +417,24 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         Duration nowMinus30 = mediaPlayer.getCurrentTime().subtract(Duration.millis(30000));
         if(nowMinus30.greaterThan(mediaPlayer.getStartTime())){
             mediaPlayer.seek(nowMinus30);
+        } else {
+            mediaPlayer.seek(mediaPlayer.getStartTime());
+        }
+    }
+
+    public void forward(int seconds) {
+        Duration nowPlus30 = mediaPlayer.getCurrentTime().add(Duration.millis(seconds * 1000));
+        if(nowPlus30.lessThan(duration)){
+            mediaPlayer.seek(nowPlus30);
+        } else {
+            mediaPlayer.seek(duration);
+        }
+    }
+
+    public void backward(int seconds) {
+        Duration nowMinus = mediaPlayer.getCurrentTime().subtract(Duration.millis(seconds * 1000));
+        if(nowMinus.greaterThan(mediaPlayer.getStartTime())){
+            mediaPlayer.seek(nowMinus);
         } else {
             mediaPlayer.seek(mediaPlayer.getStartTime());
         }
