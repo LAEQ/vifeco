@@ -7,6 +7,7 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.scene.input.KeyEvent;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DAOException;
 import org.laeq.db.PointDAO;
@@ -43,19 +44,20 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
+        dispatchEvent("player.play");
         view.play();
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void rewind() {
-        view.backward();
+        view.backward(30);
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void forward() {
-        view.forward();
+        view.forward(30);
     }
 
     @ControllerAction
@@ -113,7 +115,7 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     private void publishEvent(String eventName, Object obj){
-        getApplication().getEventRouter().publishEventAsync(eventName, Arrays.asList(obj));
+        getApplication().getEventRouter().publishEvent(eventName, Arrays.asList(obj));
     }
 
     private Map<String, RunnableWithArgs> listenerList(){
@@ -144,10 +146,36 @@ public class PlayerController extends AbstractGriffonController {
 
         list.put("controls.duration", objects -> {
             Double value = (Double) objects[0];
-            System.out.println("duration player: " + value);
             model.setDuration(value);
         });
 
+        list.put("point.hightlight", objects -> {
+            int id = (int) objects[0];
+            view.hightlight(id);
+        });
+
+        list.put("point.no_hightlight", objects -> {
+            view.hightlight();
+        });
+
+        list.put("point.deleted", objects -> runInsideUISync(() -> view.removePoint((Point) objects[0])));
+
         return list;
+    }
+
+    public void dispatchDuration(Duration duration) {
+        getApplication().getEventRouter().publishEventAsync("media.duration", Arrays.asList(duration));
+    }
+
+    private void dispatchEvent(String eventName){
+        getApplication().getEventRouter().publishEvent(eventName);
+    }
+
+    public void update(Duration currentTime) {
+        publishEvent("media.currentTime", currentTime);
+    }
+
+    public void updateRate(Double rate) {
+        publishEvent("controls.rate", rate);
     }
 }

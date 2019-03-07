@@ -86,17 +86,6 @@ public class ControlsModel extends AbstractGriffonModel {
         return ControlsDefault.opacity;
     }
 
-    public void increaseVolume(){
-//        if(getVolume() < VOLUME_MAX){
-//            setVolume(getVolume() + 1);
-//        }
-    }
-    public void decreaseVolume(){
-//        if(getVolume() > VOLUME_MIN){
-//            setVolume(getVolume() - 1);
-//        }
-    }
-
     public void increaseRate() {
         if(getRate() < 10){
             BigDecimal bg = new BigDecimal(rate.add(0.1).doubleValue());

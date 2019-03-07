@@ -8,10 +8,8 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
-
 import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.SortedSet;

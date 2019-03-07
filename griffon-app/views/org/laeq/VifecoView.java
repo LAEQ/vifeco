@@ -80,7 +80,6 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         middlePane = new SplitPane();
         middlePane.prefHeight(-1);
         middlePane.prefWidth(-1);
-        middlePane.setStyle("-fx-border-color: black");
         root.setVgrow(middlePane, Priority.ALWAYS);
 
 

@@ -46,18 +46,18 @@ import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {
+    private final ObservableSet<Point> pointsDisplayed = FXCollections.observableSet();
+
     private Point2D mousePosition;
     private Media media;
     private MediaPlayer mediaPlayer;
     private Duration duration;
-    private ObservableSet<Point> pointsDisplayed;
+
 
     @MVCMember @Nonnull private PlayerController controller;
     @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private ContainerView parentView;
     @MVCMember @Nonnull private Video video;
-
-    VifecoView rootView;
 
     @FXML private MediaView mediaView;
     @FXML private Pane iconPane;
@@ -69,15 +69,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private Text durationLabel;
     @Inject private VideoService videoService;
 
+    private VifecoView rootView;
     private ControlsModel controlsModel;
 
-    private int index = 1;
     private final Duration FADE_DURATION = Duration.millis(200);
 
     //Listeners
     private EventHandler<KeyEvent> keyListener;
     private EventHandler<? super MouseEvent> mouseMoveListener;
-
 
     private Map<String, Icon> playerIcons;
     private static final String playStr = "play";
@@ -96,23 +95,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         rootView = (VifecoView) getApplication().getMvcGroupManager().getViews().get("vifeco");
-        pointsDisplayed = FXCollections.observableSet();
-        pointsDisplayed.addListener(new SetChangeListener<Point>() {
-            @Override
-            public void onChanged(Change<? extends Point> change) {
-                if(change.wasAdded()){
-                    Icon icon = change.getElementAdded().getIcon(iconPane.getBoundsInLocal());
-                    icon.setOpacity(model.getOpacity());
-                    icon.setScaleX(model.getSize() / 100);
-                    icon.setScaleY(model.getSize() / 100);
-                    iconPane.getChildren().add(((Point)change.getElementAdded()).getIcon(iconPane.getBoundsInLocal()));
-                }
-
-                if(change.wasRemoved()){
-                    iconPane.getChildren().remove(change.getElementRemoved().getIcon());
-                }
-            }
-        });
+        pointsDisplayed.addListener(displayListener());
 
         Node node = loadFromFXML();
 
@@ -162,10 +145,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         if (event.getDeltaY() > 0) {
             controlsModel.increaseRate();
             mediaPlayer.setRate(controlsModel.getRate());
+
         } else if (event.getDeltaY() < 0) {
             controlsModel.decreateRate();
             mediaPlayer.setRate(controlsModel.getRate());
         }
+
+        controller.updateRate(controlsModel.getRate());
+
     }
 
     @FXML
@@ -175,10 +162,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         } else if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
             backward(5);
         }
-    }
-
-    public void setVolume() {
-        getLog().info("set volume");
     }
 
     public void addPoint(Point point) {
@@ -212,13 +195,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
             iconPane.setPrefWidth(newValue.getWidth());
             iconPane.setPrefHeight(newValue.getHeight());
-            repositionIcons();
         });
-    }
-
-    private void repositionIcons() {
-
-
     }
 
     private void setUp() {
@@ -238,6 +215,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             mediaPlayer.setOnReady(() -> {
                 duration = mediaPlayer.getMedia().getDuration();
                 updateValues();
+
+                controller.dispatchDuration(duration);
             });
 
         } else {
@@ -258,7 +237,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     private void init() {
-        //Create media
         setUp();
 
         currentTimeListener = currentTimeListener();
@@ -315,7 +293,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         mediaPlayer = null;
     }
 
-    //Mouse move: icon pane
     private EventHandler<? super MouseEvent> mouseEnterListener() {
         return event -> {
             iconPane.setOnMouseMoved(mouseMoveListener);
@@ -338,27 +315,42 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private InvalidationListener sliderListener(){
         return  observable -> {
             if(timeSlider.isPressed() && mediaPlayer != null){
-                mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100));
-            } else if (timeSlider.isValueChanging() && mediaPlayer != null) {
-                mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
+                displayPoints();
+                Duration t = duration.multiply(timeSlider.getValue() / 100);
+                controller.update(t);
+                mediaPlayer.seek(t);
             }
+//            else if (timeSlider.isValueChanging() && mediaPlayer != null) {
+//                mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
+//            }
         };
     }
 
     private ChangeListener<Number> iconWidthPropertyListener(){
-        return new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                pointsDisplayed.forEach(point -> {
-                    point.repositionX((Double) newValue);
-                });
-            }
-        };
+        return (observable, oldValue, newValue) -> pointsDisplayed.forEach(point -> {
+            point.repositionX((Double) newValue);
+        });
     }
     private ChangeListener<Number> iconHeightPropertyListener(){
         return (observable, oldValue, newValue) -> pointsDisplayed.forEach(point -> {
             point.repositionY((Double) newValue);
         });
+    }
+
+    private SetChangeListener<Point> displayListener(){
+        return change -> {
+            if(change.wasAdded()){
+                Icon icon = change.getElementAdded().getIcon(iconPane.getBoundsInLocal());
+                icon.setOpacity(model.getOpacity());
+                icon.setScaleX(model.getSize() / 100);
+                icon.setScaleY(model.getSize() / 100);
+                iconPane.getChildren().add(((Point)change.getElementAdded()).getIcon(iconPane.getBoundsInLocal()));
+            }
+
+            if(change.wasRemoved()){
+                iconPane.getChildren().remove(change.getElementRemoved().getIcon());
+            }
+        };
     }
 
     private void keyValues(KeyEvent event) {
@@ -378,14 +370,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
             controller.savePoint(relPoint);
         }
-
-        System.out.println(event);
     }
     private void updateValues() {
         Platform.runLater(() -> {
             displayPoints();
 
-            timeSlider.setDisable(duration.isUnknown());
+//            timeSlider.setDisable(duration.isUnknown());
 
             if (!timeSlider.isDisabled() && duration.greaterThanOrEqualTo(Duration.ZERO) && !timeSlider.isValueChanging()) {
                 timeSlider.setValue(mediaPlayer.getCurrentTime().divide(duration).toMillis() * 100.0);
@@ -405,41 +395,27 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             pointsDisplayed.clear();
         });
     }
-    public void forward() {
-        Duration nowPlus30 = mediaPlayer.getCurrentTime().add(Duration.millis(30000));
-        if(nowPlus30.lessThan(duration)){
-            mediaPlayer.seek(nowPlus30);
-        } else {
-            mediaPlayer.seek(duration);
-        }
-    }
-    public void backward() {
-        Duration nowMinus30 = mediaPlayer.getCurrentTime().subtract(Duration.millis(30000));
-        if(nowMinus30.greaterThan(mediaPlayer.getStartTime())){
-            mediaPlayer.seek(nowMinus30);
-        } else {
-            mediaPlayer.seek(mediaPlayer.getStartTime());
-        }
-    }
 
     public void forward(int seconds) {
         Duration nowPlus30 = mediaPlayer.getCurrentTime().add(Duration.millis(seconds * 1000));
         if(nowPlus30.lessThan(duration)){
             mediaPlayer.seek(nowPlus30);
+            controller.update(nowPlus30);
         } else {
+            controller.update(duration);
             mediaPlayer.seek(duration);
         }
     }
-
     public void backward(int seconds) {
         Duration nowMinus = mediaPlayer.getCurrentTime().subtract(Duration.millis(seconds * 1000));
         if(nowMinus.greaterThan(mediaPlayer.getStartTime())){
             mediaPlayer.seek(nowMinus);
+            controller.update(nowMinus);
         } else {
+            controller.update(mediaPlayer.getStartTime());
             mediaPlayer.seek(mediaPlayer.getStartTime());
         }
     }
-
     public void rate(Double newValue) {
         if(mediaPlayer != null){
            final Timeline rateTimeline = new Timeline(new KeyFrame(FADE_DURATION, new KeyValue(mediaPlayer.rateProperty(), newValue)));
@@ -447,7 +423,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
            rateTimeline.play();
         }
     }
-
     public void size(Double size){
         runInsideUISync(() -> {
             iconPane.getChildren().forEach(n -> {
@@ -460,7 +435,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             });
         });
     }
-
     public void opacity(Double oldvalue, Double newValue) {
         runInsideUISync(() -> {
             iconPane.getChildren().forEach(n -> {
@@ -474,12 +448,27 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             });
         });
     }
-
     public void volume(Double value) {
         if(mediaPlayer != null){
             final Timeline volumeTimeline = new Timeline(new KeyFrame(FADE_DURATION, new KeyValue(mediaPlayer.volumeProperty(), value)));
             volumeTimeline.setCycleCount(1);
             volumeTimeline.play();
         }
+    }
+
+    public void hightlight(int id) {
+        Optional<Point> point = pointsDisplayed.stream().filter(p -> p.getId() == id).findAny();
+
+        if(point.isPresent()){
+            point.get().getIcon().colorize();
+        }
+    }
+
+    public void hightlight() {
+        pointsDisplayed.stream().parallel().forEach(p -> p.getIcon().reset());
+    }
+
+    public void removePoint(Point point) {
+        pointsDisplayed.remove(point);
     }
 }

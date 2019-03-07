@@ -60,7 +60,17 @@ public class CategoryModel extends AbstractGriffonModel {
 
     public void addPoint(Point point) {
         SimpleLongProperty spl = getCategoryProperty(point.getCategory());
-        spl.setValue(spl.getValue() + 1);
-        total.setValue(total.getValue() + 1);
+        long value = spl.getValue();
+        spl.setValue(value + 1);
+        value = total.getValue();
+        total.setValue(value + 1);
+    }
+
+    public void deletePoint(Point point) {
+        SimpleLongProperty spl = getCategoryProperty(point.getCategory());
+        long value = spl.getValue();
+        spl.setValue(value - 1);
+        value = total.getValue();
+        total.setValue(value +- 1);
     }
 }

@@ -39,6 +39,10 @@ public class CategoryController extends AbstractGriffonController {
             });
         });
 
+        list.put("point.deleted", objects -> {
+            model.deletePoint((Point)objects[0]);
+        });
+
         return list;
     }
 }

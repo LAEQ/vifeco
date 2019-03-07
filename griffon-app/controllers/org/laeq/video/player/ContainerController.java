@@ -29,10 +29,6 @@ public class ContainerController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         if(video != null){
-
-//            getCategoryList(video);
-//            getPoints(video);
-
             Map<String, Object> datas = new HashMap<>();
             datas.put("video", video);
 
@@ -40,6 +36,7 @@ public class ContainerController extends AbstractGriffonController {
                 createGroup("controls");
                 createGroup("category", datas);
                 createGroup("video_player", datas);
+                createGroup("timeline", datas);
             });
 
         } else {

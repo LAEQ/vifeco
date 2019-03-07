@@ -20,14 +20,13 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @FXML private AnchorPane controlPane;
     @FXML private AnchorPane playerPane;
     @FXML private AnchorPane categoryPane;
-
+    @FXML private AnchorPane timelinePane;
 
     @Override
     public void initUI() {
         Node node = loadFromFXML();
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
         connectActions(node, controller);
-        init();
     }
 
     @Override
@@ -37,19 +36,16 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         destroyMVCGroup("video_player");
     }
 
-    private void init() {
-
-    }
-
     public AnchorPane getControlPane() {
         return controlPane;
     }
-
     public AnchorPane getPlayerPane() {
         return playerPane;
     }
-
     public AnchorPane getCategoryPane() {
         return categoryPane;
+    }
+    public AnchorPane getTimelinePane() {
+        return timelinePane;
     }
 }

@@ -29,6 +29,14 @@ public class Icon extends Group {
         getChildren().addAll(getCanvas(), svg);
     }
 
+    public void reset(){
+        this.svg.setFill(Paint.valueOf(this.color));
+    }
+
+    public void colorize(){
+        this.svg.setFill(Color.DARKORANGE);
+    }
+
     public Icon(String path, String color){
         this.path = path;
         this.size = 1;

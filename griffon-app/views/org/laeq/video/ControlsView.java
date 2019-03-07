@@ -151,7 +151,6 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         });
 
         list.put("duration", (observable, oldValue, newValue) -> {
-            System.out.println("duration:" + newValue);
             controller.changeDuration(newValue);
         });
 
@@ -168,11 +167,15 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         rateSlider.valueProperty().bindBidirectional(model.rateProperty());
         rateValue.textProperty().bind(model.rateProperty().asString());
 
-        rateSlider.valueProperty().addListener((obs, oldval, newVal) -> {
-            BigDecimal bd = new BigDecimal((newVal.toString()));
-            bd = bd.setScale(1, RoundingMode.HALF_EVEN);
-            rateSlider.setValue(bd.doubleValue());
-        });
+        try{
+            rateSlider.valueProperty().addListener((obs, oldval, newVal) -> {
+                BigDecimal bd = new BigDecimal((newVal.toString()));
+                bd = bd.setScale(1, RoundingMode.HALF_EVEN);
+                rateSlider.setValue(bd.doubleValue());
+            });
+        } catch (Exception e){
+            getLog().error(e.getMessage());
+        }
 
         rateSlider.setMin(0.1);
         rateSlider.setMax(10);
@@ -188,9 +191,14 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         volumeValue.textProperty().bind(model.volumeProperty().asString());
 
         volumeSlider.valueProperty().addListener((obs, oldval, newVal) -> {
-            BigDecimal bd = new BigDecimal((newVal.toString()));
-            bd = bd.setScale(1, RoundingMode.HALF_EVEN);
-            volumeSlider.setValue(bd.doubleValue());
+
+            try{
+                BigDecimal bd = new BigDecimal((newVal.toString()));
+                bd = bd.setScale(1, RoundingMode.HALF_EVEN);
+                volumeSlider.setValue(bd.doubleValue());
+            } catch (Exception e){
+                getLog().error(e.getMessage());
+            }
         });
 
         volumeSlider.setMin(0);
@@ -207,9 +215,14 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         sizeValue.textProperty().bind(model.sizeProperty().asString());
 
         sizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            BigDecimal bd = new BigDecimal(newValue.toString());
-            bd = bd.setScale(0, RoundingMode.HALF_EVEN);
-            sizeSlider.setValue(bd.intValueExact());
+            try{
+                BigDecimal bd = new BigDecimal(newValue.toString());
+                bd = bd.setScale(0, RoundingMode.HALF_EVEN);
+                sizeSlider.setValue(bd.intValueExact());
+            } catch (Exception e){
+                getLog().error(e.getMessage());
+            }
+
         });
 
         sizeSlider.setMin(10);
@@ -227,9 +240,14 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         opacityValue.textProperty().bind(model.opacityProperty().asString());
 
         opacitySlider.valueProperty().addListener((obs, oldval, newVal) -> {
-            BigDecimal bd = new BigDecimal((newVal.toString()));
-            bd = bd.setScale(1, RoundingMode.HALF_EVEN);
-            opacitySlider.setValue(bd.doubleValue());
+            try{
+                BigDecimal bd = new BigDecimal((newVal.toString()));
+                bd = bd.setScale(1, RoundingMode.HALF_EVEN);
+                opacitySlider.setValue(bd.doubleValue());
+            } catch (Exception e){
+                getLog().error(e.getMessage());
+            }
+
         });
 
         opacitySlider.setMin(0.1);
@@ -247,9 +265,14 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         durationValue.textProperty().bind(model.durationProperty().asString());
 
         durationSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            BigDecimal bd = new BigDecimal(newValue.toString());
-            bd = bd.setScale(0, RoundingMode.HALF_EVEN);
-            durationSlider.setValue(bd.intValueExact());
+            try{
+                BigDecimal bd = new BigDecimal(newValue.toString());
+                bd = bd.setScale(0, RoundingMode.HALF_EVEN);
+                durationSlider.setValue(bd.intValueExact());
+            } catch (Exception e){
+                getLog().error(e.getMessage());
+            }
+
         });
 
         durationSlider.setMin(1);

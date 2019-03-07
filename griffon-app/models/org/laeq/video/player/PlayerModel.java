@@ -91,8 +91,4 @@ public class PlayerModel extends AbstractGriffonModel {
 
         return video.getPointSet().subSet(start, end);
     }
-
-    private Icon generateIcon(Point point){
-        return new Icon(point.getCategory(), 100);
-    }
 }

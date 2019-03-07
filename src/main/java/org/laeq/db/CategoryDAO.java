@@ -98,7 +98,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             throw new DAOException("Error deleting a category");
     }
 
-    //@todo write unit test
+    //@todo write unit updatePosition
     public Set<Category> findByCollection(Collection collection) {
         String query = "select * from CATEGORY_COLLECTION as CC join CATEGORY as C on CC.CATEGORY_ID = C.ID where CC.COLLECTION_ID = ?;";
 
