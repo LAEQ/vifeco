@@ -6,7 +6,6 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,10 +13,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.text.Text;
 import javafx.util.Callback;
-import javafx.util.Duration;
-import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.laeq.TranslatedView;
@@ -25,13 +21,15 @@ import org.laeq.graphic.Color;
 import org.laeq.graphic.icon.CategoryMatrice;
 import org.laeq.graphic.icon.IconAbstract;
 import org.laeq.graphic.icon.IconType;
-import org.laeq.model.*;
+import org.laeq.model.Category;
+import org.laeq.model.Collection;
+import org.laeq.model.User;
+import org.laeq.model.Video;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ContainerView extends TranslatedView {

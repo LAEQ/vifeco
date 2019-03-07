@@ -5,6 +5,7 @@ import griffon.core.i18n.MessageSource;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TableColumn;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;

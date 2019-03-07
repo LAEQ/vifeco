@@ -5,7 +5,6 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.CRUDController;
 import org.laeq.db.DAOException;
 import org.laeq.db.UserDAO;

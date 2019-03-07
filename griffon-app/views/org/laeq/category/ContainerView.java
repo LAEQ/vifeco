@@ -4,10 +4,6 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -16,7 +12,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
-import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.TranslatedView;
 import org.laeq.graphic.Color;
 import org.laeq.graphic.IconSVG;
@@ -25,7 +20,6 @@ import org.laeq.model.Icon;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
-import java.lang.annotation.Retention;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ContainerView extends TranslatedView {

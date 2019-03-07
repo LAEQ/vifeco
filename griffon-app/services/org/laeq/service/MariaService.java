@@ -5,7 +5,6 @@ import ch.vorburger.mariadb4j.DB;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.scene.media.Media;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.db.*;

@@ -1,8 +1,7 @@
 package org.laeq.db
 
-
-import org.laeq.model.*
 import javafx.util.Duration
+import org.laeq.model.*
 
 class PointDAOTest extends AbstractDAOTest {
     PointDAO repository

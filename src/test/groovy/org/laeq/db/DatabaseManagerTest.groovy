@@ -3,6 +3,7 @@ package org.laeq.db
 import ch.vorburger.mariadb4j.DB
 import ch.vorburger.mariadb4j.DBConfigurationBuilder
 import spock.lang.Specification
+
 import java.sql.Connection
 import java.sql.Statement
 

@@ -5,9 +5,6 @@ import ch.vorburger.mariadb4j.DBConfigurationBuilder
 import spock.lang.Shared
 import spock.lang.Specification
 
-import java.sql.Connection
-import java.sql.Statement
-
 class AbstractDAOTest extends Specification {
     @Shared def dbName = "vifecodb"
     @Shared def db

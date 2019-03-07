@@ -6,6 +6,7 @@ import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.service.MariaService;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashMap;

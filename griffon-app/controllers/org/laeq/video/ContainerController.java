@@ -6,17 +6,16 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.scene.control.TableColumn;
 import org.laeq.CRUDController;
 import org.laeq.db.*;
-import org.laeq.model.*;
+import org.laeq.model.Collection;
+import org.laeq.model.User;
+import org.laeq.model.Video;
 import org.laeq.service.MariaService;
-import org.laeq.settings.Settings;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends CRUDController<Video> {
