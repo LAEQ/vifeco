@@ -75,14 +75,12 @@ public class ContainerModel extends AbstractGriffonModel {
     }
 
     public void setSelectedCollection(Collection collection) {
-        clearForm();;
+        clearForm();
 
         this.selectedCollection = collection;
         setName(collection.getName());
         setIsDefault(collection.isIsDefault());
-        collection.getCategorySet().forEach(category -> {
-            categorySBP.get(category).setValue(true);
-        });
+        collection.getCategorySet().forEach(category -> categorySBP.get(category).setValue(true));
     }
 
     public void clearForm(){
@@ -109,9 +107,9 @@ public class ContainerModel extends AbstractGriffonModel {
             result = false;
         }
 
-        Boolean isOneSelected = categorySBP.values().stream().anyMatch( e-> e.getValue() == true);
+        Boolean isOneSelected = categorySBP.values().stream().anyMatch( e-> e.getValue());
 
-        if(isOneSelected == false){
+        if(!isOneSelected){
             builder.append("\n - categories: ");
             builder.append(messageSource.getMessage("org.laeq.model.collection.validation.categories", Locale.CANADA));
             result = false;
@@ -129,7 +127,7 @@ public class ContainerModel extends AbstractGriffonModel {
 
     public Collection generateCollection() {
         Collection collection = new Collection();
-        collection.setCategorySet(this.categorySBP.entrySet().stream().filter(x -> x.getValue().getValue() == true).map(map -> map.getKey()).collect(Collectors.toSet()));
+        collection.setCategorySet(this.categorySBP.entrySet().stream().filter(x -> x.getValue().getValue()).map(map -> map.getKey()).collect(Collectors.toSet()));
         collection.setName(getName());
         collection.setIsDefault(isIsDefault());
 

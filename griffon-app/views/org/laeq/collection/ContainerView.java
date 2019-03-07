@@ -119,7 +119,6 @@ public class ContainerView extends TranslatedView {
                         translate(titleLabel, "org.laeq.collection.title_edit");
                     });
 
-
                     delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));
                     delete.setOnMouseClicked(event -> {
                         controller.delete(collectionTable.getItems().get(getIndex()));
@@ -158,9 +157,9 @@ public class ContainerView extends TranslatedView {
                             group.getChildren().addAll(matrice.getIconMap().values());
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {
-
+                        getLog().error(e.getMessage());
                     } catch (Exception e) {
-
+                        getLog().error(e.getMessage());
                     }
 
                     if (empty) {
@@ -169,7 +168,6 @@ public class ContainerView extends TranslatedView {
                     } else {
                         setGraphic(group);
                     }
-
                 }
             };
 

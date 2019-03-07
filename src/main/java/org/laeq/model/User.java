@@ -2,9 +2,9 @@ package org.laeq.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 
@@ -12,15 +12,15 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 
 @JsonIgnoreProperties({"createdAt", "updatedAt"})
+@JsonPropertyOrder({"id", "firstName", "lastName", "email", "isDefault"})
 public class User extends BaseEntity {
-    private SimpleIntegerProperty id;
+    private int id;
     private SimpleStringProperty firstName;
     private SimpleStringProperty lastName;
     private SimpleStringProperty email;
     private SimpleBooleanProperty isDefault;
 
     public User() {
-        this.id = new SimpleIntegerProperty(0);
         this.firstName = new SimpleStringProperty("");
         this.lastName = new SimpleStringProperty("");
         this.email = new SimpleStringProperty("");
@@ -28,10 +28,10 @@ public class User extends BaseEntity {
     }
     public User(Integer id, String fName, String lastName, String email) {
         this(fName, lastName, email);
-        this.id.set(id);
+
+        this.id = id;
     }
     public User(String fName, String lName, String email) {
-        this.id = new SimpleIntegerProperty(0);
         this.firstName = new SimpleStringProperty(fName);
         this.lastName = new SimpleStringProperty(lName);
         this.email = new SimpleStringProperty(email);
@@ -41,19 +41,13 @@ public class User extends BaseEntity {
     public String getFirstName() {
         return firstName.get();
     }
-
     public void setFirstName(String fName) {
         firstName.set(fName);
     }
-
     public String getLastName() {
         return lastName.get();
     }
 
-    @JsonIgnore
-    public SimpleIntegerProperty idProperty() {
-        return id;
-    }
     @JsonIgnore
     public SimpleStringProperty firstNameProperty() {
         return firstName;
@@ -80,13 +74,10 @@ public class User extends BaseEntity {
         email.set(fName);
     }
     public void setId(int id) {
-        this.id.set(id);
+        this.id = id;
     }
     public int getId() {
-        return this.id.getValue();
-    }
-    public boolean getIsActive() {
-        return isDefault.get();
+        return this.id;
     }
     public void setIsDefault(boolean isDefault) {
         this.isDefault.set(isDefault);
@@ -107,7 +98,7 @@ public class User extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id.getValue().equals(user.id.getValue()) &&
+        return id == user.getId() &&
                 firstName.getValue().equals(user.firstName.getValue()) &&
                 lastName.getValue().equals(user.lastName.getValue()) &&
                 email.getValue().equals(user.email.getValue());
@@ -115,7 +106,7 @@ public class User extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id.getValue(), firstName.getValue(), lastName.getValue(), email.getValue());
+        return Objects.hash(id, firstName.getValue(), lastName.getValue(), email.getValue());
     }
 
     @JsonIgnore

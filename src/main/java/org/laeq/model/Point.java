@@ -2,11 +2,13 @@ package org.laeq.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javafx.geometry.Bounds;
 import javafx.util.Duration;
 
 import java.util.Objects;
 @JsonIgnoreProperties({"id", "video", "icon", "duration", "createdAt", "updatedAt", "category"})
+@JsonPropertyOrder({"x", "y", "categoryId", "start"})
 public class Point extends BaseEntity implements Comparable<Point> {
     private int id;
     private double x;

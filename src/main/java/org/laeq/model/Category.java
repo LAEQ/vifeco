@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @JsonIgnoreProperties({"createdAt", "updatedAt" })
 public class Category extends BaseEntity {
-    private Integer id;
+    private int id;
     private String name;
     private String icon;
     private String color;
@@ -16,7 +16,7 @@ public class Category extends BaseEntity {
 
     }
 
-    public Category(Integer id, String name, String icon, String color, String shortcut) {
+    public Category(int id, String name, String icon, String color, String shortcut) {
         this(name, icon, color, shortcut);
         this.id = id;
     }
@@ -69,7 +69,7 @@ public class Category extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return id.equals(category.id);
+        return id == category.id;
     }
 
     @Override

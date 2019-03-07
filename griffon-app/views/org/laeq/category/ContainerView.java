@@ -18,7 +18,6 @@ import org.laeq.graphic.IconSVG;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
 import org.laeq.template.MiddlePaneView;
-
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -180,7 +179,7 @@ public class ContainerView extends TranslatedView {
                         colorPickerField.setValue(javafx.scene.paint.Color.valueOf(category.getColor()));
 
                     } catch (Exception e){
-
+                        getLog().error(e.getMessage());
                     }
 
                     if (empty) {

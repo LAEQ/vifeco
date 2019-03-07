@@ -9,7 +9,6 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.video.category.CategoryGroup;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -17,11 +16,10 @@ import java.util.Set;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class CategoryModel extends AbstractGriffonModel {
-    private final HashMap<Category, CategoryGroup> categoryList = new HashMap<>();
-    private HashMap<Category, SimpleLongProperty> categoryPropertyList;
-    private SimpleIntegerProperty total;
-
     @MVCMember @Nonnull private Video video;
+
+    private final HashMap<Category, SimpleLongProperty> categoryPropertyList = new HashMap<>();
+    private final SimpleIntegerProperty total = new SimpleIntegerProperty(this, "total", 0);
 
     public long getTotal() {
         return total.get();
@@ -31,24 +29,17 @@ public class CategoryModel extends AbstractGriffonModel {
     }
 
     public void generateProperties() {
-        categoryPropertyList = new HashMap<>();
-
         video.getCollection().getCategorySet().forEach(category -> {
-            long total = video.getPointSet().stream().filter(point -> {
-                return point.getCategory().equals(category);
-            }).count();
+            long total = video.getPointSet().stream().filter(point -> point.getCategory().equals(category)).count();
 
             categoryPropertyList.put(category, new SimpleLongProperty(this, category.getName(), total));
         });
 
-        total = new SimpleIntegerProperty(this, "total", video.getPointSet().size());
+        total.set(video.getPointSet().size());
     }
 
     public SimpleLongProperty getCategoryProperty(Category category){
         return categoryPropertyList.get(category);
-    }
-    public HashMap<Category, SimpleLongProperty> getCategoryPropertyList() {
-        return categoryPropertyList;
     }
 
     public Set<Category> getCategorySet() {

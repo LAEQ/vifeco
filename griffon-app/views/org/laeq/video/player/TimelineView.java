@@ -43,7 +43,6 @@ public class TimelineView extends AbstractJavaFXGriffonView {
         durationLine.setStrokeWidth(1.0);
 
         pane.getChildren().addAll(line, durationLine, timeline);
-
         pane.widthProperty().addListener((observable, oldValue, newValue) -> {
             double x= newValue.doubleValue() / 2;
             double x1 = model.getLineDuration() * timeline.getRatio();
@@ -54,7 +53,6 @@ public class TimelineView extends AbstractJavaFXGriffonView {
             durationLine.setEndX(x - x1);
             timeline.setX(x);
         });
-
         timeline.getGroup().setOnMouseEntered(event -> {
             System.out.println(event);
             if(event.getPickResult().getIntersectedNode() != null){
@@ -65,11 +63,7 @@ public class TimelineView extends AbstractJavaFXGriffonView {
                 }
             }
         });
-
-        timeline.getGroup().setOnMouseExited(event -> {
-            controller.highlightPoint();
-        });
-
+        timeline.getGroup().setOnMouseExited(event -> controller.highlightPoint());
         timeline.getGroup().setOnMouseClicked(event -> {
             if(event.getPickResult().getIntersectedNode() != null){
                 try{
@@ -77,11 +71,10 @@ public class TimelineView extends AbstractJavaFXGriffonView {
                     controller.deletePoint(circle.getIdentifier());
                     timeline.getGroup().getChildren().remove(circle);
                 } catch (ClassCastException e){
-
+                    getLog().error(e.getMessage());
                 }
             }
         });
-
         parentView.getTimelinePane().getChildren().add(pane);
     }
 

@@ -71,8 +71,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private VifecoView rootView;
     private ControlsModel controlsModel;
 
-    private final Duration FADE_DURATION = Duration.millis(200);
-
     //Listeners
     private EventHandler<KeyEvent> keyListener;
     private EventHandler<? super MouseEvent> mouseMoveListener;
@@ -417,7 +415,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
     public void rate(Double newValue) {
         if(mediaPlayer != null){
-           final Timeline rateTimeline = new Timeline(new KeyFrame(FADE_DURATION, new KeyValue(mediaPlayer.rateProperty(), newValue)));
+           final Timeline rateTimeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(mediaPlayer.rateProperty(), newValue)));
            rateTimeline.setCycleCount(1);
            rateTimeline.play();
         }
@@ -449,7 +447,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
     public void volume(Double value) {
         if(mediaPlayer != null){
-            final Timeline volumeTimeline = new Timeline(new KeyFrame(FADE_DURATION, new KeyValue(mediaPlayer.volumeProperty(), value)));
+            final Timeline volumeTimeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(mediaPlayer.volumeProperty(), value)));
             volumeTimeline.setCycleCount(1);
             volumeTimeline.play();
         }
