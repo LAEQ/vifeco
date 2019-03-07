@@ -50,8 +50,8 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     @FXML private Text opacityValue;
     @FXML private Pane opacityIcon;
 
-    private Map<String, ChangeListener<Number>> listenerMap;
-    private Map<String, EventHandler<MouseEvent>> clickListener;
+    private final Map<String, ChangeListener<Number>> listenerMap = new HashMap<>();
+    private final Map<String, EventHandler<MouseEvent>> clickListener = new HashMap<>();
 
     @Override
     public void initUI() {
@@ -65,14 +65,14 @@ public class ControlsView extends AbstractJavaFXGriffonView {
 
         parentView.getControlPane().getChildren().add(node);
 
-        listenerMap = initListener();
+        initListener();
         rateSlider.valueProperty().addListener(listenerMap.get("rate"));
         volumeSlider.valueProperty().addListener(listenerMap.get("volume"));
         opacitySlider.valueProperty().addListener(listenerMap.get("opacity"));
         durationSlider.valueProperty().addListener(listenerMap.get("duration"));
         sizeSlider.valueProperty().addListener(listenerMap.get("size"));
 
-        clickListener = clickListener();
+        clickListener();
         rateIcon.setOnMouseClicked(clickListener.get("rate"));
         volumeIcon.setOnMouseClicked(clickListener.get("volume"));
         sizeIcon.setOnMouseClicked(clickListener.get("size"));
@@ -123,42 +123,34 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         listenerMap.clear();
     }
 
-    private Map<String, EventHandler<MouseEvent>>  clickListener(){
-        Map<String, EventHandler<MouseEvent>> list = new HashMap<>();
-
-        list.put("rate",  event -> controller.changeRate(model.setDefaultRate()));
-        list.put("volume",  event -> controller.changeVolume(model.setDefaultVolume()));
-        list.put("opacity",  event -> controller.changeOpacity(0.5, model.setDefaultOpacity()));
-        list.put("size",  event -> controller.changeSize(model.setDefaultSize()));
-        list.put("duration",  event -> controller.changeDuration(model.setDefaultDuration()));
-
-        return list;
+    private void  clickListener(){
+        clickListener.put("rate",  event -> controller.changeRate(model.setDefaultRate()));
+        clickListener.put("volume",  event -> controller.changeVolume(model.setDefaultVolume()));
+        clickListener.put("opacity",  event -> controller.changeOpacity(0.5, model.setDefaultOpacity()));
+        clickListener.put("size",  event -> controller.changeSize(model.setDefaultSize()));
+        clickListener.put("duration",  event -> controller.changeDuration(model.setDefaultDuration()));
     }
 
-    private Map<String, ChangeListener<Number>> initListener(){
-        Map<String, ChangeListener<Number>> list = new HashMap<>();
-
-        list.put("rate", (observable, oldValue, newValue) -> {
+    private void initListener(){
+        listenerMap.put("rate", (observable, oldValue, newValue) -> {
             controller.changeRate(newValue);
         });
 
-        list.put("volume", (observable, oldValue, newValue) -> {
+        listenerMap.put("volume", (observable, oldValue, newValue) -> {
             controller.changeVolume(newValue);
         });
 
-        list.put("size", (observable, oldValue, newValue) -> {
+        listenerMap.put("size", (observable, oldValue, newValue) -> {
             controller.changeSize(newValue);
         });
 
-        list.put("duration", (observable, oldValue, newValue) -> {
+        listenerMap.put("duration", (observable, oldValue, newValue) -> {
             controller.changeDuration(newValue);
         });
 
-        list.put("opacity", (observable, oldValue, newValue) -> {
+        listenerMap.put("opacity", (observable, oldValue, newValue) -> {
             controller.changeOpacity(oldValue, newValue);
         });
-
-        return list;
     }
 
     private void initRateSlider(){
