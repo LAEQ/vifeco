@@ -50,27 +50,19 @@ public class TimelineController extends AbstractGriffonController {
             });
         });
 
-        list.put("player.play", objects -> {
-            view.play();
-        });
+        list.put("player.play", objects -> view.play());
 
         list.put("point.added", objects -> runInsideUISync(() -> view.addPoint((Point) objects[0])));
 
-        list.put("media.currentTime", objects -> {
-           runInsideUISync(() -> {
-               view.updatePosition((Duration)objects[0]);
-           });
-        });
+        list.put("media.currentTime", objects -> runInsideUISync(() -> {
+            view.updatePosition((Duration)objects[0]);
+        }));
 
-        list.put("controls.duration", objects -> {
-            runInsideUISync(() -> {
-                view.updateDurationLine((double)objects[0]);
-            });
-        });
+        list.put("controls.duration", objects -> runInsideUISync(() -> {
+            view.updateDurationLine((double)objects[0]);
+        }));
 
-        list.put("controls.rate", objects -> {
-           view.updateRate((double)objects[0]);
-        });
+        list.put("controls.rate", objects -> view.updateRate((double)objects[0]));
 
         return list;
     }

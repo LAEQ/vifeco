@@ -183,7 +183,6 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         volumeValue.textProperty().bind(model.volumeProperty().asString());
 
         volumeSlider.valueProperty().addListener((obs, oldval, newVal) -> {
-
             try{
                 BigDecimal bd = new BigDecimal((newVal.toString()));
                 bd = bd.setScale(1, RoundingMode.HALF_EVEN);

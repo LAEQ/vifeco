@@ -58,6 +58,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private ContainerView parentView;
     @MVCMember @Nonnull private Video video;
 
+    @FXML private Pane playerPane;
     @FXML private MediaView mediaView;
     @FXML private Pane iconPane;
     @FXML private Button playActionTarget;
@@ -88,6 +89,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private InvalidationListener currentTimeListener;
     private InvalidationListener sliderListener;
 
+    private EventHandler<ScrollEvent> scrollListener;
+    private EventHandler<MouseEvent> clickListener;
+
 
     @Override
     public void initUI() {
@@ -112,6 +116,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         parentView.getPlayerPane().getChildren().add(node);
     }
 
+    private EventHandler<ScrollEvent> scrollListener(){
+        return event -> {
+            String eventName = event.getDeltaY() > 0 ? "rate.increase" : "rate.decrease";
+
+            controller.updateRate(eventName);
+        };
+    }
+
     @Override
     public void mvcGroupDestroy() {
         runInsideUISync(() -> {
@@ -133,32 +145,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         }
     }
 
-    @FXML
-    public void playerPaneScroll(ScrollEvent event) {
-        if (controlsModel == null) {
-            controlsModel = (ControlsModel) getApplication().getMvcGroupManager().getAt("controls").getModel();
-        }
-
-        if (event.getDeltaY() > 0) {
-            controlsModel.increaseRate();
-            mediaPlayer.setRate(controlsModel.getRate());
-
-        } else if (event.getDeltaY() < 0) {
-            controlsModel.decreateRate();
-            mediaPlayer.setRate(controlsModel.getRate());
-        }
-
-        controller.updateRate(controlsModel.getRate());
-
-    }
-
-    @FXML
-    public void playerPaneMouseClicked(MouseEvent mouseEvent) {
-        if(mouseEvent.getButton().equals(MouseButton.SECONDARY)){
-            forward(5);
-        } else if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-            backward(5);
-        }
+    private EventHandler<MouseEvent> clickListener(){
+        return mouseEvent -> {
+            if(mouseEvent.getButton().equals(MouseButton.SECONDARY)){
+                forward(5);
+            } else if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                backward(5);
+            }
+        };
     }
 
     public void addPoint(Point point) {
@@ -244,6 +238,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         displayPoints();
 
+        scrollListener = scrollListener();
+        playerPane.setOnScroll(scrollListener);
+        clickListener = clickListener();
+        playerPane.setOnMouseClicked(clickListener);
 
         mouseExitListener = mouseExitListener();
         iconPane.setOnMouseExited(mouseExitListener);
@@ -288,6 +286,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         mediaPlayer.dispose();
         mediaPlayer = null;
+
+        playerPane.removeEventHandler(ScrollEvent.SCROLL, scrollListener);
+        scrollListener = null;
+
+        playerPane.removeEventHandler(MouseEvent.MOUSE_CLICKED, clickListener);
+        clickListener = null;
     }
 
     private EventHandler<? super MouseEvent> mouseEnterListener() {
