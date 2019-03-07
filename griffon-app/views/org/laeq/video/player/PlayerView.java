@@ -133,15 +133,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void play() {
         if (model.isIsPlaying()) {
-            Icon icon = (Icon) playActionTarget.getGraphic();
-            icon.setPath(IconSVG.btnPause);
-            mediaPlayer.pause();
             model.setIsPlaying(false);
+            mediaPlayer.pause();
         } else {
-            Icon icon = (Icon) playActionTarget.getGraphic();
-            icon.setPath(IconSVG.btnPlay);
-            mediaPlayer.play();
             model.setIsPlaying(true);
+            mediaPlayer.play();
         }
     }
 
@@ -297,14 +293,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private EventHandler<? super MouseEvent> mouseEnterListener() {
         return event -> {
             iconPane.setOnMouseMoved(mouseMoveListener);
-            rootView.getScene().setOnKeyPressed(keyListener);
+            rootView.getScene().setOnKeyReleased(keyListener);
         };
     }
     private EventHandler<MouseEvent> mouseExitListener(){
         return event -> {
             mousePosition = null;
             iconPane.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveListener);
-            rootView.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, keyListener);
+            rootView.getScene().removeEventHandler(KeyEvent.KEY_RELEASED, keyListener);
         };
     }
 
