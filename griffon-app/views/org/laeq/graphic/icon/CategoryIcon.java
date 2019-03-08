@@ -19,7 +19,7 @@ public class CategoryIcon extends IconAbstract {
 
     public CategoryIcon(Category category, double width, double height) {
         this.category = category;
-        icon = new Icon(category.getIcon(), "black");
+        icon = new Icon(category.getIcon(), category.getColor());
         icon.setLayoutY(5);
         icon.setLayoutX(5);
         label = new Label(truncate(category.getName()));
