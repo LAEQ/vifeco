@@ -10,6 +10,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -415,9 +416,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
     public void rate(Double newValue) {
         if(mediaPlayer != null){
-           final Timeline rateTimeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(mediaPlayer.rateProperty(), newValue)));
-           rateTimeline.setCycleCount(1);
-           rateTimeline.play();
+            mediaPlayer.setRate(newValue);
+            controller.update(mediaPlayer.getCurrentTime());
+//           final Timeline rateTimeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(mediaPlayer.rateProperty(), newValue)));
+//           rateTimeline.setCycleCount(1);
+//           rateTimeline.play();
         }
     }
     public void size(Double size){
@@ -462,7 +465,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void hightlight() {
-        pointsDisplayed.stream().parallel().forEach(p -> p.getIcon().reset());
+        runInsideUIAsync(() -> {
+            pointsDisplayed.stream().forEach(p -> p.getIcon().reset());
+        });
     }
 
     public void removePoint(Point point) {
