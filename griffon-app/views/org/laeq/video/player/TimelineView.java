@@ -54,7 +54,6 @@ public class TimelineView extends AbstractJavaFXGriffonView {
             timeline.setX(x);
         });
         timeline.getGroup().setOnMouseEntered(event -> {
-            System.out.println(event);
             if(event.getPickResult().getIntersectedNode() != null){
                 try{
                     controller.highlightPoint((TimelineIcon) event.getPickResult().getIntersectedNode());

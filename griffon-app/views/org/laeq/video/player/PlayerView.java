@@ -58,6 +58,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private ContainerView parentView;
     @MVCMember @Nonnull private Video video;
 
+    @FXML private Pane playerPane;
     @FXML private MediaView mediaView;
     @FXML private Pane iconPane;
     @FXML private Button playActionTarget;
@@ -88,6 +89,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private InvalidationListener currentTimeListener;
     private InvalidationListener sliderListener;
 
+    private EventHandler<ScrollEvent> scrollListener;
+    private EventHandler<MouseEvent> clickListener;
+
 
     @Override
     public void initUI() {
@@ -112,6 +116,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         parentView.getPlayerPane().getChildren().add(node);
     }
 
+    private EventHandler<ScrollEvent> scrollListener(){
+        return event -> {
+            String eventName = event.getDeltaY() > 0 ? "rate.increase" : "rate.decrease";
+
+            controller.updateRate(eventName);
+        };
+    }
+
     @Override
     public void mvcGroupDestroy() {
         runInsideUISync(() -> {
@@ -121,44 +133,22 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void play() {
         if (model.isIsPlaying()) {
-            Icon icon = (Icon) playActionTarget.getGraphic();
-            icon.setPath(IconSVG.btnPause);
-            mediaPlayer.pause();
             model.setIsPlaying(false);
+            mediaPlayer.pause();
         } else {
-            Icon icon = (Icon) playActionTarget.getGraphic();
-            icon.setPath(IconSVG.btnPlay);
-            mediaPlayer.play();
             model.setIsPlaying(true);
+            mediaPlayer.play();
         }
     }
 
-    @FXML
-    public void playerPaneScroll(ScrollEvent event) {
-        if (controlsModel == null) {
-            controlsModel = (ControlsModel) getApplication().getMvcGroupManager().getAt("controls").getModel();
-        }
-
-        if (event.getDeltaY() > 0) {
-            controlsModel.increaseRate();
-            mediaPlayer.setRate(controlsModel.getRate());
-
-        } else if (event.getDeltaY() < 0) {
-            controlsModel.decreateRate();
-            mediaPlayer.setRate(controlsModel.getRate());
-        }
-
-        controller.updateRate(controlsModel.getRate());
-
-    }
-
-    @FXML
-    public void playerPaneMouseClicked(MouseEvent mouseEvent) {
-        if(mouseEvent.getButton().equals(MouseButton.SECONDARY)){
-            forward(5);
-        } else if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-            backward(5);
-        }
+    private EventHandler<MouseEvent> clickListener(){
+        return mouseEvent -> {
+            if(mouseEvent.getButton().equals(MouseButton.SECONDARY)){
+                forward(5);
+            } else if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                backward(5);
+            }
+        };
     }
 
     public void addPoint(Point point) {
@@ -244,6 +234,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         displayPoints();
 
+        scrollListener = scrollListener();
+        playerPane.setOnScroll(scrollListener);
+        clickListener = clickListener();
+        playerPane.setOnMouseClicked(clickListener);
 
         mouseExitListener = mouseExitListener();
         iconPane.setOnMouseExited(mouseExitListener);
@@ -288,19 +282,25 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         mediaPlayer.dispose();
         mediaPlayer = null;
+
+        playerPane.removeEventHandler(ScrollEvent.SCROLL, scrollListener);
+        scrollListener = null;
+
+        playerPane.removeEventHandler(MouseEvent.MOUSE_CLICKED, clickListener);
+        clickListener = null;
     }
 
     private EventHandler<? super MouseEvent> mouseEnterListener() {
         return event -> {
             iconPane.setOnMouseMoved(mouseMoveListener);
-            rootView.getScene().setOnKeyPressed(keyListener);
+            rootView.getScene().setOnKeyReleased(keyListener);
         };
     }
     private EventHandler<MouseEvent> mouseExitListener(){
         return event -> {
             mousePosition = null;
             iconPane.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveListener);
-            rootView.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, keyListener);
+            rootView.getScene().removeEventHandler(KeyEvent.KEY_RELEASED, keyListener);
         };
     }
 
@@ -415,9 +415,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
     public void rate(Double newValue) {
         if(mediaPlayer != null){
-           final Timeline rateTimeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(mediaPlayer.rateProperty(), newValue)));
-           rateTimeline.setCycleCount(1);
-           rateTimeline.play();
+            mediaPlayer.setRate(newValue);
+            controller.update(mediaPlayer.getCurrentTime());
+//           final Timeline rateTimeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(mediaPlayer.rateProperty(), newValue)));
+//           rateTimeline.setCycleCount(1);
+//           rateTimeline.play();
         }
     }
     public void size(Double size){
@@ -462,7 +464,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void hightlight() {
-        pointsDisplayed.stream().parallel().forEach(p -> p.getIcon().reset());
+        runInsideUIAsync(() -> {
+            pointsDisplayed.stream().forEach(p -> p.getIcon().reset());
+        });
     }
 
     public void removePoint(Point point) {

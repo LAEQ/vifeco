@@ -22,7 +22,6 @@ public class VideoTimeline extends Group {
     private final Group group = new Group();
     private final int ratio = 50;
     private double y = 81;
-    private double x;
 
     private TranslateTransition translate;
     private Boolean isPlaying = false;
@@ -54,8 +53,7 @@ public class VideoTimeline extends Group {
 
     public void addPoint(Point point) {
         double x = point.getStart().toSeconds() * ratio;
-        TimelineIcon circle = new TimelineIcon(x, getNextY(), 5, point.getId());
-
+        TimelineIcon circle = new TimelineIcon(x, getNextY(), 5, point);
 
         group.getChildren().add(circle);
     }
@@ -78,8 +76,6 @@ public class VideoTimeline extends Group {
 
 
     public void setX(double x){
-        this.x= x;
-
         this.setLayoutX(x);
     }
 

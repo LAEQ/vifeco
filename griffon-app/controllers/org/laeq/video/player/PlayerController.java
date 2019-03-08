@@ -178,4 +178,8 @@ public class PlayerController extends AbstractGriffonController {
     public void updateRate(Double rate) {
         publishEvent("controls.rate", rate);
     }
+
+    public void updateRate(String eventName) {
+        dispatchEvent(eventName);
+    }
 }

@@ -197,7 +197,7 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
 
         Set<Collection> result = new HashSet<>();
 
-        String query = "SELECT C.ID as CAT_ID, C.NAME AS CAT_NAME, C.ICON, C.SHORTCUT, CC.ID, CC.NAME, CC.IS_DEFAULT as IS_DEFAULT FROM COLLECTION as CC" +
+        String query = "SELECT C.ID as CAT_ID, C.NAME AS CAT_NAME, C.ICON, C.SHORTCUT, CC.ID, CC.NAME, CC.IS_DEFAULT as IS_DEFAULT, C.COLOR AS COLOR FROM COLLECTION as CC" +
                 " LEFT JOIN CATEGORY_COLLECTION as CCC ON CC.ID = CCC.COLLECTION_ID" +
                 " LEFT JOIN CATEGORY as C ON C.ID = CCC.CATEGORY_ID  ORDER BY CC.ID ASC;";
 
@@ -219,6 +219,7 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
                     category.setId(queryResult.getInt("CAT_ID"));
                     category.setName(queryResult.getString("CAT_NAME"));
                     category.setIcon(queryResult.getString("ICON"));
+                    category.setColor(queryResult.getString("COLOR"));
                     category.setShortcut(queryResult.getString("SHORTCUT"));
                     collection.addCategory(category);
                 } else {
@@ -231,6 +232,7 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
                     category.setId(queryResult.getInt("CAT_ID"));
                     category.setName(queryResult.getString("CAT_NAME"));
                     category.setIcon(queryResult.getString("ICON"));
+                    category.setColor(queryResult.getString("COLOR"));
                     category.setShortcut(queryResult.getString("SHORTCUT"));
 
                     if(category.getName() != null){

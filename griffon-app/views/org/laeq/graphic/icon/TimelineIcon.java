@@ -1,7 +1,8 @@
 package org.laeq.graphic.icon;
 
-import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import org.laeq.model.Point;
 
 public class TimelineIcon extends Circle {
     private int identifier;
@@ -9,10 +10,10 @@ public class TimelineIcon extends Circle {
     /**
      * Creates an empty instance of Circle.
      */
-    public TimelineIcon(double x, double y, double size, int id) {
+    public TimelineIcon(double x, double y, double size, Point point) {
         super(x, y, size);
-        this.identifier = id;
-        this.setFill(Color.DARKGRAY);
+        this.identifier = point.getId();
+        this.setFill(Paint.valueOf(point.getCategory().getColor()));
     }
 
     public int getIdentifier() {

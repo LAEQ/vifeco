@@ -29,7 +29,6 @@ public class CategoryGroup extends AnchorPane {
         setRightAnchor(background, 10d);
 
         Label textShortCut = new Label(category.getShortcut());
-//        textShortCut.setFont(new Font("sans", 8));
         textShortCut.setStyle("-fx-font-family: sans; -fx-fons-size: 9px;");
         textShortCut.setLayoutX(80);
         textShortCut.setLayoutY(30);

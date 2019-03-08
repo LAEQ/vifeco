@@ -1,7 +1,9 @@
 package org.laeq.template;
 
+import com.sun.media.jfxmedia.MediaException;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
@@ -32,8 +34,6 @@ public class MiddlePaneController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
-
-//        createGroup("status");
     }
 
     private Map<String, RunnableWithArgs> listenerList(){
@@ -48,32 +48,41 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.add", objects -> {
             File videoFile = (File) objects[0];
                 if (videoFile.exists()) {
-                    try {
+                    try{
                         Media media = new Media(videoFile.getCanonicalFile().toURI().toString());
-
                         MediaPlayer mediaPlayer = new MediaPlayer(media);
+                        Video video = dbService.createVideo(videoFile, Duration.millis(10));
+                        Map<String, Object> args = new HashMap<>();
+                        args.put("video", video);
+                        createGroup("player", args);
 
-                        mediaPlayer.setOnReady(() -> {
-                            Duration duration = mediaPlayer.getMedia().getDuration();
+                    } catch (IOException exception){
+                        getLog().error(exception.getMessage());
+                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String message = getApplication().getMessageSource().getMessage("org.laeq.video.file.error");
+                        dialogService.simpleAlert(title, message);
 
-                            try {
-                                Video video = dbService.createVideo(videoFile, duration);
-                                Map<String, Object> args = new HashMap<>();
-                                args.put("video", video);
-
-                                createGroup("player", args);
-                            } catch (IOException | SQLException | DAOException e) {
-                                String message = String.format("Error createing the video: %s", videoFile.toString());
-                                dialogService.simpleAlert("key.to_implement", message);
-                                getLog().error("Error creating and saving video in db: ", videoFile);
-                            }
-                        });
-
-                    } catch (IOException e) {
-                        getLog().error(String.format("Create video with file %s", videoFile));
+                    } catch (SQLException | DAOException e) {
+                        getLog().error(e.getMessage());
+                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String message = getApplication().getMessageSource().getMessage("org.laeq.video.video_dao.error");
+                        dialogService.simpleAlert(title, message);
+                    } catch (MediaException | javafx.scene.media.MediaException e) {
+                        getLog().error(e.getMessage());
+                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String message = getApplication().getMessageSource().getMessage("org.laeq.video.media_file.error");
+                        dialogService.simpleAlert(title, message);
+                    } catch (Exception e){
+                        getLog().error(e.getMessage());
+                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String message = getApplication().getMessageSource().getMessage("org.laeq.video.file.error");
+                        dialogService.simpleAlert(title, message);
                     }
+
                 } else {
                     getLog().error(String.format("PlayerView: file not exits %s", videoFile));
+                    String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                    dialogService.simpleAlert(title, String.format("PlayerView: file not exits %s", videoFile));
                 }
         });
 
@@ -89,10 +98,10 @@ public class MiddlePaneController extends AbstractGriffonController {
         return list;
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void createGroup(String groupName, Map<String, Object> args){
-        destroyMVCGroup("player");
 
+    @ControllerAction
+    @Threading(Threading.Policy.SKIP)
+    public void createGroup(String groupName, Map<String, Object> args){
         try{
             createMVCGroup(groupName, args);
         } catch (Exception e){
@@ -100,7 +109,8 @@ public class MiddlePaneController extends AbstractGriffonController {
         }
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @ControllerAction
+    @Threading(Threading.Policy.SKIP)
     public void createGroup(String groupName){
         try{
             createMVCGroup(groupName);
