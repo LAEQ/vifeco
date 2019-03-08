@@ -5,37 +5,56 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 
 public class Icon extends Group {
-    protected double size;
-    protected final String path;
-    protected final String color;
-    protected final SVGPath svg;
-    protected final float svgRatio;
+    private double size;
+    private final String path;
+    private final String color;
+    protected SVGPath svg;
+    protected Circle circle;
+    private final float svgRatio;
 
     public Icon(Category category, double size)  {
+        this.svgRatio = 0.50f;
         this.path = category.getIcon();
         this.size = size;
         this.color = category.getColor();
+
+        generateSVG(this.color);
+        generateCircle(org.laeq.graphic.Color.light);
+
+        getChildren().addAll(this.circle, this.svg);
+    }
+
+    private void generateCircle(String color){
+        circle = new Circle(size / 2, size / 2, size / 2);
+        circle.setFill(Paint.valueOf(color));
+    }
+
+    private void generateSVG(String color){
         this.svg = new SVGPath();
-        this.svg.setFill(Paint.valueOf(this.color));
-        this.svgRatio = 0.50f;
+        svg.setFill(Paint.valueOf(color));
         svg.setContent(path);
         svg.setLayoutX(getX());
         svg.setLayoutY(getY());
         svg.setScaleX(getScale());
         svg.setScaleY(getScale());
-
-        getChildren().addAll(getCanvas(), svg);
     }
 
     public void reset(){
-        this.svg.setFill(Paint.valueOf(this.color));
+        getChildren().clear();
+        generateSVG(this.color);
+        generateCircle(org.laeq.graphic.Color.light);
+        getChildren().addAll(this.circle, this.svg);
     }
 
     public void colorize(){
-        this.svg.setFill(Color.DARKORANGE);
+        getChildren().clear();
+        generateSVG(org.laeq.graphic.Color.light);
+        generateCircle(this.color);
+        getChildren().addAll(this.circle, this.svg);
     }
 
     public Icon(String path, String color){
