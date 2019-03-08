@@ -34,7 +34,7 @@ public class CategoryIconCount extends IconAbstract{
         this.width = width;
         this.height = height;
 
-        icon = new Icon(category.getIcon(), "black", size);
+        icon = new Icon(category.getIcon(), category.getColor(), size);
         icon.setLayoutY(height / 2 - icon.getLayoutBounds().getHeight() / 2 + 6);
         icon.setLayoutX(25);
 

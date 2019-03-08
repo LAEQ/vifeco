@@ -19,6 +19,7 @@ public class Icon extends Group {
         this.size = size;
         this.color = category.getColor();
         this.svg = new SVGPath();
+        this.svg.setFill(Paint.valueOf(this.color));
         this.svgRatio = 0.50f;
         svg.setContent(path);
         svg.setLayoutX(getX());
