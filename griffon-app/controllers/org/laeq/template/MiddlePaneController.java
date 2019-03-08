@@ -1,5 +1,6 @@
 package org.laeq.template;
 
+import com.sun.media.jfxmedia.MediaException;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
@@ -47,30 +48,41 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.add", objects -> {
             File videoFile = (File) objects[0];
                 if (videoFile.exists()) {
-//                    try {
-//                        Media media = new Media(videoFile.getCanonicalFile().toURI().toString());
-//                        MediaPlayer mediaPlayer = new MediaPlayer(media);
-//                        mediaPlayer.setOnReady(() -> {
-//                        Duration duration = mediaPlayer.getMedia().getDuration();
+                    try{
+                        Media media = new Media(videoFile.getCanonicalFile().toURI().toString());
+                        MediaPlayer mediaPlayer = new MediaPlayer(media);
+                        Video video = dbService.createVideo(videoFile, Duration.millis(10));
+                        Map<String, Object> args = new HashMap<>();
+                        args.put("video", video);
+                        createGroup("player", args);
 
-                            try {
-                                Video video = dbService.createVideo(videoFile, Duration.millis(10));
-                                Map<String, Object> args = new HashMap<>();
-                                args.put("video", video);
+                    } catch (IOException exception){
+                        getLog().error(exception.getMessage());
+                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String message = getApplication().getMessageSource().getMessage("org.laeq.video.file.error");
+                        dialogService.simpleAlert(title, message);
 
-                                createGroup("player", args);
-                            } catch (IOException | SQLException | DAOException e) {
-                                String message = String.format("Error createing the video: %s", videoFile.toString());
-                                dialogService.simpleAlert("key.to_implement", message);
-                                getLog().error("Error creating and saving video in db: ", videoFile);
-                            }
-//                        });
+                    } catch (SQLException | DAOException e) {
+                        getLog().error(e.getMessage());
+                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String message = getApplication().getMessageSource().getMessage("org.laeq.video.video_dao.error");
+                        dialogService.simpleAlert(title, message);
+                    } catch (MediaException | javafx.scene.media.MediaException e) {
+                        getLog().error(e.getMessage());
+                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String message = getApplication().getMessageSource().getMessage("org.laeq.video.media_file.error");
+                        dialogService.simpleAlert(title, message);
+                    } catch (Exception e){
+                        getLog().error(e.getMessage());
+                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String message = getApplication().getMessageSource().getMessage("org.laeq.video.file.error");
+                        dialogService.simpleAlert(title, message);
+                    }
 
-//                    } catch (IOException e) {
-//                        getLog().error(String.format("Create video with file %s", videoFile));
-//                    }
                 } else {
                     getLog().error(String.format("PlayerView: file not exits %s", videoFile));
+                    String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                    dialogService.simpleAlert(title, String.format("PlayerView: file not exits %s", videoFile));
                 }
         });
 
