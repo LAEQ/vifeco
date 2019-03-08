@@ -2,6 +2,7 @@ package org.laeq.template;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
@@ -32,8 +33,6 @@ public class MiddlePaneController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
-
-//        createGroup("status");
     }
 
     private Map<String, RunnableWithArgs> listenerList(){
@@ -48,16 +47,14 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.add", objects -> {
             File videoFile = (File) objects[0];
                 if (videoFile.exists()) {
-                    try {
-                        Media media = new Media(videoFile.getCanonicalFile().toURI().toString());
-
-                        MediaPlayer mediaPlayer = new MediaPlayer(media);
-
-                        mediaPlayer.setOnReady(() -> {
-                            Duration duration = mediaPlayer.getMedia().getDuration();
+//                    try {
+//                        Media media = new Media(videoFile.getCanonicalFile().toURI().toString());
+//                        MediaPlayer mediaPlayer = new MediaPlayer(media);
+//                        mediaPlayer.setOnReady(() -> {
+//                        Duration duration = mediaPlayer.getMedia().getDuration();
 
                             try {
-                                Video video = dbService.createVideo(videoFile, duration);
+                                Video video = dbService.createVideo(videoFile, Duration.millis(10));
                                 Map<String, Object> args = new HashMap<>();
                                 args.put("video", video);
 
@@ -67,11 +64,11 @@ public class MiddlePaneController extends AbstractGriffonController {
                                 dialogService.simpleAlert("key.to_implement", message);
                                 getLog().error("Error creating and saving video in db: ", videoFile);
                             }
-                        });
+//                        });
 
-                    } catch (IOException e) {
-                        getLog().error(String.format("Create video with file %s", videoFile));
-                    }
+//                    } catch (IOException e) {
+//                        getLog().error(String.format("Create video with file %s", videoFile));
+//                    }
                 } else {
                     getLog().error(String.format("PlayerView: file not exits %s", videoFile));
                 }
@@ -89,10 +86,10 @@ public class MiddlePaneController extends AbstractGriffonController {
         return list;
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void createGroup(String groupName, Map<String, Object> args){
-        destroyMVCGroup("player");
 
+    @ControllerAction
+    @Threading(Threading.Policy.SKIP)
+    public void createGroup(String groupName, Map<String, Object> args){
         try{
             createMVCGroup(groupName, args);
         } catch (Exception e){
@@ -100,7 +97,8 @@ public class MiddlePaneController extends AbstractGriffonController {
         }
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @ControllerAction
+    @Threading(Threading.Policy.SKIP)
     public void createGroup(String groupName){
         try{
             createMVCGroup(groupName);
