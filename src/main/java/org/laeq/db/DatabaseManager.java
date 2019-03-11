@@ -1,19 +1,14 @@
 package org.laeq.db;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URI;
+import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
+import java.util.List;
 
 public class DatabaseManager {
     private Logger logger;
@@ -32,38 +27,24 @@ public class DatabaseManager {
         return DriverManager.getConnection(this.config.getUrl(), this.config.getUser(), this.config.getPassword());
     }
 
-    public boolean loadFixtures(URI fixtures) throws IOException, SQLException {
-        Path path = Paths.get(fixtures);
+    public boolean loadFixtures(String fixtures){
+        try(Connection connection = getConnection();
+            Statement stmt = connection.createStatement())
+        {
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fixtures);
+            List<String> fixturesQuery = IOUtils.readLines(inputStream, "UTF-8");
 
-        if( ! Files.exists(path)){
-            logger.error(String.format("DatabaseManager: cannot find the file: %s", fixtures.toString()));
-            return false;
-        }
-
-        BufferedReader reader = new BufferedReader(new FileReader(path.toFile()));
-        StringBuilder builder = new StringBuilder();
-        String line;
-
-        try (Connection connection = getConnection();
-             Statement stmt = connection.createStatement()){
-
-            while((line = reader.readLine()) != null){
-                builder.append(line);
-
-                if(line.contains(";")){
-                    stmt.addBatch(builder.toString());
-                    builder.delete(0, builder.length());
-                }
+            for (String query: fixturesQuery) {
+                stmt.addBatch(query);
             }
 
-            int[] result = stmt.executeBatch();
+            stmt.executeBatch();
 
             return true;
+        } catch (SQLException | IOException e) {
+            logger.error("Fail to create tables" + e.getMessage());
+            return false;
         }
-    }
-
-    public boolean loadFixtures(URL fixtures) throws IOException, SQLException, URISyntaxException {
-        return loadFixtures(fixtures.toURI());
     }
 
     public void getTableStatus() throws SQLException, DAOException {

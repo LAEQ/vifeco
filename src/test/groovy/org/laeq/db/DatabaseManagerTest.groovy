@@ -56,24 +56,24 @@ class DatabaseManagerTest extends Specification {
 
     def "test create tables"() {
         setup:
-        def createSQL = this.class.getClassLoader().getResource("sql/create_tables.sql")
+        def createSQL = "sql/create_tables.sql"
 
         when:
         def result = manager.loadFixtures(createSQL)
 
         then:
-        noExceptionThrown()
+        result == true
     }
 
     def "test load fixtures"() {
         setup:
-        def createSQL = this.class.getClassLoader().getResource("sql/create_tables.sql")
-        def fixturesSQL = this.class.getClassLoader().getResource("sql/fixtures.sql")
+        def sqlFiles = ["sql/create_tables.sql", "sql/fixtures.sql"]
 
 
         when:
-        manager.loadFixtures(createSQL)
-        manager.loadFixtures(fixturesSQL)
+        sqlFiles.each {
+            manager.loadFixtures(it)
+        }
 
         then:
         noExceptionThrown()
