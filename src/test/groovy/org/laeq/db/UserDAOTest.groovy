@@ -74,7 +74,7 @@ class UserDAOTest extends AbstractDAOTest {
     def "test delete the default "() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/fixtures.sql"))
+            manager.loadFixtures("sql/fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -91,7 +91,7 @@ class UserDAOTest extends AbstractDAOTest {
     def "test delete an existing "() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -108,7 +108,7 @@ class UserDAOTest extends AbstractDAOTest {
     def "test find default"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -124,7 +124,7 @@ class UserDAOTest extends AbstractDAOTest {
     def "test delete an unknown "() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }

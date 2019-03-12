@@ -17,7 +17,7 @@ class PointDAOTest extends AbstractDAOTest {
     def "test insertion"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -40,7 +40,7 @@ class PointDAOTest extends AbstractDAOTest {
     def "test count"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -55,7 +55,7 @@ class PointDAOTest extends AbstractDAOTest {
     def "test findAll"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -70,7 +70,7 @@ class PointDAOTest extends AbstractDAOTest {
     def "test findByVideo"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -91,7 +91,7 @@ class PointDAOTest extends AbstractDAOTest {
     def "test delete"(){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -114,7 +114,7 @@ class PointDAOTest extends AbstractDAOTest {
     def "test delete does not exists"(){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }

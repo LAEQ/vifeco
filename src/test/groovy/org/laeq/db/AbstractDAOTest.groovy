@@ -31,7 +31,7 @@ class AbstractDAOTest extends Specification {
 
         try{
             sqlArray.each {
-              manager.loadFixtures(getClass().classLoader.getResource(it))
+              manager.loadFixtures(it)
             }
         } catch (Exception e){
             println e

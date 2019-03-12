@@ -60,7 +60,7 @@ class CategoryDAOTest extends AbstractDAOTest {
     def "test delete an existing category"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -77,7 +77,7 @@ class CategoryDAOTest extends AbstractDAOTest {
     def "test delete an unknown category" (){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -93,7 +93,7 @@ class CategoryDAOTest extends AbstractDAOTest {
     def "test find by collection"(){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
