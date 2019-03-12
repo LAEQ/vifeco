@@ -12,7 +12,7 @@ class CollectionDAOTest extends AbstractDAOTest {
 
     def "test insertion"() {
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -35,7 +35,7 @@ class CollectionDAOTest extends AbstractDAOTest {
 
     def "test update: modify name"() {
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -52,7 +52,7 @@ class CollectionDAOTest extends AbstractDAOTest {
 
     def "test update: delete 2 categories"() {
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -73,7 +73,7 @@ class CollectionDAOTest extends AbstractDAOTest {
 
     def "test update: delete 2 categories add 2 new ones"() {
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -101,7 +101,7 @@ class CollectionDAOTest extends AbstractDAOTest {
     def "test: get list of ids of category for a specific collection."(){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -129,7 +129,7 @@ class CollectionDAOTest extends AbstractDAOTest {
     def "test findById"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -151,7 +151,7 @@ class CollectionDAOTest extends AbstractDAOTest {
     def "test findDefault"(){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -167,7 +167,7 @@ class CollectionDAOTest extends AbstractDAOTest {
     def "test findAll but empty"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -183,7 +183,7 @@ class CollectionDAOTest extends AbstractDAOTest {
     def "test delete default collection fails successfully. You cannot delete it!"() {
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
@@ -200,7 +200,7 @@ class CollectionDAOTest extends AbstractDAOTest {
     def "test delete a regular collection" (){
         setup:
         try{
-            manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }

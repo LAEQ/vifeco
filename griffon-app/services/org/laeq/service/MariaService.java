@@ -15,8 +15,6 @@ import org.laeq.settings.Settings;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -56,32 +54,18 @@ public class MariaService extends AbstractGriffonService {
         db.start();
         db.createDB(dbName);
 
-        URL tableQuery = getClass().getClassLoader().getResource("sql/create_tables.sql");
+        boolean result = false;
+        result = manager.loadFixtures("sql/create_tables.sql");
 
-        try {
-            manager.loadFixtures(tableQuery);
-        } catch (IOException | SQLException | URISyntaxException e) {
-            getLog().error(e.getMessage());
-        }
+        if(result){
+            try{
+                UserDAO userDAO = new UserDAO(manager);
+                User defaultUser = userDAO.findDefault();
 
-        try{
-            UserDAO userDAO = new UserDAO(manager);
-            User defaultUser = userDAO.findDefault();
-
-        } catch (DAOException | SQLException e) {
-            try {
-                loadFixtures();
-            } catch (SQLException | IOException | URISyntaxException e1) {
-                getLog().error(String.format("MariaService cannot load the fixtures. %s", e.getMessage()));
+            } catch (DAOException | SQLException e) {
+                manager.loadFixtures("sql/fixtures.sql");
             }
         }
-
-    }
-
-    private void loadFixtures() throws SQLException, IOException, URISyntaxException {
-        URL tableQuery = getClass().getClassLoader().getResource("sql/fixtures.sql");
-
-        manager.loadFixtures(tableQuery);
     }
 
     public void stop() throws ManagedProcessException {

@@ -17,7 +17,7 @@ class VideoDAOTest extends AbstractDAOTest {
         def result = false
 
         try{
-            result = manager.loadFixtures(this.class.classLoader.getResource("sql/test_fixtures.sql"))
+            result = manager.loadFixtures("sql/test_fixtures.sql")
         } catch (Exception e){
             println e
         }
