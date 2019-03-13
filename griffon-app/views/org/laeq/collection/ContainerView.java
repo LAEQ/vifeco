@@ -13,12 +13,12 @@ import javafx.util.Callback;
 import org.laeq.TranslatedView;
 import org.laeq.graphic.Color;
 import org.laeq.graphic.IconSVG;
-import org.laeq.graphic.icon.CategoryMatrice;
 import org.laeq.graphic.icon.IconType;
 import org.laeq.model.Category;
 import org.laeq.model.CategoryCheckedBox;
 import org.laeq.model.Collection;
 import org.laeq.model.Icon;
+import org.laeq.model.icon.IconDescriptorMatrice;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
@@ -154,8 +154,8 @@ public class ContainerView extends TranslatedView {
                         Set<Category> categorySet = collectionTable.getItems().get(getIndex()).getCategorySet();
 
                         if(categorySet != null){
-                            CategoryMatrice matrice = new CategoryMatrice(categorySet, IconType.REGULAR);
-                            group.getChildren().addAll(matrice.getIconMap().values());
+                            IconDescriptorMatrice matrix = new IconDescriptorMatrice(categorySet, IconType.REGULAR);
+                            group.getChildren().addAll(matrix.getIconMap().values());
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {
                         getLog().error(e.getMessage());

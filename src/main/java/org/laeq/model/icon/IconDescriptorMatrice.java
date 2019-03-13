@@ -1,15 +1,17 @@
-package org.laeq.graphic.icon;
+package org.laeq.model.icon;
 
 import javafx.geometry.Point2D;
+import org.laeq.graphic.icon.CategoryIcon;
+import org.laeq.graphic.icon.CategoryIconCount;
+import org.laeq.graphic.icon.IconAbstract;
+import org.laeq.graphic.icon.IconType;
 import org.laeq.model.Category;
-import org.laeq.model.icon.IconCounter;
-import org.laeq.model.icon.IconSize;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class CategoryMatrice {
+public class IconDescriptorMatrice {
     private double width;
     private double height;
     private int size;
@@ -18,11 +20,12 @@ public class CategoryMatrice {
     Set<Category> categorySet;
     Point2D[] points;
 
-    Map<Category, IconCounter> iconMap = new HashMap<>();
+    Map<Category, IconDescriptor> iconMap = new HashMap<>();
 
-    public CategoryMatrice(Set<Category> categorySet, IconType type) {
+    public IconDescriptorMatrice(Set<Category> categorySet, IconType type) {
         this.type = type;
-        this.setValues();
+        this.width = 180;
+        this.height = 40;
 
         this.categorySet = categorySet;
         points = new Point2D[categorySet.size()];
@@ -30,33 +33,14 @@ public class CategoryMatrice {
 
         int index = 0;
         for (Category category: categorySet) {
-            IconCounter iconCounter = new IconCounter(new IconSize(category, 80), 190, 60);
+            IconDescriptor iconCounter = new IconDescriptor(new IconSize(category, 40), this.width, this.height);
             iconCounter.decorate();
             iconCounter.position(points[index++]);
             iconMap.put(category, iconCounter);
         }
     }
 
-    private IconAbstract generateIcon(Category category){
-        if(this.type == IconType.COUNT){
-            return new CategoryIconCount(category, this.size, this.width, this.height);
-        } else {
-            return new CategoryIcon(category, this.width, this.height);
-        }
-    }
-
-    private void setValues(){
-        if(type == IconType.COUNT){
-            this.width = 190;
-            this.height = 60;
-            this.size = 50;
-        } else if(type == IconType.REGULAR){
-            this.width = 180;
-            this.height  = 30;
-        }
-    }
-
-    public Map<Category, IconCounter> getIconMap() {
+    public Map<Category, IconDescriptor> getIconMap() {
         return iconMap;
     }
 

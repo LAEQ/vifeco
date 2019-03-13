@@ -1,6 +1,5 @@
 package org.laeq.model.icon;
 
-
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -15,9 +14,9 @@ public class IconDescriptor extends Group implements IconDecorator {
     /**
      * Constructs a group.
      */
-    public IconDescriptor(IconSize iconSize) {
+    public IconDescriptor(IconSize iconSize, double width, double height) {
         this.iconSize = iconSize;
-        this.rectangle = new Rectangle(-10 ,-10, 180, 40);
+        this.rectangle = new Rectangle(-10 ,-10, width, height);
         this.rectangle.setFill(Color.LIGHTGRAY);
         this.label = new Label(iconSize.category.getName());
         this.label.setStyle("-fx-font-family: sans; -fx-font-size: 13px;");

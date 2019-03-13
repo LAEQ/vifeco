@@ -17,7 +17,7 @@ import javafx.util.Callback;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.laeq.TranslatedView;
-import org.laeq.graphic.icon.CategoryMatrice;
+import org.laeq.model.icon.IconCounterMatrice;
 import org.laeq.graphic.icon.IconType;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
@@ -176,7 +176,7 @@ public class ContainerView extends TranslatedView {
         collectionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
         collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));
 
-        CategoryMatrice matrice = new CategoryMatrice(model.getCategorySet(), IconType.COUNT);
+        IconCounterMatrice matrice = new IconCounterMatrice(model.getCategorySet(), IconType.COUNT);
         categoryGroupMap = matrice.getIconMap();
 
         categoryGroup.getChildren().addAll(matrice.getIconMap().values());
