@@ -31,6 +31,7 @@ import org.laeq.model.Category;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.model.icon.IconPointColorized;
 import org.laeq.video.ControlsModel;
 import org.laeq.video.VideoService;
 
@@ -337,7 +338,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private SetChangeListener<Point> displayListener(){
         return change -> {
             if(change.wasAdded()){
-                Icon icon = change.getElementAdded().getIcon(iconPane.getBoundsInLocal());
+                IconPointColorized icon = change.getElementAdded().getIcon(iconPane.getBoundsInLocal());
                 icon.setOpacity(model.getOpacity());
                 icon.setScaleX(model.getSize() / 100);
                 icon.setScaleY(model.getSize() / 100);

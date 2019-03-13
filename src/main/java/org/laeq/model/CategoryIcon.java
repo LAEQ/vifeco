@@ -1,4 +1,4 @@
-package org.laeq.collection;
+package org.laeq.model;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -8,7 +8,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
-
 
 public class CategoryIcon extends Group {
     private double width = 50d;

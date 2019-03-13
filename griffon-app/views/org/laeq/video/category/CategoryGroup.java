@@ -1,5 +1,6 @@
 package org.laeq.video.category;
 
+import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -8,6 +9,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
+import org.laeq.model.icon.IconPoint;
+import org.laeq.model.icon.IconSize;
 
 public class CategoryGroup extends AnchorPane {
 
@@ -40,9 +43,11 @@ public class CategoryGroup extends AnchorPane {
 
         setRightAnchor(textLabel, 15d);
 
-        Icon icon = new Icon(category, size);
+        IconPoint iconPoint = new IconPoint(new IconSize(category, size));
+        iconPoint.decorate();
+        iconPoint.position(new Point2D(size / 2, size / 2));
 
-        getChildren().addAll(background, icon, textShortCut, textLabel);
+        getChildren().addAll(background, iconPoint, textShortCut, textLabel);
     }
 
     public Text getTextLabel() {

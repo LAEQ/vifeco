@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javafx.geometry.Bounds;
 import javafx.util.Duration;
+import org.laeq.model.icon.IconPoint;
+import org.laeq.model.icon.IconPointColorized;
+import org.laeq.model.icon.IconSize;
 
 import java.util.Objects;
 @JsonIgnoreProperties({"id", "video", "icon", "duration", "createdAt", "updatedAt", "category"})
@@ -16,7 +19,7 @@ public class Point extends BaseEntity implements Comparable<Point> {
     private Duration start;
     private Category category;
     private Video video;
-    private Icon icon;
+    private IconPointColorized icon;
 
     public Point() {
     }
@@ -121,9 +124,9 @@ public class Point extends BaseEntity implements Comparable<Point> {
     }
 
     @JsonIgnore
-    public Icon getIcon(Bounds bounds) {
+    public IconPointColorized getIcon(Bounds bounds) {
         if(this.icon == null){
-            this.icon = new Icon(category, 100);
+            this.icon = new IconPointColorized(new IconSize(category, 100));
         }
 
         this.icon.setLayoutX(getX() * bounds.getWidth() - 100 / 2);
@@ -133,9 +136,9 @@ public class Point extends BaseEntity implements Comparable<Point> {
     }
 
     @JsonIgnore
-    public Icon getIcon() {
+    public IconPointColorized getIcon() {
         if(this.icon == null){
-            this.icon = new Icon(category, 100);
+            this.icon = new IconPointColorized(new IconSize(category, 100));
         }
 
         return icon;

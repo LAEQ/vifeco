@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
+import org.laeq.model.icon.IconPointColorized;
 
 import java.util.ArrayList;
 
@@ -52,7 +53,7 @@ public class Timeline extends Group {
         return y;
     }
     public void addPoint(Point point) {
-        Icon icon = point.getIcon();
+        IconPointColorized icon = point.getIcon();
         double x = point.getStart().toSeconds() * ratio;
         icon.setLayoutX(x);
         icon.setLayoutY(getNextY());

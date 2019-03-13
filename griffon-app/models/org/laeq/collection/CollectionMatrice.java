@@ -2,6 +2,7 @@ package org.laeq.collection;
 
 import javafx.geometry.Point2D;
 import org.laeq.model.Category;
+import org.laeq.model.CategoryIcon;
 
 import java.util.HashMap;
 import java.util.Map;

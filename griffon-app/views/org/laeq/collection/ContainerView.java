@@ -16,6 +16,7 @@ import org.laeq.graphic.IconSVG;
 import org.laeq.graphic.icon.CategoryMatrice;
 import org.laeq.graphic.icon.IconType;
 import org.laeq.model.Category;
+import org.laeq.model.CategoryCheckedBox;
 import org.laeq.model.Collection;
 import org.laeq.model.Icon;
 import org.laeq.template.MiddlePaneView;
