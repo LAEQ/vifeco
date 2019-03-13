@@ -25,6 +25,7 @@ import org.laeq.model.Category;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
+import org.laeq.model.icon.IconCounter;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
@@ -57,7 +58,7 @@ public class ContainerView extends TranslatedView {
     @FXML private Button deleteActionTarget;
     @FXML private Button editActionTarget;
 
-    Map<Category, IconAbstract> categoryGroupMap;
+    Map<Category, IconCounter> categoryGroupMap;
 
     private TableColumn<Video, User> userColumn;
     private TableColumn<Video, Collection> collectionColumn;
@@ -239,7 +240,7 @@ public class ContainerView extends TranslatedView {
 
         model.getCategorySet().forEach(c -> {
             categoryGroupMap.get(c).setOpacity(0.4);
-            categoryGroupMap.get(c).colorize(Color.white, Color.white);
+//            categoryGroupMap.get(c).colorize(Color.white, Color.white);
             categoryGroupMap.get(c).setText("-");
         });
     }

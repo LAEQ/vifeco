@@ -13,12 +13,8 @@ import org.laeq.model.icon.IconPoint;
 import org.laeq.model.icon.IconSize;
 
 public class CategoryGroup extends AnchorPane {
-
-    private String filePath;
-    private Text textLabel;
-
-    private String fillColor = "#aaaaaa";
-    private Category category;
+    private final Text textLabel;
+    private final Category category;
 
     /**
      * Creates an AnchorPane layout.

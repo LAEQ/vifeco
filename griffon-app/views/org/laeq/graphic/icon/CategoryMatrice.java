@@ -2,6 +2,8 @@ package org.laeq.graphic.icon;
 
 import javafx.geometry.Point2D;
 import org.laeq.model.Category;
+import org.laeq.model.icon.IconCounter;
+import org.laeq.model.icon.IconSize;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +18,7 @@ public class CategoryMatrice {
     Set<Category> categorySet;
     Point2D[] points;
 
-    Map<Category, IconAbstract> iconMap = new HashMap<>();
+    Map<Category, IconCounter> iconMap = new HashMap<>();
 
     public CategoryMatrice(Set<Category> categorySet, IconType type) {
         this.type = type;
@@ -28,10 +30,10 @@ public class CategoryMatrice {
 
         int index = 0;
         for (Category category: categorySet) {
-            IconAbstract icon = generateIcon(category);
-            icon.setPosition(points[index]);
-            index++;
-            iconMap.put(category, icon);
+            IconCounter iconCounter = new IconCounter(new IconSize(category, 80), 190, 60);
+            iconCounter.decorate();
+            iconCounter.position(points[index++]);
+            iconMap.put(category, iconCounter);
         }
     }
 
@@ -45,7 +47,7 @@ public class CategoryMatrice {
 
     private void setValues(){
         if(type == IconType.COUNT){
-            this.width = 170;
+            this.width = 190;
             this.height = 60;
             this.size = 50;
         } else if(type == IconType.REGULAR){
@@ -54,7 +56,7 @@ public class CategoryMatrice {
         }
     }
 
-    public Map<Category, IconAbstract> getIconMap() {
+    public Map<Category, IconCounter> getIconMap() {
         return iconMap;
     }
 

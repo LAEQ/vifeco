@@ -17,9 +17,9 @@ public class IconCounter extends Group implements IconDecorator {
     /**
      * Constructs a group.
      */
-    public IconCounter(IconSize iconSize) {
-        this.width = 190;
-        this.height = 60;
+    public IconCounter(IconSize iconSize, double width, double height) {
+        this.width = width;
+        this.height = height;
         this.iconSize = iconSize;
         this.rectangle = new Rectangle(0 ,0, this.width, this.height);
         this.rectangle.setFill(Color.WHITE);
@@ -45,5 +45,9 @@ public class IconCounter extends Group implements IconDecorator {
     public void position(Point2D point) {
         this.setLayoutX(point.getX());
         this.setLayoutY(point.getY());
+    }
+
+    public void reset() {
+        this.setText("-");
     }
 }

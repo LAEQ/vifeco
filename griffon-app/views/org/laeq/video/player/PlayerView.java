@@ -339,10 +339,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         return change -> {
             if(change.wasAdded()){
                 IconPointColorized icon = change.getElementAdded().getIcon(iconPane.getBoundsInLocal());
+                icon.decorate();
                 icon.setOpacity(model.getOpacity());
                 icon.setScaleX(model.getSize() / 100);
                 icon.setScaleY(model.getSize() / 100);
-                iconPane.getChildren().add(((Point)change.getElementAdded()).getIcon(iconPane.getBoundsInLocal()));
+                iconPane.getChildren().add((change.getElementAdded()).getIcon(iconPane.getBoundsInLocal()));
             }
 
             if(change.wasRemoved()){
@@ -373,7 +374,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         Platform.runLater(() -> {
             displayPoints();
 
-//            timeSlider.setDisable(duration.isUnknown());
+            timeSlider.setDisable(duration.isUnknown());
 
             if (!timeSlider.isDisabled() && duration.greaterThanOrEqualTo(Duration.ZERO) && !timeSlider.isValueChanging()) {
                 timeSlider.setValue(mediaPlayer.getCurrentTime().divide(duration).toMillis() * 100.0);

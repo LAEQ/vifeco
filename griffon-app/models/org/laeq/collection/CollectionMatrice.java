@@ -3,6 +3,8 @@ package org.laeq.collection;
 import javafx.geometry.Point2D;
 import org.laeq.model.Category;
 import org.laeq.model.CategoryIcon;
+import org.laeq.model.icon.IconCounter;
+import org.laeq.model.icon.IconSize;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +28,7 @@ public class CollectionMatrice {
 
         int index = 0;
         for (Category category : categorySet) {
+            IconCounter iconCounter = new IconCounter(new IconSize(category, 50), width, height);
             CategoryIcon icon = new CategoryIcon(category, 50, this.width, this.height);
             icon.setPosition(points[index]);
             index++;
