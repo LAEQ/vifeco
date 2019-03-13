@@ -4,8 +4,6 @@ import javafx.scene.Group;
 import javafx.scene.control.CheckBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import org.laeq.model.Category;
-import org.laeq.model.Icon;
 
 public class CategoryCheckedBox extends Group {
         private double width = 50;

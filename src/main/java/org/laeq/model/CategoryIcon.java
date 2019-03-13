@@ -6,8 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import org.laeq.model.Category;
-import org.laeq.model.Icon;
 
 public class CategoryIcon extends Group {
     private double width = 50d;

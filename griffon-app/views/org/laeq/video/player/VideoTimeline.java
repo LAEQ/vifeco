@@ -96,6 +96,8 @@ public class VideoTimeline extends Group {
         translate.setCycleCount(1);
         translate.setAutoReverse(false);
 
+        group.getChildren().clear();
+
         group.getChildren().addAll(lines);
         group.getChildren().addAll(texts);
     }

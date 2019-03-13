@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javafx.geometry.Bounds;
 import javafx.util.Duration;
-import org.laeq.model.icon.IconPoint;
 import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconSize;
 
@@ -129,9 +128,6 @@ public class Point extends BaseEntity implements Comparable<Point> {
             this.icon = new IconPointColorized(new IconSize(category, 100));
         }
 
-        this.icon.setLayoutX(getX() * bounds.getWidth() - 100 / 2);
-        this.icon.setLayoutY(getY() * bounds.getHeight() - 100 / 2);
-
         return icon;
     }
 
@@ -150,11 +146,11 @@ public class Point extends BaseEntity implements Comparable<Point> {
 
     @JsonIgnore
     public void repositionY(Double newValue) {
-        this.icon.setLayoutY(getY() * newValue - 100 / 2);
+        this.icon.setLayoutY(getY() * newValue);
     }
     @JsonIgnore
     public void repositionX(Double newValue) {
-        this.icon.setLayoutX(getX() * newValue - 100 / 2);
+        this.icon.setLayoutX(getX() * newValue );
     }
 }
 

@@ -12,6 +12,7 @@ import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -32,7 +33,6 @@ import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
-import org.laeq.video.ControlsModel;
 import org.laeq.video.VideoService;
 
 import javax.annotation.Nonnull;
@@ -53,7 +53,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private MediaPlayer mediaPlayer;
     private Duration duration;
 
-
     @MVCMember @Nonnull private PlayerController controller;
     @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private ContainerView parentView;
@@ -71,7 +70,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @Inject private VideoService videoService;
 
     private VifecoView rootView;
-    private ControlsModel controlsModel;
 
     //Listeners
     private EventHandler<KeyEvent> keyListener;
@@ -329,6 +327,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             point.repositionX((Double) newValue);
         });
     }
+
     private ChangeListener<Number> iconHeightPropertyListener(){
         return (observable, oldValue, newValue) -> pointsDisplayed.forEach(point -> {
             point.repositionY((Double) newValue);
@@ -338,12 +337,17 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private SetChangeListener<Point> displayListener(){
         return change -> {
             if(change.wasAdded()){
-                IconPointColorized icon = change.getElementAdded().getIcon(iconPane.getBoundsInLocal());
+                IconPointColorized icon = change.getElementAdded().getIcon();
                 icon.decorate();
                 icon.setOpacity(model.getOpacity());
                 icon.setScaleX(model.getSize() / 100);
                 icon.setScaleY(model.getSize() / 100);
-                iconPane.getChildren().add((change.getElementAdded()).getIcon(iconPane.getBoundsInLocal()));
+
+                Bounds bounds = iconPane.getLayoutBounds();
+                Point2D point = new Point2D(change.getElementAdded().getX() * bounds.getWidth(), change.getElementAdded().getY() * bounds.getHeight());
+                icon.position(point);
+
+                iconPane.getChildren().add(icon);
             }
 
             if(change.wasRemoved()){

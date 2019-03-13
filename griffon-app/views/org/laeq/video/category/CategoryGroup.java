@@ -8,7 +8,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import org.laeq.model.Category;
-import org.laeq.model.Icon;
 import org.laeq.model.icon.IconPoint;
 import org.laeq.model.icon.IconSize;
 
