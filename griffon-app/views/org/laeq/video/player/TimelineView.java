@@ -3,6 +3,7 @@ package org.laeq.video.player;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.scene.Group;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -12,6 +13,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.graphic.icon.TimelineIcon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.model.icon.IconTimeline;
 
 import javax.annotation.Nonnull;
 
@@ -24,8 +26,8 @@ public class TimelineView extends AbstractJavaFXGriffonView {
 
     private final VideoTimeline timeline = new VideoTimeline();
 
-    private final Line line = new Line(0,0,0,100);
-    private final Line durationLine = new Line(0,0,0,100);
+    private final Line line = new Line(0,0,0,160);
+    private final Line durationLine = new Line(0,0,0,160);
     private Pane pane;
 
     @Override

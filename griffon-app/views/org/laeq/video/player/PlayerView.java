@@ -338,7 +338,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         return change -> {
             if(change.wasAdded()){
                 IconPointColorized icon = change.getElementAdded().getIcon();
-                icon.decorate();
                 icon.setOpacity(model.getOpacity());
                 icon.setScaleX(model.getSize() / 100);
                 icon.setScaleY(model.getSize() / 100);

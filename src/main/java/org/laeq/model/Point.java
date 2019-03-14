@@ -135,6 +135,7 @@ public class Point extends BaseEntity implements Comparable<Point> {
     public IconPointColorized getIcon() {
         if(this.icon == null){
             this.icon = new IconPointColorized(new IconSize(category, 100));
+            this.icon.decorate();
         }
 
         return icon;

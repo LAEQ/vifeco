@@ -25,7 +25,6 @@ public class ContainerController extends AbstractGriffonController {
     @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
 
-
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         if(video != null){
@@ -42,6 +41,14 @@ public class ContainerController extends AbstractGriffonController {
         } else {
             getLog().error("PlayerController: video is null ??" );
         }
+    }
+
+    @Override
+    public void mvcGroupDestroy(){
+        destroyMVCGroup("controls");
+        destroyMVCGroup("category");
+        destroyMVCGroup("video_player");
+        destroyMVCGroup("timeline");
     }
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)

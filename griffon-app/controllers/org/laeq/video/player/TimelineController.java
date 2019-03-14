@@ -10,6 +10,7 @@ import org.laeq.db.DAOException;
 import org.laeq.graphic.icon.TimelineIcon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.model.icon.IconTimeline;
 import org.laeq.service.MariaService;
 import org.laeq.video.ControlsDefault;
 

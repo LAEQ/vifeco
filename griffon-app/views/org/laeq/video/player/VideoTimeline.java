@@ -3,6 +3,7 @@ package org.laeq.video.player;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.collections.SetChangeListener;
+import javafx.geometry.Point2D;
 import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -12,8 +13,12 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.laeq.graphic.icon.TimelineIcon;
 import org.laeq.model.Point;
+import org.laeq.model.icon.IconSize;
+import org.laeq.model.icon.IconTimeline;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class VideoTimeline extends Group {
     private Duration duration;
@@ -21,14 +26,18 @@ public class VideoTimeline extends Group {
     private final ArrayList<Text> texts = new ArrayList<>();
     private final Group group = new Group();
     private final int ratio = 50;
-    private double y = 81;
+    private final double height = 160;
+    private final int iconSize = 17;
+    private final HashMap<IconTimeline, Integer> icons = new HashMap<>();
+
+
+    private double y = 160;
 
     private TranslateTransition translate;
     private Boolean isPlaying = false;
     private SetChangeListener<Point> listener;
 
     private Duration currentPosition = Duration.seconds(0);
-
 
     public VideoTimeline() {
         getChildren().add(group);
@@ -42,20 +51,31 @@ public class VideoTimeline extends Group {
     }
 
     private double getNextY(){
-        if(y > 75){
-            y = 5;
+        if(y >= height - 17){
+            y = 17;
         } else {
-            y += 12;
+            y += iconSize + 5;
         }
 
         return y;
     }
 
+    public int getIconIdentifier(Group group){
+        return icons.get(group);
+    }
+
     public void addPoint(Point point) {
         double x = point.getStart().toSeconds() * ratio;
-        TimelineIcon circle = new TimelineIcon(x, getNextY(), 5, point);
 
-        group.getChildren().add(circle);
+        IconTimeline icon = new IconTimeline(new IconSize(point.getCategory(), iconSize), point.getId());
+        icon.decorate();
+        icon.position(new Point2D(x, getNextY()));
+
+        icons.put(icon, icon.getIdentifier());
+
+//        TimelineIcon icon = new TimelineIcon(x, getNextY(), iconSize, point);
+
+        group.getChildren().add(icon);
     }
 
     public void removePoint(TimelineIcon icon){
@@ -73,7 +93,6 @@ public class VideoTimeline extends Group {
             translate.playFrom(this.currentPosition);
         }
     }
-
 
     public void setX(double x){
         this.setLayoutX(x);
@@ -113,14 +132,13 @@ public class VideoTimeline extends Group {
     private SetChangeListener<Point> listener() {
         return change -> {
 
-
         };
     }
 
     private Line drawLine(int x) {
-        int height = (x % 10 == 0) ? 90 : 95;
+        double height = (x % 10 == 0) ? (this.height - 10) : (this.height - 5);
 
-        Line line = new Line(x * ratio, height, x * ratio, 100);
+        Line line = new Line(x * ratio, height, x * ratio, this.height);
         line.setStroke(Color.GRAY);
         line.setStrokeWidth(1);
         return line;
@@ -147,7 +165,7 @@ public class VideoTimeline extends Group {
     private Text drawText(int i) {
         Text text = new Text(formatText(i));
         text.setLayoutX(i * ratio - 2);
-        text.setLayoutY(85);
+        text.setLayoutY(this.height - 15);
         text.setFill(Color.DARKGRAY);
         text.setFont(new Font("sans", 10));
         return text;
@@ -171,5 +189,3 @@ public class VideoTimeline extends Group {
         translate.setRate(rate);
     }
 }
-
-
