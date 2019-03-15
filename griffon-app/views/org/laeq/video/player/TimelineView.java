@@ -3,19 +3,20 @@ package org.laeq.video.player;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.scene.Group;
+import javafx.collections.SetChangeListener;
+import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.graphic.icon.TimelineIcon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.model.icon.IconTimeline;
+import org.laeq.model.icon.IconPointColorized;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
 
 @ArtifactProviderFor(GriffonView.class)
 public class TimelineView extends AbstractJavaFXGriffonView {
@@ -23,6 +24,9 @@ public class TimelineView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private TimelineModel model;
     @MVCMember @Nonnull private ContainerView parentView;
     @MVCMember @Nonnull private Video video;
+    @MVCMember @Nonnull private VideoEditor editor;
+
+    private final HashMap<Point, IconPointColorized> icons = new HashMap<>();
 
     private final VideoTimeline timeline = new VideoTimeline();
 
@@ -55,41 +59,49 @@ public class TimelineView extends AbstractJavaFXGriffonView {
             durationLine.setEndX(x - x1);
             timeline.setX(x);
         });
-        timeline.getGroup().setOnMouseEntered(event -> {
-            if(event.getPickResult().getIntersectedNode() != null){
-                try{
-                    controller.highlightPoint((TimelineIcon) event.getPickResult().getIntersectedNode());
-                } catch (ClassCastException e){
-                    getLog().error(e.getMessage());
-                }
+
+        timeline.setOnMouseEntered(event -> {
+            Node node = (Node) event.getSource();
+
+            if(node.getParent() instanceof IconPointColorized){
+                System.out.println("Mouse entered");
             }
         });
-        timeline.getGroup().setOnMouseExited(event -> controller.highlightPoint());
+
+        timeline.getGroup().setOnMouseExited(event -> {
+
+        });
+
         timeline.getGroup().setOnMouseClicked(event -> {
-            if(event.getPickResult().getIntersectedNode() != null){
-                try{
-                    TimelineIcon circle = (TimelineIcon) event.getPickResult().getIntersectedNode();
-                    controller.deletePoint(circle.getIdentifier());
-                    timeline.getGroup().getChildren().remove(circle);
-                } catch (ClassCastException e){
-                    getLog().error(e.getMessage());
+            Node node = (Node) event.getTarget();
+            if(node.getParent() instanceof IconPointColorized){
+                Point point = editor.deleteTimelineIcon((IconPointColorized) node.getParent());
+                if(point != null){
+                    controller.deletePoint(point);
                 }
             }
         });
+
         parentView.getTimelinePane().getChildren().add(pane);
     }
 
-    public void init(){
+    public void init() {
         timeline.init(model.getDuration());
-        video.getPointSet().forEach(point -> timeline.addPoint(point));
+        timeline.addIcons(editor.getTimelineIconMap());
+
+        editor.getTimelinePane().addListener((SetChangeListener<IconPointColorized>) change -> {
+            if (change.wasAdded()) {
+                timeline.addIcon(change.getElementAdded());
+            }
+
+            if (change.wasRemoved()) {
+                timeline.removeIcon(change.getElementRemoved());
+            }
+        });
     }
 
     public void play() {
         timeline.tooglePlay();
-    }
-
-    public void addPoint(Point point) {
-        timeline.addPoint(point);
     }
 
     public void updatePosition(Duration position) {

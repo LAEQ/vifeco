@@ -23,7 +23,7 @@ public class Icon extends Group {
         this.color = category.getColor();
 
         generateSVG(this.color);
-        generateCircle(org.laeq.graphic.Color.light);
+        generateCircle(org.laeq.model.icon.Color.light);
 
         getChildren().addAll(this.circle, this.svg);
     }
@@ -46,13 +46,13 @@ public class Icon extends Group {
     public void reset(){
         getChildren().clear();
         generateSVG(this.color);
-        generateCircle(org.laeq.graphic.Color.light);
+        generateCircle(org.laeq.model.icon.Color.light);
         getChildren().addAll(this.circle, this.svg);
     }
 
     public void colorize(){
         getChildren().clear();
-        generateSVG(org.laeq.graphic.Color.light);
+        generateSVG(org.laeq.model.icon.Color.light);
         generateCircle(this.color);
         getChildren().addAll(this.circle, this.svg);
     }
@@ -91,7 +91,7 @@ public class Icon extends Group {
     private Canvas getCanvas(){
         Canvas canvas = new Canvas(size, size);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.valueOf(org.laeq.graphic.Color.light));
+        gc.setFill(Color.valueOf(org.laeq.model.icon.Color.light));
         gc.fillOval(0,0, size, size);
         canvas.setOpacity(1);
 

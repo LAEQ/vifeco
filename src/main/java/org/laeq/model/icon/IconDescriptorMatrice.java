@@ -1,10 +1,6 @@
 package org.laeq.model.icon;
 
 import javafx.geometry.Point2D;
-import org.laeq.graphic.icon.CategoryIcon;
-import org.laeq.graphic.icon.CategoryIconCount;
-import org.laeq.graphic.icon.IconAbstract;
-import org.laeq.graphic.icon.IconType;
 import org.laeq.model.Category;
 
 import java.util.HashMap;
@@ -12,28 +8,23 @@ import java.util.Map;
 import java.util.Set;
 
 public class IconDescriptorMatrice {
-    private double width;
-    private double height;
-    private int size;
-    private IconType type;
+    private double width = 180;
+    private double height = 40;
+    private int size = 40;
 
     Set<Category> categorySet;
     Point2D[] points;
 
     Map<Category, IconDescriptor> iconMap = new HashMap<>();
 
-    public IconDescriptorMatrice(Set<Category> categorySet, IconType type) {
-        this.type = type;
-        this.width = 180;
-        this.height = 40;
-
+    public IconDescriptorMatrice(Set<Category> categorySet) {
         this.categorySet = categorySet;
         points = new Point2D[categorySet.size()];
         generatePositions();
 
         int index = 0;
         for (Category category: categorySet) {
-            IconDescriptor iconCounter = new IconDescriptor(new IconSize(category, 40), this.width, this.height);
+            IconDescriptor iconCounter = new IconDescriptor(new IconSize(category, size), this.width, this.height);
             iconCounter.decorate();
             iconCounter.position(points[index++]);
             iconMap.put(category, iconCounter);

@@ -85,7 +85,7 @@ public class ContainerController extends CRUDController<User> {
                 String message = getMessage("org.laeq.delete.default_user.error");
                 alert("key.to_implement", message);
 
-                getLog().error(String.format("UserDAO: failed to delete %s.", user));
+                getLog().error(String.format("UserDAO: failed to deleteVideoIcon %s.", user));
             }
         }
     }

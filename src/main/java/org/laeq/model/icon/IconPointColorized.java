@@ -10,6 +10,7 @@ import org.laeq.model.Category;
 
 
 public class IconPointColorized extends IconPoint {
+    private final Circle circleOver;
     private final Circle circle2;
     private final IconSize iconSize2;
     private final EventHandler<MouseEvent> mouseEnter;
@@ -20,6 +21,9 @@ public class IconPointColorized extends IconPoint {
         super(iconSize);
         circle2 = generateCircle();
         circle2.setFill(Paint.valueOf(iconSize.category.getColor()));
+        circleOver = generateCircle();
+        circleOver.setFill(Color.WHITE);
+        circleOver.setOpacity(0);
 
         Category c = null;
         try {
@@ -35,21 +39,41 @@ public class IconPointColorized extends IconPoint {
         mouseEnter = event -> colorize();
         mouseExit = event -> reset();
 
-        listen();
+        listener();
     }
 
-    public void listen(){
+    @Override
+    public void clear(){
+        removeListener();
+        this.iconSize.clear();
+        getChildren().clear();
+    }
+
+    @Override
+    public void decorate(){
+        this.iconSize.decorate();
+        getChildren().addAll(this.circle, this.iconSize, this.circleOver);
+    }
+
+    private void removeListener(){
+        removeEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnter);
+        removeEventHandler(MouseEvent.MOUSE_EXITED, mouseExit);
+    }
+
+    public void listener(){
         setOnMouseEntered(mouseEnter);
         setOnMouseExited(mouseExit);
     }
 
     public void colorize(){
-        getChildren().clear();
-        getChildren().addAll(this.circle2, this.iconSize2);
+        getChildren().removeAll(this.circle, this.iconSize);
+        getChildren().add(0, this.circle2);
+        getChildren().add(1, this.iconSize2);
     }
 
     public void reset(){
-        getChildren().clear();
-        getChildren().addAll(this.circle, this.iconSize);
+        getChildren().removeAll(this.circle2, this.iconSize2);
+        getChildren().add(0, this.circle);
+        getChildren().add(1, this.iconSize);
     }
 }

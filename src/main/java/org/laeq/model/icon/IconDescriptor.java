@@ -33,6 +33,11 @@ public class IconDescriptor extends Group implements IconDecorator {
     }
 
     @Override
+    public void clear() {
+
+    }
+
+    @Override
     public void position(Point2D point) {
         this.setLayoutX(point.getX());
         this.setLayoutY(point.getY());

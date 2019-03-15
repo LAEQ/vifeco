@@ -1,4 +1,4 @@
-package org.laeq.graphic;
+package org.laeq.model.icon;
 
 public class Color {
     public static String blue = "#007bffff";

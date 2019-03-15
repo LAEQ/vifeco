@@ -68,7 +68,7 @@ class CategoryDAOTest extends AbstractDAOTest {
         Category category = new Category(1, "mock", "mock", "#FFFFFF","A")
 
         when:
-        repository.delete(category)
+        repository.deleteVideoIcon(category)
 
         then:
         notThrown DAOException
@@ -84,7 +84,7 @@ class CategoryDAOTest extends AbstractDAOTest {
 
         Category category = new Category(-1, "mock", "mock", "#000000", "A")
         when:
-        repository.delete(category)
+        repository.deleteVideoIcon(category)
 
         then:
         thrown DAOException

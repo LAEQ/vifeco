@@ -3,10 +3,7 @@ package org.laeq.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import javafx.geometry.Bounds;
 import javafx.util.Duration;
-import org.laeq.model.icon.IconPointColorized;
-import org.laeq.model.icon.IconSize;
 
 import java.util.Objects;
 @JsonIgnoreProperties({"id", "video", "icon", "duration", "createdAt", "updatedAt", "category"})
@@ -18,7 +15,6 @@ public class Point extends BaseEntity implements Comparable<Point> {
     private Duration start;
     private Category category;
     private Video video;
-    private IconPointColorized icon;
 
     public Point() {
     }
@@ -122,36 +118,8 @@ public class Point extends BaseEntity implements Comparable<Point> {
                 '}';
     }
 
-    @JsonIgnore
-    public IconPointColorized getIcon(Bounds bounds) {
-        if(this.icon == null){
-            this.icon = new IconPointColorized(new IconSize(category, 100));
-        }
-
-        return icon;
-    }
-
-    @JsonIgnore
-    public IconPointColorized getIcon() {
-        if(this.icon == null){
-            this.icon = new IconPointColorized(new IconSize(category, 100));
-            this.icon.decorate();
-        }
-
-        return icon;
-    }
-
     public int getCategoryId(){
         return category.getId();
-    }
-
-    @JsonIgnore
-    public void repositionY(Double newValue) {
-        this.icon.setLayoutY(getY() * newValue);
-    }
-    @JsonIgnore
-    public void repositionX(Double newValue) {
-        this.icon.setLayoutX(getX() * newValue );
     }
 }
 

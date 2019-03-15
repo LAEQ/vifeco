@@ -6,11 +6,8 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.db.DAOException;
-import org.laeq.graphic.icon.TimelineIcon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.model.icon.IconTimeline;
 import org.laeq.service.MariaService;
 import org.laeq.video.ControlsDefault;
 
@@ -19,13 +16,13 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @ArtifactProviderFor(GriffonController.class)
 public class TimelineController extends AbstractGriffonController {
     @MVCMember @Nonnull private TimelineModel model;
     @MVCMember @Nonnull private TimelineView view;
     @MVCMember @Nonnull private Video video;
+    @MVCMember @Nonnull private VideoEditor editor;
 
     @Inject private MariaService mariaService;
 
@@ -53,7 +50,6 @@ public class TimelineController extends AbstractGriffonController {
 
         list.put("player.play", objects -> view.play());
 
-        list.put("point.added", objects -> runInsideUISync(() -> view.addPoint((Point) objects[0])));
 
         list.put("media.currentTime", objects -> runInsideUISync(() -> {
             view.updatePosition((Duration)objects[0]);
@@ -68,26 +64,7 @@ public class TimelineController extends AbstractGriffonController {
         return list;
     }
 
-    public void deletePoint(int identifier) {
-        Optional<Point> point = video.getPointSet().stream().filter(p -> p.getId() == identifier).findFirst();
-
-        if(point.isPresent()){
-            try {
-                mariaService.getPointDAO().delete(point.get());
-                video.getPointSet().remove(point.get());
-                getApplication().getEventRouter().publishEvent("point.deleted", Arrays.asList(point.get()));
-            } catch (DAOException e) {
-                getLog().error(e.getMessage());
-            }
-        }
-
-    }
-
-    public void highlightPoint(TimelineIcon intersectedNode) {
-        getApplication().getEventRouter().publishEvent("point.hightlight", Arrays.asList(intersectedNode.getIdentifier()));
-    }
-
-    public void highlightPoint() {
-        getApplication().getEventRouter().publishEvent("point.no_hightlight");
+    public void deletePoint(Point point) {
+        getApplication().getEventRouter().publishEvent("point.deleted", Arrays.asList(point));
     }
 }

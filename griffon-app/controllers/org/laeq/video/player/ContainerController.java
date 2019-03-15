@@ -21,6 +21,7 @@ import java.util.Set;
 public class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private Video video;
+    @MVCMember @Nonnull private VideoEditor editor;
 
     @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
@@ -30,6 +31,7 @@ public class ContainerController extends AbstractGriffonController {
         if(video != null){
             Map<String, Object> datas = new HashMap<>();
             datas.put("video", video);
+            datas.put("editor", editor);
 
             runInsideUISync(() ->{
                 createGroup("controls");

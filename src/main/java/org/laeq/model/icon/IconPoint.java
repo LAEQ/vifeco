@@ -27,6 +27,13 @@ public class IconPoint extends Group implements IconDecorator {
     }
 
     @Override
+    public void clear() {
+        this.iconSize.clear();
+        getChildren().clear();
+    }
+
+
+    @Override
     public void position(Point2D point) {
         this.point = point;
         setLayoutX(point.getX());

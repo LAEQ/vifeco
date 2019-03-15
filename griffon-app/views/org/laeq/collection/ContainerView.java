@@ -11,14 +11,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import org.laeq.TranslatedView;
-import org.laeq.graphic.Color;
-import org.laeq.graphic.IconSVG;
-import org.laeq.graphic.icon.IconType;
 import org.laeq.model.Category;
 import org.laeq.model.CategoryCheckedBox;
 import org.laeq.model.Collection;
 import org.laeq.model.Icon;
+import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconDescriptorMatrice;
+import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
@@ -113,7 +112,7 @@ public class ContainerView extends TranslatedView {
                     delete.setLayoutX(55);
 
                     btnGroup.getChildren().addAll(edit, delete);
-                    Icon icon = new Icon(IconSVG.edit, org.laeq.graphic.Color.gray_dark);
+                    Icon icon = new Icon(IconSVG.edit, Color.gray_dark);
                     edit.setGraphic(icon);
                     edit.setOnMouseClicked(event -> {
                         model.setSelectedCollection(collectionTable.getItems().get(getIndex()));
@@ -154,7 +153,7 @@ public class ContainerView extends TranslatedView {
                         Set<Category> categorySet = collectionTable.getItems().get(getIndex()).getCategorySet();
 
                         if(categorySet != null){
-                            IconDescriptorMatrice matrix = new IconDescriptorMatrice(categorySet, IconType.REGULAR);
+                            IconDescriptorMatrice matrix = new IconDescriptorMatrice(categorySet);
                             group.getChildren().addAll(matrix.getIconMap().values());
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {

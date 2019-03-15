@@ -31,10 +31,11 @@ public class IconSize extends BaseIcon {
 
     @Override
     public void decorate(){
-        try{
-            getChildren().add(this.svgPath);
-        } catch (Exception e){
+        getChildren().add(this.svgPath);
+    }
 
-        }
+    @Override
+    public void clear(){
+        getChildren().clear();
     }
 }

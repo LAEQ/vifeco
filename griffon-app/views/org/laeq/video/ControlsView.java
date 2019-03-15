@@ -12,10 +12,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.graphic.Color;
-import org.laeq.graphic.IconSVG;
 import org.laeq.model.Icon;
 import org.laeq.model.IconButton;
+import org.laeq.model.icon.Color;
+import org.laeq.model.icon.IconSVG;
 import org.laeq.video.player.ContainerView;
 
 import javax.annotation.Nonnull;

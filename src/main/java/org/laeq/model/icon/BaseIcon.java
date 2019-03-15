@@ -26,6 +26,11 @@ public abstract class BaseIcon extends Group implements IconDecorator {
         getChildren().add(this.svgPath);
     }
 
+    @Override
+    public void clear(){
+        getChildren().clear();
+    }
+
     public void position(Point2D point) {
         this.setLayoutX(point.getX());
         this.setLayoutY(point.getY());

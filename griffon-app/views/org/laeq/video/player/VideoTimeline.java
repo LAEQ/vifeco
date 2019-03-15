@@ -2,8 +2,6 @@ package org.laeq.video.player;
 
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
-import javafx.collections.SetChangeListener;
-import javafx.geometry.Point2D;
 import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -11,14 +9,10 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.laeq.graphic.icon.TimelineIcon;
-import org.laeq.model.Point;
-import org.laeq.model.icon.IconSize;
-import org.laeq.model.icon.IconTimeline;
+import org.laeq.model.icon.IconPointColorized;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Set;
 
 public class VideoTimeline extends Group {
     private Duration duration;
@@ -28,14 +22,10 @@ public class VideoTimeline extends Group {
     private final int ratio = 50;
     private final double height = 160;
     private final int iconSize = 17;
-    private final HashMap<IconTimeline, Integer> icons = new HashMap<>();
-
-
     private double y = 160;
 
     private TranslateTransition translate;
     private Boolean isPlaying = false;
-    private SetChangeListener<Point> listener;
 
     private Duration currentPosition = Duration.seconds(0);
 
@@ -50,7 +40,7 @@ public class VideoTimeline extends Group {
         return group;
     }
 
-    private double getNextY(){
+    public double getNextY(){
         if(y >= height - 17){
             y = 17;
         } else {
@@ -58,28 +48,6 @@ public class VideoTimeline extends Group {
         }
 
         return y;
-    }
-
-    public int getIconIdentifier(Group group){
-        return icons.get(group);
-    }
-
-    public void addPoint(Point point) {
-        double x = point.getStart().toSeconds() * ratio;
-
-        IconTimeline icon = new IconTimeline(new IconSize(point.getCategory(), iconSize), point.getId());
-        icon.decorate();
-        icon.position(new Point2D(x, getNextY()));
-
-        icons.put(icon, icon.getIdentifier());
-
-//        TimelineIcon icon = new TimelineIcon(x, getNextY(), iconSize, point);
-
-        group.getChildren().add(icon);
-    }
-
-    public void removePoint(TimelineIcon icon){
-        group.getChildren().remove(icon);
     }
 
     public void tooglePlay(){
@@ -97,7 +65,6 @@ public class VideoTimeline extends Group {
     public void setX(double x){
         this.setLayoutX(x);
     }
-
     public void init(Duration duration) {
         this.duration = duration;
         for (int i = 0; i < this.duration.toSeconds(); i++) {
@@ -106,7 +73,6 @@ public class VideoTimeline extends Group {
                 texts.add(drawText(i));
             }
         }
-
 
         translate = new TranslateTransition(this.duration, this.group);
         translate.setInterpolator(Interpolator.LINEAR);
@@ -119,20 +85,6 @@ public class VideoTimeline extends Group {
 
         group.getChildren().addAll(lines);
         group.getChildren().addAll(texts);
-    }
-
-    private void initListener() {
-        listener = listener();
-//        points.addListener(listener);
-    }
-    private void removeListener() {
-//        points.removeListener(listener);
-    }
-
-    private SetChangeListener<Point> listener() {
-        return change -> {
-
-        };
     }
 
     private Line drawLine(int x) {
@@ -184,8 +136,27 @@ public class VideoTimeline extends Group {
     public double getRatio() {
         return ratio;
     }
-
     public void setRate(double rate) {
         translate.setRate(rate);
+    }
+
+    public void addIcons(Set<IconPointColorized> icons) {
+        icons.parallelStream().forEach(icon ->{
+            icon.setLayoutX(icon.getLayoutX() * ratio);
+            icon.setLayoutY(getNextY());
+        });
+
+        group.getChildren().addAll(icons);
+    }
+
+    public void addIcon(IconPointColorized icon){
+        icon.setLayoutX(icon.getLayoutX() * ratio);
+        icon.setLayoutY(getNextY());
+
+        group.getChildren().add(icon);
+    }
+
+    public void removeIcon(IconPointColorized elementRemoved) {
+        group.getChildren().remove(elementRemoved);
     }
 }

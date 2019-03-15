@@ -9,8 +9,9 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
-import org.laeq.graphic.IconSVG;
 import org.laeq.icon.IconService;
+import org.laeq.model.icon.Color;
+import org.laeq.model.icon.IconSVG;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -63,7 +64,7 @@ public class MenuView extends AbstractJavaFXGriffonView {
     }
 
     private Button generateButton(String path, String name, String help, String eventName){
-        Button btn = new Button(path, org.laeq.graphic.Color.gray_dark, name, help, eventName);
+        Button btn = new Button(path, Color.gray_dark, name, help, eventName);
         Tooltip tooltip = new Tooltip(help);
         Tooltip.install(btn, tooltip);
         btn.setLayoutY(10);
