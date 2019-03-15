@@ -6,6 +6,7 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.SetChangeListener;
 import javafx.event.EventHandler;
@@ -209,7 +210,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
                 controller.dispatchDuration(duration);
                 getLog().info("Dispatch duration");
-
             });
 
         } else {
@@ -377,23 +377,21 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void forward(int seconds) {
         Duration nowPlus30 = mediaPlayer.getCurrentTime().add(Duration.millis(seconds * 1000));
-        if(nowPlus30.lessThan(duration)){
-            mediaPlayer.seek(nowPlus30);
-            controller.update(nowPlus30);
-        } else {
-            controller.update(duration);
-            mediaPlayer.seek(duration);
-        }
+        Duration now = nowPlus30.lessThan(duration)? nowPlus30 : duration;
+
+        controller.update(now);
+        mediaPlayer.seek(now);
+        editor.display(now);
+        timeSlider.setValue(mediaPlayer.getCurrentTime().divide(duration).toMillis() * 100.0);
     }
     public void backward(int seconds) {
         Duration nowMinus = mediaPlayer.getCurrentTime().subtract(Duration.millis(seconds * 1000));
-        if(nowMinus.greaterThan(mediaPlayer.getStartTime())){
-            mediaPlayer.seek(nowMinus);
-            controller.update(nowMinus);
-        } else {
-            controller.update(mediaPlayer.getStartTime());
-            mediaPlayer.seek(mediaPlayer.getStartTime());
-        }
+        Duration now = nowMinus.greaterThan(mediaPlayer.getStartTime())? nowMinus : mediaPlayer.getStartTime();
+
+        controller.update(now);
+        mediaPlayer.seek(now);
+        editor.display(now);
+        timeSlider.setValue(mediaPlayer.getCurrentTime().divide(duration).toMillis() * 100.0);
     }
     public void rate(Double newValue) {
         if(mediaPlayer != null){

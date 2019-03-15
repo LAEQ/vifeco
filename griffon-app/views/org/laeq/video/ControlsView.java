@@ -12,10 +12,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Icon;
-import org.laeq.model.IconButton;
+import org.laeq.model.Category;
 import org.laeq.model.icon.Color;
+import org.laeq.model.icon.IconButton;
 import org.laeq.model.icon.IconSVG;
+import org.laeq.model.icon.IconSquare;
 import org.laeq.video.player.ContainerView;
 
 import javax.annotation.Nonnull;
@@ -154,7 +155,11 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initRateSlider(){
-        Icon icon = new IconButton(IconSVG.rate, Color.gray_dark);
+        Category category = new Category();
+        category.setIcon(IconSVG.rate);
+        category.setColor(Color.gray_dark);
+        IconButton icon = new IconButton(new IconSquare(category), 25);
+        icon.decorate();
         rateIcon.getChildren().add(icon);
         rateSlider.valueProperty().bindBidirectional(model.rateProperty());
         rateValue.textProperty().bind(model.rateProperty().asString());
@@ -177,7 +182,11 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initVolumeSpinner(){
-        Icon icon = new IconButton(IconSVG.volume, Color.gray_dark);
+        Category category = new Category();
+        category.setIcon(IconSVG.volume);
+        category.setColor(Color.gray_dark);
+        IconButton icon = new IconButton(new IconSquare(category), 25);
+        icon.decorate();
         volumeIcon.getChildren().add(icon);
         volumeSlider.valueProperty().bindBidirectional(model.volumeProperty());
         volumeValue.textProperty().bind(model.volumeProperty().asString());
@@ -200,7 +209,11 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initSizePoint() {
-        Icon icon = new IconButton(IconSVG.size, Color.gray_dark);
+        Category category = new Category();
+        category.setIcon(IconSVG.size);
+        category.setColor(Color.gray_dark);
+        IconButton icon = new IconButton(new IconSquare(category), 25);
+        icon.decorate();
         sizeIcon.getChildren().add(icon);
         sizeSlider.valueProperty().bindBidirectional(model.sizeProperty());
         sizeValue.textProperty().bind(model.sizeProperty().asString());
@@ -225,7 +238,11 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initOpacityPoint() {
-        Icon icon = new IconButton(IconSVG.opacity, Color.gray_dark);
+        Category category = new Category();
+        category.setIcon(IconSVG.opacity);
+        category.setColor(Color.gray_dark);
+        IconButton icon = new IconButton(new IconSquare(category), 25);
+        icon.decorate();
         opacityIcon.getChildren().add(icon);
         opacitySlider.valueProperty().bindBidirectional(model.opacityProperty());
         opacityValue.textProperty().bind(model.opacityProperty().asString());
@@ -250,7 +267,11 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initDurationPoint() {
-        Icon icon = new IconButton(IconSVG.duration, Color.gray_dark);
+        Category category = new Category();
+        category.setIcon(IconSVG.duration);
+        category.setColor(Color.gray_dark);
+        IconButton icon = new IconButton(new IconSquare(category), 25);
+        icon.decorate();
         durationIcon.getChildren().add(icon);
         durationSlider.valueProperty().bindBidirectional(model.durationProperty());
         durationValue.textProperty().bind(model.durationProperty().asString());

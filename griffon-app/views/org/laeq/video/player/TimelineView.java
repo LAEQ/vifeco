@@ -3,6 +3,8 @@ package org.laeq.video.player;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.SetChangeListener;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;

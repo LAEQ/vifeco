@@ -138,6 +138,7 @@ public class VideoTimeline extends Group {
     }
     public void setRate(double rate) {
         translate.setRate(rate);
+
     }
 
     public void addIcons(Set<IconPointColorized> icons) {

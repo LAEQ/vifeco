@@ -1,5 +1,6 @@
 package org.laeq.video.player;
 
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
@@ -139,7 +140,6 @@ public class VideoEditor {
 
     public void setPaneWidth(double doubleValue) {
         paneWidth = doubleValue;
-
         reposition();
     }
 
