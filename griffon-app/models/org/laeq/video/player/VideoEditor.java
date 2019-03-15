@@ -129,8 +129,9 @@ public class VideoEditor {
 
         SortedSet<Point> points = video.getPointSet().subSet(start, end);
         pointsToDisplay.retainAll(points);
+
         points.forEach(point -> {
-            if(!pointsToDisplay.contains(point)){
+            if( ! pointsToDisplay.contains(point)){
                 pointsToDisplay.add(point);
             }
         });

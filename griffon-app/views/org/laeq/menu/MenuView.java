@@ -10,8 +10,11 @@ import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 import org.laeq.icon.IconService;
+import org.laeq.model.Category;
 import org.laeq.model.icon.Color;
+import org.laeq.model.icon.IconButton;
 import org.laeq.model.icon.IconSVG;
+import org.laeq.model.icon.IconSquare;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,37 +37,41 @@ public class MenuView extends AbstractJavaFXGriffonView {
 
         parentView.getTop().getChildren().add(node);
 
-        Button videoListBtn = generateButton(IconSVG.video, "video list", "Open the video section", "video.section");
+        IconButton videoListBtn = generateButton(IconSVG.video, "video list", "Open the video section", "video.section");
         videoListBtn.setLayoutX(10);
         subMenuPane.getChildren().add(videoListBtn);
 
-        Button videoAddBtn = generateButton(IconSVG.video_plus,"video add", "Add a new video", "video.open");
+        IconButton videoAddBtn = generateButton(IconSVG.video_plus,"video add", "Add a new video", "video.open");
         videoAddBtn.setLayoutX(55);
         subMenuPane.getChildren().add(videoAddBtn);
 
-        Button userBtn = generateButton(IconSVG.user, "user", "Open user section", "user.section");
+        IconButton userBtn = generateButton(IconSVG.user, "user", "Open user section", "user.section");
         userBtn.setLayoutX(115);
         subMenuPane.getChildren().add(userBtn);
 
-        Button categoryBtn  = generateButton(IconSVG.category, "category", "Open category section", "category.section");
+        IconButton categoryBtn  = generateButton(IconSVG.category, "category", "Open category section", "category.section");
         categoryBtn.setLayoutX(175);
         subMenuPane.getChildren().add(categoryBtn);
 
-        Button collectionBtn = generateButton(IconSVG.collection, "collection", "Open collection section", "collection.section");
+        IconButton collectionBtn = generateButton(IconSVG.collection, "collection", "Open collection section", "collection.section");
         collectionBtn.setLayoutX(235);
         subMenuPane.getChildren().add(collectionBtn);
 
-        Button databaseBtn = generateButton(IconSVG.db, "database", "Open database section", "database.section");
+        IconButton databaseBtn = generateButton(IconSVG.db, "database", "Open database section", "database.section");
         databaseBtn.setLayoutX(295);
         subMenuPane.getChildren().add(databaseBtn);
 
-        Button statisticBtn = generateButton(IconSVG.statistic, "statistic", "Open statistic section", "statistic.section");
+        IconButton statisticBtn = generateButton(IconSVG.statistic, "statistic", "Open statistic section", "statistic.section");
         statisticBtn.setLayoutX(355);
         subMenuPane.getChildren().add(statisticBtn);
     }
 
-    private Button generateButton(String path, String name, String help, String eventName){
-        Button btn = new Button(path, Color.gray_dark, name, help, eventName);
+    private IconButton generateButton(String path, String name, String help, String eventName){
+        Category category = new Category();
+        category.setIcon(path);
+        category.setColor(Color.gray_dark);
+        IconButton btn = new IconButton(new IconSquare(category), 40);
+        btn.decorate();
         Tooltip tooltip = new Tooltip(help);
         Tooltip.install(btn, tooltip);
         btn.setLayoutY(10);
@@ -74,9 +81,5 @@ public class MenuView extends AbstractJavaFXGriffonView {
         });
 
         return btn;
-    }
-
-    private void publishEvent(String eventName){
-        getApplication().getEventRouter().publishEvent(eventName);
     }
 }

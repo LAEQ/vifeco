@@ -114,7 +114,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 change.getElementAdded().setOpacity(model.getOpacity());
                 change.getElementAdded().setScaleX(model.getSize() / 100);
                 change.getElementAdded().setScaleY(model.getSize() / 100);
-                iconPane.getChildren().add(change.getElementAdded());
+                try{
+                    iconPane.getChildren().add(change.getElementAdded());
+                } catch (Exception e){
+                    getLog().error(e.getMessage());
+                }
+
             } else if(change.wasRemoved()){
                 iconPane.getChildren().remove(change.getElementRemoved());
             }
@@ -434,6 +439,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void setDuration(Double value) {
         editor.setDuration(value);
-        editor.display(mediaPlayer.getCurrentTime());
+        if(! model.isIsPlaying()){
+            editor.display(mediaPlayer.getCurrentTime());
+        }
     }
 }
