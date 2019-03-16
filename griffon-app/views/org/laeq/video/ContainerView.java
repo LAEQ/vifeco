@@ -8,11 +8,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -119,6 +121,13 @@ public class ContainerView extends TranslatedView {
         });
 
         filterNameField.textProperty().addListener(filtering());
+
+        videoTable.setOnMouseClicked(event -> {
+            if(event.getClickCount() == 2){
+                Video video = videoTable.getSelectionModel().getSelectedItem();
+                controller.editVideo(video);
+            }
+        });
     }
 
     private ChangeListener<String> filtering(){
