@@ -132,6 +132,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             String eventName = event.getDeltaY() > 0 ? "rate.increase" : "rate.decrease";
 
             controller.updateRate(eventName);
+            editor.display(mediaPlayer.getCurrentTime());
+            controller.dispatchDuration(mediaPlayer.getCurrentTime());
         };
     }
 
