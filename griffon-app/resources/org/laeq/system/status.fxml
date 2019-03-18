@@ -3,7 +3,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1" fx:controller="org.laeq.system.StatusController">
+<AnchorPane prefHeight="378.0" prefWidth="879.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.system.StatusController">
     <children>
         <GridPane layoutX="10.0" layoutY="50.0" prefHeight="90.0" prefWidth="410.0">
             <columnConstraints>

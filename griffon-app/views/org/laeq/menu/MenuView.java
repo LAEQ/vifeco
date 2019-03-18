@@ -61,8 +61,12 @@ public class MenuView extends AbstractJavaFXGriffonView {
         databaseBtn.setLayoutX(295);
         subMenuPane.getChildren().add(databaseBtn);
 
+        IconButton importBtn = generateButton(IconSVG.importVideo, "import", "Import a video file", "video.import");
+        importBtn.setLayoutX(355);
+        subMenuPane.getChildren().add(importBtn);
+
         IconButton statisticBtn = generateButton(IconSVG.statistic, "statistic", "Open statistic section", "statistic.section");
-        statisticBtn.setLayoutX(355);
+        statisticBtn.setLayoutX(415);
         subMenuPane.getChildren().add(statisticBtn);
     }
 

@@ -41,7 +41,7 @@ public class VideoTimeline extends Group {
     }
 
     public double getNextY(){
-        if(y >= height - 17){
+        if(y >= height - 27){
             y = 17;
         } else {
             y += iconSize + 5;

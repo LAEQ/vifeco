@@ -1,5 +1,6 @@
 package org.laeq.video;
 
+import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
@@ -15,7 +16,9 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends CRUDController<Video> {
@@ -45,6 +48,8 @@ public class ContainerController extends CRUDController<Video> {
         model.addCategories(categoryDAO.findAll());
 
         view.initForm();
+
+        getApplication().getEventRouter().addEventListener(listeners());
     }
 
     public void clear(){
@@ -127,5 +132,16 @@ public class ContainerController extends CRUDController<Video> {
             model.getSelectedVideo().getCollection().getCategorySet().addAll(categoryDAO.findByCollection(model.getSelectedVideo().getCollection()));
             view.showDetails();
         }
+    }
+
+    private Map<String, RunnableWithArgs> listeners(){
+        Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        list.put("video.import.success", objects -> {
+            model.getVideoList().clear();
+            model.getVideoList().addAll(videoDAO.findAll());
+        });
+
+        return list;
     }
 }

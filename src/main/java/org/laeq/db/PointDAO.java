@@ -12,6 +12,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
+    private String insertQuery = "INSERT INTO POINT(X, Y, VIDEO_ID, CATEGORY_ID, START) VALUES(?, ?, ?, ?, ?);";
+
     public PointDAO(@Nonnull DatabaseManager manager) {
         super(manager);
     }
@@ -20,9 +22,8 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
     public void insert(Point point) throws DAOException {
         int result = 0;
 
-        String query = "INSERT INTO POINT(X, Y, VIDEO_ID, CATEGORY_ID, START) VALUES(?, ?, ?, ?, ?);";
         try(Connection connection = getManager().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement statement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS))
         {
             statement.setDouble(1, point.getX());
             statement.setDouble(2, point.getY());
@@ -150,5 +151,26 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
 
         if(result !=1)
             throw new DAOException("Error deleting a point.");
+    }
+
+    public void insert(Video video) throws SQLException {
+        try(Connection connection = getManager().getConnection()){
+            PreparedStatement stmt = connection.prepareStatement(insertQuery);
+
+            connection.setAutoCommit(false);
+
+            for (Point point : video.getPointSet()) {
+                stmt.setDouble(1, point.getX());
+                stmt.setDouble(2, point.getY());
+                stmt.setInt(3, video.getId());
+                stmt.setInt(4, point.getCategory().getId());
+                stmt.setDouble(5, point.getStart().toMillis());
+                stmt.addBatch();
+            }
+
+            stmt.executeBatch();
+
+            connection.commit();
+        }
     }
 }

@@ -39,11 +39,6 @@ public class ContainerModel extends AbstractGriffonModel {
     public ObservableList<Video> getVideoList() {
         return videoList;
     }
-
-    public void setVideoList(ObservableList<Video> videoList) {
-        this.videoList = videoList;
-    }
-
     public Set<Collection> getCollectionSet() {
         return collectionSet;
     }
