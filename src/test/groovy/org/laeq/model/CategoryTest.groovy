@@ -16,4 +16,28 @@ class CategoryTest extends Specification {
         then:
         result == expected
     }
+
+    def "deserialize" () {
+        setup:
+        String json = '{\n' +
+                '        "id": 1,\n' +
+                '        "name": "Moving car",\n' +
+                '        "icon": "mock",\n' +
+                '        "color": "#000000",\n' +
+                '        "shortcut": "A"\n' +
+                '      }'
+
+        ObjectMapper mapper = new ObjectMapper()
+
+        when:
+        Category result = mapper.readValue(json, Category.class)
+        Category category = new Category(1, 'Moving car', 'mock', '#000000', 'A')
+
+        then:
+        result == category
+        result.name == "Moving car"
+        result.icon == "mock"
+        result.color == "#000000"
+        result.shortcut == "A"
+    }
 }

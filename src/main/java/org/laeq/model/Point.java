@@ -3,11 +3,14 @@ package org.laeq.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import javafx.util.Duration;
+import org.laeq.model.serializer.PointDeserializer;
 
 import java.util.Objects;
-@JsonIgnoreProperties({"id", "video", "icon", "duration", "createdAt", "updatedAt", "category"})
-@JsonPropertyOrder({"x", "y", "categoryId", "start"})
+@JsonIgnoreProperties({"video", "icon", "duration", "createdAt", "updatedAt", "category"})
+@JsonPropertyOrder({"id", "x", "y", "categoryId", "start"})
+@JsonDeserialize(using = PointDeserializer.class)
 public class Point extends BaseEntity implements Comparable<Point> {
     private int id;
     private double x;
@@ -16,8 +19,7 @@ public class Point extends BaseEntity implements Comparable<Point> {
     private Category category;
     private Video video;
 
-    public Point() {
-    }
+    public Point() {}
 
     public Point(int id, Duration start){
         this.id = id;

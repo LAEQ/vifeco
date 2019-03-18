@@ -29,4 +29,19 @@ class VideoTest extends Specification {
         then:
         result == expected
     }
+
+    def "deserialization" (){
+        setup:
+        String json = getClass().classLoader.getResource("export/export_1.json").text
+        ObjectMapper mapper = new ObjectMapper()
+
+        when:
+        Video result = mapper.readValue(json, Video.class)
+
+        println result.pointSet
+
+        then:
+        result.path == '/home/david/Downloads/07074207.wav'
+        result.pointSet.size() == 3
+    }
 }

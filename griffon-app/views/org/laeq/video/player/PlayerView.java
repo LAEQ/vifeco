@@ -6,7 +6,6 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.SetChangeListener;
 import javafx.event.EventHandler;

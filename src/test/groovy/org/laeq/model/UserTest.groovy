@@ -18,4 +18,25 @@ class UserTest extends Specification {
         then:
         result == expected
     }
+
+    def "deserialize" (){
+        setup:
+        String json = '{\n' +
+                '    "id": 3,\n' +
+                '    "firstName": "David",\n' +
+                '    "lastName": "Maignan",\n' +
+                '    "email": "",\n' +
+                '    "isDefault": false\n' +
+                '  }'
+
+        ObjectMapper mapper = new ObjectMapper()
+
+
+        when:
+        User result = mapper.readValue(json, User.class)
+
+
+        then:
+        result == new User(3, "David", "Maignan", "")
+    }
 }

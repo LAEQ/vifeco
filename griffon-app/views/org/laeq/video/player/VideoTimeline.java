@@ -53,7 +53,7 @@ public class VideoTimeline extends Group {
     public void tooglePlay(){
         if(isPlaying){
             isPlaying = false;
-            this.currentPosition = translate.getCurrentTime();
+            this.currentPosition = translate.getCurrentTime(); //@todo nullpointer exception
             this.translate.pause();
 
         } else {

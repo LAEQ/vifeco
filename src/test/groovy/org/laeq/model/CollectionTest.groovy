@@ -100,6 +100,55 @@ class CollectionTest extends Specification {
 
         then:
         result == expected
+    }
 
+    def "deserialization" (){
+        setup:
+        String json = '{\n' +
+                '    "id": 1,\n' +
+                '    "name": "Default",\n' +
+                '    "isDefault": false,\n' +
+                '    "categorySet": [\n' +
+                '      {\n' +
+                '        "id": 1,\n' +
+                '        "name": "Moving car",\n' +
+                '        "icon": "mock1",\n' +
+                '        "color": "#000000",\n' +
+                '        "shortcut": "A"\n' +
+                '      },\n' +
+                '      {\n' +
+                '        "id": 2,\n' +
+                '        "name": "Moving bike",\n' +
+                '        "icon": "mock2",\n' +
+                '        "color": "#000000",\n' +
+                '        "shortcut": "S"\n' +
+                '      },\n' +
+                '      {\n' +
+                '        "id": 3,\n' +
+                '        "name": "Moving truck",\n' +
+                '        "icon": "mock3",\n' +
+                '        "color": "#000000",\n' +
+                '        "shortcut": "D"\n' +
+                '      },\n' +
+                '      {\n' +
+                '        "id": 4,\n' +
+                '        "name": "Stopped car",\n' +
+                '        "icon": "mock4",\n' +
+                '        "color": "#000000",\n' +
+                '        "shortcut": "F"\n' +
+                '      }\n' +
+                '    ]\n' +
+                '  }'
+        ObjectMapper mapper = new ObjectMapper()
+
+        when:
+        Collection result = mapper.readValue(json, Collection.class)
+
+        then:
+        result == new Collection(1, "Default", false)
+        result.id == 1
+        result.name == "Default"
+        result.isDefault == false
+        result.categorySet.contains(new Category(1, 'Moving car', 'mock1', '#000000', 'A')) == true
     }
 }
