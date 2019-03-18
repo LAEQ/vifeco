@@ -3,8 +3,6 @@ package org.laeq.video.player;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.SetChangeListener;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
@@ -62,16 +60,18 @@ public class TimelineView extends AbstractJavaFXGriffonView {
             timeline.setX(x);
         });
 
-        timeline.setOnMouseEntered(event -> {
-            Node node = (Node) event.getSource();
+        timeline.getGroup().setOnMouseEntered(event -> {
+            editor.reset();
+
+            Node node = event.getPickResult().getIntersectedNode();
 
             if(node.getParent() instanceof IconPointColorized){
-                System.out.println("Mouse entered");
+                editor.reset((IconPointColorized)node.getParent());
             }
         });
 
         timeline.getGroup().setOnMouseExited(event -> {
-
+            editor.reset();
         });
 
         timeline.getGroup().setOnMouseClicked(event -> {

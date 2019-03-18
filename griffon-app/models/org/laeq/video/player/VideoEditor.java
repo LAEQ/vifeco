@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
+import javafx.scene.Parent;
 import javafx.util.Duration;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -209,5 +210,17 @@ public class VideoEditor {
 
     public void setDuration(Double value) {
         this.duration = value;
+    }
+
+    public void reset(IconPointColorized iconTimeline) {
+        Point point = timelineIconMap.getKey(iconTimeline);
+
+        if(point != null){
+            videoIconMap.get(point).colorize();
+        }
+    }
+
+    public void reset() {
+        videoIconMap.values().stream().forEach(IconPointColorized::reset);
     }
 }

@@ -15,7 +15,7 @@ public class IconPointColorized extends IconPoint {
     private final IconSize iconSize2;
     private final EventHandler<MouseEvent> mouseEnter;
     private final EventHandler<MouseEvent> mouseExit;
-
+    private boolean isColorized = false;
 
     public IconPointColorized(IconSize iconSize) {
         super(iconSize);
@@ -66,14 +66,20 @@ public class IconPointColorized extends IconPoint {
     }
 
     public void colorize(){
-        getChildren().removeAll(this.circle, this.iconSize);
-        getChildren().add(0, this.circle2);
-        getChildren().add(1, this.iconSize2);
+        if(!isColorized){
+            getChildren().removeAll(this.circle, this.iconSize);
+            getChildren().add(0, this.circle2);
+            getChildren().add(1, this.iconSize2);
+            isColorized = true;
+        }
     }
 
     public void reset(){
-        getChildren().removeAll(this.circle2, this.iconSize2);
-        getChildren().add(0, this.circle);
-        getChildren().add(1, this.iconSize);
+        if(isColorized){
+            getChildren().removeAll(this.circle2, this.iconSize2);
+            getChildren().add(0, this.circle);
+            getChildren().add(1, this.iconSize);
+            isColorized = false;
+        }
     }
 }
