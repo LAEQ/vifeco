@@ -21,16 +21,17 @@ import java.util.Set;
 public class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private Video video;
+    @MVCMember @Nonnull private VideoEditor editor;
 
     @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
-
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         if(video != null){
             Map<String, Object> datas = new HashMap<>();
             datas.put("video", video);
+            datas.put("editor", editor);
 
             runInsideUISync(() ->{
                 createGroup("controls");
@@ -42,6 +43,14 @@ public class ContainerController extends AbstractGriffonController {
         } else {
             getLog().error("PlayerController: video is null ??" );
         }
+    }
+
+    @Override
+    public void mvcGroupDestroy(){
+        destroyMVCGroup("controls");
+        destroyMVCGroup("category");
+        destroyMVCGroup("video_player");
+        destroyMVCGroup("timeline");
     }
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)

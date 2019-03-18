@@ -10,10 +10,10 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.graphic.Color;
-import org.laeq.graphic.IconSVG;
 import org.laeq.model.Icon;
 import org.laeq.model.User;
+import org.laeq.model.icon.Color;
+import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;

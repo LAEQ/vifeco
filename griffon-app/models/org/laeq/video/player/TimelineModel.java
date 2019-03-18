@@ -3,8 +3,6 @@ package org.laeq.video.player;
 import griffon.core.artifact.GriffonModel;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
@@ -21,7 +19,6 @@ public class TimelineModel extends AbstractGriffonModel {
     private Duration duration;
     private double lineDuration;
 
-    private final ObservableSet<Point> points = FXCollections.observableSet();
     private SetChangeListener<Point> listener;
 
     public Duration getDuration() {
@@ -31,12 +28,6 @@ public class TimelineModel extends AbstractGriffonModel {
     public void init(Duration duration) {
         video.setDuration(duration.toMillis());
         this.duration = duration;
-
-        points.addAll(video.getPointSet());
-        
-        listener = listener();
-
-        points.addListener(listener);
     }
 
     public double getLineDuration() {
@@ -47,10 +38,5 @@ public class TimelineModel extends AbstractGriffonModel {
         this.lineDuration = lineDuration;
     }
 
-    private SetChangeListener<Point> listener() {
-        return change -> {
 
-
-        };
-    }
 }

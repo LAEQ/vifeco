@@ -15,6 +15,7 @@ import org.laeq.db.DAOException;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
+import org.laeq.video.player.VideoEditor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -53,7 +54,9 @@ public class MiddlePaneController extends AbstractGriffonController {
                         MediaPlayer mediaPlayer = new MediaPlayer(media);
                         Video video = dbService.createVideo(videoFile, Duration.millis(10));
                         Map<String, Object> args = new HashMap<>();
+                        VideoEditor editor = new VideoEditor(video, dbService.getPointDAO());
                         args.put("video", video);
+                        args.put("editor", editor);
                         createGroup("player", args);
 
                     } catch (IOException exception){
@@ -89,15 +92,17 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.edit", objects -> {
             Video video = (Video) objects[0];
 
+            VideoEditor editor = new VideoEditor(video, dbService.getPointDAO());
+
             Map<String, Object> args = new HashMap<>();
             args.put("video", video);
+            args.put("editor", editor);
 
             createGroup("player", args);
         });
 
         return list;
     }
-
 
     @ControllerAction
     @Threading(Threading.Policy.SKIP)

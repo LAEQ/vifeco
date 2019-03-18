@@ -33,7 +33,6 @@ public class PlayerModel extends AbstractGriffonModel {
         duration = ControlsDefault.duration;
         opacity = ControlsDefault.opacity;
     }
-
     public Double getDuration() {
         return duration;
     }
@@ -81,9 +80,6 @@ public class PlayerModel extends AbstractGriffonModel {
     }
     public boolean isIsPlaying() {
         return isPlaying;
-    }
-    public Category debugCategory() {
-        return video.getCollection().getCategorySet().iterator().next();
     }
 
     public SortedSet<Point> displayPoints(Duration currentTime){

@@ -5,7 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
-import org.laeq.graphic.Color;
+import org.laeq.model.icon.Color;
 
 public class IconButton extends Icon {
     private final EventHandler<MouseEvent> mouseEnter;
@@ -15,11 +15,11 @@ public class IconButton extends Icon {
         super(path, color);
 
         mouseEnter = event -> {
-            this.svg.setFill(Paint.valueOf(org.laeq.graphic.Color.cyan));
+            this.svg.setFill(Paint.valueOf(Color.cyan));
         };
 
         mouseExited = event -> {
-            this.svg.setFill(Paint.valueOf(org.laeq.graphic.Color.gray_dark));
+            this.svg.setFill(Paint.valueOf(Color.gray_dark));
         };
 
         Canvas canvas = new Canvas(25, 25);

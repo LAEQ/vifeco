@@ -6,14 +6,14 @@
     <items>
         <AnchorPane minHeight="0.0" minWidth="-Infinity" prefHeight="160.0" prefWidth="100.0">
             <children>
-                <SplitPane fx:id="splitPane" dividerPositions="0.2, 0.6" prefHeight="416.0" prefWidth="896.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <SplitPane fx:id="splitPane" dividerPositions="0.2, 0.6" prefHeight="416.0" prefWidth="896.0" AnchorPane.bottomAnchor="160.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                         <AnchorPane fx:id="controlPane" maxWidth="350.0" minHeight="0.0" minWidth="250.0" prefHeight="472.0" prefWidth="250.0" />
                         <AnchorPane fx:id="playerPane" minWidth="500.0" prefHeight="379.0" prefWidth="500.0" />
                         <AnchorPane fx:id="categoryPane" maxWidth="350.0" minWidth="250.0" prefWidth="300.0" />
                     </items>
                 </SplitPane>
-                <AnchorPane fx:id="timelinePane" maxHeight="100.0" minHeight="100.0" prefHeight="100.0" prefWidth="896.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                <AnchorPane fx:id="timelinePane" maxHeight="160.0" minHeight="160.0" prefHeight="160.0" prefWidth="896.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
             </children>
         </AnchorPane>
     </items>

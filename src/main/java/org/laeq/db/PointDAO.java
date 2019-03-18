@@ -144,11 +144,11 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
         {
             statement.setInt(1, point.getId());
             result = statement.executeUpdate();
-        } catch (Exception e){
+        } catch (SQLException e){
             getLogger().error(e.getMessage());
         }
 
         if(result !=1)
-            throw new DAOException("Error deleting a point");
+            throw new DAOException("Error deleting a point.");
     }
 }

@@ -8,23 +8,23 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.laeq.TranslatedView;
-import org.laeq.graphic.Color;
-import org.laeq.graphic.icon.CategoryMatrice;
-import org.laeq.graphic.icon.IconAbstract;
-import org.laeq.graphic.icon.IconType;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
+import org.laeq.model.icon.IconCounter;
+import org.laeq.model.icon.IconCounterMatrice;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
@@ -57,7 +57,7 @@ public class ContainerView extends TranslatedView {
     @FXML private Button deleteActionTarget;
     @FXML private Button editActionTarget;
 
-    Map<Category, IconAbstract> categoryGroupMap;
+    Map<Category, IconCounter> categoryGroupMap;
 
     private TableColumn<Video, User> userColumn;
     private TableColumn<Video, Collection> collectionColumn;
@@ -121,6 +121,13 @@ public class ContainerView extends TranslatedView {
         });
 
         filterNameField.textProperty().addListener(filtering());
+
+        videoTable.setOnMouseClicked(event -> {
+            if(event.getClickCount() == 2){
+                Video video = videoTable.getSelectionModel().getSelectedItem();
+                controller.editVideo(video);
+            }
+        });
     }
 
     private ChangeListener<String> filtering(){
@@ -177,7 +184,7 @@ public class ContainerView extends TranslatedView {
         collectionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
         collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));
 
-        CategoryMatrice matrice = new CategoryMatrice(model.getCategorySet(), IconType.COUNT);
+        IconCounterMatrice matrice = new IconCounterMatrice(model.getCategorySet());
         categoryGroupMap = matrice.getIconMap();
 
         categoryGroup.getChildren().addAll(matrice.getIconMap().values());
@@ -239,7 +246,7 @@ public class ContainerView extends TranslatedView {
 
         model.getCategorySet().forEach(c -> {
             categoryGroupMap.get(c).setOpacity(0.4);
-            categoryGroupMap.get(c).colorize(Color.white, Color.white);
+//            categoryGroupMap.get(c).colorize(Color.white, Color.white);
             categoryGroupMap.get(c).setText("-");
         });
     }

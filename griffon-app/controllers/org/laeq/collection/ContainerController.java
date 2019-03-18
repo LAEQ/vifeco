@@ -61,7 +61,7 @@ public class ContainerController extends CRUDController<Collection> {
                     collectionDAO.delete(collection);
                     this.model.delete(collection);
                 } catch (DAOException e) {
-                    alert("org.laeq.dao.error", String.format("Cannot delete %s", collection));
+                    alert("org.laeq.dao.error", String.format("Cannot deleteVideoIcon %s", collection));
                 }
             }
         });

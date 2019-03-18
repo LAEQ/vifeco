@@ -11,7 +11,7 @@ import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DAOException;
 import org.laeq.db.PointDAO;
-import org.laeq.model.Category;
+import org.laeq.db.VideoDAO;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
@@ -19,26 +19,35 @@ import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @ArtifactProviderFor(GriffonController.class)
 public class PlayerController extends AbstractGriffonController {
     @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private PlayerView view;
     @MVCMember @Nonnull private Video video;
+    @MVCMember @Nonnull private VideoEditor editor;
+
     @Inject private DialogService dialogService;
     @Inject private MariaService dbService;
 
     private PointDAO pointDAO;
+    private VideoDAO videoDAO;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
 
         pointDAO = dbService.getPointDAO();
+        videoDAO = dbService.getVideoDAO();
+    }
+
+    @Override
+    public void mvcGroupDestroy() {
+
     }
 
     @ControllerAction
@@ -63,7 +72,8 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void backVideo() {
-        view.reload();
+
+//        view.reload();
     }
 
     @ControllerAction
@@ -79,39 +89,8 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
-    public void savePoint(Point point) {
-        try {
-            pointDAO.insert(point);
-            model.addPoint(point);
-            view.addPoint(point);
-            publishEvent("point.added", point);
-
-        } catch (DAOException e) {
-            getLog().error(String.format("PlayerCtrl: cannot save new point: %s : %s", point, e.getMessage()));
-        }
-    }
-
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD)
-    public void addPoint(Point point, String letter) {
-        try {
-            Optional<Category> category = model.getCategory(letter);
-
-            if(category.isPresent()){
-                point.setCategory(category.get());
-            } else {
-                point.setCategory(model.debugCategory());
-            }
-
-            point.setVideo(video);
-            pointDAO.insert(point);
-            model.addPoint(point);
-
-            view.addPoint(point);
-            publishEvent("point.added", point);
-
-        } catch (DAOException e) {
-            getLog().error(String.format("PlayerCtrl: cannot save new point: %s : %s", point, e.getMessage()));
-        }
+    public void addPoint(Point point) {
+        publishEvent("point.added", point);
     }
 
     private void publishEvent(String eventName, Object obj){
@@ -147,29 +126,26 @@ public class PlayerController extends AbstractGriffonController {
         list.put("controls.duration", objects -> {
             Double value = (Double) objects[0];
             model.setDuration(value);
+            view.setDuration(value);
         });
-
-        list.put("point.hightlight", objects -> {
-            int id = (int) objects[0];
-            view.hightlight(id);
-        });
-
-        list.put("point.no_hightlight", objects -> {
-            view.hightlight();
-        });
-
-        list.put("point.deleted", objects -> runInsideUISync(() -> view.removePoint((Point) objects[0])));
 
         return list;
     }
 
     public void dispatchDuration(Duration duration) {
-        getApplication().getEventRouter().publishEventAsync("media.duration", Arrays.asList(duration));
+        video.setDuration(duration.toMillis());
+        try {
+            videoDAO.updateDuration(video);
+            getApplication().getEventRouter().publishEventAsync("media.duration", Arrays.asList(duration));
+        } catch (SQLException | DAOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void dispatchEvent(String eventName){
         getApplication().getEventRouter().publishEvent(eventName);
     }
+
 
     public void update(Duration currentTime) {
         publishEvent("media.currentTime", currentTime);
@@ -181,5 +157,9 @@ public class PlayerController extends AbstractGriffonController {
 
     public void updateRate(String eventName) {
         dispatchEvent(eventName);
+    }
+
+    public void deletePoint(Point point) {
+        getApplication().getEventRouter().publishEvent("point.deleted", Arrays.asList(point));
     }
 }

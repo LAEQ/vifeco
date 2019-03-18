@@ -2,24 +2,19 @@ package org.laeq.menu;
 
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-import org.laeq.graphic.Color;
+import org.laeq.model.icon.Color;
 
 public class Button extends Group {
-    private String svgPath;
-    private String color;
-
-    private String name;
-    private String help;
-    private String eventName;
-    private GraphicsContext gc;
-    private Canvas canvas;
-    private Rectangle rectangle;
+    private final String svgPath;
+    private final String color;
+    private final String name;
+    private final String help;
+    private final String eventName;
+    private final Rectangle rectangle;
 
     private final EventHandler<MouseEvent> mouseEnter;
     private final EventHandler<MouseEvent> mouseExited;

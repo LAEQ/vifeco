@@ -3,7 +3,6 @@ package org.laeq.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import javafx.geometry.Bounds;
 import javafx.util.Duration;
 
 import java.util.Objects;
@@ -16,7 +15,6 @@ public class Point extends BaseEntity implements Comparable<Point> {
     private Duration start;
     private Category category;
     private Video video;
-    private Icon icon;
 
     public Point() {
     }
@@ -120,38 +118,8 @@ public class Point extends BaseEntity implements Comparable<Point> {
                 '}';
     }
 
-    @JsonIgnore
-    public Icon getIcon(Bounds bounds) {
-        if(this.icon == null){
-            this.icon = new Icon(category, 100);
-        }
-
-        this.icon.setLayoutX(getX() * bounds.getWidth() - 100 / 2);
-        this.icon.setLayoutY(getY() * bounds.getHeight() - 100 / 2);
-
-        return icon;
-    }
-
-    @JsonIgnore
-    public Icon getIcon() {
-        if(this.icon == null){
-            this.icon = new Icon(category, 100);
-        }
-
-        return icon;
-    }
-
     public int getCategoryId(){
         return category.getId();
-    }
-
-    @JsonIgnore
-    public void repositionY(Double newValue) {
-        this.icon.setLayoutY(getY() * newValue - 100 / 2);
-    }
-    @JsonIgnore
-    public void repositionX(Double newValue) {
-        this.icon.setLayoutX(getX() * newValue - 100 / 2);
     }
 }
 

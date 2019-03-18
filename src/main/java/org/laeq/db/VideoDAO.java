@@ -130,6 +130,24 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
 
     }
 
+    public void updateDuration(Video video) throws SQLException, DAOException {
+        try(Connection connection = getManager().getConnection())
+        {
+            String query = "UPDATE VIDEO SET DURATION=?  WHERE ID = ?;";
+            PreparedStatement stmt = connection.prepareStatement(query);
+
+            stmt.setDouble(1, video.getDuration());
+            stmt.setInt(2, video.getId());
+
+            int result = stmt.executeUpdate();
+
+            if(result != 1){
+                throw new DAOException("UserDAO: cannot update.");
+            }
+        }
+
+    }
+
     public void update(Video video) throws SQLException, DAOException {
         try(Connection connection = getManager().getConnection())
         {

@@ -1,4 +1,4 @@
-package org.laeq.collection;
+package org.laeq.model.icon;
 
 import javafx.geometry.Point2D;
 import org.laeq.model.Category;
@@ -7,37 +7,35 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class CollectionMatrice {
-    private double width;
-    private double height;
+public class IconCounterMatrice {
+    private final double width = 190;
+    private final double height = 60;
+    private final int size = 80;
 
     Set<Category> categorySet;
     Point2D[] points;
 
-    Map<Category, CategoryIcon> iconMap = new HashMap<>();
+    Map<Category, IconCounter> iconMap = new HashMap<>();
 
-    public CollectionMatrice(double width, double height, Set<Category> categorySet) {
-        this.width = width;
-        this.height = height;
+    public IconCounterMatrice(Set<Category> categorySet) {
         this.categorySet = categorySet;
         points = new Point2D[categorySet.size()];
         generatePositions();
 
         int index = 0;
-        for (Category category : categorySet) {
-            CategoryIcon icon = new CategoryIcon(category, 50, this.width, this.height);
-            icon.setPosition(points[index]);
-            index++;
-            iconMap.put(category, icon);
+        for (Category category: categorySet) {
+            IconCounter iconCounter = new IconCounter(new IconSize(category, size), width, height);
+            iconCounter.decorate();
+            iconCounter.position(points[index++]);
+            iconMap.put(category, iconCounter);
         }
-
     }
 
-    public Map<Category, CategoryIcon> getIconMap() {
+    public Map<Category, IconCounter> getIconMap() {
         return iconMap;
     }
 
-    private void generatePositions() {
+    private void generatePositions(){
         double x = 0;
         double y = 0;
         for (int i = 1; i < categorySet.size() + 1; i++) {
@@ -45,7 +43,7 @@ public class CollectionMatrice {
 
             x += width + 10;
 
-            if (i % 3 == 0) {
+            if(i % 3 == 0){
                 x = 0;
                 y += height + 10;
             }
