@@ -23,7 +23,7 @@ public class IconCounter extends Group implements IconDecorator {
         this.iconSize = iconSize;
         this.rectangle = new Rectangle(0 ,0, this.width, this.height);
         this.rectangle.setFill(Color.WHITE);
-        this.label = new Label("1200");
+        this.label = new Label("-");
         this.label.setFont(new Font("sans", 25));
         this.label.setLayoutX(95);
         this.label.setLayoutY(height / 2 - 15);

@@ -8,13 +8,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -90,7 +88,8 @@ public class ContainerView extends TranslatedView {
         videoTable.setEditable(true);
 
         TableColumn<Video, Void> selectBox = new TableColumn<>("#");
-        selectBox.setPrefWidth(10);
+        selectBox.setPrefWidth(30);
+
         TableColumn<Video, String> dateColumn = new TableColumn<>("Created At");
         TableColumn<Video, String> pathColumn = new TableColumn("Name");
         userColumn = new TableColumn<>("User");
@@ -109,6 +108,7 @@ public class ContainerView extends TranslatedView {
 
         videoTable.getColumns().addAll(selectBox, dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn, lastPointColumn);
 
+        selectBox.setCellFactory(addSelectBox());
         dateColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getCreatedFormatted()));
         pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         durationColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getDurationFormatted()));
@@ -128,6 +128,31 @@ public class ContainerView extends TranslatedView {
                 controller.editVideo(video);
             }
         });
+    }
+
+    private Callback<TableColumn<Video, Void>, TableCell<Video, Void>> addSelectBox() {
+        return param -> {
+            final  TableCell<Video, Void> cell = new TableCell<Video, Void>(){
+                CheckBox selectBox = new CheckBox("");
+
+                Group btnGroup = new Group();
+                {
+                    btnGroup.getChildren().addAll(selectBox);
+                }
+
+                @Override
+                public void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(btnGroup);
+                    }
+                }
+            };
+
+            return cell;
+        };
     }
 
     private ChangeListener<String> filtering(){
@@ -173,7 +198,7 @@ public class ContainerView extends TranslatedView {
     public void initForm(){
         ObservableList<User> users = FXCollections.observableArrayList(model.getUserSet());
 
-        userColumn.setCellValueFactory(param -> new SimpleObjectProperty<User>(param.getValue().getUser()));
+        userColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getUser()));
         userColumn.setMinWidth(140);
         userColumn.setCellFactory(ComboBoxTableCell.forTableColumn(users));
         userColumn.setOnEditCommit(event -> controller.updateUser(event));
@@ -190,54 +215,6 @@ public class ContainerView extends TranslatedView {
         categoryGroup.getChildren().addAll(matrice.getIconMap().values());
     }
 
-    private Callback<TableColumn<Video, Void>, TableCell<Video, Void>> addActions() {
-        return param -> {
-            final TableCell<Video, Void> cell = new TableCell<Video, Void>() {
-
-                Button edit = new Button("");
-                Button export = new Button("");
-                Button delete = new Button("");
-
-                Group btnGroup = new Group();
-                {
-                    edit.setLayoutX(5);
-                    export.setLayoutX(45);
-                    delete.setLayoutX(85);
-
-                    btnGroup.getChildren().addAll(edit, export, delete);
-                    FontIcon icon = new FontIcon(FontAwesome.EDIT);
-                    edit.setGraphic(icon);
-                    edit.setOnAction(event -> {
-                        Video video = videoTable.getItems().get(getIndex());
-                        controller.editVideo(video);
-                    });
-                    export.setGraphic(new FontIcon(FontAwesome.ARROW_CIRCLE_UP));
-                    export.setOnAction(event -> {
-                        Video video = videoTable.getItems().get(getIndex());
-//                        controller.export(video);
-                    });
-
-                    delete.setGraphic(new FontIcon(FontAwesome.TRASH));
-                    delete.setOnAction(event -> {
-                        Video video = videoTable.getItems().get(getIndex());
-//                        controller.deleteVideo(video);
-                    });
-                }
-
-                @Override
-                public void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        setGraphic(btnGroup);
-                    }
-                }
-            };
-            return cell;
-        };
-    }
-
     public void reset() {
         titleValue.setText("");
         durationValue.setText("");
@@ -246,8 +223,9 @@ public class ContainerView extends TranslatedView {
 
         model.getCategorySet().forEach(c -> {
             categoryGroupMap.get(c).setOpacity(0.4);
-//            categoryGroupMap.get(c).colorize(Color.white, Color.white);
             categoryGroupMap.get(c).setText("-");
         });
+
+        videoTable.getSelectionModel().clearSelection();
     }
 }

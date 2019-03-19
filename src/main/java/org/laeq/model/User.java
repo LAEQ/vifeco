@@ -31,6 +31,14 @@ public class User extends BaseEntity {
 
         this.id = id;
     }
+
+    public User(Integer id, String fName, String lastName, String email, boolean isDefault) {
+        this(fName, lastName, email);
+
+        this.id = id;
+        this.isDefault = new SimpleBooleanProperty(isDefault);
+    }
+
     public User(String fName, String lName, String email) {
         this.firstName = new SimpleStringProperty(fName);
         this.lastName = new SimpleStringProperty(lName);
@@ -111,8 +119,6 @@ public class User extends BaseEntity {
 
     @JsonIgnore
     public ObservableValue<String> getName() {
-        return Bindings.createStringBinding(() -> {
-            return String.format("%s %s", getFirstName(), getLastName());
-        });
+        return Bindings.createStringBinding(() -> String.format("%s %s", getFirstName(), getLastName()));
     }
 }

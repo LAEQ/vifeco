@@ -12,6 +12,7 @@ import java.util.Set;
 public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
     private CollectionDAO collectionDAO;
     private UserDAO userDAO;
+    private String insertQuery = "INSERT INTO VIDEO (PATH, DURATION, USER_ID, COLLECTION_ID) VALUES (?, ?, ?, ?);";
 
     public VideoDAO(@Nonnull DatabaseManager manager, CollectionDAO collectionDAO, UserDAO userDAO) {
         super(manager);
@@ -23,10 +24,8 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
     public void insert(Video video) throws DAOException {
         int result = 0;
 
-        String query = "INSERT INTO VIDEO (PATH, DURATION, USER_ID, COLLECTION_ID) VALUES (?, ?, ?, ?);";
-
         try(Connection connection = getManager().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement statement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS))
         {
             statement.setString(1, video.getPath());
             statement.setDouble(2, video.getDuration());
@@ -200,4 +199,5 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             }
         }
     }
+
 }

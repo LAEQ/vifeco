@@ -24,9 +24,31 @@ class VideoTest extends Specification {
 
         when:
         String result = new ObjectMapper().writeValueAsString(video)
-        String expected = '{"path":"path/to/video.mp4","user":{"id":1,"firstName":"test","lastName":"test","email":"test","isDefault":false},"duration":10000.0,"collection":{"id":1,"name":"collection 1","isDefault":false,"categorySet":[{"id":1,"name":"category 1","icon":"icon 1","color":"color 1","shortcut":"A"},{"id":2,"name":"category 2","icon":"icon 2","color":"color 2","shortcut":"B"}]},"pointSet":[{"x":10.0,"y":11.0,"categoryId":1,"startDouble":1000.0},{"x":11.0,"y":10.0,"categoryId":2,"startDouble":2000.0}]}'
+        String expected = '{"path":"path/to/video.mp4","user":{"id":1,"firstName":"test","lastName":"test","email":"test","isDefault":false},"duration":10000.0,' +
+                '"collection":{"id":1,"name":"collection 1","isDefault":false,' +
+                '"categorySet":[{"id":1,"name":"category 1","icon":"icon 1","color":"color 1","shortcut":"A"},' +
+                '{"id":2,"name":"category 2","icon":"icon 2","color":"color 2","shortcut":"B"}]},' +
+                '"pointSet":[{"id":1,"x":10.0,"y":11.0,"categoryId":1,"startDouble":1000.0},{"id":2,"x":11.0,"y":10.0,"categoryId":2,"startDouble":2000.0}]}'
 
         then:
         result == expected
+    }
+
+    def "deserialization" (){
+        setup:
+        String json = getClass().classLoader.getResource("export/export_1.json").text
+        ObjectMapper mapper = new ObjectMapper()
+
+        when:
+        Video result = mapper.readValue(json, Video.class)
+
+        then:
+        result.path == '/home/david/Downloads/07074207.wav'
+        result.duration == 258573.333334
+        result.collection == new Collection(1, 'Default', false)
+        result.collection.categorySet.size() == 4
+        result.collection.categorySet.contains(new Category(1, 'Moving car', 'mock', '#000000', 'A'))
+        result.pointSet.size() == 3
+        result.pointSet.contains(new Point(1, Duration.millis(0.0)))
     }
 }

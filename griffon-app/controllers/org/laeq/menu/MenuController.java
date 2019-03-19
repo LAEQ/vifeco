@@ -9,12 +9,16 @@ import griffon.transform.Threading;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.db.DAOException;
 import org.laeq.model.User;
+import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
+import org.laeq.video.ImportService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +31,8 @@ public class MenuController extends AbstractGriffonController {
     private FileChooser fileChooser;
 
     @Inject private DialogService dialogService;
+    @Inject private ImportService importService;
+    @Inject private MariaService dbService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -49,6 +55,36 @@ public class MenuController extends AbstractGriffonController {
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
             getApplication().getEventRouter().publishEvent("video.add", Arrays.asList(selectedFile));
+        } else {
+            System.out.println("Error loading the file");
+        }
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void importVideo() {
+        fileChooser = new FileChooser();
+        fileChooser.setTitle("Import video file");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(
+                        "Video Files",
+                        "*.json")
+        );
+
+        Stage stage = (Stage) getApplication().getWindowManager().findWindow("mainWindow");
+
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if (selectedFile != null) {
+
+            try {
+                importService.execute(selectedFile);
+                getApplication().getEventRouter().publishEventAsync("video.import.success");
+            } catch (IOException | DAOException e) {
+                dialogService.simpleAlert(getApplication().getMessageSource().getMessage("key.to_implement"),
+                        getApplication().getMessageSource().getMessage("org.laeq.video.import.error"));
+            }
+
+
         } else {
             System.out.println("Error loading the file");
         }
@@ -142,6 +178,10 @@ public class MenuController extends AbstractGriffonController {
 
         list.put("video.open", objects -> {
             open();
+        });
+
+        list.put("video.import", objects -> {
+            importVideo();
         });
 
         return list;

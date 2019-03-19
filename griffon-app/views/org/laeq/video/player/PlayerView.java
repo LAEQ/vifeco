@@ -6,7 +6,6 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.SetChangeListener;
 import javafx.event.EventHandler;
@@ -129,11 +128,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     private EventHandler<ScrollEvent> scrollListener(){
         return event -> {
+            System.out.println(event);
             String eventName = event.getDeltaY() > 0 ? "rate.increase" : "rate.decrease";
-
             controller.updateRate(eventName);
-            editor.display(mediaPlayer.getCurrentTime());
-            controller.dispatchDuration(mediaPlayer.getCurrentTime());
         };
     }
 
@@ -220,7 +217,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     private void displayPoints() {
-        editor.display(mediaPlayer.getCurrentTime());
+        if(! mediaPlayer.getCurrentTime().isUnknown()){
+            editor.display(mediaPlayer.getCurrentTime());
+        }
     }
 
     private void init() {
@@ -345,7 +344,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             return;
         }
 
-        if(mediaPlayer != null && category.isPresent() && mousePosition != null){
+        if(mediaPlayer != null && category.isPresent() && mousePosition != null && ! mediaPlayer.getCurrentTime().isUnknown()){
             Point newPoint = new Point();
             newPoint.setX(mousePosition.getX());
             newPoint.setY(mousePosition.getY());
