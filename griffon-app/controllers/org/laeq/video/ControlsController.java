@@ -14,25 +14,16 @@ import java.util.Map;
 @ArtifactProviderFor(GriffonController.class)
 public class ControlsController extends AbstractGriffonController {
     @MVCMember @Nonnull private ControlsModel model;
-    @MVCMember @Nonnull private ControlsView view;
-
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
-
     }
 
     private Map<String, RunnableWithArgs> listenerList() {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("rate.increase", objects -> {
-           model.increaseRate();
-        });
-
-        list.put("rate.decrease", objects -> {
-            model.decreateRate();
-        });
+        list.put("rate.change", objects -> this.model.setRate((Double) objects[0]));
 
         return list;
     }

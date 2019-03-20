@@ -16,18 +16,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.TranslatedView;
 import org.laeq.VifecoView;
-import org.laeq.model.Category;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
-import org.laeq.model.Video;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconSVG;
@@ -35,11 +30,8 @@ import org.laeq.video.VideoService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends TranslatedView {
@@ -88,6 +80,7 @@ public class PlayerView extends TranslatedView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
+        parentView.getPlayerPane().getChildren().add(node);
         rootView = (VifecoView) getApplication().getMvcGroupManager().getViews().get("vifeco");
 
         keyListener = event -> keyValues(event);
@@ -99,13 +92,6 @@ public class PlayerView extends TranslatedView {
 
             nodeOver = (Node)(mouseEvent.getTarget());
         };
-
-        connectActions(node, controller);
-        init();
-        subInitUI();
-
-        parentView.getPlayerPane().getChildren().add(node);
-
 
         editor.getVideoPane().addListener((SetChangeListener<IconPointColorized>) change -> {
             if(change.wasAdded()){
@@ -122,21 +108,27 @@ public class PlayerView extends TranslatedView {
                 iconPane.getChildren().remove(change.getElementRemoved());
             }
         });
+
+        connectActions(node, controller);
+        init();
+        subInitUI();
     }
 
     private EventHandler<ScrollEvent> scrollListener(){
         return event -> {
+            if(event.getDeltaY() > 0){
+                editor.increaseRate();
+            } else {
+                editor.decreateRate();
+            }
 
-            String eventName = event.getDeltaY() > 0 ? "rate.increase" : "rate.decrease";
-
+            controller.updateRate(editor.getRate());
         };
     }
 
     @Override
     public void mvcGroupDestroy() {
-        runInsideUISync(() -> {
-            destroy();
-        });
+        runInsideUISync(() -> destroy());
     }
 
     public void play() {
@@ -192,7 +184,7 @@ public class PlayerView extends TranslatedView {
             updateValues();
         } else {
             playActionTarget.setDisable(true);
-            alert("key.to_implement", "org.laeq.video.file.error");
+            alert("org.laeq.title.error", "org.laeq.video.file.error");
         }
 
         //Settings all the listeners ....
@@ -271,18 +263,14 @@ public class PlayerView extends TranslatedView {
         };
     }
     private InvalidationListener currentTimeListener(){
-        return (observable -> {
-            updateValues();
-        });
+        return (observable -> updateValues());
     }
+
     private InvalidationListener sliderListener(){
         return  observable -> {
             if(timeSlider.isPressed()){
                 updateValues();
-
-                Duration t = editor.getDuration().multiply(timeSlider.getValue() / 100);
-
-                editor.getMediaPlayer().seek(t);
+                editor.getMediaPlayer().seek(editor.getDuration().multiply(timeSlider.getValue() / 100));
             }
         };
     }
@@ -307,7 +295,7 @@ public class PlayerView extends TranslatedView {
             Point point = editor.deleteVideoIcon((IconPointColorized)(nodeOver.getParent()));
 
             if(point != null){
-//                controller.deletePoint(point);
+                controller.deletePoint(point);
             }
 
             return;
@@ -317,7 +305,7 @@ public class PlayerView extends TranslatedView {
             Point point = editor.addPoint(mousePosition, event);
 
             if(point != null){
-                //@todo dispatch new point
+                controller.addPoint(point);
             }
         }
     }
@@ -339,32 +327,21 @@ public class PlayerView extends TranslatedView {
     }
 
     public void forward(int seconds) {
-//        Duration nowPlus30 = mediaPlayer.getCurrentTime().add(Duration.millis(seconds * 1000));
-//        Duration now = nowPlus30.lessThan(duration)? nowPlus30 : duration;
+        Duration nowPlus30 = editor.getMediaPlayer().getCurrentTime().add(Duration.millis(seconds * 1000));
+        Duration now = nowPlus30.lessThan(editor.getTotalDuration())? nowPlus30 : editor.getTotalDuration();
 
-//        controller.update(now);
-//        mediaPlayer.seek(now);
-//        editor.display(now);
-//        timeSlider.setValue(mediaPlayer.getCurrentTime().divide(duration).toMillis() * 100.0);
+        editor.getMediaPlayer().seek(now);
+        runInsideUISync(() -> editor.display());
+
     }
     public void backward(int seconds) {
-//        Duration nowMinus = mediaPlayer.getCurrentTime().subtract(Duration.millis(seconds * 1000));
-//        Duration now = nowMinus.greaterThan(mediaPlayer.getStartTime())? nowMinus : mediaPlayer.getStartTime();
+        Duration nowMinus = editor.getMediaPlayer().getCurrentTime().subtract(Duration.millis(seconds * 1000));
+        Duration now = nowMinus.greaterThan(editor.getMediaPlayer().getStartTime())? nowMinus : editor.getMediaPlayer().getStartTime();
 
-//        controller.update(now);
-//        mediaPlayer.seek(now);
-//        editor.display(now);
-//        timeSlider.setValue(mediaPlayer.getCurrentTime().divide(duration).toMillis() * 100.0);
+        editor.getMediaPlayer().seek(now);
+        runInsideUISync(() -> editor.display());
     }
-    public void rate(Double newValue) {
-//        if(mediaPlayer != null){
-//            mediaPlayer.setRate(newValue);
-//            controller.update(mediaPlayer.getCurrentTime());
-//           final Timeline rateTimeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(mediaPlayer.rateProperty(), newValue)));
-//           rateTimeline.setCycleCount(1);
-//           rateTimeline.play();
-//        }
-    }
+
     public void size(Double size){
         runInsideUISync(() -> {
             iconPane.getChildren().forEach(n -> {
@@ -378,30 +355,27 @@ public class PlayerView extends TranslatedView {
         });
     }
     public void opacity(Double oldvalue, Double newValue) {
-        runInsideUISync(() -> {
-            iconPane.getChildren().forEach(n -> {
-
-                FadeTransition transition = new FadeTransition(Duration.millis(100), n);
-                transition.setInterpolator(Interpolator.LINEAR);
-                transition.setFromValue(oldvalue);
-                transition.setToValue(newValue);
-                transition.setCycleCount(1);
-                transition.play();
-            });
-        });
+        runInsideUISync(() -> iconPane.getChildren().forEach(n -> {
+            FadeTransition transition = new FadeTransition(Duration.millis(100), n);
+            transition.setInterpolator(Interpolator.LINEAR);
+            transition.setFromValue(oldvalue);
+            transition.setToValue(newValue);
+            transition.setCycleCount(1);
+            transition.play();
+        }));
     }
     public void volume(Double value) {
-//        if(mediaPlayer != null){
-//            final Timeline volumeTimeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(mediaPlayer.volumeProperty(), value)));
-//            volumeTimeline.setCycleCount(1);
-//            volumeTimeline.play();
-//        }
+        final Timeline volumeTimeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(editor.getMediaPlayer().volumeProperty(), value)));
+        volumeTimeline.setCycleCount(1);
+        volumeTimeline.play();
     }
 
     public void setDuration(Double value) {
-//        editor.setDuration(value);
-//        if(! model.isIsPlaying()){
-//            editor.display(mediaPlayer.getCurrentTime());
-//        }
+        editor.setDuration(value);
+        runInsideUISync(() ->  editor.display());
+    }
+
+    public void rate(Double rate) {
+        editor.getMediaPlayer().setRate(rate);
     }
 }

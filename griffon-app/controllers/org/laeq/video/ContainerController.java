@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends CRUDController<Video> {
@@ -95,7 +94,7 @@ public class ContainerController extends CRUDController<Video> {
     public void delete(){
 
         if(model.getSelectedVideo() == null){
-            alert("key.to_implement", "org.laeq.video.no_selection");
+            alert("org.laeq.title.error", "org.laeq.video.no_selection");
             return;
         }
 
@@ -115,7 +114,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void edit(){
         if(model.getSelectedVideo() == null){
-            alert("key.to_implement", getMessage("org.laeq.video.no_selection"));
+            alert("org.laeq.title.error", getMessage("org.laeq.video.no_selection"));
             return;
         }
 
@@ -124,7 +123,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void export(){
         if(model.getSelectedVideo() == null){
-            alert("key.to_implement", getMessage("org.laeq.video.no_selection"));
+            alert("org.laeq.title.error", getMessage("org.laeq.video.no_selection"));
             return;
         }
 
@@ -133,7 +132,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void editVideo(Video video) {
         if(model.getSelectedVideo() == null){
-            alert("key.to_implement", getMessage("org.laeq.video.no_selection"));
+            alert("org.laeq.title.error", getMessage("org.laeq.video.no_selection"));
             return;
         }
 
@@ -149,7 +148,7 @@ public class ContainerController extends CRUDController<Video> {
             videoDAO.updateUser(event.getRowValue(), event.getNewValue());
             event.getRowValue().setUser(event.getNewValue());
         } catch (SQLException | DAOException e) {
-            alert("key.to_implement", e.getMessage());
+            alert("org.laeq.title.error", e.getMessage());
         }
     }
 
@@ -158,7 +157,7 @@ public class ContainerController extends CRUDController<Video> {
             videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
             event.getRowValue().setCollection(event.getNewValue());
         } catch (SQLException | DAOException e) {
-            alert("key.to_implement", e.getMessage());
+            alert("org.laeq.title.error", e.getMessage());
         }
     }
 
@@ -176,6 +175,7 @@ public class ContainerController extends CRUDController<Video> {
         list.put("video.import.success", objects -> {
             model.getVideoList().clear();
             model.getVideoList().addAll(videoDAO.findAll());
+            view.refresh();
         });
 
         list.put("video.created", objects -> {

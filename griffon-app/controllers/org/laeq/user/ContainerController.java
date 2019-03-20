@@ -10,7 +10,6 @@ import org.laeq.db.DAOException;
 import org.laeq.db.UserDAO;
 import org.laeq.model.User;
 import org.laeq.service.MariaService;
-import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,10 +19,8 @@ import java.util.Map;
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends CRUDController<User> {
     @MVCMember @Nonnull private ContainerModel model;
-    @MVCMember @Nonnull private ContainerView view;
 
     @Inject private MariaService dbService;
-    @Inject private DialogService dialogService;
 
     private UserDAO userDAO;
 
@@ -44,7 +41,7 @@ public class ContainerController extends CRUDController<User> {
                 updateUser(user);
             }
         } else {
-            alert("key.to_implement", String.format("Some fields are invalid: \n%s", model.getErrors()));
+            alert("org.laeq.title.error", String.format("Some fields are invalid: \n%s", model.getErrors()));
         }
     }
 
@@ -55,7 +52,7 @@ public class ContainerController extends CRUDController<User> {
             model.clear();
         } catch (DAOException e) {
             String message = String.format("Cannot save user: \n%s", user);
-            alert("key.to_implemetent", message);
+            alert("org.laeq.title.error", message);
 
             getLog().error(message);
         }
@@ -68,7 +65,7 @@ public class ContainerController extends CRUDController<User> {
             model.clear();
         } catch (DAOException | SQLException e) {
             String message = String.format("Cannot save user: \n%s", model.getUser());
-            alert("key.to_implement", message);
+            alert("org.laeq.title.error", message);
 
             getLog().error(message);
         }
@@ -83,7 +80,7 @@ public class ContainerController extends CRUDController<User> {
                 model.delete(user);
             } catch (DAOException e) {
                 String message = getMessage("org.laeq.delete.default_user.error");
-                alert("key.to_implement", message);
+                alert("org.laeq.title.error", message);
 
                 getLog().error(String.format("UserDAO: failed to deleteVideoIcon %s.", user));
             }

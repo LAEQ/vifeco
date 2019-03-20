@@ -1,8 +1,6 @@
 package org.laeq.video.player;
 
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
@@ -26,7 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
@@ -41,10 +40,8 @@ public class VideoEditor {
     private final ObservableSet<IconPointColorized> timelinePane = FXCollections.observableSet();
     private final ObservableSet<IconPointColorized> videoPane = FXCollections.observableSet();
 
-    //Observable properties
+
     private final SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
-    private final SimpleDoubleProperty rate = new SimpleDoubleProperty(ControlsDefault.rate);
-    private final SimpleObjectProperty<Duration> currentTime = new SimpleObjectProperty<>(Duration.UNKNOWN);
 
     private final Set<String> shortcuts;
 
@@ -85,11 +82,6 @@ public class VideoEditor {
         file = new File(video.getPath());
         media = new Media(file.getCanonicalFile().toURI().toString());
         mediaPlayer = new MediaPlayer(media);
-
-        mediaPlayer.setOnReady(() -> {
-            rate.bind(mediaPlayer.rateProperty());
-            currentTime.bind(mediaPlayer.currentTimeProperty());
-        });
 
         pointsToDisplay.addListener((SetChangeListener<Point>) change -> {
             if(change.wasAdded()){
@@ -262,14 +254,6 @@ public class VideoEditor {
         }
     }
 
-    public SimpleBooleanProperty isPlayingProperty() {
-        return isPlaying;
-    }
-    public SimpleDoubleProperty rateProperty() {
-        return rate;
-    }
-    public SimpleObjectProperty<Duration> currentTimeProperty(){return currentTime;}
-
     public Point addPoint(Point2D mousePosition, KeyEvent event) {
         if(this.shortcuts.contains(event.getCode().getName())){
             Optional<Category> optionalCategory = video.getCollection().getCategorySet().stream().filter(category -> category.getShortcut().equals(event.getCode().getName())).findFirst();
@@ -292,5 +276,32 @@ public class VideoEditor {
         }
 
         return null;
+    }
+
+    public void increaseRate() {
+        changeRate(0.1);
+    }
+
+    public void decreateRate() {
+        changeRate(-0.1);
+    }
+
+    public void changeRate(double change){
+        Double rate = mediaPlayer.getRate();
+
+        rate += change;
+
+        if(rate >= 0.1 && rate <= 10){
+            BigDecimal bg = new BigDecimal(rate);
+            mediaPlayer.setRate(bg.setScale(1, RoundingMode.HALF_EVEN).doubleValue());
+        }
+    }
+
+    public double getRate(){
+        return mediaPlayer.getRate();
+    }
+
+    public Duration getTotalDuration() {
+        return mediaPlayer.getTotalDuration();
     }
 }

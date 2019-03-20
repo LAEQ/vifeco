@@ -78,15 +78,15 @@ public class MenuController extends AbstractGriffonController {
 
             try {
                 importService.execute(selectedFile);
-                getApplication().getEventRouter().publishEventAsync("video.import.success");
+                getApplication().getEventRouter().publishEvent("video.import.success");
             } catch (IOException | DAOException e) {
-                dialogService.simpleAlert(getApplication().getMessageSource().getMessage("key.to_implement"),
-                        getApplication().getMessageSource().getMessage("org.laeq.video.import.error"));
+                dialogService.simpleAlert(
+                        getApplication().getMessageSource().getMessage("org.laeq.title.error"),
+                        getApplication().getMessageSource().getMessage("org.laeq.video.import.error")
+                );
             }
-
-
         } else {
-            System.out.println("Error loading the file");
+            getLog().error("Error loading the file");
         }
     }
 

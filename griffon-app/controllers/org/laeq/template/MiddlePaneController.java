@@ -8,12 +8,9 @@ import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DAOException;
-import org.laeq.db.VideoDAO;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
@@ -64,30 +61,30 @@ public class MiddlePaneController extends AbstractGriffonController {
 
                     } catch (IOException exception){
                         getLog().error(exception.getMessage());
-                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String title = getApplication().getMessageSource().getMessage("org.laeq.title.error");
                         String message = getApplication().getMessageSource().getMessage("org.laeq.video.file.error");
                         dialogService.simpleAlert(title, message);
 
                     } catch (SQLException | DAOException e) {
                         getLog().error(e.getMessage());
-                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String title = getApplication().getMessageSource().getMessage("org.laeq.title.error");
                         String message = getApplication().getMessageSource().getMessage("org.laeq.video.video_dao.error");
                         dialogService.simpleAlert(title, message);
                     } catch (MediaException | javafx.scene.media.MediaException e) {
                         getLog().error(e.getMessage());
-                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String title = getApplication().getMessageSource().getMessage("org.laeq.title.error");
                         String message = getApplication().getMessageSource().getMessage("org.laeq.video.media_file.error");
                         dialogService.simpleAlert(title, message);
                     } catch (Exception e){
                         getLog().error(e.getMessage());
-                        String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                        String title = getApplication().getMessageSource().getMessage("org.laeq.title.error");
                         String message = getApplication().getMessageSource().getMessage("org.laeq.video.file.error");
                         dialogService.simpleAlert(title, message);
                     }
 
                 } else {
                     getLog().error(String.format("PlayerView: file not exits %s", videoFile));
-                    String title = getApplication().getMessageSource().getMessage("key.to_implement");
+                    String title = getApplication().getMessageSource().getMessage("org.laeq.title.error");
                     dialogService.simpleAlert(title, String.format("PlayerView: file not exits %s", videoFile));
                 }
         });

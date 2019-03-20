@@ -3,17 +3,10 @@ package org.laeq.video.player;
 import griffon.core.artifact.GriffonModel;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-import org.laeq.model.Category;
-import org.laeq.model.Point;
-import org.laeq.model.User;
-import org.laeq.model.Video;
 import org.laeq.video.ControlsDefault;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
-import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class PlayerModel extends AbstractGriffonModel {
