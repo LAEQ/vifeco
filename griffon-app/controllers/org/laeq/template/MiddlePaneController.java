@@ -94,12 +94,16 @@ public class MiddlePaneController extends AbstractGriffonController {
 
         list.put("video.edit", objects -> {
             Video video = (Video) objects[0];
-            VideoEditor editor = new VideoEditor(video, dbService.getPointDAO());
 
-            Map<String, Object> args = new HashMap<>();
-            args.put("editor", editor);
-
-            createGroup("player", args);
+            VideoEditor editor = null;
+            try {
+                editor = new VideoEditor(video, dbService.getPointDAO());
+                Map<String, Object> args = new HashMap<>();
+                args.put("editor", editor);
+                createGroup("player", args);
+            } catch (IOException e) {
+                getLog().error(e.getMessage());
+            }
         });
 
         return list;

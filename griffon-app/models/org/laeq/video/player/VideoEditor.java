@@ -1,6 +1,8 @@
 package org.laeq.video.player;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
@@ -39,7 +41,11 @@ public class VideoEditor {
     private final ObservableSet<IconPointColorized> timelinePane = FXCollections.observableSet();
     private final ObservableSet<IconPointColorized> videoPane = FXCollections.observableSet();
 
+    //Observable properties
     private final SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
+    private final SimpleDoubleProperty rate = new SimpleDoubleProperty(ControlsDefault.rate);
+    private final SimpleObjectProperty<Duration> currentTime = new SimpleObjectProperty<>(Duration.UNKNOWN);
+
     private final Set<String> shortcuts;
 
     private double paneWidth;
@@ -51,24 +57,15 @@ public class VideoEditor {
     private Media media;
     private MediaPlayer mediaPlayer;
 
-    public VideoEditor(Video video, PointDAO pointDAO) {
+    public VideoEditor(Video video, PointDAO pointDAO) throws IOException {
         this.video = video;
         this.pointDAO = pointDAO;
-
         this.shortcuts = video.getCollection().getCategorySet().parallelStream().map(category -> category.getShortcut()).collect(Collectors.toSet());
-
-        try {
-            file = new File(video.getPath());
-            media = new Media(file.getCanonicalFile().toURI().toString());
-            mediaPlayer = new MediaPlayer(media);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
 
         videoIconMap = new DualHashBidiMap<>();
         timelineIconMap = new DualHashBidiMap<>();
 
-        video.getPointSet().parallelStream().forEach(point -> {
+        video.getPointSet().stream().forEach(point -> {
             IconPointColorized iconVideo = createIcon(point.getCategory(), 100);
             iconVideo.decorate();
             iconVideo.setLayoutX(point.getX());
@@ -82,6 +79,16 @@ public class VideoEditor {
 
             timelineIconMap.put(point, iconTime);
             timelinePane.add(iconTime);
+        });
+
+
+        file = new File(video.getPath());
+        media = new Media(file.getCanonicalFile().toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+
+        mediaPlayer.setOnReady(() -> {
+            rate.bind(mediaPlayer.rateProperty());
+            currentTime.bind(mediaPlayer.currentTimeProperty());
         });
 
         pointsToDisplay.addListener((SetChangeListener<Point>) change -> {
@@ -258,7 +265,10 @@ public class VideoEditor {
     public SimpleBooleanProperty isPlayingProperty() {
         return isPlaying;
     }
-
+    public SimpleDoubleProperty rateProperty() {
+        return rate;
+    }
+    public SimpleObjectProperty<Duration> currentTimeProperty(){return currentTime;}
 
     public Point addPoint(Point2D mousePosition, KeyEvent event) {
         if(this.shortcuts.contains(event.getCode().getName())){

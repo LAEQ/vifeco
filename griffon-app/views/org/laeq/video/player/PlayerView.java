@@ -278,7 +278,8 @@ public class PlayerView extends TranslatedView {
     private InvalidationListener sliderListener(){
         return  observable -> {
             if(timeSlider.isPressed()){
-                displayPoints();
+                updateValues();
+
                 Duration t = editor.getDuration().multiply(timeSlider.getValue() / 100);
 
                 editor.getMediaPlayer().seek(t);

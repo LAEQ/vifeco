@@ -33,7 +33,7 @@ public class ContainerController extends AbstractGriffonController {
 //            createGroup("controls", datas);
 //            createGroup("category", datas);
             createGroup("video_player", datas);
-//            createGroup("timeline", datas);
+            createGroup("timeline", datas);
         });
     }
 

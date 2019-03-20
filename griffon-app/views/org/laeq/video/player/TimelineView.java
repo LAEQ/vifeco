@@ -3,6 +3,10 @@ package org.laeq.video.player;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.SetChangeListener;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
@@ -23,19 +27,22 @@ public class TimelineView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private TimelineController controller;
     @MVCMember @Nonnull private TimelineModel model;
     @MVCMember @Nonnull private ContainerView parentView;
-    @MVCMember @Nonnull private Video video;
     @MVCMember @Nonnull private VideoEditor editor;
 
-    private final HashMap<Point, IconPointColorized> icons = new HashMap<>();
-
     private final VideoTimeline timeline = new VideoTimeline();
-
     private final Line line = new Line(0,0,0,160);
     private final Line durationLine = new Line(0,0,0,160);
+
     private Pane pane;
+
+    //Listeners
+    private ChangeListener<Duration> currentTimeListener;
+    private ChangeListener<Boolean> isPlayingListener;
 
     @Override
     public void initUI() {
+        initListeners();
+
         pane = new Pane();
 
         AnchorPane.setTopAnchor(pane, 0d);
@@ -50,7 +57,7 @@ public class TimelineView extends AbstractJavaFXGriffonView {
 
         pane.getChildren().addAll(line, durationLine, timeline);
         pane.widthProperty().addListener((observable, oldValue, newValue) -> {
-            double x= newValue.doubleValue() / 2;
+            double x = newValue.doubleValue() / 2;
             double x1 = model.getLineDuration() * timeline.getRatio();
 
             line.setStartX(x);
@@ -60,35 +67,61 @@ public class TimelineView extends AbstractJavaFXGriffonView {
             timeline.setX(x);
         });
 
-        timeline.getGroup().setOnMouseEntered(event -> {
-            editor.reset();
+        // Listener for video slider if video is paused
+        editor.isPlayingProperty().addListener(isPlayingListener);
+        editor.play();
+        editor.play();
 
-            Node node = event.getPickResult().getIntersectedNode();
 
-            if(node.getParent() instanceof IconPointColorized){
-                editor.reset((IconPointColorized)node.getParent());
-            }
-        });
 
-        timeline.getGroup().setOnMouseExited(event -> {
-            editor.reset();
-        });
+//        timeline.getGroup().setOnMouseEntered(event -> {
+//            editor.reset();
+//
+//            Node node = event.getPickResult().getIntersectedNode();
+//
+//            if(node.getParent() instanceof IconPointColorized){
+//                editor.reset((IconPointColorized)node.getParent());
+//            }
+//        });
+//
+//        timeline.getGroup().setOnMouseExited(event -> {
+//            editor.reset();
+//        });
+//
+//        timeline.getGroup().setOnMouseClicked(event -> {
+//            Node node = (Node) event.getTarget();
+//            if(node.getParent() instanceof IconPointColorized){
+//                Point point = editor.deleteTimelineIcon((IconPointColorized) node.getParent());
+//                if(point != null){
+//                    controller.deletePoint(point);
+//                }
+//            }
+//        });
 
-        timeline.getGroup().setOnMouseClicked(event -> {
-            Node node = (Node) event.getTarget();
-            if(node.getParent() instanceof IconPointColorized){
-                Point point = editor.deleteTimelineIcon((IconPointColorized) node.getParent());
-                if(point != null){
-                    controller.deletePoint(point);
-                }
-            }
-        });
+        init();
 
         parentView.getTimelinePane().getChildren().add(pane);
     }
 
+    private void initListeners(){
+        currentTimeListener = (observable, oldValue, newValue) -> {
+            if (! editor.isPlayingProperty().getValue()) {
+                timeline.translate(newValue);
+            }
+        };
+
+        isPlayingListener = (observable, oldValue, newValue) -> {
+            if(! newValue){
+                editor.currentTimeProperty().addListener(currentTimeListener);
+            } else {
+                editor.currentTimeProperty().removeListener(currentTimeListener);
+            }
+        };
+
+    }
+
     public void init() {
-        timeline.init(model.getDuration());
+        timeline.init(editor.getDuration());
         timeline.addIcons(editor.getTimelineIconMap());
 
         editor.getTimelinePane().addListener((SetChangeListener<IconPointColorized>) change -> {
@@ -102,23 +135,11 @@ public class TimelineView extends AbstractJavaFXGriffonView {
         });
     }
 
-    public void play() {
-        timeline.tooglePlay();
-    }
-
-    public void updatePosition(Duration position) {
-        timeline.translate(position);
-    }
-
     public void updateDurationLine(double newValue) {
 
         durationLine.setStartX(pane.getWidth() / 2 - (newValue * timeline.getRatio()));
         durationLine.setEndX(pane.getWidth() / 2 - (newValue * timeline.getRatio()));
 
         model.setLineDuration(newValue);
-    }
-
-    public void updateRate(double rate) {
-        timeline.setRate(rate);
     }
 }

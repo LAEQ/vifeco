@@ -21,10 +21,8 @@ import java.util.Map;
 public class TimelineController extends AbstractGriffonController {
     @MVCMember @Nonnull private TimelineModel model;
     @MVCMember @Nonnull private TimelineView view;
-    @MVCMember @Nonnull private Video video;
     @MVCMember @Nonnull private VideoEditor editor;
 
-    @Inject private MariaService mariaService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -40,26 +38,26 @@ public class TimelineController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listenerList(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("media.duration", objects -> {
-            Duration duration = (Duration) objects[0];
-            runInsideUISync(() -> {
-                model.init(duration);
-                view.init();
-            });
-        });
-
-        list.put("player.play", objects -> view.play());
-
-
-        list.put("media.currentTime", objects -> runInsideUISync(() -> {
-            view.updatePosition((Duration)objects[0]);
-        }));
-
-        list.put("controls.duration", objects -> runInsideUISync(() -> {
-            view.updateDurationLine((double)objects[0]);
-        }));
-
-        list.put("controls.rate", objects -> view.updateRate((double)objects[0]));
+//        list.put("media.duration", objects -> {
+//            Duration duration = (Duration) objects[0];
+//            runInsideUISync(() -> {
+//                model.init(duration);
+//                view.init();
+//            });
+//        });
+//
+//        list.put("player.play", objects -> view.play());
+//
+//
+//        list.put("media.currentTime", objects -> runInsideUISync(() -> {
+//            view.updatePosition((Duration)objects[0]);
+//        }));
+//
+//        list.put("controls.duration", objects -> runInsideUISync(() -> {
+//            view.updateDurationLine((double)objects[0]);
+//        }));
+//
+//        list.put("controls.rate", objects -> view.updateRate((double)objects[0]));
 
         return list;
     }

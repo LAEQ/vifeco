@@ -13,22 +13,7 @@ import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class TimelineModel extends AbstractGriffonModel {
-    @MVCMember @Nonnull private Video video;
-    @MVCMember @Nonnull private TimelineView view;
-
-    private Duration duration;
     private double lineDuration;
-
-    private SetChangeListener<Point> listener;
-
-    public Duration getDuration() {
-        return duration;
-    }
-
-    public void init(Duration duration) {
-        video.setDuration(duration.toMillis());
-        this.duration = duration;
-    }
 
     public double getLineDuration() {
         return lineDuration;

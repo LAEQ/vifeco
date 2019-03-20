@@ -124,13 +124,7 @@ public class VideoTimeline extends Group {
     }
 
     public void translate(Duration position) {
-        this.translate.pause();
-        this.currentPosition = position;
-        this.group.setTranslateX(- this.currentPosition.toSeconds() * this.ratio);
-
-        if(isPlaying){
-            this.translate.playFrom(this.currentPosition);
-        }
+        this.group.setTranslateX(- position.toSeconds() * this.ratio);
     }
 
     public double getRatio() {
