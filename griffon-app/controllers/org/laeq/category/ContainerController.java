@@ -83,7 +83,7 @@ public class ContainerController extends AbstractGriffonController {
     }
 
     private void alert(String alertMsg){
-        dialogService.simpleAlert("key.to_implement",alertMsg);
+        dialogService.simpleAlert("org.laeq.title.error",alertMsg);
     }
 
     public void delete(Category category) {
@@ -91,7 +91,7 @@ public class ContainerController extends AbstractGriffonController {
             categoryDAO.delete(category);
             model.delete(category);
         } catch (DAOException e) {
-            dialogService.simpleAlert("key.to_implement", e.getMessage());
+            dialogService.simpleAlert("org.laeq.title.error", e.getMessage());
         }
 
     }

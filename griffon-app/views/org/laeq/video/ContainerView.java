@@ -14,8 +14,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Callback;
-import org.kordamp.ikonli.fontawesome.FontAwesome;
-import org.kordamp.ikonli.javafx.FontIcon;
 import org.laeq.TranslatedView;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
@@ -23,9 +21,13 @@ import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconCounter;
 import org.laeq.model.icon.IconCounterMatrice;
+import org.laeq.model.icon.IconSVG;
+import org.laeq.model.icon.IconSquare;
 import org.laeq.template.MiddlePaneView;
+import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +62,8 @@ public class ContainerView extends TranslatedView {
     private TableColumn<Video, User> userColumn;
     private TableColumn<Video, Collection> collectionColumn;
 
+    @Inject private DialogService dialogService;
+
     @Override
     public void initUI() {
         Node node = loadFromFXML();
@@ -77,6 +81,25 @@ public class ContainerView extends TranslatedView {
         textFields.put(clearActionTarget, "org.laeq.video.clear_btn");
         textFields.put(deleteActionTarget, "org.laeq.video.delete_btn");
         textFields.put(editActionTarget, "org.laeq.video.edit_btn");
+
+        IconSquare exportIcon = new IconSquare(new Category("export", IconSVG.export, "#FFFFFFFF", "A"));
+        exportIcon.decorate();
+        exportActionTarget.setGraphic(exportIcon);
+
+        IconSquare deleteIcon = new IconSquare(new Category("delete", IconSVG.trash, "#FFFFFFFF", "A"));
+        deleteIcon.decorate();
+        deleteActionTarget.setGraphic(deleteIcon);
+
+        IconSquare editIcon = new IconSquare(new Category("delete", IconSVG.edit, "#FFFFFFFF", "A"));
+        editIcon.decorate();
+        editActionTarget.setGraphic(editIcon);
+
+        IconSquare clearIcon = new IconSquare(new Category("clear", IconSVG.clear, "#000000FF", "A"));
+        clearIcon.decorate();
+        clearActionTarget.setGraphic(clearIcon);
+
+
+
 
         translate();
     }
@@ -111,7 +134,7 @@ public class ContainerView extends TranslatedView {
         selectBox.setCellFactory(addSelectBox());
         dateColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getCreatedFormatted()));
         pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        durationColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getDurationFormatted()));
+        durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty().asString());
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
 
         videoTable.setItems(this.model.getFilteredList());
@@ -125,7 +148,12 @@ public class ContainerView extends TranslatedView {
         videoTable.setOnMouseClicked(event -> {
             if(event.getClickCount() == 2){
                 Video video = videoTable.getSelectionModel().getSelectedItem();
-                controller.editVideo(video);
+                if(video.getDuration() != 0){
+                    controller.editVideo(video);
+                }else{
+                    alert("org.laeq.title.error", "org.laeq.video.duration.error");
+                }
+
             }
         });
     }
@@ -163,7 +191,6 @@ public class ContainerView extends TranslatedView {
                 }
 
                 String filter = newValue.toLowerCase();
-
                 if(video.getName().toLowerCase().contains(filter)){
                     return true;
                 }
@@ -209,10 +236,10 @@ public class ContainerView extends TranslatedView {
         collectionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
         collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));
 
-        IconCounterMatrice matrice = new IconCounterMatrice(model.getCategorySet());
-        categoryGroupMap = matrice.getIconMap();
+        IconCounterMatrice matrix = new IconCounterMatrice(model.getCategorySet());
+        categoryGroupMap = matrix.getIconMap();
 
-        categoryGroup.getChildren().addAll(matrice.getIconMap().values());
+        categoryGroup.getChildren().addAll(matrix.getIconMap().values());
     }
 
     public void reset() {
@@ -222,10 +249,13 @@ public class ContainerView extends TranslatedView {
         lastPointValue.setText("");
 
         model.getCategorySet().forEach(c -> {
-            categoryGroupMap.get(c).setOpacity(0.4);
             categoryGroupMap.get(c).setText("-");
         });
 
         videoTable.getSelectionModel().clearSelection();
+    }
+
+    public void refresh() {
+        videoTable.refresh();
     }
 }

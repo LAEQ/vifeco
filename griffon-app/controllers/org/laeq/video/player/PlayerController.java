@@ -6,20 +6,10 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.scene.input.KeyEvent;
-import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.db.DAOException;
-import org.laeq.db.PointDAO;
-import org.laeq.db.VideoDAO;
 import org.laeq.model.Point;
-import org.laeq.model.Video;
-import org.laeq.service.MariaService;
-import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,21 +18,10 @@ import java.util.Map;
 public class PlayerController extends AbstractGriffonController {
     @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private PlayerView view;
-    @MVCMember @Nonnull private Video video;
-    @MVCMember @Nonnull private VideoEditor editor;
-
-    @Inject private DialogService dialogService;
-    @Inject private MariaService dbService;
-
-    private PointDAO pointDAO;
-    private VideoDAO videoDAO;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
-
-        pointDAO = dbService.getPointDAO();
-        videoDAO = dbService.getVideoDAO();
     }
 
     @Override
@@ -53,7 +32,6 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
-        dispatchEvent("player.play");
         view.play();
     }
 
@@ -76,22 +54,6 @@ public class PlayerController extends AbstractGriffonController {
 //        view.reload();
     }
 
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void test(KeyEvent keyEvent) {
-        System.out.println("test");
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void closeTab() {
-        destroyMVCGroup(getMvcGroup().getMvcId());
-    }
-
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD)
-    public void addPoint(Point point) {
-        publishEvent("point.added", point);
-    }
 
     private void publishEvent(String eventName, Object obj){
         getApplication().getEventRouter().publishEvent(eventName, Arrays.asList(obj));
@@ -101,9 +63,9 @@ public class PlayerController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         list.put("controls.rate", objects -> {
-            view.rate((Double) objects[0]);
-            model.setRate((Double) objects[0]);
-
+            Double rate = (Double) objects[0];
+            model.setRate(rate);
+            view.rate(rate);
         });
 
         list.put("controls.volume", objects -> {
@@ -132,34 +94,24 @@ public class PlayerController extends AbstractGriffonController {
         return list;
     }
 
-    public void dispatchDuration(Duration duration) {
-        video.setDuration(duration.toMillis());
-        try {
-            videoDAO.updateDuration(video);
-            getApplication().getEventRouter().publishEventAsync("media.duration", Arrays.asList(duration));
-        } catch (SQLException | DAOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void dispatchEvent(String eventName){
         getApplication().getEventRouter().publishEvent(eventName);
     }
 
-
-    public void update(Duration currentTime) {
-        publishEvent("media.currentTime", currentTime);
-    }
-
-    public void updateRate(Double rate) {
-        publishEvent("controls.rate", rate);
-    }
-
-    public void updateRate(String eventName) {
-        dispatchEvent(eventName);
+    private void dispatchEvent(String eventName, Object object){
+        getApplication().getEventRouter().publishEvent(eventName, Arrays.asList(object));
     }
 
     public void deletePoint(Point point) {
         getApplication().getEventRouter().publishEvent("point.deleted", Arrays.asList(point));
+    }
+
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    public void addPoint(Point point) {
+        publishEvent("point.added", point);
+    }
+
+    public void updateRate(double rate) {
+        publishEvent("rate.change", rate);
     }
 }

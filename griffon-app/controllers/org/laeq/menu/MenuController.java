@@ -54,7 +54,7 @@ public class MenuController extends AbstractGriffonController {
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            getApplication().getEventRouter().publishEvent("video.add", Arrays.asList(selectedFile));
+            getApplication().getEventRouter().publishEvent("video.create", Arrays.asList(selectedFile));
         } else {
             System.out.println("Error loading the file");
         }
@@ -78,15 +78,15 @@ public class MenuController extends AbstractGriffonController {
 
             try {
                 importService.execute(selectedFile);
-                getApplication().getEventRouter().publishEventAsync("video.import.success");
+                getApplication().getEventRouter().publishEvent("video.import.success");
             } catch (IOException | DAOException e) {
-                dialogService.simpleAlert(getApplication().getMessageSource().getMessage("key.to_implement"),
-                        getApplication().getMessageSource().getMessage("org.laeq.video.import.error"));
+                dialogService.simpleAlert(
+                        getApplication().getMessageSource().getMessage("org.laeq.title.error"),
+                        getApplication().getMessageSource().getMessage("org.laeq.video.import.error")
+                );
             }
-
-
         } else {
-            System.out.println("Error loading the file");
+            getLog().error("Error loading the file");
         }
     }
 

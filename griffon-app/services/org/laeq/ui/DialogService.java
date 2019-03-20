@@ -58,13 +58,15 @@ public class DialogService extends AbstractGriffonService {
     }
 
     public void simpleAlert(String title, String text){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setWidth(250);
+        runInsideUISync(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(title);
+            alert.setWidth(250);
 
-        alert.setHeaderText(null);
-        alert.setContentText(text);
-        alert.showAndWait();
+            alert.setHeaderText(null);
+            alert.setContentText(text);
+            alert.showAndWait();
+        });
     }
 
 }

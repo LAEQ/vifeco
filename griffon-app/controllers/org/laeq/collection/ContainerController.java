@@ -39,7 +39,7 @@ public class ContainerController extends CRUDController<Collection> {
                 collectionDAO.save(collection);
                 model.update(collection);
             } catch (DAOException e) {
-                alert("key.to_implement", e.getMessage());
+                alert("org.laeq.title.error", e.getMessage());
             }
 
         } else {

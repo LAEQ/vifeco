@@ -8,7 +8,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import org.laeq.model.Category;
-import org.laeq.model.icon.IconPoint;
 import org.laeq.model.icon.IconSize;
 
 public class CategoryGroup extends AnchorPane {
@@ -22,6 +21,7 @@ public class CategoryGroup extends AnchorPane {
         this.category = category;
 
         Pane background = new Pane();
+        background.setPrefHeight(size);
 
         setLeftAnchor(background, 10d);
         setRightAnchor(background, 10d);
@@ -38,7 +38,7 @@ public class CategoryGroup extends AnchorPane {
 
         setRightAnchor(textLabel, 15d);
 
-        IconPoint iconPoint = new IconPoint(new IconSize(category, size));
+        IconSize iconPoint = new IconSize(category, size);
         iconPoint.decorate();
         iconPoint.position(new Point2D(size / 2, size / 2));
 

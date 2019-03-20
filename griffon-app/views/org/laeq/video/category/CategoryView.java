@@ -10,8 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Category;
-import org.laeq.model.Video;
-import org.laeq.video.CategoryController;
 import org.laeq.video.CategoryModel;
 import org.laeq.video.player.ContainerView;
 
@@ -23,10 +21,8 @@ import static javafx.scene.layout.AnchorPane.setRightAnchor;
 
 @ArtifactProviderFor(GriffonView.class)
 public class CategoryView extends AbstractJavaFXGriffonView {
-    @MVCMember @Nonnull private CategoryController controller;
     @MVCMember @Nonnull private CategoryModel model;
     @MVCMember @Nonnull private ContainerView parentView;
-    @MVCMember @Nonnull private Video video;
 
     @FXML private Pane categoryPane;
     @FXML private Text totalLabel;
@@ -38,12 +34,6 @@ public class CategoryView extends AbstractJavaFXGriffonView {
     public void initUI() {
         parent = loadFromFXML();
         categoryList = new HashMap<>();
-
-//        model.generateProperties(categoryList.keySet());
-//        categoryList.forEach((k, v) -> {
-//            v.getTextLabel().textProperty().bind(model.getCategoryProperty(k).asString());
-//        });
-//        totalLabel.textProperty().bind(model.totalProperty().asString());
 
         parentView.getCategoryPane().getChildren().add(parent);
     }

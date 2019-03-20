@@ -20,9 +20,7 @@ public class CRUDController<T> extends AbstractGriffonController {
     @Inject protected DialogService dialogService;
 
     protected void alert(String key, String alertMsg){
-        runInsideUISync(() -> {
-            dialogService.simpleAlert(getMessage(key), alertMsg);
-        });
+        runInsideUISync(() -> dialogService.simpleAlert(getMessage(key), alertMsg));
     }
 
     protected Boolean confirm(String key){

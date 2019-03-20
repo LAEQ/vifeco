@@ -2,7 +2,6 @@ package org.laeq.video.player;
 
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
-import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -10,7 +9,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.laeq.model.icon.IconPointColorized;
-
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -22,26 +20,19 @@ public class VideoTimeline extends Group {
     private final int ratio = 50;
     private final double height = 160;
     private final int iconSize = 17;
+
     private double y = 160;
-
-    private TranslateTransition translate;
-    private Boolean isPlaying = false;
-
-    private Duration currentPosition = Duration.seconds(0);
 
     public VideoTimeline() {
         getChildren().add(group);
-
-        setCache(true);
-        setCacheHint(CacheHint.SPEED);
     }
 
     public Group getGroup(){
         return group;
     }
 
-    public double getNextY(){
-        if(y >= height - 27){
+    private double getNextY(){
+        if(y > (17 + 5) * 5){
             y = 17;
         } else {
             y += iconSize + 5;
@@ -50,21 +41,6 @@ public class VideoTimeline extends Group {
         return y;
     }
 
-    public void tooglePlay(){
-        if(isPlaying){
-            isPlaying = false;
-            this.currentPosition = translate.getCurrentTime(); //@todo nullpointer exception
-            this.translate.pause();
-
-        } else {
-            isPlaying = true;
-            translate.playFrom(this.currentPosition);
-        }
-    }
-
-    public void setX(double x){
-        this.setLayoutX(x);
-    }
     public void init(Duration duration) {
         this.duration = duration;
         for (int i = 0; i < this.duration.toSeconds(); i++) {
@@ -74,17 +50,47 @@ public class VideoTimeline extends Group {
             }
         }
 
-        translate = new TranslateTransition(this.duration, this.group);
-        translate.setInterpolator(Interpolator.LINEAR);
-        translate.setFromX(0);
-        translate.setToX(0 - (this.duration.toSeconds() * this.ratio));
-        translate.setCycleCount(1);
-        translate.setAutoReverse(false);
-
         group.getChildren().clear();
-
         group.getChildren().addAll(lines);
         group.getChildren().addAll(texts);
+    }
+
+
+    public void setX(double x){
+        this.setLayoutX(x);
+    }
+
+    public void translate(Duration position) {
+        TranslateTransition t = new TranslateTransition(Duration.millis(100), this.group);
+
+        t.setInterpolator(Interpolator.LINEAR);
+        t.setToX(- position.toSeconds() * this.ratio);
+        t.setCycleCount(0);
+        t.play();
+    }
+
+    public double getRatio() {
+        return ratio;
+    }
+
+    public void addIcons(Set<IconPointColorized> icons) {
+        icons.parallelStream().forEach(icon ->{
+            icon.setLayoutX(icon.getLayoutX() * ratio);
+            icon.setLayoutY(getNextY());
+        });
+
+        group.getChildren().addAll(icons);
+    }
+
+    public void addIcon(IconPointColorized icon){
+        icon.setLayoutX(icon.getLayoutX() * ratio);
+        icon.setLayoutY(getNextY());
+
+        group.getChildren().add(icon);
+    }
+
+    public void removeIcon(IconPointColorized elementRemoved) {
+        group.getChildren().remove(elementRemoved);
     }
 
     private Line drawLine(int x) {
@@ -121,43 +127,5 @@ public class VideoTimeline extends Group {
         text.setFill(Color.DARKGRAY);
         text.setFont(new Font("sans", 10));
         return text;
-    }
-
-    public void translate(Duration position) {
-        this.translate.pause();
-        this.currentPosition = position;
-        this.group.setTranslateX(- this.currentPosition.toSeconds() * this.ratio);
-
-        if(isPlaying){
-            this.translate.playFrom(this.currentPosition);
-        }
-    }
-
-    public double getRatio() {
-        return ratio;
-    }
-    public void setRate(double rate) {
-        translate.setRate(rate);
-
-    }
-
-    public void addIcons(Set<IconPointColorized> icons) {
-        icons.parallelStream().forEach(icon ->{
-            icon.setLayoutX(icon.getLayoutX() * ratio);
-            icon.setLayoutY(getNextY());
-        });
-
-        group.getChildren().addAll(icons);
-    }
-
-    public void addIcon(IconPointColorized icon){
-        icon.setLayoutX(icon.getLayoutX() * ratio);
-        icon.setLayoutY(getNextY());
-
-        group.getChildren().add(icon);
-    }
-
-    public void removeIcon(IconPointColorized elementRemoved) {
-        group.getChildren().remove(elementRemoved);
     }
 }
