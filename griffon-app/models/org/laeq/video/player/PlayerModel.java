@@ -17,9 +17,7 @@ import java.util.SortedSet;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class PlayerModel extends AbstractGriffonModel {
-    @MVCMember @Nonnull private Video video;
-
-    private Boolean isPlaying = false;
+    @MVCMember @Nonnull VideoEditor editor;
     private Double rate;
     private Double volume;
     private Double size;
@@ -62,32 +60,5 @@ public class PlayerModel extends AbstractGriffonModel {
     }
     public void setOpacity(Double opacity) {
         this.opacity = opacity;
-    }
-    public void setVideo(Video video) {
-        this.video = video;
-    }
-    public void addPoint(Point point) {
-        video.addPoint(point);
-    }
-    public Optional<Category> getCategory(String shortcut) {
-        return video.getCollection().getCategorySet().stream().filter(category -> category.getShortcut().equals(shortcut)).findFirst();
-    }
-    public User getUser() {
-        return video.getUser();
-    }
-    public void setIsPlaying(Boolean value){
-        isPlaying = value;
-    }
-    public boolean isIsPlaying() {
-        return isPlaying;
-    }
-
-    public SortedSet<Point> displayPoints(Duration currentTime){
-        Duration startDuration = (currentTime.subtract(Duration.millis( duration * 1000)));
-        Point start = new Point(Integer.MAX_VALUE, startDuration);
-        Point end = new Point(Integer.MAX_VALUE, currentTime);
-        end.setStart(currentTime);
-
-        return video.getPointSet().subSet(start, end);
     }
 }

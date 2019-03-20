@@ -19,8 +19,6 @@ import java.util.Set;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends AbstractGriffonController {
-    @MVCMember @Nonnull private ContainerModel model;
-    @MVCMember @Nonnull private Video video;
     @MVCMember @Nonnull private VideoEditor editor;
 
     @Inject private MariaService dbService;
@@ -28,21 +26,15 @@ public class ContainerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        if(video != null){
-            Map<String, Object> datas = new HashMap<>();
-            datas.put("video", video);
-            datas.put("editor", editor);
+        Map<String, Object> datas = new HashMap<>();
+        datas.put("editor", editor);
 
-            runInsideUISync(() ->{
-                createGroup("controls");
-                createGroup("category", datas);
-                createGroup("video_player", datas);
-                createGroup("timeline", datas);
-            });
-
-        } else {
-            getLog().error("PlayerController: video is null ??" );
-        }
+        runInsideUISync(() ->{
+//            createGroup("controls", datas);
+//            createGroup("category", datas);
+            createGroup("video_player", datas);
+//            createGroup("timeline", datas);
+        });
     }
 
     @Override
@@ -69,17 +61,5 @@ public class ContainerController extends AbstractGriffonController {
         } catch (Exception e){
             getLog().info(String.format("CreateMVCGroup: %s - %s", groupName, e.getMessage()));
         }
-    }
-
-    private void getCategoryList(Video video){
-        Set<Category> categorySet = dbService.getCategoryDAO().findByCollection(video.getCollection());
-
-        video.getCollection().getCategorySet().addAll(categorySet);
-    }
-
-    private void getPoints(Video video){
-        Set<Point> pointSet = dbService.getPointDAO().findByVideo(video);
-
-        video.getPointSet().addAll(pointSet);
     }
 }

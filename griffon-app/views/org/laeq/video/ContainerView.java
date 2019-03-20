@@ -24,8 +24,10 @@ import org.laeq.model.Video;
 import org.laeq.model.icon.IconCounter;
 import org.laeq.model.icon.IconCounterMatrice;
 import org.laeq.template.MiddlePaneView;
+import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,6 +61,8 @@ public class ContainerView extends TranslatedView {
 
     private TableColumn<Video, User> userColumn;
     private TableColumn<Video, Collection> collectionColumn;
+
+    @Inject private DialogService dialogService;
 
     @Override
     public void initUI() {
@@ -125,7 +129,12 @@ public class ContainerView extends TranslatedView {
         videoTable.setOnMouseClicked(event -> {
             if(event.getClickCount() == 2){
                 Video video = videoTable.getSelectionModel().getSelectedItem();
-                controller.editVideo(video);
+                if(video.getDuration() != 0){
+                    controller.editVideo(video);
+                }else{
+                    alert("key.to_implement", "org.laeq.video.duration.error");
+                }
+
             }
         });
     }
@@ -163,7 +172,6 @@ public class ContainerView extends TranslatedView {
                 }
 
                 String filter = newValue.toLowerCase();
-
                 if(video.getName().toLowerCase().contains(filter)){
                     return true;
                 }
@@ -209,10 +217,10 @@ public class ContainerView extends TranslatedView {
         collectionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
         collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));
 
-        IconCounterMatrice matrice = new IconCounterMatrice(model.getCategorySet());
-        categoryGroupMap = matrice.getIconMap();
+        IconCounterMatrice matrix = new IconCounterMatrice(model.getCategorySet());
+        categoryGroupMap = matrix.getIconMap();
 
-        categoryGroup.getChildren().addAll(matrice.getIconMap().values());
+        categoryGroup.getChildren().addAll(matrix.getIconMap().values());
     }
 
     public void reset() {
@@ -222,7 +230,6 @@ public class ContainerView extends TranslatedView {
         lastPointValue.setText("");
 
         model.getCategorySet().forEach(c -> {
-            categoryGroupMap.get(c).setOpacity(0.4);
             categoryGroupMap.get(c).setText("-");
         });
 

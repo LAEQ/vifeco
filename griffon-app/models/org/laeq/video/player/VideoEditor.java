@@ -1,8 +1,13 @@
 package org.laeq.video.player;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
+import javafx.geometry.Point2D;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -17,11 +22,16 @@ import org.laeq.video.ControlsDefault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.stream.Collectors;
 
 public class VideoEditor {
-    private static Logger logger = LoggerFactory.getLogger(VideoEditor.class);
+    private final static Logger logger = LoggerFactory.getLogger(VideoEditor.class.getName());
     private final Video video;
     private final BidiMap<Point, IconPointColorized> videoIconMap;
     private final BidiMap<Point, IconPointColorized> timelineIconMap;
@@ -29,15 +39,32 @@ public class VideoEditor {
     private final ObservableSet<IconPointColorized> timelinePane = FXCollections.observableSet();
     private final ObservableSet<IconPointColorized> videoPane = FXCollections.observableSet();
 
+    private final SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
+    private final Set<String> shortcuts;
+
     private double paneWidth;
     private double paneHeight;
 
     private final PointDAO pointDAO;
     private Double duration = ControlsDefault.duration;
+    private File file;
+    private Media media;
+    private MediaPlayer mediaPlayer;
 
     public VideoEditor(Video video, PointDAO pointDAO) {
         this.video = video;
         this.pointDAO = pointDAO;
+
+        this.shortcuts = video.getCollection().getCategorySet().parallelStream().map(category -> category.getShortcut()).collect(Collectors.toSet());
+
+        try {
+            file = new File(video.getPath());
+            media = new Media(file.getCanonicalFile().toURI().toString());
+            mediaPlayer = new MediaPlayer(media);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+
         videoIconMap = new DualHashBidiMap<>();
         timelineIconMap = new DualHashBidiMap<>();
 
@@ -69,19 +96,6 @@ public class VideoEditor {
                 videoPane.remove(icon);
             }
         });
-    }
-
-    public boolean addPoint(Point point){
-        try {
-            pointDAO.insert(point);
-            createPoint(point);
-            video.getPointSet().add(point);
-
-            return true;
-        } catch (DAOException e) {
-            logger.error("Error saving new point: " + e.getMessage());
-            return false;
-        }
     }
 
     private void createPoint(Point point){
@@ -121,7 +135,8 @@ public class VideoEditor {
         return timelineIconMap.values();
     }
 
-    public void display(Duration currentTime){
+    public void display(){
+        Duration currentTime = mediaPlayer.getCurrentTime();
         Duration startDuration = (currentTime.subtract(Duration.millis( this.duration * 1000)));
         Point start = new Point(Integer.MAX_VALUE, startDuration);
         Point end = new Point(Integer.MAX_VALUE, currentTime);
@@ -141,7 +156,6 @@ public class VideoEditor {
         paneWidth = doubleValue;
         reposition();
     }
-
     public void setPaneHeight(double doubleValue) {
         paneHeight = doubleValue;
 
@@ -205,11 +219,9 @@ public class VideoEditor {
 
         return null;
     }
-
     public void setDuration(Double value) {
         this.duration = value;
     }
-
     public void reset(IconPointColorized iconTimeline) {
         Point point = timelineIconMap.getKey(iconTimeline);
 
@@ -217,8 +229,58 @@ public class VideoEditor {
             videoIconMap.get(point).colorize();
         }
     }
-
     public void reset() {
         videoIconMap.values().stream().forEach(IconPointColorized::reset);
+    }
+
+    public boolean isValid() {
+        return file.exists() && media != null && mediaPlayer != null;
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
+    public Video getVideo() {
+        return video;
+    }
+
+    public void play() {
+        if(isPlaying.getValue()){
+            isPlaying.set(false);
+            mediaPlayer.pause();
+        } else {
+            mediaPlayer.play();
+            isPlaying.set(true);
+        }
+    }
+
+    public SimpleBooleanProperty isPlayingProperty() {
+        return isPlaying;
+    }
+
+
+    public Point addPoint(Point2D mousePosition, KeyEvent event) {
+        if(this.shortcuts.contains(event.getCode().getName())){
+            Optional<Category> optionalCategory = video.getCollection().getCategorySet().stream().filter(category -> category.getShortcut().equals(event.getCode().getName())).findFirst();
+            Point point = new Point();
+            point.setX(mousePosition.getX());
+            point.setY(mousePosition.getY());
+            point.setCategory(optionalCategory.get());
+
+            try {
+                point.setVideo(video);
+                point.setStart(mediaPlayer.getCurrentTime());
+                pointDAO.insert(point);
+                video.getPointSet().add(point);
+                createPoint(point);
+                return point;
+            } catch (DAOException e) {
+                logger.error("Error saving new point: " + e.getMessage());
+                return null;
+            }
+        }
+
+        return null;
     }
 }

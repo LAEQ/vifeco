@@ -94,11 +94,9 @@ public class MiddlePaneController extends AbstractGriffonController {
 
         list.put("video.edit", objects -> {
             Video video = (Video) objects[0];
-
             VideoEditor editor = new VideoEditor(video, dbService.getPointDAO());
 
             Map<String, Object> args = new HashMap<>();
-            args.put("video", video);
             args.put("editor", editor);
 
             createGroup("player", args);
@@ -108,7 +106,7 @@ public class MiddlePaneController extends AbstractGriffonController {
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.SKIP)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void createGroup(String groupName, Map<String, Object> args){
         try{
             createMVCGroup(groupName, args);
@@ -118,7 +116,7 @@ public class MiddlePaneController extends AbstractGriffonController {
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.SKIP)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void createGroup(String groupName){
         try{
             createMVCGroup(groupName);

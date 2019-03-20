@@ -26,23 +26,11 @@ import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class PlayerController extends AbstractGriffonController {
-    @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private PlayerView view;
-    @MVCMember @Nonnull private Video video;
-    @MVCMember @Nonnull private VideoEditor editor;
-
-    @Inject private DialogService dialogService;
-    @Inject private MariaService dbService;
-
-    private PointDAO pointDAO;
-    private VideoDAO videoDAO;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
-
-        pointDAO = dbService.getPointDAO();
-        videoDAO = dbService.getVideoDAO();
     }
 
     @Override
@@ -53,7 +41,6 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
-        dispatchEvent("player.play");
         view.play();
     }
 
@@ -76,19 +63,7 @@ public class PlayerController extends AbstractGriffonController {
 //        view.reload();
     }
 
-    @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void test(KeyEvent keyEvent) {
-        System.out.println("test");
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void closeTab() {
-        destroyMVCGroup(getMvcGroup().getMvcId());
-    }
-
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void addPoint(Point point) {
         publishEvent("point.added", point);
     }
@@ -100,66 +75,47 @@ public class PlayerController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listenerList(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("controls.rate", objects -> {
-            view.rate((Double) objects[0]);
-            model.setRate((Double) objects[0]);
-
-        });
-
-        list.put("controls.volume", objects -> {
-            Double value = (Double) objects[0];
-            view.volume(value);
-            model.setVolume(value);
-        });
-
-        list.put("controls.size", objects -> {
-            Double size = (Double) objects[0];
-            view.size(size);
-            model.setSize(size);
-        });
-
-        list.put("controls.opacity", objects -> {
-            view.opacity((Double)objects[0], (Double)objects[1]);
-            model.setOpacity((Double)objects[1]);
-        });
-
-        list.put("controls.duration", objects -> {
-            Double value = (Double) objects[0];
-            model.setDuration(value);
-            view.setDuration(value);
-        });
+//        list.put("controls.rate", objects -> {
+//            view.rate((Double) objects[0]);
+//            model.setRate((Double) objects[0]);
+//        });
+//
+//        list.put("controls.volume", objects -> {
+//            Double value = (Double) objects[0];
+//            view.volume(value);
+//            model.setVolume(value);
+//        });
+//
+//        list.put("controls.size", objects -> {
+//            Double size = (Double) objects[0];
+//            view.size(size);
+//            model.setSize(size);
+//        });
+//
+//        list.put("controls.opacity", objects -> {
+//            view.opacity((Double)objects[0], (Double)objects[1]);
+//            model.setOpacity((Double)objects[1]);
+//        });
+//
+//        list.put("controls.duration", objects -> {
+//            Double value = (Double) objects[0];
+//            model.setDuration(value);
+//            view.setDuration(value);
+//        });
 
         return list;
-    }
-
-    public void dispatchDuration(Duration duration) {
-        video.setDuration(duration.toMillis());
-        try {
-            videoDAO.updateDuration(video);
-            getApplication().getEventRouter().publishEventAsync("media.duration", Arrays.asList(duration));
-        } catch (SQLException | DAOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void dispatchEvent(String eventName){
         getApplication().getEventRouter().publishEvent(eventName);
     }
 
-
-    public void update(Duration currentTime) {
-        publishEvent("media.currentTime", currentTime);
+    private void dispatchEvent(String eventName, Object object){
+        getApplication().getEventRouter().publishEvent(eventName, Arrays.asList(object));
     }
 
-    public void updateRate(Double rate) {
-        publishEvent("controls.rate", rate);
-    }
 
-    public void updateRate(String eventName) {
-        dispatchEvent(eventName);
-    }
-
-    public void deletePoint(Point point) {
-        getApplication().getEventRouter().publishEvent("point.deleted", Arrays.asList(point));
-    }
+//    public void deletePoint(Point point) {
+//        getApplication().getEventRouter().publishEvent("point.deleted", Arrays.asList(point));
+//    }
 }
