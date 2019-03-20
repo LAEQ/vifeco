@@ -4,6 +4,7 @@ import com.sun.media.jfxmedia.MediaException;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
+import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
@@ -12,6 +13,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DAOException;
+import org.laeq.db.VideoDAO;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
@@ -22,6 +24,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,18 +49,18 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.section", objects -> createGroup("video_container"));
         list.put("database.section", objects -> createGroup("status"));
 
-        list.put("video.add", objects -> {
+        list.put("video.create", objects -> {
             File videoFile = (File) objects[0];
                 if (videoFile.exists()) {
                     try{
-                        Media media = new Media(videoFile.getCanonicalFile().toURI().toString());
-                        MediaPlayer mediaPlayer = new MediaPlayer(media);
-                        Video video = dbService.createVideo(videoFile, Duration.millis(10));
-                        Map<String, Object> args = new HashMap<>();
-                        VideoEditor editor = new VideoEditor(video, dbService.getPointDAO());
-                        args.put("video", video);
-                        args.put("editor", editor);
-                        createGroup("player", args);
+                        Video video = dbService.createVideo(videoFile, Duration.millis(0));
+                        MVCGroup group = getApplication().getMvcGroupManager().findGroup("video_container");
+
+                        if(group != null && group.isAlive()){
+                            getApplication().getEventRouter().publishEvent("video.created", Arrays.asList(video));
+                        } else {
+                            createGroup("video_container");
+                        }
 
                     } catch (IOException exception){
                         getLog().error(exception.getMessage());

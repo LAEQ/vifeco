@@ -2,9 +2,13 @@ package org.laeq.video;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import griffon.transform.Threading;
 import javafx.scene.control.TableColumn;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import org.laeq.CRUDController;
 import org.laeq.db.*;
 import org.laeq.model.Collection;
@@ -14,6 +18,8 @@ import org.laeq.service.MariaService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,7 +55,37 @@ public class ContainerController extends CRUDController<Video> {
 
         view.initForm();
 
+        model.getVideoList().forEach(video -> {
+            if(video.getDuration() == 0.0){
+                runInsideUISync(() ->getVideoDuration(video));
+            }
+        });
+
         getApplication().getEventRouter().addEventListener(listeners());
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    private void getVideoDuration(Video video) {
+        File file = new File(video.getPath());
+
+        if (file.exists()) {
+            try {
+                Media media = new Media(file.getCanonicalFile().toURI().toString());
+                MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+                mediaPlayer.setOnReady(()-> {
+                    video.setDuration(mediaPlayer.getMedia().getDuration().toMillis());
+                    try {
+                        videoDAO.updateDuration(video);
+                    } catch (SQLException | DAOException e) {
+                        getLog().error(e.getMessage());
+                    }
+                });
+            } catch (IOException e) {
+                getLog().error(e.getMessage());
+            }
+        }
     }
 
     public void clear(){
@@ -140,6 +176,14 @@ public class ContainerController extends CRUDController<Video> {
         list.put("video.import.success", objects -> {
             model.getVideoList().clear();
             model.getVideoList().addAll(videoDAO.findAll());
+        });
+
+        list.put("video.created", objects -> {
+            Video video = (Video) objects[0];
+            runInsideUISync(() -> {
+                model.getVideoList().add(video);
+                getVideoDuration(video);
+            });
         });
 
         return list;

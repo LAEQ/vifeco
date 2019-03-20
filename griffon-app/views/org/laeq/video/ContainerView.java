@@ -111,7 +111,7 @@ public class ContainerView extends TranslatedView {
         selectBox.setCellFactory(addSelectBox());
         dateColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getCreatedFormatted()));
         pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        durationColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getDurationFormatted()));
+        durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty().asString());
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
 
         videoTable.setItems(this.model.getFilteredList());
