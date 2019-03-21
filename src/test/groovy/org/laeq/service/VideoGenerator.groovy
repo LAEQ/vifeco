@@ -9,11 +9,12 @@ import org.laeq.model.Video
 
 
 class VideoGenerator {
+    static int pointId = 1
 
-    static Video generateVideo(){
+    static Video generateVideo(int totalCategory){
         Collection collection = generateCollection(1)
 
-        1.upto(10, {
+        1.upto(totalCategory, {
             def category = generateCategory(it)
             collection.categorySet.add(category)
         })
@@ -33,16 +34,17 @@ class VideoGenerator {
 
     static Category generateCategory(int id){
         Category category = new Category()
+        category.name = "cat_"+ id
         category.id = id
 
         return category
     }
 
-    static void generatePoints(Video video, int id){
-        1.upto(5, {
-            Category category = video1.collection.categorySet.find { it.id = id}
-            Duration start = Duration.millis(it)
-            Point point = new Point(10, 10, start, video1, category)
+    static void generatePoints(Video video, int categoryId, int seconds){
+        Category category = video.collection.categorySet.find { it.id == categoryId}
+        1.upto(10, {
+            Duration start = Duration.millis(seconds + it * 1000)
+            Point point = new Point(pointId++,10, 10, start, video, category)
             video.pointSet.add(point)
         })
     }
