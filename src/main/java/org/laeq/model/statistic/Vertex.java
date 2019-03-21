@@ -6,7 +6,9 @@ import java.util.Objects;
 
 public class Vertex {
     public Point point;
-    public int index = -1;
+    public int num = -1;
+    public int min = -1;
+
     public Vertex(Point point){
         this.point = point;
     }

@@ -21,6 +21,10 @@ public class Point extends BaseEntity implements Comparable<Point> {
 
     public Point() {}
 
+    public Point(int id) {
+        this.id = id;
+    }
+
     public Point(int id, Duration start){
         this.id = id;
         this.start = start;

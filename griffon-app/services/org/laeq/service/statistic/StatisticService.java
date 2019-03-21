@@ -5,13 +5,13 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;
+import org.laeq.model.statistic.Edge;
 import org.laeq.model.statistic.Graph;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.model.statistic.Vertex;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
@@ -47,11 +47,9 @@ public class StatisticService extends AbstractGriffonService {
             video2CategoryMap.put(category, new HashSet<>());
         });
 
-
         video1.getPointSet().stream().forEach(point -> {
             video1CategoryMap.get(point.getCategory()).add(point);
         });
-
         video2.getPointSet().stream().forEach(point -> {
             video2CategoryMap.get(point.getCategory()).add(point);
         });
@@ -89,5 +87,83 @@ public class StatisticService extends AbstractGriffonService {
         return graphs.get(category);
     }
 
+    public void calculate(){
+        List<List<Vertex>> result = new ArrayList<>();
+        Category category = new Category();
+        category.setId(1);
+        tarjan(graphs.get(category));
+    }
 
+    public List<List<Vertex>> tarjan(Graph graph){
+        graph.vertices.keySet().stream().forEach(vertex -> vertex.num = -1);
+
+        int counter = 0;
+
+        Stack<Vertex> stack = new Stack<>();
+        List<List<Vertex>> result = new ArrayList<>();
+
+        graph.vertices.keySet().forEach(vertex -> {
+            if(vertex.num == -1){
+                visit(graph, vertex, counter, stack,  result);
+            }
+        });
+
+        return result;
+    }
+
+    private void visit(Graph graph, Vertex vertex, int counter, Stack<Vertex> stack, List<List<Vertex>> result) {
+        vertex.num = counter++;
+        vertex.min = vertex.num;
+
+        stack.push(vertex);
+
+        for (Edge edge: graph.vertices.get(vertex)) {
+            if(edge.end.num == -1){
+                visit(graph, edge.end, counter, stack, result);
+                vertex.min = Math.min(vertex.min, edge.end.min);
+            } else if(stack.contains(edge.end)){
+                vertex.min = Math.min(vertex.min, edge.end.num);
+            }
+        }
+
+        if(vertex.num == vertex.min){
+            Vertex w = stack.pop();
+
+            List<Vertex> c = new ArrayList<>();
+            do{
+                c.add(w);
+                w = stack.pop();
+            } while (vertex != w);
+
+            result.add(c);
+        }
+    }
 }
+
+//1.  TARJAN (G = (V, E))
+//2.  pour tout v ∈ V
+//3.    v.num ← −1
+//4.  compteur ← 0
+//5.  chemin ← Pile vide
+//6.  R ← Partition vide
+//7.  pour tout v ∈ V
+//8.  si v.num = −1
+//9.  PARCOURS P ROFONDEUR (v)
+//10. retourner R
+//11. PARCOURS P ROFONDEUR (v)
+//12. v.num ← compteur + +
+//13. v.min ← v.num
+//14. chemin.empiler(v)
+//15. pour tout arête sortante (v, w)
+//16. si w.num = −1
+//17. PARCOURS P ROFONDEUR (w)
+//18. v.min ← min(v.min, w.min)
+//19. sinon si w ∈ chemin
+//20. v.min ← min(v.min, w.num)
+//21. si v.num = v.min
+//22. C ← {}
+//23  répéter
+//24. w ← chemin. DEPILER
+//25. C.ajouter(w)
+//26. tant que v 6 = w
+//27. R ← R ∪ C

@@ -108,4 +108,40 @@ class StatisticServiceTest extends Specification {
         graph.vertices.get(new Vertex(new Point(19, Duration.millis(0)))).size() == 7
         graph.vertices.get(new Vertex(new Point(20, Duration.millis(0)))).size() == 6
     }
+
+    def "test tarjan"(){
+        setup:
+        Graph graph = new Graph()
+        Point a = new Point(1)
+        Point b = new Point(2)
+        Point c = new Point(3)
+        Point d = new Point(4)
+        Point e = new Point(5)
+        Point f = new Point(6)
+        Point g = new Point(7)
+        Point h = new Point(8)
+
+        graph.addSimpleEdge( a, b)
+        graph.addSimpleEdge(b, a)
+        graph.addSimpleEdge(b, c)
+        graph.addSimpleEdge(c, b)
+        graph.addSimpleEdge(c, a)
+
+        graph.addSimpleEdge(b, f)
+
+        graph.addSimpleEdge(f, d)
+
+        graph.addSimpleEdge(d, e)
+        graph.addSimpleEdge(d, h)
+        graph.addSimpleEdge(e, d)
+        graph.addSimpleEdge(e, g)
+
+        graph.addSimpleEdge(g, e)
+
+        graph.addSimpleEdge(g, h)
+
+        graph.addVertex(h)
+
+        graph.tarjan()
+    }
 }

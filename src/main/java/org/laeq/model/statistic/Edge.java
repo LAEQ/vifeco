@@ -3,11 +3,11 @@ package org.laeq.model.statistic;
 import org.laeq.model.Point;
 
 public class Edge{
-    public Point start;
-    public Point end;
+    public Vertex start;
+    public Vertex end;
 
     public Edge(Point start, Point end){
-        this.start = start;
-        this.end = end;
+        this.start = new Vertex(start);
+        this.end = new Vertex(end);
     }
 }
