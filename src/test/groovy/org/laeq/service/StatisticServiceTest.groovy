@@ -1,15 +1,13 @@
 package org.laeq.service
 
 import javafx.util.Duration
-import org.laeq.model.statistic.Graph
+import org.laeq.model.Category
 import org.laeq.model.Point
 import org.laeq.model.Video
-import org.laeq.model.statistic.Vertex
+import org.laeq.model.statistic.Graph
 import org.laeq.service.statistic.StatisticException
 import org.laeq.service.statistic.StatisticService
 import spock.lang.Specification
-import org.laeq.model.Category
-
 
 class StatisticServiceTest extends Specification {
     StatisticService service
@@ -29,7 +27,7 @@ class StatisticServiceTest extends Specification {
 
         when:
         service.setVideos(video1, video2)
-        service.execute()
+        service.init()
 
         then:
         thrown StatisticException
@@ -40,7 +38,7 @@ class StatisticServiceTest extends Specification {
         service.setVideos(video1, video2)
 
         when:
-        service.execute()
+        service.init()
 
         then:
         thrown StatisticException
@@ -52,13 +50,13 @@ class StatisticServiceTest extends Specification {
         service.setDurationStep(Duration.seconds(10))
 
         when:
-        VideoGenerator.generatePoints(video1, 1, 0)
-        VideoGenerator.generatePoints(video2, 2, 0)
-        VideoGenerator.generatePoints(video1, 3, 0 )
-        VideoGenerator.generatePoints(video2, 4, 0)
+        VideoGenerator.generatePoints(video1, 1, 0, 10)
+        VideoGenerator.generatePoints(video2, 2, 0, 10)
+        VideoGenerator.generatePoints(video1, 3, 0 ,10)
+        VideoGenerator.generatePoints(video2, 4, 0, 10)
 
         service.setDurationStep(Duration.millis(1000))
-        service.execute()
+        service.init()
 
         then:
         service.video1CategoryMap.get(video1.collection.categorySet.find {it.id == 1}).size() == 10
@@ -66,48 +64,48 @@ class StatisticServiceTest extends Specification {
         service.video2CategoryMap.get(video2.collection.categorySet.find {it.id == 3}).size() == 0
     }
 
-    def "test graph generation for a category"() {
+    def "test graph generation (vertices and edges) for one category"() {
         setup:
         Video video_1 = VideoGenerator.generateVideo(1)
         Video video_2 = VideoGenerator.generateVideo(1)
 
         // generate 10 points starting from 10 every seconds
-        VideoGenerator.generatePoints(video_1, 1, 10)
-        VideoGenerator.generatePoints(video_2, 1, 10)
+        VideoGenerator.generatePoints(video_1, 1, 10, 10)
+        VideoGenerator.generatePoints(video_2, 1, 10, 10)
 
         when:
         service.setVideos(video_1, video_2)
         service.setDurationStep(Duration.seconds(5))
-        service.execute()
+        service.init()
         service.generateGraphs()
 
         Category category = video1.collection.categorySet.find{it.id == 1}
         Graph graph = service.getGraphByCategory(category)
 
         then:
-        graph.edges.get(new Vertex(new Point(1, Duration.millis(0)))).size() == 6
-        graph.edges.get(new Vertex(new Point(2, Duration.millis(0)))).size() == 7
-        graph.edges.get(new Vertex(new Point(3, Duration.millis(0)))).size() == 8
-        graph.edges.get(new Vertex(new Point(4, Duration.millis(0)))).size() == 9
-        graph.edges.get(new Vertex(new Point(5, Duration.millis(0)))).size() == 10
-        graph.edges.get(new Vertex(new Point(6, Duration.millis(0)))).size() == 10
-        graph.edges.get(new Vertex(new Point(7, Duration.millis(0)))).size() == 9
-        graph.edges.get(new Vertex(new Point(8, Duration.millis(0)))).size() == 8
-        graph.edges.get(new Vertex(new Point(9, Duration.millis(0)))).size() == 7
-        graph.edges.get(new Vertex(new Point(10, Duration.millis(0)))).size() == 6
-        graph.edges.get(new Vertex(new Point(11, Duration.millis(0)))).size() == 6
-        graph.edges.get(new Vertex(new Point(12, Duration.millis(0)))).size() == 7
-        graph.edges.get(new Vertex(new Point(13, Duration.millis(0)))).size() == 8
-        graph.edges.get(new Vertex(new Point(14, Duration.millis(0)))).size() == 9
-        graph.edges.get(new Vertex(new Point(15, Duration.millis(0)))).size() == 10
-        graph.edges.get(new Vertex(new Point(16, Duration.millis(0)))).size() == 10
-        graph.edges.get(new Vertex(new Point(17, Duration.millis(0)))).size() == 9
-        graph.edges.get(new Vertex(new Point(18, Duration.millis(0)))).size() == 8
-        graph.edges.get(new Vertex(new Point(19, Duration.millis(0)))).size() == 7
-        graph.edges.get(new Vertex(new Point(20, Duration.millis(0)))).size() == 6
+        graph.edges.get(graph.vertices.get(new Point(1))).size() == 6
+        graph.edges.get(graph.vertices.get(new Point(2))).size()== 7
+        graph.edges.get(graph.vertices.get(new Point(3))).size()== 8
+        graph.edges.get(graph.vertices.get(new Point(4))).size() == 9
+        graph.edges.get(graph.vertices.get(new Point(5))).size()== 10
+        graph.edges.get(graph.vertices.get(new Point(6))).size() == 10
+        graph.edges.get(graph.vertices.get(new Point(7))).size() == 9
+        graph.edges.get(graph.vertices.get(new Point(8))).size() == 8
+        graph.edges.get(graph.vertices.get(new Point(9))).size() == 7
+        graph.edges.get(graph.vertices.get(new Point(10))).size() == 6
+        graph.edges.get(graph.vertices.get(new Point(11))).size() == 6
+        graph.edges.get(graph.vertices.get(new Point(12))).size() == 7
+        graph.edges.get(graph.vertices.get(new Point(13))).size() == 8
+        graph.edges.get(graph.vertices.get(new Point(14))).size() == 9
+        graph.edges.get(graph.vertices.get(new Point(15))).size() == 10
+        graph.edges.get(graph.vertices.get(new Point(16))).size() == 10
+        graph.edges.get(graph.vertices.get(new Point(17))).size() == 9
+        graph.edges.get(graph.vertices.get(new Point(18))).size() == 8
+        graph.edges.get(graph.vertices.get(new Point(19))).size() == 7
+        graph.edges.get(graph.vertices.get(new Point(20))).size() == 6
     }
 
-    def "test tarjan 1"(){
+    def "test tarjan algorithm"(){
         setup:
         Graph graph = new Graph()
         Point a = new Point(1)
@@ -154,7 +152,6 @@ class StatisticServiceTest extends Specification {
         def resultIds = resultList.collect {it.collect {it.point.id}.sort()}
         println resultIds
 
-
         then:
         resultIds.contains([8]) == true
         resultIds.contains([6]) == true
@@ -162,5 +159,55 @@ class StatisticServiceTest extends Specification {
         resultIds.contains([1,2,3]) == true
     }
 
+    def "test execute 3 points" () {
+        setup:
+        Video video1 = VideoGenerator.generateVideo(1)
+        Video video2 = VideoGenerator.generateVideo(1)
 
+        Category category = video1.collection.categorySet.find { it.id == 1}
+
+        when:
+        VideoGenerator.generatePoints(video1, 1, 0, 0) // 10 points starting at 10 every seconds
+        VideoGenerator.generatePoints(video2, 1, 0, 0)  // 10 points starting at 4 every seconds
+
+        Point point1 = new Point(1, 10,10,Duration.millis(1000),video1, category)
+        video1.pointSet.add(point1)
+
+        Point point2 = new Point(2, 10,10,Duration.millis(1000),video2, category)
+        video2.pointSet.add(point2)
+
+        Point point3 = new Point(3, 10,10,Duration.millis(3000),video2, category)
+        video2.pointSet.add(point3)
+
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(1))
+        def result = service.execute()
+
+        println result.get(category)
+
+
+        then:
+        result.get(category).collect{it.size()}.sort() == [1,2]
+    }
+
+    def "test execute" () {
+        setup:
+        Video video1 = VideoGenerator.generateVideo(1)
+        Video video2 = VideoGenerator.generateVideo(1)
+
+        Category category = video1.collection.categorySet.find { it.id == 1}
+
+        when:
+        VideoGenerator.generatePoints(video1, 1, 0, 4) // 10 points starting at 0 every seconds
+        VideoGenerator.generatePoints(video2, 1, 0, 2)  // 10 points starting at 0 every seconds
+
+
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(1))
+        def result = service.execute()
+
+        then:
+        result.get(category).collect{it.collect{it.point.id}.sort()}.contains([1,2,3,5,6]) == true
+        result.get(category).collect{it.collect{it.point.id}.sort()}.contains([4]) == true
+    }
 }

@@ -16,6 +16,10 @@ public class Category extends BaseEntity implements Cloneable{
 
     }
 
+    public Category(int id){
+        this.id = id;
+    }
+
     public Category(int id, String name, String icon, String color, String shortcut) {
         this(name, icon, color, shortcut);
         this.id = id;

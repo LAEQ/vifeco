@@ -20,6 +20,11 @@ public class Graph {
         edges.put(vertex, new ArrayList<>());
     }
 
+    public void addVertices(Set<Point> points){
+        points.forEach(point -> addVertex(point));
+    }
+
+
     public void addEdges(Point start, Point end){
         edges.get(vertices.get(start)).add(new Edge(vertices.get(start), vertices.get(end)));
     }

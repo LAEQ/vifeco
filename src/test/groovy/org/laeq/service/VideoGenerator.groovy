@@ -1,12 +1,7 @@
 package org.laeq.service
 
 import javafx.util.Duration
-import org.laeq.model.Category
-import org.laeq.model.Collection
-import org.laeq.model.Point
-import org.laeq.model.User
-import org.laeq.model.Video
-
+import org.laeq.model.*
 
 class VideoGenerator {
     static int pointId = 1
@@ -40,9 +35,9 @@ class VideoGenerator {
         return category
     }
 
-    static void generatePoints(Video video, int categoryId, int seconds){
+    static void generatePoints(Video video, int categoryId, int seconds, int total){
         Category category = video.collection.categorySet.find { it.id == categoryId}
-        1.upto(10, {
+        1.upto(total, {
             Duration start = Duration.millis(seconds + it * 1000)
             Point point = new Point(pointId++,10, 10, start, video, category)
             video.pointSet.add(point)
