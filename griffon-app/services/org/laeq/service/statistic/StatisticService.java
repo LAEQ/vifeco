@@ -95,14 +95,14 @@ public class StatisticService extends AbstractGriffonService {
     }
 
     public List<List<Vertex>> tarjan(Graph graph){
-        graph.vertices.keySet().stream().forEach(vertex -> vertex.num = -1);
+        graph.edges.keySet().stream().forEach(vertex -> vertex.num = -1);
 
         int counter = 0;
 
         Stack<Vertex> stack = new Stack<>();
         List<List<Vertex>> result = new ArrayList<>();
 
-        graph.vertices.keySet().forEach(vertex -> {
+        graph.edges.keySet().forEach(vertex -> {
             if(vertex.num == -1){
                 visit(graph, vertex, counter, stack,  result);
             }
@@ -117,7 +117,7 @@ public class StatisticService extends AbstractGriffonService {
 
         stack.push(vertex);
 
-        for (Edge edge: graph.vertices.get(vertex)) {
+        for (Edge edge: graph.edges.get(vertex)) {
             if(edge.end.num == -1){
                 visit(graph, edge.end, counter, stack, result);
                 vertex.min = Math.min(vertex.min, edge.end.min);

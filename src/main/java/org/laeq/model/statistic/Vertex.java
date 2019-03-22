@@ -18,12 +18,12 @@ public class Vertex {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vertex vertex = (Vertex) o;
-        return point.getId() == vertex.point.getId();
+        return point == vertex.point;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(point.getId());
+        return Objects.hash(point);
     }
 
     @Override

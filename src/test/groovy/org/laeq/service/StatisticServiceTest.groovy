@@ -3,8 +3,6 @@ package org.laeq.service
 import javafx.util.Duration
 import org.laeq.model.statistic.Graph
 import org.laeq.model.Point
-import org.laeq.model.User
-import org.laeq.model.Vertex
 import org.laeq.model.Video
 import org.laeq.model.statistic.Vertex
 import org.laeq.service.statistic.StatisticException
@@ -87,29 +85,29 @@ class StatisticServiceTest extends Specification {
         Graph graph = service.getGraphByCategory(category)
 
         then:
-        graph.vertices.get(new Vertex(new Point(1, Duration.millis(0)))).size() == 6
-        graph.vertices.get(new Vertex(new Point(2, Duration.millis(0)))).size() == 7
-        graph.vertices.get(new Vertex(new Point(3, Duration.millis(0)))).size() == 8
-        graph.vertices.get(new Vertex(new Point(4, Duration.millis(0)))).size() == 9
-        graph.vertices.get(new Vertex(new Point(5, Duration.millis(0)))).size() == 10
-        graph.vertices.get(new Vertex(new Point(6, Duration.millis(0)))).size() == 10
-        graph.vertices.get(new Vertex(new Point(7, Duration.millis(0)))).size() == 9
-        graph.vertices.get(new Vertex(new Point(8, Duration.millis(0)))).size() == 8
-        graph.vertices.get(new Vertex(new Point(9, Duration.millis(0)))).size() == 7
-        graph.vertices.get(new Vertex(new Point(10, Duration.millis(0)))).size() == 6
-        graph.vertices.get(new Vertex(new Point(11, Duration.millis(0)))).size() == 6
-        graph.vertices.get(new Vertex(new Point(12, Duration.millis(0)))).size() == 7
-        graph.vertices.get(new Vertex(new Point(13, Duration.millis(0)))).size() == 8
-        graph.vertices.get(new Vertex(new Point(14, Duration.millis(0)))).size() == 9
-        graph.vertices.get(new Vertex(new Point(15, Duration.millis(0)))).size() == 10
-        graph.vertices.get(new Vertex(new Point(16, Duration.millis(0)))).size() == 10
-        graph.vertices.get(new Vertex(new Point(17, Duration.millis(0)))).size() == 9
-        graph.vertices.get(new Vertex(new Point(18, Duration.millis(0)))).size() == 8
-        graph.vertices.get(new Vertex(new Point(19, Duration.millis(0)))).size() == 7
-        graph.vertices.get(new Vertex(new Point(20, Duration.millis(0)))).size() == 6
+        graph.edges.get(new Vertex(new Point(1, Duration.millis(0)))).size() == 6
+        graph.edges.get(new Vertex(new Point(2, Duration.millis(0)))).size() == 7
+        graph.edges.get(new Vertex(new Point(3, Duration.millis(0)))).size() == 8
+        graph.edges.get(new Vertex(new Point(4, Duration.millis(0)))).size() == 9
+        graph.edges.get(new Vertex(new Point(5, Duration.millis(0)))).size() == 10
+        graph.edges.get(new Vertex(new Point(6, Duration.millis(0)))).size() == 10
+        graph.edges.get(new Vertex(new Point(7, Duration.millis(0)))).size() == 9
+        graph.edges.get(new Vertex(new Point(8, Duration.millis(0)))).size() == 8
+        graph.edges.get(new Vertex(new Point(9, Duration.millis(0)))).size() == 7
+        graph.edges.get(new Vertex(new Point(10, Duration.millis(0)))).size() == 6
+        graph.edges.get(new Vertex(new Point(11, Duration.millis(0)))).size() == 6
+        graph.edges.get(new Vertex(new Point(12, Duration.millis(0)))).size() == 7
+        graph.edges.get(new Vertex(new Point(13, Duration.millis(0)))).size() == 8
+        graph.edges.get(new Vertex(new Point(14, Duration.millis(0)))).size() == 9
+        graph.edges.get(new Vertex(new Point(15, Duration.millis(0)))).size() == 10
+        graph.edges.get(new Vertex(new Point(16, Duration.millis(0)))).size() == 10
+        graph.edges.get(new Vertex(new Point(17, Duration.millis(0)))).size() == 9
+        graph.edges.get(new Vertex(new Point(18, Duration.millis(0)))).size() == 8
+        graph.edges.get(new Vertex(new Point(19, Duration.millis(0)))).size() == 7
+        graph.edges.get(new Vertex(new Point(20, Duration.millis(0)))).size() == 6
     }
 
-    def "test tarjan"(){
+    def "test tarjan 1"(){
         setup:
         Graph graph = new Graph()
         Point a = new Point(1)
@@ -121,27 +119,48 @@ class StatisticServiceTest extends Specification {
         Point g = new Point(7)
         Point h = new Point(8)
 
-        graph.addSimpleEdge( a, b)
-        graph.addSimpleEdge(b, a)
-        graph.addSimpleEdge(b, c)
-        graph.addSimpleEdge(c, b)
-        graph.addSimpleEdge(c, a)
-
-        graph.addSimpleEdge(b, f)
-
-        graph.addSimpleEdge(f, d)
-
-        graph.addSimpleEdge(d, e)
-        graph.addSimpleEdge(d, h)
-        graph.addSimpleEdge(e, d)
-        graph.addSimpleEdge(e, g)
-
-        graph.addSimpleEdge(g, e)
-
-        graph.addSimpleEdge(g, h)
-
+        graph.addVertex(a)
+        graph.addVertex(b)
+        graph.addVertex(c)
+        graph.addVertex(d)
+        graph.addVertex(e)
+        graph.addVertex(f)
+        graph.addVertex(g)
         graph.addVertex(h)
 
-        graph.tarjan()
+        
+        graph.addEdges(a, b)
+        graph.addEdges(b, a)
+        graph.addEdges(b, c)
+        graph.addEdges(c, b)
+        graph.addEdges(c, a)
+
+        graph.addEdges(a, e)
+
+        graph.addEdges(b, f)
+
+        graph.addEdges(f, d)
+
+        graph.addEdges(d, e)
+        graph.addEdges(d, h)
+        graph.addEdges(e, d)
+        graph.addEdges(e, g)
+        graph.addEdges(g, e)
+
+        graph.addEdges(g, h)
+
+        when:
+        def resultList = graph.tarjan()
+        def resultIds = resultList.collect {it.collect {it.point.id}.sort()}
+        println resultIds
+
+
+        then:
+        resultIds.contains([8]) == true
+        resultIds.contains([6]) == true
+        resultIds.contains([4,5,7]) == true
+        resultIds.contains([1,2,3]) == true
     }
+
+
 }
