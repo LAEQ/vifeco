@@ -6,7 +6,7 @@ import org.laeq.model.*
 class VideoGenerator {
     static int pointId = 1
 
-    static Video generateVideo(int totalCategory){
+    static Video generateVideo( int videoId, int totalCategory){
         Collection collection = generateCollection(1)
 
         1.upto(totalCategory, {
@@ -15,7 +15,7 @@ class VideoGenerator {
         })
 
         User user = new User(1, "test", "test", "test@test.com")
-        Video video = new Video("path", Duration.millis(10000), user, collection)
+        Video video = new Video(videoId,"path", Duration.millis(10000), user, collection)
 
         return video
     }

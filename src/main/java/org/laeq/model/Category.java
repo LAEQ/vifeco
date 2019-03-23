@@ -83,10 +83,7 @@ public class Category extends BaseEntity implements Cloneable{
 
     @Override
     public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return "Cat{" + id + '}';
     }
 
     @Override

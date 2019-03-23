@@ -92,6 +92,39 @@ public class StatisticService extends AbstractGriffonService {
         return result;
     }
 
+
+    public Map<Category, Map<Video, Long>> analyse() throws StatisticException {
+        Map<Category, List<List<Vertex>>> result = execute();
+
+        Map<Category, Map<Video, Long>> totalDiff = new HashMap<>();
+
+        result.entrySet().forEach(entry -> {
+            List<List<Vertex>> list = entry.getValue();
+
+            Map<Video, Long> datas = new HashMap<>();
+            datas.put(video1, 0L);
+            datas.put(video2, 0L);
+
+            totalDiff.put(entry.getKey(), datas);
+
+            list.forEach( l -> {
+                long totalA = l.stream().filter(vertex -> vertex.point.getVideo() == video1).count();
+                long totalB = l.stream().filter(vertex -> vertex.point.getVideo() == video2).count();
+
+                Long newValueA = datas.get(video1) + Math.max(totalA - totalB, 0);
+                Long newValueB = datas.get(video2) + Math.max(totalB - totalA, 0);
+
+
+                datas.put(video1, newValueA);
+                datas.put(video2, newValueB);
+            });
+        });
+
+        System.out.println(totalDiff);
+
+        return totalDiff;
+    }
+
     public HashMap<Category, Set<Point>> getVideo1CategoryMap() {
         return video1CategoryMap;
     }

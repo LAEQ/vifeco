@@ -2,29 +2,26 @@ package org.laeq.statistic;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Set;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
-    private StringProperty clickCount;
+   private ObservableList<Video> videos = FXCollections.observableArrayList();
 
-    @Nonnull
-    public final StringProperty clickCountProperty() {
-        if (clickCount == null) {
-            clickCount = new SimpleStringProperty(this, "clickCount", "0");
-        }
-        return clickCount;
+    public ObservableList<Video> getVideos() {
+        return videos;
     }
 
-    public void setClickCount(String clickCount) {
-        clickCountProperty().set(clickCount);
-    }
-
-    public String getClickCount() {
-        return clickCountProperty().get();
+    public void addVideos(Collection<Video> videos) {
+        this.videos.addAll(videos);
     }
 }

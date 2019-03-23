@@ -17,8 +17,8 @@ class StatisticServiceTest extends Specification {
     def setup(){
         service = new StatisticService()
 
-        video1 = VideoGenerator.generateVideo(10)
-        video2 = VideoGenerator.generateVideo(10)
+        video1 = VideoGenerator.generateVideo(1, 10)
+        video2 = VideoGenerator.generateVideo(2, 10)
     }
 
     def "test videos with different collections"(){
@@ -66,8 +66,8 @@ class StatisticServiceTest extends Specification {
 
     def "test graph generation (vertices and edges) for one category"() {
         setup:
-        Video video_1 = VideoGenerator.generateVideo(1)
-        Video video_2 = VideoGenerator.generateVideo(1)
+        Video video_1 = VideoGenerator.generateVideo(1,1)
+        Video video_2 = VideoGenerator.generateVideo(2, 1)
 
         // generate 10 points starting from 10 every seconds
         VideoGenerator.generatePoints(video_1, 1, 10, 10)
@@ -161,8 +161,8 @@ class StatisticServiceTest extends Specification {
 
     def "test execute 3 points" () {
         setup:
-        Video video1 = VideoGenerator.generateVideo(1)
-        Video video2 = VideoGenerator.generateVideo(1)
+        Video video1 = VideoGenerator.generateVideo(1,1)
+        Video video2 = VideoGenerator.generateVideo(2, 1)
 
         Category category = video1.collection.categorySet.find { it.id == 1}
 
@@ -192,8 +192,8 @@ class StatisticServiceTest extends Specification {
 
     def "test execute" () {
         setup:
-        Video video1 = VideoGenerator.generateVideo(1)
-        Video video2 = VideoGenerator.generateVideo(1)
+        Video video1 = VideoGenerator.generateVideo(1,1)
+        Video video2 = VideoGenerator.generateVideo(2,1)
 
         Category category = video1.collection.categorySet.find { it.id == 1}
 
@@ -210,4 +210,58 @@ class StatisticServiceTest extends Specification {
         result.get(category).collect{it.collect{it.point.id}.sort()}.contains([1,2,3,5,6]) == true
         result.get(category).collect{it.collect{it.point.id}.sort()}.contains([4]) == true
     }
+
+    def "test analyse" () {
+        setup:
+        Video video1 = VideoGenerator.generateVideo(1,1)
+        Video video2 = VideoGenerator.generateVideo(2,1)
+
+        Category category = video1.collection.categorySet.find { it.id == 1}
+
+        when:
+        VideoGenerator.generatePoints(video1, 1, 0, 4) // 4 points starting at 0 every seconds
+        VideoGenerator.generatePoints(video2, 1, 0, 2)  // 2 points starting at 0 every seconds
+
+
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(1))
+        service.analyse()
+
+        then:
+        true == true
+    }
+
+    def "test analyse with 3 categories" () {
+        setup:
+        Video video1 = VideoGenerator.generateVideo(1,3)
+        Video video2 = VideoGenerator.generateVideo(2,3)
+
+        Category category1 = video1.collection.categorySet.find { it.id == 1}
+        Category category2 = video1.collection.categorySet.find { it.id == 2}
+        Category category3 = video1.collection.categorySet.find { it.id == 3}
+
+        when:
+        VideoGenerator.generatePoints(video1, 1, 0, 4) // 4 points starting at 0 every seconds
+        VideoGenerator.generatePoints(video2, 1, 0, 2)  // 2 points starting at 0 every seconds
+
+        VideoGenerator.generatePoints(video1, 2, 0, 10)
+        VideoGenerator.generatePoints(video2, 2, 4, 3)
+
+        VideoGenerator.generatePoints(video1, 3, 20, 5)
+        VideoGenerator.generatePoints(video2, 3, 23, 3)
+        VideoGenerator.generatePoints(video1, 3, 1000, 15)
+        VideoGenerator.generatePoints(video2, 3, 1007, 10)
+
+
+
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(1))
+        def result = service.analyse()
+
+        then:
+        result.get(category1).values().toArray() == [2,0]
+        result.get(category2).values().toArray() == [7,0]
+        result.get(category3).values().toArray() == [7,0]
+    }
+
 }
