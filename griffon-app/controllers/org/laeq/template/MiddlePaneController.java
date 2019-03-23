@@ -45,6 +45,7 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("collection.section", objects -> createGroup("collection_container"));
         list.put("video.section", objects -> createGroup("video_container"));
         list.put("database.section", objects -> createGroup("status"));
+        list.put("statistic.section", objects -> createGroup("statistic_container"));
 
         list.put("video.create", objects -> {
             File videoFile = (File) objects[0];

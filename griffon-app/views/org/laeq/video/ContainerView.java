@@ -98,9 +98,6 @@ public class ContainerView extends TranslatedView {
         clearIcon.decorate();
         clearActionTarget.setGraphic(clearIcon);
 
-
-
-
         translate();
     }
 

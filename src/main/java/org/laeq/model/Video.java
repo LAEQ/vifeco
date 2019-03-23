@@ -117,13 +117,7 @@ public class Video extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Video{" +
-                "id=" + id +
-                ", path=" + path.getValue() +
-                ", name=" + name.getValue() +
-                ", collection=" + collection +
-                ", user=" + user +
-                '}';
+        return "Video{" + id + '}';
     }
 
     public User getUser() {
