@@ -211,6 +211,27 @@ class StatisticServiceTest extends Specification {
         result.get(category).collect{it.collect{it.point.id}.sort()}.contains([4]) == true
     }
 
+    def "test connect the dots" () {
+        setup:
+        Video video1 = VideoGenerator.generateVideo(1,1)
+        Video video2 = VideoGenerator.generateVideo(2,1)
+
+        Category category = video1.collection.categorySet.find { it.id == 1}
+
+        when:
+        VideoGenerator.generatePoints(video1, 1, 0, 4) // 10 points starting at 0 every seconds
+        VideoGenerator.generatePoints(video2, 1, 0, 2)  // 10 points starting at 0 every seconds
+
+
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(1))
+        def result = service.execute()
+
+        then:
+        result.get(category).collect{it.collect{it.point.id}.sort()}.contains([1,2,3,5,6]) == true
+        result.get(category).collect{it.collect{it.point.id}.sort()}.contains([4]) == true
+    }
+
     def "test analyse" () {
         setup:
         Video video1 = VideoGenerator.generateVideo(1,1)
@@ -253,7 +274,6 @@ class StatisticServiceTest extends Specification {
         VideoGenerator.generatePoints(video2, 3, 1007, 10)
 
 
-
         service.setVideos(video1, video2)
         service.setDurationStep(Duration.seconds(1))
         def result = service.analyse()
@@ -262,6 +282,10 @@ class StatisticServiceTest extends Specification {
         result.get(category1).values().toArray() == [2,0]
         result.get(category2).values().toArray() == [7,0]
         result.get(category3).values().toArray() == [7,0]
+    }
+
+    def "test total by video and category"() {
+
     }
 
 }

@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -18,30 +20,46 @@
          <children>
             <TableView fx:id="videoTable" layoutX="40.0" layoutY="82.0" prefHeight="314.0" prefWidth="260.0" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <Button fx:id="compareBtn" layoutX="11.0" layoutY="327.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="57.0" text="Compare" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
-            <Slider fx:id="durationSlider" layoutX="72.0" layoutY="332.0"
-                    AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="5.0" />
+            <Slider fx:id="durationSlider" layoutX="72.0" layoutY="332.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="5.0" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="resultPane" minHeight="0.0" minWidth="0.0" prefHeight="363.0" prefWidth="536.0">
-         <children>
-            <Text fx:id="title" layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Statistic " AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="14.0" />
-            <Separator layoutX="10.0" layoutY="33.0" prefWidth="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="33.0" />
-            <GridPane fx:id="gridResult" layoutX="14.0" layoutY="42.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+        <items>
+            <AnchorPane fx:id="resultPane" minHeight="0.0" minWidth="0.0" prefHeight="363.0" prefWidth="536.0">
                <children>
-                  <Label text="Category" />
-                  <Label text="Video A" GridPane.columnIndex="1" />
-                  <Label text="Video B" GridPane.columnIndex="2" />
+                  <Text fx:id="title" layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Statistic " AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="14.0" />
+                  <Separator layoutX="10.0" layoutY="33.0" prefWidth="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="33.0" />
+                  <GridPane fx:id="gridResult" layoutX="14.0" layoutY="42.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Category" />
+                        <Label text="Video A" GridPane.columnIndex="1" />
+                        <Label text="Video B" GridPane.columnIndex="2" />
+                     </children>
+                  </GridPane>
                </children>
-            </GridPane>
-         </children>
-      </AnchorPane>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                   <TabPane fx:id="resultTabs" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                     <tabs>
+                        <Tab text="Visualization">
+                          <content>
+                            <AnchorPane fx:id="visualTab" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
+                     </tabs>
+                  </TabPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
    </items>
 </SplitPane>

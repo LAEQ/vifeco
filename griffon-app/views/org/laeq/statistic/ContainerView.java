@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
@@ -17,6 +18,7 @@ import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Category;
 import org.laeq.model.Video;
+import org.laeq.model.statistic.Graph;
 import org.laeq.service.statistic.StatisticException;
 import org.laeq.service.statistic.StatisticService;
 import org.laeq.template.MiddlePaneView;
@@ -41,11 +43,9 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @FXML private Button compareBtn;
     @FXML private Slider durationSlider;
     @FXML private GridPane gridResult;
-
+    @FXML private AnchorPane visualTab;
 
     private BidiMap<CheckBox, Video> selectBoxes;
-
-
 
     @Override
     public void initUI() {
@@ -121,8 +121,6 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
         gridResult.getColumnConstraints().addAll(getColumnConstraints());
 
-
-
         Video video1 = this.model.getVideos().get(0);
         Video video2 = this.model.getVideos().get(1);
 
@@ -131,19 +129,18 @@ public class ContainerView extends AbstractJavaFXGriffonView {
             statService.setDurationStep(Duration.seconds(step));
             Map<Category, Map<Video, Long>> result = statService.analyse();
 
-
             final int[] rowIndex = new int[]{1};
 
             result.entrySet().forEach(e -> {
                 gridResult.add(new Label(e.getKey().getName()), 0, rowIndex[0]);
 
-                long totalA = video1.getPointSet().stream().filter(point -> point.getCategory().equals(e.getKey())).count();
+                long totalA = statService.getTotalVideoAByCategory(e.getKey());
 
                 gridResult.add(new Label(String.valueOf(totalA)), 1, rowIndex[0]);
                 gridResult.add(new Label(e.getValue().get(video1).toString()), 2, rowIndex[0]);
                 gridResult.add(new Label(rounder((e.getValue().get(video1) / ((double)totalA) * 100)) + "%"), 3, rowIndex[0]);
 
-                long totalB = video2.getPointSet().stream().filter(point -> point.getCategory().equals(e.getKey())).count();
+                long totalB = statService.getTotalVideoBByCategory(e.getKey());
 
                 gridResult.add(new Label(String.valueOf(totalB)), 4, rowIndex[0]);
                 gridResult.add(new Label(e.getValue().get(video2).toString()), 5, rowIndex[0]);
@@ -151,11 +148,16 @@ public class ContainerView extends AbstractJavaFXGriffonView {
                 rowIndex[0]++;
             });
 
-
-
         }catch (StatisticException e){
             dialogService.simpleAlert("key.title.error", e.getMessage());
         }
+
+        visualTab.getChildren().clear();
+
+        Map<Category, Graph> graphMap = statService.getGraphs();
+
+        visualTab.getChildren().add(statService.getStatisticTimeline());
+
     }
 
     private String rounder(double value){

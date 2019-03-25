@@ -9,6 +9,7 @@ import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.statistic.Graph;
 import org.laeq.model.statistic.Vertex;
+import org.laeq.statistic.StatisticTimeline;
 
 import java.util.*;
 
@@ -114,15 +115,36 @@ public class StatisticService extends AbstractGriffonService {
                 Long newValueA = datas.get(video1) + Math.max(totalA - totalB, 0);
                 Long newValueB = datas.get(video2) + Math.max(totalB - totalA, 0);
 
-
                 datas.put(video1, newValueA);
                 datas.put(video2, newValueB);
             });
         });
 
-        System.out.println(totalDiff);
-
         return totalDiff;
+    }
+
+    public StatisticTimeline getStatisticTimeline(){
+        StatisticTimeline timeline = new StatisticTimeline();
+        timeline.init(video1, video2);
+        timeline.setGraphs(this.graphs);
+        timeline.setLayoutY(100);
+        timeline.setLayoutX(5);
+
+        Category category = video1.getCollection().getCategorySet().stream().findAny().get();
+
+        timeline.display(category);
+
+
+
+        return timeline;
+    }
+
+    public long getTotalVideoAByCategory(Category category){
+        return video1.getPointSet().stream().filter(point -> point.getCategory().equals(category)).count();
+    }
+
+    public long getTotalVideoBByCategory(Category category){
+        return video2.getPointSet().stream().filter(point -> point.getCategory().equals(category)).count();
     }
 
     public HashMap<Category, Set<Point>> getVideo1CategoryMap() {
