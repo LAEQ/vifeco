@@ -85,6 +85,12 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
 
+    compile group: 'org.apache.xmlgraphics', name: 'batik-util', version: '1.11'
+    compile group: 'org.apache.xmlgraphics', name: 'batik-transcoder', version: '1.11'
+    compile group: 'org.apache.xmlgraphics', name: 'batik-codec', version: '1.9'
+
+
+
 
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
 
