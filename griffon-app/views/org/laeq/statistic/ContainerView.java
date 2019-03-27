@@ -56,7 +56,8 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
     public void init(){
         durationSlider.setMin(0);
-        durationSlider.setMax(60);
+        durationSlider.setMax(10);
+        durationSlider.setMinorTickCount(1);
         durationSlider.setMajorTickUnit(10);
         durationSlider.setShowTickMarks(true);
         durationSlider.setShowTickLabels(true);
@@ -72,7 +73,6 @@ public class ContainerView extends AbstractJavaFXGriffonView {
             } catch (Exception e){
                 getLog().error(e.getMessage());
             }
-
         });
 
         selectBoxes = new DualHashBidiMap<>();
@@ -138,13 +138,19 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
                 gridResult.add(new Label(String.valueOf(totalA)), 1, rowIndex[0]);
                 gridResult.add(new Label(e.getValue().get(video1).toString()), 2, rowIndex[0]);
-                gridResult.add(new Label(rounder((e.getValue().get(video1) / ((double)totalA) * 100)) + "%"), 3, rowIndex[0]);
+
+                double percent = (totalA != 0)?  e.getValue().get(video1) / ((double)totalA) : 0;
+
+                gridResult.add(new Label(rounder(percent * 100) + "%"), 3, rowIndex[0]);
 
                 long totalB = statService.getTotalVideoBByCategory(e.getKey());
 
                 gridResult.add(new Label(String.valueOf(totalB)), 4, rowIndex[0]);
                 gridResult.add(new Label(e.getValue().get(video2).toString()), 5, rowIndex[0]);
-                gridResult.add(new Label(rounder(e.getValue().get(video2) / ((double)totalB) * 100) + "%"), 6, rowIndex[0]);
+
+                percent = (totalA != 0)?  e.getValue().get(video2) / ((double)totalB) : 0;
+
+                gridResult.add(new Label(rounder(percent * 100) + "%"), 6, rowIndex[0]);
                 rowIndex[0]++;
             });
 
@@ -156,8 +162,16 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
         Map<Category, Graph> graphMap = statService.getGraphs();
 
-        visualTab.getChildren().add(statService.getStatisticTimeline());
+        final int[] y = new int[]{0};
 
+        graphMap.keySet().forEach(category -> {
+            StatisticTimeline timeline = statService.getStatisticTimeline_v2(category);
+            timeline.setLayoutY(y[0]);
+
+            y[0] += 110;
+
+            visualTab.getChildren().add(timeline);
+        });
     }
 
     private String rounder(double value){

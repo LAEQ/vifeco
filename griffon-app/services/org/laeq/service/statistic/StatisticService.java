@@ -7,11 +7,14 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.model.statistic.Edge;
 import org.laeq.model.statistic.Graph;
 import org.laeq.model.statistic.Vertex;
 import org.laeq.statistic.StatisticTimeline;
 
+import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
@@ -23,6 +26,9 @@ public class StatisticService extends AbstractGriffonService {
     public HashMap<Category, Graph> graphs = new HashMap<>();
     public HashMap<Category, Set<Point>> video1CategoryMap = new HashMap<>();
     public HashMap<Category, Set<Point>> video2CategoryMap = new HashMap<>();
+
+    private Map<Category, List<List<Vertex>>> tarjans = new HashMap<>();
+    private Map<Category, Map<Video, Long>> tarjanDiffs = new HashMap<>();
 
     public void setDurationStep(Duration step){
         this.step = step;
@@ -83,30 +89,26 @@ public class StatisticService extends AbstractGriffonService {
         init();
         generateGraphs();
 
-        Map<Category, List<List<Vertex>>> result = new HashMap<>();
-
         graphs.entrySet().forEach(entry -> {
             List<List<Vertex>> tarjan = entry.getValue().tarjan();
-            result.put(entry.getKey(), tarjan);
+            tarjans.put(entry.getKey(), tarjan);
         });
 
-        return result;
+        return tarjans;
     }
 
 
     public Map<Category, Map<Video, Long>> analyse() throws StatisticException {
-        Map<Category, List<List<Vertex>>> result = execute();
+        execute();
 
-        Map<Category, Map<Video, Long>> totalDiff = new HashMap<>();
-
-        result.entrySet().forEach(entry -> {
+        tarjans.entrySet().forEach(entry -> {
             List<List<Vertex>> list = entry.getValue();
 
             Map<Video, Long> datas = new HashMap<>();
             datas.put(video1, 0L);
             datas.put(video2, 0L);
 
-            totalDiff.put(entry.getKey(), datas);
+            tarjanDiffs.put(entry.getKey(), datas);
 
             list.forEach( l -> {
                 long totalA = l.stream().filter(vertex -> vertex.point.getVideo() == video1).count();
@@ -120,20 +122,17 @@ public class StatisticService extends AbstractGriffonService {
             });
         });
 
-        return totalDiff;
+        return tarjanDiffs;
     }
 
-    public StatisticTimeline getStatisticTimeline(){
+    public StatisticTimeline getStatisticTimeline(Category category){
         StatisticTimeline timeline = new StatisticTimeline();
         timeline.init(video1, video2);
         timeline.setGraphs(this.graphs);
         timeline.setLayoutY(100);
         timeline.setLayoutX(5);
 
-        Category category = video1.getCollection().getCategorySet().stream().findAny().get();
-
         timeline.display(category);
-
 
 
         return timeline;
@@ -159,4 +158,118 @@ public class StatisticService extends AbstractGriffonService {
     public HashMap<Category, Graph> getGraphs() {
         return graphs;
     }
+
+    public StatisticTimeline getStatisticTimeline_v2(Category category) {
+        try {
+            execute();
+            analyse();
+        } catch (StatisticException e) {
+            e.printStackTrace();
+        }
+
+        List<List<Vertex>> tarjanCat = tarjans.get(category);
+
+        StatisticTimeline timeline = new StatisticTimeline();
+        timeline.init(video1, video2);
+        timeline.setGraphs(this.graphs);
+        timeline.setLayoutY(100);
+        timeline.setLayoutX(5);
+        timeline.drawDots(category);
+
+        tarjanCat.forEach(l -> {
+            List<Vertex> vA = l.stream().filter(vertex -> vertex.point.getVideo().equals(video1)).sorted(new Comparator<Vertex>() {
+                @Override
+                public int compare(Vertex o1, Vertex o2) {
+                    double diff = o1.point.getStartDouble() - o2.point.getStartDouble();
+                    if (diff <= 0) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+
+                }
+            }).collect(Collectors.toList());
+            List<Vertex> vB = l.stream().filter(vertex -> vertex.point.getVideo().equals(video2)).sorted(new Comparator<Vertex>() {
+                @Override
+                public int compare(Vertex o1, Vertex o2) {
+                    double diff = o1.point.getStartDouble() - o2.point.getStartDouble();
+                    if (diff <= 0) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                }
+            }).collect(Collectors.toList());
+
+           if(vA.size() > vB.size()){
+               //We use vB to find edges
+               HashMap<Vertex, Edge> result = createLines(vB, vA, category);
+
+               timeline.drawEdges(result.values());
+
+           }else if(vB.size() > vA.size()){
+               HashMap<Vertex, Edge> result = createLines(vA, vB, category);
+
+               timeline.drawEdges(result.values());
+
+           } else {
+               HashMap<Vertex, Edge> result = createLines(vB, vA, category);
+
+               timeline.drawEdges(result.values());
+           }
+        });
+
+
+        return timeline;
+    }
+
+    private Comparator<Vertex> getComparator(Vertex b){
+        return (o1, o2) -> {
+            int diff = o1.totalEdges - o2.totalEdges;
+            if(diff != 0){
+                return diff;
+            }
+
+            double diffDuration1 = Math.abs(b.point.getStartDouble() - o1.point.getStartDouble());
+            double diffDuration2 = Math.abs(b.point.getStartDouble() - o2.point.getStartDouble());
+
+            if(diffDuration1 < diffDuration2){
+                return -1;
+            } else if(diffDuration2 < diffDuration1){
+                return 1;
+            }
+
+            return 0;
+        };
+    }
+
+    private HashMap<Vertex, Edge> createLines(List<Vertex> v1, List<Vertex> v2, Category category) {
+        Graph graph = graphs.get(category);
+
+        HashMap<Vertex, Edge> result = new HashMap<>();
+
+        while(v1.size() != 0){
+            Vertex b = v1.remove(0);
+            //Refactor with a priority stack
+//            v1.sort(getComparator(b));
+
+            //Search for the best - Refactor with a priority stack
+            Optional<Edge> edge = graph.edges.get(b).stream().filter(e -> v2.contains(e.end)).sorted().findFirst();
+
+            if(edge.isPresent()){
+                // Remove for the list of potential target points.
+                v2.remove(edge.get().end);
+
+                graph.edges.get(edge.get().end).forEach(edge1 -> edge1.end.totalEdges--);
+                graph.edges.get(b).forEach(edge1 -> edge1.end.totalEdges--);
+                result.put(b, edge.get());
+            } else {
+                System.out.println("Not working here. You should find an edge");
+            }
+        }
+
+      return result;
+    }
+
+
 }

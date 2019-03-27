@@ -14,6 +14,7 @@ import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.statistic.Edge;
 import org.laeq.model.statistic.Graph;
+import org.laeq.model.statistic.Vertex;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -131,13 +132,14 @@ public class StatisticTimeline extends Group {
             vertices.getChildren().add(circle);
         });
 
+
         Set<Edge> edgeSet =  graph.edges.values().stream().flatMap(List::stream).collect(Collectors.toSet());
 
         edgeSet.forEach(edge -> {
             Line line = new Line();
 
-            Circle start = circlePointMap.get(edge.start);
-            Circle end = circlePointMap.get(edge.end);
+            Circle start = circlePointMap.get(edge.start.point);
+            Circle end = circlePointMap.get(edge.end.point);
 
             line.setStartX(start.getLayoutX());
             line.setStartY(start.getLayoutY());
@@ -147,6 +149,40 @@ public class StatisticTimeline extends Group {
 
             edges.getChildren().add(line);
         });
+    }
 
+    public void drawDots(Category category) {
+        Graph graph = this.graphMap.get(category);
+
+        graph.vertices.keySet().forEach(point -> {
+            Circle circle = new Circle(-2,-2,4);
+            circle.setFill(Color.GRAY);
+
+            double y = point.getVideo().equals(videoA)? 10: 70;
+
+            circle.setLayoutY(y);
+            circle.setLayoutX(point.getStartDouble() / 1000 * this.ratio);
+
+            circlePointMap.put(point, circle);
+
+            vertices.getChildren().add(circle);
+        });
+    }
+
+    public void drawEdges(Collection<Edge> values) {
+        values.stream().forEach(edge -> {
+            Line line = new Line();
+
+            Circle start = circlePointMap.get(edge.start.point);
+            Circle end = circlePointMap.get(edge.end.point);
+
+            line.setStartX(start.getLayoutX());
+            line.setStartY(start.getLayoutY());
+
+            line.setEndX(end.getLayoutX());
+            line.setEndY(end.getLayoutY());
+
+            edges.getChildren().add(line);
+        });
     }
 }

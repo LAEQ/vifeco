@@ -27,7 +27,9 @@ public class Graph {
 
 
     public void addEdges(Point start, Point end){
-        edges.get(vertices.get(start)).add(new Edge(vertices.get(start), vertices.get(end)));
+        Vertex startVertex = vertices.get(start);
+        startVertex.totalEdges++;
+        edges.get(startVertex).add(new Edge(vertices.get(start), vertices.get(end)));
     }
 
     public List<List<Vertex>> tarjan(){

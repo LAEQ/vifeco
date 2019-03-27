@@ -232,7 +232,30 @@ class StatisticServiceTest extends Specification {
         result.get(category).collect{it.collect{it.point.id}.sort()}.contains([4]) == true
     }
 
-    def "test analyse" () {
+    def "test draw the lines between connected dots" () {
+        setup:
+        Video video1 = VideoGenerator.generateVideo(1,1)
+        Video video2 = VideoGenerator.generateVideo(2,1)
+
+        Category category = video1.collection.categorySet.find { it.id == 1}
+
+        when:
+        VideoGenerator.generatePoints(video1, 1, 0, 6)
+        VideoGenerator.generatePoints(video2, 1, 1000, 3)
+
+
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(1))
+        service.analyse()
+
+        service.getStatisticTimeline_v2()
+
+
+        then:
+        true == true
+    }
+
+    def "test analyse"() {
         setup:
         Video video1 = VideoGenerator.generateVideo(1,1)
         Video video2 = VideoGenerator.generateVideo(2,1)
@@ -246,10 +269,11 @@ class StatisticServiceTest extends Specification {
 
         service.setVideos(video1, video2)
         service.setDurationStep(Duration.seconds(1))
-        service.analyse()
+        def result = service.analyse()
+
 
         then:
-        true == true
+        result.get(category).values().toArray() == [2, 0]
     }
 
     def "test analyse with 3 categories" () {

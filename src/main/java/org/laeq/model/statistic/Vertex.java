@@ -4,10 +4,11 @@ import org.laeq.model.Point;
 
 import java.util.Objects;
 
-public class Vertex {
+public class Vertex implements Comparable<Vertex>{
     public Point point;
     public int num = -1;
     public int min = -1;
+    public int totalEdges = 0;
 
     public Vertex(Point point){
         this.point = point;
@@ -29,5 +30,16 @@ public class Vertex {
     @Override
     public String toString() {
         return "V(" + point +')';
+    }
+
+    @Override
+    public int compareTo(Vertex o) {
+        if(totalEdges < o.totalEdges){
+            return -1;
+        } else if(totalEdges > o.totalEdges){
+            return 1;
+        }
+
+        return this.point.compareTo(o.point);
     }
 }

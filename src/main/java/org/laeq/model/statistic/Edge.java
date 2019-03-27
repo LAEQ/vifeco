@@ -2,13 +2,20 @@ package org.laeq.model.statistic;
 
 import java.util.Objects;
 
-public class Edge{
+public class Edge implements Comparable<Edge>{
     public Vertex start;
     public Vertex end;
+    public double weight;
 
     public Edge(Vertex start, Vertex end){
         this.start = start;
         this.end = end;
+
+        weight = Math.abs(start.point.getStartDouble() - end.point.getStartDouble());
+    }
+
+    public double getDeltaStart(){
+        return Math.abs(this.start.point.getStartDouble() - this.end.point.getStartDouble());
     }
 
     @Override
@@ -24,5 +31,19 @@ public class Edge{
     @Override
     public int hashCode() {
         return Objects.hash(start.point.hashCode() + end.point.hashCode());
+    }
+
+    @Override
+    public int compareTo(Edge o) {
+        int diffEdges = end.totalEdges - o.end.totalEdges;
+        if(diffEdges != 0){
+            return diffEdges;
+        }
+
+        if(getDeltaStart() <= o.getDeltaStart()){
+            return -1;
+        }
+
+        return 1;
     }
 }
