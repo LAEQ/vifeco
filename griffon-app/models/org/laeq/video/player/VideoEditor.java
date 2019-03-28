@@ -172,7 +172,7 @@ public class VideoEditor {
 
     public void setPaneWidth(double doubleValue) {
         paneWidth = doubleValue;
-        timelineIconDuration = Duration.seconds(paneWidth / 50 + 1).divide(2);
+        timelineIconDuration = Duration.seconds(paneWidth / 50 + 1);
         reposition();
     }
     public void setPaneHeight(double doubleValue) {
