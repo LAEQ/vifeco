@@ -42,11 +42,34 @@ public class IconService extends AbstractGriffonService {
             "icons/icon-car-elec-blk-64.png",
     };
 
-
-    public IconService(){
-
+    public void createPNG(Category category){
         String svgFolder = Settings.svgPath;
 
+        try {
+            JPEGTranscoder t = new JPEGTranscoder();
+            t.addTranscodingHint(JPEGTranscoder.KEY_QUALITY,  new Float(.8));
+
+            PNGTranscoder transcoder = new PNGTranscoder();
+            transcoder.addTranscodingHint(PNGTranscoder.KEY_WIDTH, 80f);
+            transcoder.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, 80f);
+
+            TranscoderInput input = new TranscoderInput(buildDocument(category));
+
+            String exportPath = String.format("%s/%s.png", svgFolder, category.getName().toLowerCase().replace(" ", "_"));
+            File newFile = new File(exportPath);
+            OutputStream ostream = new FileOutputStream(newFile);
+            TranscoderOutput output = new TranscoderOutput(ostream);
+            transcoder.transcode(input, output);
+            ostream.flush();
+            ostream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public IconService(){
+        String svgFolder = Settings.svgPath;
         Path path = Paths.get(svgFolder);
 
         if(!Files.exists(path)){
@@ -60,7 +83,6 @@ public class IconService extends AbstractGriffonService {
         try {
             JPEGTranscoder t = new JPEGTranscoder();
             t.addTranscodingHint(JPEGTranscoder.KEY_QUALITY,  new Float(.8));
-
 
             PNGTranscoder transcoder = new PNGTranscoder();
             transcoder.addTranscodingHint(PNGTranscoder.KEY_WIDTH, 80f);
@@ -81,6 +103,24 @@ public class IconService extends AbstractGriffonService {
         }
     }
 
+    private Document buildDocument(Category category) {
+        final DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
+        final String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
+        final Document doc = impl.createDocument(svgNS, "svg", null);
+
+        final Element svgRoot = doc.getDocumentElement();
+
+        final Element element = doc.createElementNS(svgNS, "path");
+        element.setAttribute("d", category.getIcon());
+
+        element.setAttribute("style", "fill:black;");
+        element.setAttribute("transform", "translate(7 , 8)");
+        svgRoot.appendChild(circle(doc,40, 40, 40, "lightgray" ));
+        svgRoot.appendChild(element);
+
+        return doc;
+    }
+
     private Document buildDocument() {
         final DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
         final String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
@@ -95,7 +135,6 @@ public class IconService extends AbstractGriffonService {
         element.setAttribute("transform", "translate(7 , 8)");
         svgRoot.appendChild(circle(doc,40, 40, 40, "lightgray" ));
         svgRoot.appendChild(element);
-
 
         return doc;
     }
