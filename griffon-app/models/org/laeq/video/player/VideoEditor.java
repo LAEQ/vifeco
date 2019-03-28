@@ -36,10 +36,10 @@ public class VideoEditor {
     private final Video video;
     private final BidiMap<Point, IconPointColorized> videoIconMap;
     private final BidiMap<Point, IconPointColorized> timelineIconMap;
-    private final ObservableSet<Point> pointsToDisplay = FXCollections.observableSet();
+    private final ObservableSet<Point> pointsToTimeline = FXCollections.observableSet();
+    private final ObservableSet<Point> pointsToVideo = FXCollections.observableSet();
     private final ObservableSet<IconPointColorized> timelinePane = FXCollections.observableSet();
     private final ObservableSet<IconPointColorized> videoPane = FXCollections.observableSet();
-
 
     private final SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
 
@@ -53,6 +53,7 @@ public class VideoEditor {
     private File file;
     private Media media;
     private MediaPlayer mediaPlayer;
+    private Duration timelineIconDuration = Duration.seconds(20);
 
     public VideoEditor(Video video, PointDAO pointDAO) throws IOException {
         this.video = video;
@@ -62,39 +63,48 @@ public class VideoEditor {
         videoIconMap = new DualHashBidiMap<>();
         timelineIconMap = new DualHashBidiMap<>();
 
-        video.getPointSet().stream().forEach(point -> {
-            IconPointColorized iconVideo = createIcon(point.getCategory(), 100);
-            iconVideo.decorate();
-            iconVideo.setLayoutX(point.getX());
-            iconVideo.setLayoutY(point.getY());
-            videoIconMap.put(point, iconVideo);
-
-            IconPointColorized iconTime = createIcon(point.getCategory(), 20);
-            iconTime.decorate();
-            iconTime.setLayoutX(point.getStart().toSeconds());
-            iconTime.setLayoutY(0);
-
-            timelineIconMap.put(point, iconTime);
-            timelinePane.add(iconTime);
-        });
-
-
         file = new File(video.getPath());
         media = new Media(file.getCanonicalFile().toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
-        pointsToDisplay.addListener((SetChangeListener<Point>) change -> {
+        pointsToTimeline.addListener((SetChangeListener<Point>) change -> {
+            System.out.println("map1 size: " + videoIconMap.size() + " \t map2 size: " + timelineIconMap.size());
+
             if(change.wasAdded()){
                 Point pt = change.getElementAdded();
-                IconPointColorized icon = videoIconMap.get(pt);
-                icon.setLayoutX(pt.getX() * paneWidth);
-                icon.setLayoutY(pt.getY() * paneHeight);
-                videoPane.add(icon);
+                IconPointColorized icon = generateIconTimeline(pt);
+                timelineIconMap.putIfAbsent(pt, icon);
+                timelinePane.add(icon);
             } else if(change.wasRemoved()){
-                IconPointColorized icon = videoIconMap.get(change.getElementRemoved());
+                IconPointColorized icon = timelineIconMap.remove(change.getElementRemoved());
+                timelinePane.remove(icon);
+            }
+        });
+
+        pointsToVideo.addListener((SetChangeListener<Point>) change -> {
+            if(change.wasAdded()){
+                Point point = change.getElementAdded();
+                IconPointColorized iconVideo = createIcon(point.getCategory(), 100);
+                iconVideo.decorate();
+                iconVideo.setLayoutX(point.getX() * paneWidth);
+                iconVideo.setLayoutY(point.getY() * paneHeight);
+                videoIconMap.putIfAbsent(point, iconVideo);
+                videoPane.add(iconVideo);
+
+            } else if(change.wasRemoved()){
+                IconPointColorized icon = videoIconMap.remove(change.getElementRemoved());
                 videoPane.remove(icon);
             }
         });
+    }
+
+    private IconPointColorized generateIconTimeline(Point point){
+            IconPointColorized icon = createIcon(point.getCategory(), 20);
+            icon.decorate();
+            icon.setLayoutX(point.getStart().toSeconds());
+            icon.setLayoutY(0);
+
+            return icon;
     }
 
     private void createPoint(Point point){
@@ -136,23 +146,38 @@ public class VideoEditor {
 
     public void display(){
         Duration currentTime = mediaPlayer.getCurrentTime();
-        Duration startDuration = (currentTime.subtract(Duration.millis( this.duration * 1000)));
-        Point start = new Point(Integer.MAX_VALUE, startDuration);
-        Point end = new Point(Integer.MAX_VALUE, currentTime);
-        end.setStart(currentTime);
+
+        Duration startDuration = currentTime.subtract(timelineIconDuration);
+        Duration endDuration = currentTime.add(timelineIconDuration);
+        Point start = new Point(0, startDuration);
+        Point end = new Point(0, endDuration);
 
         SortedSet<Point> points = video.getPointSet().subSet(start, end);
-        pointsToDisplay.retainAll(points);
+        pointsToTimeline.retainAll(points);
 
         points.forEach(point -> {
-            if( ! pointsToDisplay.contains(point)){
-                pointsToDisplay.add(point);
+            if( ! pointsToTimeline.contains(point)){
+                pointsToTimeline.add(point);
+            }
+        });
+
+        startDuration = (currentTime.subtract(Duration.millis( this.duration * 1000)));
+        start = new Point(0, startDuration);
+        end = new Point(0, currentTime);
+
+        points = video.getPointSet().subSet(start, end);
+
+        pointsToVideo.retainAll(points);
+        points.forEach(point -> {
+            if( ! pointsToVideo.contains(point)){
+                pointsToVideo.add(point);
             }
         });
     }
 
     public void setPaneWidth(double doubleValue) {
         paneWidth = doubleValue;
+        timelineIconDuration = Duration.seconds(paneWidth / 50 + 1).divide(2);
         reposition();
     }
     public void setPaneHeight(double doubleValue) {
@@ -168,8 +193,8 @@ public class VideoEditor {
         if(point != null){
             try {
                 pointDAO.delete(point);
-                pointsToDisplay.remove(point);
-                pointsToDisplay.remove(point);
+                pointsToTimeline.remove(point);
+                pointsToTimeline.remove(point);
                 videoIconMap.remove(point);
                 timelineIconMap.remove(point);
                 videoPane.remove(videoIcon);
@@ -202,7 +227,7 @@ public class VideoEditor {
         if(point != null){
             try {
                 pointDAO.delete(point);
-                pointsToDisplay.remove(point);
+                pointsToTimeline.remove(point);
                 videoIconMap.remove(point);
                 timelineIconMap.remove(point);
                 videoPane.remove(videoIcon);
