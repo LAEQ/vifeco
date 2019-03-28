@@ -291,7 +291,7 @@ public class VideoEditor {
 
         rate += change;
 
-        if(rate >= 0.1 && rate <= 10){
+        if(rate >= 0.1 && rate <= 4){
             BigDecimal bg = new BigDecimal(rate);
             mediaPlayer.setRate(bg.setScale(1, RoundingMode.HALF_EVEN).doubleValue());
         }

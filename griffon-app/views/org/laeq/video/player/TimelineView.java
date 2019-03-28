@@ -84,7 +84,6 @@ public class TimelineView extends AbstractJavaFXGriffonView {
         };
     }
 
-
     @Override
     public void initUI() {
         AnchorPane.setTopAnchor(pane, 0d);
