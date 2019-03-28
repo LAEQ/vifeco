@@ -21,7 +21,6 @@ import org.laeq.model.icon.IconSize;
 import org.laeq.video.ControlsDefault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -42,9 +41,7 @@ public class VideoEditor {
     private final ObservableSet<IconPointColorized> videoPane = FXCollections.observableSet();
 
     private final SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
-
     private final Set<String> shortcuts;
-
     private double paneWidth;
     private double paneHeight;
 
@@ -68,8 +65,6 @@ public class VideoEditor {
         mediaPlayer = new MediaPlayer(media);
 
         pointsToTimeline.addListener((SetChangeListener<Point>) change -> {
-            System.out.println("map1 size: " + videoIconMap.size() + " \t map2 size: " + timelineIconMap.size());
-
             if(change.wasAdded()){
                 Point pt = change.getElementAdded();
                 IconPointColorized icon = generateIconTimeline(pt);
@@ -163,7 +158,7 @@ public class VideoEditor {
 
         startDuration = (currentTime.subtract(Duration.millis( this.duration * 1000)));
         start = new Point(0, startDuration);
-        end = new Point(0, currentTime);
+        end = new Point(0, currentTime.add(Duration.millis(1)));
 
         points = video.getPointSet().subSet(start, end);
 
@@ -292,7 +287,8 @@ public class VideoEditor {
                 point.setStart(mediaPlayer.getCurrentTime());
                 pointDAO.insert(point);
                 video.getPointSet().add(point);
-                createPoint(point);
+                display();
+
                 return point;
             } catch (DAOException e) {
                 logger.error("Error saving new point: " + e.getMessage());
