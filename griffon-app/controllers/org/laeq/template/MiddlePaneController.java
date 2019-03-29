@@ -9,8 +9,10 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.util.Duration;
+import org.apache.batik.transcoder.TranscoderException;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DAOException;
+import org.laeq.icon.IconService;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
@@ -31,6 +33,7 @@ public class MiddlePaneController extends AbstractGriffonController {
     @MVCMember @Nonnull private MiddlePaneView view;
     @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
+    @Inject private IconService iconService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -96,11 +99,15 @@ public class MiddlePaneController extends AbstractGriffonController {
             VideoEditor editor = null;
             try {
                 editor = new VideoEditor(video, dbService.getPointDAO());
+
+                editor.setImageViewMap(iconService.getImageViews(video.getCollection().getCategorySet()));
+
                 Map<String, Object> args = new HashMap<>();
                 args.put("editor", editor);
                 createGroup("player", args);
-            } catch (IOException e) {
+            } catch (IOException | TranscoderException e) {
                 getLog().error(e.getMessage());
+                dialogService.simpleAlert(getApplication().getMessageSource().getMessage("org.laeq.title.error"), e.getMessage());
             }
         });
 

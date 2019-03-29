@@ -16,6 +16,7 @@ import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Point;
 import org.laeq.model.icon.IconPointColorized;
+import org.laeq.model.icon.IconPointPNG;
 
 import javax.annotation.Nonnull;
 
@@ -33,7 +34,7 @@ public class TimelineView extends AbstractJavaFXGriffonView {
     private final Pane pane;
     private final ChangeListener<Number> widthPropertyListener;
     private final ChangeListener<Duration> currentTimeListener;
-    private final SetChangeListener<IconPointColorized> timelinePaneListener;
+    private final SetChangeListener<IconPointPNG> timelinePaneListener;
     private final EventHandler<MouseEvent> mouseEnterListener;
     private final EventHandler<? super MouseEvent> mouseExitedListener;
     private final EventHandler<? super MouseEvent> mouseClickListener;

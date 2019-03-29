@@ -53,10 +53,6 @@ public class ContainerController extends CRUDController<Video> {
 
         Set<Category> categorySet = categoryDAO.findAll();
 
-        categorySet.forEach(category -> {
-            iconService.createPNG(category);
-        });
-
         model.getVideoList().addAll(videoDAO.findAll());
         model.getUserSet().addAll(userDAO.findAll());
         model.getCollectionSet().addAll(ccDAO.findAll());

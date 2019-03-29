@@ -5,6 +5,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.geometry.Point2D;
+import javafx.scene.CacheHint;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -16,7 +19,9 @@ import org.laeq.db.PointDAO;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.model.icon.IconPoint;
 import org.laeq.model.icon.IconPointColorized;
+import org.laeq.model.icon.IconPointPNG;
 import org.laeq.model.icon.IconSize;
 import org.laeq.video.ControlsDefault;
 import org.slf4j.Logger;
@@ -25,26 +30,24 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class VideoEditor {
     private final static Logger logger = LoggerFactory.getLogger(VideoEditor.class.getName());
     private final Video video;
-    private final BidiMap<Point, IconPointColorized> videoIconMap;
-    private final BidiMap<Point, IconPointColorized> timelineIconMap;
+    private final BidiMap<Point, IconPointPNG> videoIconMap;
+    private final BidiMap<Point, IconPointPNG> timelineIconMap;
     private final ObservableSet<Point> pointsToTimeline = FXCollections.observableSet();
     private final ObservableSet<Point> pointsToVideo = FXCollections.observableSet();
-    private final ObservableSet<IconPointColorized> timelinePane = FXCollections.observableSet();
-    private final ObservableSet<IconPointColorized> videoPane = FXCollections.observableSet();
+    private final ObservableSet<IconPointPNG> timelinePane = FXCollections.observableSet();
+    private final ObservableSet<IconPointPNG> videoPane = FXCollections.observableSet();
 
+    private Map<Category, Image[]> imageViewMap;
     private final SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
     private final Set<String> shortcuts;
     private double paneWidth;
     private double paneHeight;
-
     private final PointDAO pointDAO;
     private Double duration = ControlsDefault.duration;
     private File file;
@@ -66,12 +69,21 @@ public class VideoEditor {
 
         pointsToTimeline.addListener((SetChangeListener<Point>) change -> {
             if(change.wasAdded()){
-                Point pt = change.getElementAdded();
-                IconPointColorized icon = generateIconTimeline(pt);
-                timelineIconMap.putIfAbsent(pt, icon);
+                Point point = change.getElementAdded();
+                ImageView image1 = new ImageView(imageViewMap.get(point.getCategory())[2]);
+                ImageView image2 = new ImageView(imageViewMap.get(point.getCategory())[3]);
+                image1.setCache(true);
+                image1.setCacheHint(CacheHint.SPEED);
+                image2.setCache(true);
+                image2.setCacheHint(CacheHint.SPEED);
+
+                IconPointPNG icon = new IconPointPNG(image1, image2);
+                icon.setLayoutX(point.getStart().toSeconds());
+                icon.setLayoutY(0);
+                timelineIconMap.putIfAbsent(point, icon);
                 timelinePane.add(icon);
             } else if(change.wasRemoved()){
-                IconPointColorized icon = timelineIconMap.remove(change.getElementRemoved());
+                IconPointPNG icon = timelineIconMap.remove(change.getElementRemoved());
                 timelinePane.remove(icon);
             }
         });
@@ -79,15 +91,22 @@ public class VideoEditor {
         pointsToVideo.addListener((SetChangeListener<Point>) change -> {
             if(change.wasAdded()){
                 Point point = change.getElementAdded();
-                IconPointColorized iconVideo = createIcon(point.getCategory(), 100);
-                iconVideo.decorate();
+                ImageView image1 = new ImageView(imageViewMap.get(point.getCategory())[0]);
+                ImageView image2 = new ImageView(imageViewMap.get(point.getCategory())[1]);
+
+                image1.setCache(true);
+                image1.setCacheHint(CacheHint.SPEED);
+                image2.setCache(true);
+                image2.setCacheHint(CacheHint.SPEED);
+
+                IconPointPNG iconVideo = new IconPointPNG(image1, image2);
                 iconVideo.setLayoutX(point.getX() * paneWidth);
                 iconVideo.setLayoutY(point.getY() * paneHeight);
                 videoIconMap.putIfAbsent(point, iconVideo);
                 videoPane.add(iconVideo);
 
             } else if(change.wasRemoved()){
-                IconPointColorized icon = videoIconMap.remove(change.getElementRemoved());
+                IconPointPNG icon = videoIconMap.remove(change.getElementRemoved());
                 videoPane.remove(icon);
             }
         });
@@ -102,40 +121,21 @@ public class VideoEditor {
             return icon;
     }
 
-    private void createPoint(Point point){
-        IconPointColorized iconVideo = createIcon(point.getCategory(), 100);
-        iconVideo.setLayoutX(point.getX() * paneWidth);
-        iconVideo.setLayoutY(point.getY() * paneHeight);
-        iconVideo.decorate();
-        videoIconMap.put(point, iconVideo);
-
-        videoPane.add(iconVideo);
-
-        IconPointColorized iconTime = createIcon(point.getCategory(), 20);
-        iconTime.decorate();
-        iconTime.setLayoutX(point.getStart().toSeconds());
-        iconTime.setLayoutY(0);
-
-        timelineIconMap.put(point, iconTime);
-        timelinePane.add(iconTime);
-    }
-
-    public ObservableSet<IconPointColorized> getTimelinePane() {
+    public ObservableSet<IconPointPNG> getTimelinePane() {
         return timelinePane;
     }
-    public ObservableSet<IconPointColorized> getVideoPane() {
+    public ObservableSet<IconPointPNG> getVideoPane() {
         return videoPane;
     }
 
     private IconPointColorized createIcon(Category category, int size){
         return new IconPointColorized(new IconSize(category, size));
     }
-
     public Duration getDuration() {
         return Duration.millis(video.getDuration());
     }
 
-    public Set<IconPointColorized> getTimelineIconMap() {
+    public Set<IconPointPNG> getTimelineIconMap() {
         return timelineIconMap.values();
     }
 
@@ -183,7 +183,7 @@ public class VideoEditor {
 
     public Point deleteVideoIcon(IconPointColorized videoIcon) {
         Point point = videoIconMap.getKey(videoIcon);
-        IconPointColorized timelineIcon = timelineIconMap.get(point);
+        IconPointPNG timelineIcon = timelineIconMap.get(point);
 
         if(point != null){
             try {
@@ -205,7 +205,6 @@ public class VideoEditor {
 
         return null;
     }
-
     private void reposition() {
         videoPane.forEach(icon -> {
             Point pt = videoIconMap.getKey(icon);
@@ -217,7 +216,7 @@ public class VideoEditor {
 
     public Point deleteTimelineIcon(IconPointColorized icon) {
         Point point = timelineIconMap.getKey(icon);
-        IconPointColorized videoIcon = videoIconMap.get(point);
+        IconPointPNG videoIcon = videoIconMap.get(point);
 
         if(point != null){
             try {
@@ -249,13 +248,12 @@ public class VideoEditor {
         }
     }
     public void reset() {
-        videoIconMap.values().stream().forEach(IconPointColorized::reset);
+        videoIconMap.values().stream().forEach(IconPointPNG::reset);
     }
 
     public boolean isValid() {
         return file.exists() && media != null && mediaPlayer != null;
     }
-
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
     }
@@ -302,11 +300,9 @@ public class VideoEditor {
     public void increaseRate() {
         changeRate(0.1);
     }
-
     public void decreateRate() {
         changeRate(-0.1);
     }
-
     public void changeRate(double change){
         Double rate = mediaPlayer.getRate();
 
@@ -324,5 +320,9 @@ public class VideoEditor {
 
     public Duration getTotalDuration() {
         return mediaPlayer.getTotalDuration();
+    }
+
+    public void setImageViewMap(Map<Category, Image[]> imageViewMap) {
+        this.imageViewMap = imageViewMap;
     }
 }
