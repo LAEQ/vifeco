@@ -4,7 +4,10 @@ import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleDoubleProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.laeq.model.Preferences;
+import org.laeq.user.PreferencesService;
 
+import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -15,6 +18,7 @@ public class ControlsModel extends AbstractGriffonModel {
     private SimpleDoubleProperty size;
     private SimpleDoubleProperty duration;
     private SimpleDoubleProperty opacity;
+    private Preferences prefs;
 
     public ControlsModel(){
         this.rate = new SimpleDoubleProperty(this, "rate", ControlsDefault.rate);
@@ -122,5 +126,19 @@ public class ControlsModel extends AbstractGriffonModel {
     public Number setDefaultDuration() {
         setDuration(getDefaultDuration());
         return getDefaultDuration();
+    }
+
+    public void setPreferences(Preferences preferences) {
+        this.prefs = preferences;
+
+        setRate(preferences.rate);
+        setOpacity(preferences.opacity);
+        setVolume(preferences.volume);
+        setSize(preferences.size);
+        setDuration(preferences.duration);
+    }
+
+    public Preferences getPrefs() {
+        return prefs;
     }
 }
