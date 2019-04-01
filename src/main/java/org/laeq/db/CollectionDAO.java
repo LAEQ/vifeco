@@ -244,7 +244,7 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
             }
 
         } catch (SQLException e) {
-            getLogger().error("Error catageryCollection: " + e.getMessage());
+            getLogger().error("Error collection findAll() : " + e.getMessage());
         }
 
         return result;
@@ -289,7 +289,7 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
     @Override
     public void delete(Collection collection) throws DAOException {
         if(collection.getId() == 1){
-            throw new DAOException("CollectionDAO: You cannot deleteVideoIcon the default category collection");
+            throw new DAOException("CollectionDAO: You cannot the default category collection");
         }
 
         int result = 0;
@@ -297,7 +297,7 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
 
 
         try(Connection connection = getManager().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);)
+            PreparedStatement statement = connection.prepareStatement(query))
         {
             statement.setInt(1, collection.getId());
 
@@ -308,7 +308,7 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
         }
 
         if(result != 1)
-            throw new DAOException(String.format("Cannot deleteVideoIcon %s", collection));
+            throw new DAOException(String.format("Cannot delete %s", collection.getName()));
 
     }
 

@@ -4,7 +4,7 @@ import org.laeq.model.Category
 import org.laeq.model.Collection
 
 class CategoryDAOTest extends AbstractDAOTest {
-    def repository
+    CategoryDAO repository
 
     def setup(){
         repository = new CategoryDAO(manager)
@@ -65,10 +65,10 @@ class CategoryDAOTest extends AbstractDAOTest {
             println e
         }
 
-        Category category = new Category(1, "mock", "mock", "#FFFFFF","A")
+        Category category = new Category(5, "mock", "mock", "#FFFFFF","A")
 
         when:
-        repository.deleteVideoIcon(category)
+        repository.delete(category)
 
         then:
         notThrown DAOException
@@ -84,7 +84,7 @@ class CategoryDAOTest extends AbstractDAOTest {
 
         Category category = new Category(-1, "mock", "mock", "#000000", "A")
         when:
-        repository.deleteVideoIcon(category)
+        repository.delete(category)
 
         then:
         thrown DAOException

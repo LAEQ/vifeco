@@ -33,4 +33,4 @@ out
 target
 
 # HSQLDB #
-db/hsqldb/*
+*.iml

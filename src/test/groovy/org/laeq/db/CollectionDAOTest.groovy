@@ -205,7 +205,7 @@ class CollectionDAOTest extends AbstractDAOTest {
             println e
         }
 
-        Collection categoryCollection = new Collection(2, "mock", false)
+        Collection categoryCollection = new Collection(3, "mock", false)
 
         when:
         repository.delete(categoryCollection)
