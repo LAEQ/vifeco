@@ -292,8 +292,8 @@ public class PlayerView extends TranslatedView {
             return;
         }
 
-        if((event.getCode().equals(KeyCode.ESCAPE) || event.getCode().equals(KeyCode.DELETE)) && nodeOver !=  null && nodeOver.getParent() instanceof IconPointColorized){
-            Point point = editor.deleteVideoIcon((IconPointColorized)(nodeOver.getParent()));
+        if((event.getCode().equals(KeyCode.ESCAPE) || event.getCode().equals(KeyCode.DELETE)) && nodeOver !=  null && nodeOver.getParent() instanceof IconPointPNG){
+            Point point = editor.deleteVideoIcon((IconPointPNG) (nodeOver.getParent()));
 
             if(point != null){
                 controller.deletePoint(point);

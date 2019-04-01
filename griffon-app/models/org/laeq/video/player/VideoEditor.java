@@ -181,14 +181,13 @@ public class VideoEditor {
         reposition();
     }
 
-    public Point deleteVideoIcon(IconPointColorized videoIcon) {
+    public Point deleteVideoIcon(IconPointPNG videoIcon) {
         Point point = videoIconMap.getKey(videoIcon);
         IconPointPNG timelineIcon = timelineIconMap.get(point);
 
         if(point != null){
             try {
                 pointDAO.delete(point);
-                pointsToTimeline.remove(point);
                 pointsToTimeline.remove(point);
                 videoIconMap.remove(point);
                 timelineIconMap.remove(point);
@@ -199,7 +198,7 @@ public class VideoEditor {
 
                 return point;
             } catch (DAOException e) {
-                logger.error("Failed to deleteVideoIcon point: " + e.getMessage());
+                logger.error("Failed to delete the point: " + e.getMessage());
             }
         }
 
@@ -214,7 +213,7 @@ public class VideoEditor {
         });
     }
 
-    public Point deleteTimelineIcon(IconPointColorized icon) {
+    public Point deleteTimelineIcon(IconPointPNG icon) {
         Point point = timelineIconMap.getKey(icon);
         IconPointPNG videoIcon = videoIconMap.get(point);
 
@@ -240,10 +239,10 @@ public class VideoEditor {
     public void setDuration(Double value) {
         this.duration = value;
     }
-    public void reset(IconPointColorized iconTimeline) {
+    public void reset(IconPointPNG iconTimeline) {
         Point point = timelineIconMap.getKey(iconTimeline);
 
-        if(point != null){
+        if(point != null && videoIconMap.containsKey(point)){
             videoIconMap.get(point).colorize();
         }
     }

@@ -149,7 +149,7 @@ public class IconService extends AbstractGriffonService {
         element.setAttribute("d", category.getIcon());
 
         element.setAttribute("style", "fill:" + color1 + ";");
-        element.setAttribute("transform", "translate(10 , 8) scale( " + scale + " , " + scale + " )");
+        element.setAttribute("transform", "translate(11 , 11) scale( " + scale + " , " + scale + " )");
         svgRoot.appendChild(circle(doc ,width, width, width, color2 ));
         svgRoot.appendChild(element);
 

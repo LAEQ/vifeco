@@ -10,6 +10,14 @@ public class IconPointPNG extends Group {
         this.imageOff = imageOff;
         this.imageOn = imageOn;
 
+        double x = this.imageOff.getImage().getWidth() / 2;
+        double y = this.imageOff.getImage().getHeight() / 2;
+
+        this.imageOff.setLayoutX( - x);
+        this.imageOff.setLayoutY( - y);
+        this.imageOn.setLayoutX( - x);
+        this.imageOn.setLayoutY( - y);
+
         getChildren().add(this.imageOff);
 
         setOnMouseEntered(event -> colorize());
@@ -17,13 +25,13 @@ public class IconPointPNG extends Group {
     }
 
     public void reset(){
+        getChildren().clear();
         getChildren().add(this.imageOff);
-        getChildren().remove(this.imageOn);
     }
 
     public void colorize(){
+        getChildren().clear();
         getChildren().add(this.imageOn);
-        getChildren().remove(this.imageOff);
     }
 
 
