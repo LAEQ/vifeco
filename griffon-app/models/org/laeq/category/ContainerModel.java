@@ -110,7 +110,7 @@ public class ContainerModel extends AbstractGriffonModel {
             builder.append(" - icon\n");
         }
 
-        if(! getColor().matches("^#[A-Za-z0-9]{8}$")){
+        if(! getColor().matches("^#[A-Za-z0-9]{6}$")){
             result = false;
             builder.append(" - Color\n");
         }

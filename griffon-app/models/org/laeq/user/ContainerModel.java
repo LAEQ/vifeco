@@ -114,7 +114,7 @@ public class ContainerModel extends AbstractGriffonModel {
         return user;
     }
 
-    public void clear() {
+    public void clearForm() {
         this.selectedUser = null;
         setFirstName("");
         setLastName("");

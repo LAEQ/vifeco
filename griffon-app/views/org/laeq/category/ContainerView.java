@@ -9,13 +9,13 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
 import org.laeq.TranslatedView;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
-import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
 
@@ -80,19 +80,19 @@ public class ContainerView extends TranslatedView {
     public void initForm(){
         final String[] colorStr = new String[1];
 
-
         colorPickerField.valueProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue);
-            colorStr[0] = Integer.toHexString(newValue.hashCode());
+            Color color = colorPickerField.getValue();
 
-            while(colorStr[0].length() < 8){
-                colorStr[0] = "0" + colorStr[0];
-            }
-
-            colorStr[0] = "#" + colorStr[0];
-            svgPath.setFill(Paint.valueOf(colorStr[0]));
-            model.setColor(colorStr[0]);
+            svgPath.setFill(color);
+            model.setColor(toRGBCode(color));
         });
+    }
+
+    private String toRGBCode(Color color){
+        return String.format( "#%02X%02X%02X",
+                (int)( color.getRed() * 255 ),
+                (int)( color.getGreen() * 255 ),
+                (int)( color.getBlue() * 255 ) );
     }
 
     private void init(){
@@ -136,14 +136,16 @@ public class ContainerView extends TranslatedView {
                     delete.setLayoutX(55);
 
                     btnGroup.getChildren().addAll(edit, delete);
-                    Icon icon = new Icon(IconSVG.edit, Color.gray_dark);
+                    Icon icon = new Icon(IconSVG.edit, org.laeq.model.icon.Color.gray_dark);
                     edit.setGraphic(icon);
                     edit.setOnAction(event -> {
                         model.setSelectedCategory(categoryTable.getItems().get(getIndex()));
+                        Category category = categoryTable.getItems().get(getIndex());
+                        colorPickerField.setValue(Color.web(category.getColor()));
                     });
 
 
-                    delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));
+                    delete.setGraphic(new Icon(IconSVG.bin, org.laeq.model.icon.Color.gray_dark));
                     delete.setOnAction(event -> {
                         controller.delete(categoryTable.getItems().get(getIndex()));
                     });

@@ -175,7 +175,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         }
 
         rateSlider.setMin(0.1);
-        rateSlider.setMax(10);
+        rateSlider.setMax(4);
         rateSlider.setMajorTickUnit(1);
         rateSlider.setShowTickMarks(true);
         rateSlider.setShowTickLabels(true);

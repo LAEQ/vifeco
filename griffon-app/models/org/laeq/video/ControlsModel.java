@@ -87,7 +87,7 @@ public class ControlsModel extends AbstractGriffonModel {
     }
 
     public void increaseRate() {
-        if(getRate() < 10){
+        if(getRate() < 4){
             BigDecimal bg = new BigDecimal(rate.add(0.1).doubleValue());
             this.setRate(bg.setScale(1, RoundingMode.HALF_EVEN).doubleValue());
         }

@@ -9,6 +9,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.laeq.model.icon.IconPointColorized;
+import org.laeq.model.icon.IconPointPNG;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -74,7 +75,7 @@ public class VideoTimeline extends Group {
         return ratio;
     }
 
-    public void addIcons(Set<IconPointColorized> icons) {
+    public void addIcons(Set<IconPointPNG> icons) {
         icons.parallelStream().forEach(icon ->{
             icon.setLayoutX(icon.getLayoutX() * ratio);
             icon.setLayoutY(getNextY());
@@ -83,14 +84,14 @@ public class VideoTimeline extends Group {
         group.getChildren().addAll(icons);
     }
 
-    public void addIcon(IconPointColorized icon){
+    public void addIcon(IconPointPNG icon){
         icon.setLayoutX(icon.getLayoutX() * ratio);
         icon.setLayoutY(getNextY());
 
         group.getChildren().add(icon);
     }
 
-    public void removeIcon(IconPointColorized elementRemoved) {
+    public void removeIcon(IconPointPNG elementRemoved) {
         group.getChildren().remove(elementRemoved);
     }
 
