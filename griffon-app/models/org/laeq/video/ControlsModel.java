@@ -5,9 +5,7 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleDoubleProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Preferences;
-import org.laeq.user.PreferencesService;
 
-import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
