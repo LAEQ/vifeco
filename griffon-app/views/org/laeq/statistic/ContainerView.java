@@ -21,6 +21,7 @@ import org.laeq.service.statistic.StatisticException;
 import org.laeq.service.statistic.StatisticService;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.math.BigDecimal;

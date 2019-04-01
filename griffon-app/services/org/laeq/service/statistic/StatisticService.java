@@ -120,8 +120,6 @@ public class StatisticService extends AbstractGriffonService {
             });
         });
 
-        System.out.println(totalDiff);
-
         return totalDiff;
     }
 

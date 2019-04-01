@@ -14,6 +14,7 @@ import org.laeq.icon.IconService;
 import org.laeq.model.Category;
 import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;

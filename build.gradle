@@ -119,6 +119,10 @@ compileGroovy.enabled = false
 tasks.withType(JavaCompile) {
     sourceCompatibility = project.sourceCompatibility
     targetCompatibility = project.targetCompatibility
+    run{
+        jvmArgs '-Dprism.vsync=false'
+    }
+
 }
 
 tasks.withType(GroovyCompile) {

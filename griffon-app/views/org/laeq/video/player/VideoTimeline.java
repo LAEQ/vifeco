@@ -8,7 +8,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconPointPNG;
 
 import java.util.ArrayList;

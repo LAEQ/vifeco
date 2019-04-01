@@ -43,7 +43,7 @@ class VideoTest extends Specification {
         Video result = mapper.readValue(json, Video.class)
 
         then:
-        result.path == '/home/david/Downloads/07074207.wav'
+        result.path == '/path/export/exported_video.wav'
         result.duration == 258573.333334
         result.collection == new Collection(1, 'Default', false)
         result.collection.categorySet.size() == 4

@@ -13,7 +13,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.util.Callback;
 import org.laeq.TranslatedView;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;

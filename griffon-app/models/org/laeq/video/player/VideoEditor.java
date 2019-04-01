@@ -19,18 +19,21 @@ import org.laeq.db.PointDAO;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.model.icon.IconPoint;
 import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconPointPNG;
 import org.laeq.model.icon.IconSize;
 import org.laeq.video.ControlsDefault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 public class VideoEditor {
@@ -327,5 +330,26 @@ public class VideoEditor {
 
     public SimpleBooleanProperty isPlayingProperty() {
         return isPlaying;
+    }
+
+    public void seekPlus(double time) {
+        Duration currentTime = mediaPlayer.getCurrentTime().add(Duration.millis(time));
+
+        if(currentTime.lessThan(mediaPlayer.getTotalDuration())){
+            mediaPlayer.seek(currentTime);
+        } else {
+            mediaPlayer.seek(mediaPlayer.getTotalDuration());
+        }
+
+    }
+
+    public void seekMinus(double time) {
+        Duration currentTime = mediaPlayer.getCurrentTime().subtract(Duration.millis(time));
+
+        if(currentTime.greaterThan(mediaPlayer.getStartTime())){
+            mediaPlayer.seek(currentTime);
+        } else {
+            mediaPlayer.seek(mediaPlayer.getStartTime());
+        }
     }
 }

@@ -1,5 +1,5 @@
 {
-  "path": "exported_video.wav",
+  "path": "/path/export/exported_video.wav",
   "user": {
     "id": 1,
     "firstName": "David",
