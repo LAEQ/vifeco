@@ -39,7 +39,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
         }
 
         if(result != 1)
-            throw new DAOException("Error during DAO insert category");
+            throw new DAOException("Error during inserting category: " + category.getName());
     }
 
     @Override
@@ -95,7 +95,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
         }
 
         if(result !=1)
-            throw new DAOException("Error deleting a category");
+            throw new DAOException("Error deleting category: " + category.getName());
     }
 
     //@todo write unit updatePosition
@@ -134,7 +134,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             int result = stmt.executeUpdate();
 
             if(result != 1){
-                throw new DAOException(String.format("CategoryDAO: cannot update category", category));
+                throw new DAOException(String.format("Error cannot update category: ", category.getName()));
             }
         }
     }
