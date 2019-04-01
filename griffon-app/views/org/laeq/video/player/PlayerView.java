@@ -7,6 +7,7 @@ import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.SetChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -171,6 +172,17 @@ public class PlayerView extends TranslatedView {
         mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
             iconPane.setPrefWidth(newValue.getWidth());
             iconPane.setPrefHeight(newValue.getHeight());
+        });
+
+        editor.isPlayingProperty().addListener((observable, oldValue, newValue) -> {
+            runInsideUISync(() -> {
+                if(newValue.booleanValue()){
+                    playActionTarget.setGraphic(playerIcons.get(pauseStr));
+                } else {
+                    playActionTarget.setGraphic(playerIcons.get(playStr));
+                }
+            });
+
         });
     }
 
