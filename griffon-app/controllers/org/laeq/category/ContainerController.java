@@ -6,15 +6,18 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import org.apache.batik.transcoder.TranscoderException;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.CategoryDAO;
 import org.laeq.db.DAOException;
+import org.laeq.icon.IconService;
 import org.laeq.model.Category;
 import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +27,7 @@ public class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull private ContainerModel model;
     @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
+    @Inject private IconService iconService;
 
     private CategoryDAO categoryDAO;
 
@@ -54,8 +58,9 @@ public class ContainerController extends AbstractGriffonController {
             categoryDAO.update(category);
             model.updateCategory(category);
             model.clear();
-        } catch (SQLException | DAOException e) {
-            alert("key to enter");
+            iconService.createPNG(category);
+        } catch (SQLException | DAOException | IOException | TranscoderException e) {
+            alert("Failed to update category: " + category);
         }
     }
 
@@ -65,7 +70,8 @@ public class ContainerController extends AbstractGriffonController {
             categoryDAO.insert(category);
             model.addCategory(category);
             model.clear();
-        } catch (DAOException e) {
+            iconService.createPNG(category);
+        } catch (DAOException | IOException | TranscoderException e) {
             alert("Failed to create category: " + category);
         }
     }

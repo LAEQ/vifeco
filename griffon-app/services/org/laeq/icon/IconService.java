@@ -71,10 +71,10 @@ public class IconService extends AbstractGriffonService {
         ostream.close();
 
         transcoder = new PNGTranscoder();
-        transcoder.addTranscodingHint(PNGTranscoder.KEY_WIDTH, 30f);
-        transcoder.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, 30f);
+        transcoder.addTranscodingHint(PNGTranscoder.KEY_WIDTH, 20f);
+        transcoder.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, 20f);
 
-        input = new TranscoderInput(buildDocument(category, 15, category.getColor(), "white"));
+        input = new TranscoderInput(buildDocument(category, 10, category.getColor(), "white"));
         exportPath = getImagePath(category, "_small_off");
         newFile = new File(exportPath);
         ostream = new FileOutputStream(newFile);
@@ -83,7 +83,7 @@ public class IconService extends AbstractGriffonService {
         ostream.flush();
         ostream.close();
 
-        input = new TranscoderInput(buildDocument(category, 15, "white", category.getColor()));
+        input = new TranscoderInput(buildDocument(category, 10, "white", category.getColor()));
         exportPath = getImagePath(category, "_small_on");
         newFile = new File(exportPath);
         ostream = new FileOutputStream(newFile);
@@ -167,7 +167,7 @@ public class IconService extends AbstractGriffonService {
         element.setAttribute("d", category.getIcon());
 
         element.setAttribute("style", "fill:" + color1 + ";");
-        element.setAttribute("transform", "translate(1.6 , 1.6)");
+        element.setAttribute("transform", "translate(1.6 , 1.6) scale(0.7, 0.7)");
         svgRoot.appendChild(circle(doc, width, width, width, color2));
         svgRoot.appendChild(element);
 
