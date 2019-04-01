@@ -5,7 +5,6 @@ import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Preferences;
-import org.laeq.model.Video;
 import org.laeq.settings.Settings;
 
 import java.io.File;

@@ -24,7 +24,6 @@ import org.laeq.VifecoView;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.icon.Color;
-import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconPointPNG;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.video.VideoService;
@@ -171,6 +170,17 @@ public class PlayerView extends TranslatedView {
         mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
             iconPane.setPrefWidth(newValue.getWidth());
             iconPane.setPrefHeight(newValue.getHeight());
+        });
+
+        editor.isPlayingProperty().addListener((observable, oldValue, newValue) -> {
+            runInsideUISync(() -> {
+                if(newValue.booleanValue()){
+                    playActionTarget.setGraphic(playerIcons.get(pauseStr));
+                } else {
+                    playActionTarget.setGraphic(playerIcons.get(playStr));
+                }
+            });
+
         });
     }
 

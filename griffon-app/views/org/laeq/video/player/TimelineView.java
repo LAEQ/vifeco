@@ -6,6 +6,7 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.SetChangeListener;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -14,8 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Point;
-import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconPointPNG;
 
 import javax.annotation.Nonnull;
@@ -27,6 +26,8 @@ public class TimelineView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private ContainerView parentView;
     @MVCMember @Nonnull private VideoEditor editor;
 
+    private Point2D mousePosition;
+
     private final VideoTimeline timeline = new VideoTimeline();
     private final Line line = new Line(0,0,0,160);
     private final Line durationLine = new Line(0,0,0,160);
@@ -37,7 +38,7 @@ public class TimelineView extends AbstractJavaFXGriffonView {
     private final SetChangeListener<IconPointPNG> timelinePaneListener;
     private final EventHandler<MouseEvent> mouseEnterListener;
     private final EventHandler<? super MouseEvent> mouseExitedListener;
-    private final EventHandler<? super MouseEvent> mouseClickListener;
+    private double dragDistance = 0.0;
 
     public TimelineView(){
         pane = new Pane();
@@ -65,15 +66,7 @@ public class TimelineView extends AbstractJavaFXGriffonView {
             }
         };
         mouseExitedListener = event -> editor.reset();
-        mouseClickListener = event -> {
-            Node node = (Node) event.getTarget();
-            if(node.getParent() instanceof IconPointPNG){
-                Point point = editor.deleteTimelineIcon((IconPointPNG) node.getParent());
-                if(point != null){
-                    controller.deletePoint(point);
-                }
-            }
-        };
+
         timelinePaneListener = change -> {
             if (change.wasAdded()) {
                 timeline.addIcon(change.getElementAdded());
@@ -103,13 +96,32 @@ public class TimelineView extends AbstractJavaFXGriffonView {
 
         timeline.getGroup().setOnMouseEntered(mouseEnterListener);
         timeline.getGroup().setOnMouseExited(mouseExitedListener);
-        timeline.getGroup().setOnMouseClicked(mouseClickListener);
 
         init();
         editor.play();
         editor.play();
 
         parentView.getTimelinePane().getChildren().add(pane);
+
+        pane.setOnMouseDragged(event -> {
+            if(mousePosition == null){
+                mousePosition = new Point2D(event.getX() , 0);
+            } else {
+                double diff = mousePosition.getX() - event.getX();
+
+                if(diff < 0){
+                    editor.seekPlus(50);
+                } else {
+                    editor.seekMinus(50);
+                }
+
+                mousePosition = new Point2D(event.getX() , 0);
+            }
+        });
+
+        pane.setOnMouseDragReleased(event -> {
+            mousePosition = null;
+        });
     }
 
     public void init() {
@@ -132,6 +144,5 @@ public class TimelineView extends AbstractJavaFXGriffonView {
         editor.getTimelinePane().removeListener(timelinePaneListener);
         timeline.getGroup().removeEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnterListener);
         timeline.getGroup().removeEventHandler(MouseEvent.MOUSE_EXITED, mouseExitedListener);
-        timeline.getGroup().removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickListener);
     }
 }
