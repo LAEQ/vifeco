@@ -37,7 +37,6 @@ public class TimelineView extends AbstractJavaFXGriffonView {
     private final SetChangeListener<IconPointPNG> timelinePaneListener;
     private final EventHandler<MouseEvent> mouseEnterListener;
     private final EventHandler<? super MouseEvent> mouseExitedListener;
-    private final EventHandler<? super MouseEvent> mouseClickListener;
 
     public TimelineView(){
         pane = new Pane();
@@ -65,15 +64,7 @@ public class TimelineView extends AbstractJavaFXGriffonView {
             }
         };
         mouseExitedListener = event -> editor.reset();
-        mouseClickListener = event -> {
-            Node node = (Node) event.getTarget();
-            if(node.getParent() instanceof IconPointPNG){
-                Point point = editor.deleteTimelineIcon((IconPointPNG) node.getParent());
-                if(point != null){
-                    controller.deletePoint(point);
-                }
-            }
-        };
+
         timelinePaneListener = change -> {
             if (change.wasAdded()) {
                 timeline.addIcon(change.getElementAdded());
@@ -103,7 +94,6 @@ public class TimelineView extends AbstractJavaFXGriffonView {
 
         timeline.getGroup().setOnMouseEntered(mouseEnterListener);
         timeline.getGroup().setOnMouseExited(mouseExitedListener);
-        timeline.getGroup().setOnMouseClicked(mouseClickListener);
 
         init();
         editor.play();
@@ -132,6 +122,5 @@ public class TimelineView extends AbstractJavaFXGriffonView {
         editor.getTimelinePane().removeListener(timelinePaneListener);
         timeline.getGroup().removeEventHandler(MouseEvent.MOUSE_ENTERED, mouseEnterListener);
         timeline.getGroup().removeEventHandler(MouseEvent.MOUSE_EXITED, mouseExitedListener);
-        timeline.getGroup().removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickListener);
     }
 }

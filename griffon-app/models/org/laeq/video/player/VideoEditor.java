@@ -324,4 +324,8 @@ public class VideoEditor {
     public void setImageViewMap(Map<Category, Image[]> imageViewMap) {
         this.imageViewMap = imageViewMap;
     }
+
+    public SimpleBooleanProperty isPlayingProperty() {
+        return isPlaying;
+    }
 }
