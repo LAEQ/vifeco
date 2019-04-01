@@ -18,6 +18,9 @@ import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -43,6 +46,20 @@ public class IconService extends AbstractGriffonService {
             "icons/iconmonstr-car-23-64.png",
             "icons/icon-car-elec-blk-64.png",
     };
+
+    public IconService(){
+        String svgPath = Settings.svgPath;
+
+        Path path = Paths.get(svgPath);
+
+        if(!Files.exists(path)){
+            try {
+                Files.createDirectories(path);
+            } catch (IOException e) {
+                getLog().error(e.getMessage());
+            }
+        }
+    }
 
     public void createPNG(Category category) throws IOException, TranscoderException {
         JPEGTranscoder t = new JPEGTranscoder();

@@ -14,7 +14,6 @@ import org.laeq.icon.IconService;
 import org.laeq.model.Category;
 import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
@@ -28,7 +27,6 @@ public class ContainerController extends AbstractGriffonController {
     @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
     @Inject private IconService iconService;
-
     private CategoryDAO categoryDAO;
 
     @Override
@@ -60,7 +58,8 @@ public class ContainerController extends AbstractGriffonController {
             model.clear();
             iconService.createPNG(category);
         } catch (SQLException | DAOException | IOException | TranscoderException e) {
-            alert("Failed to update category: " + category);
+            getLog().error(e.getMessage());
+            alert("Failed to update category: " + category.getName());
         }
     }
 
@@ -72,7 +71,8 @@ public class ContainerController extends AbstractGriffonController {
             model.clear();
             iconService.createPNG(category);
         } catch (DAOException | IOException | TranscoderException e) {
-            alert("Failed to create category: " + category);
+            getLog().error(e.getMessage());
+            alert("Failed to create category: " + category.getName());
         }
     }
 
@@ -97,8 +97,8 @@ public class ContainerController extends AbstractGriffonController {
             categoryDAO.delete(category);
             model.delete(category);
         } catch (DAOException e) {
+            getLog().error(e.getMessage());
             dialogService.simpleAlert("org.laeq.title.error", e.getMessage());
         }
-
     }
 }
