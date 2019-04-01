@@ -107,9 +107,6 @@ public class ContainerView extends TranslatedView {
         categoryGroupMap = new HashMap<>();
         videoTable.setEditable(true);
 
-        TableColumn<Video, Void> selectBox = new TableColumn<>("#");
-        selectBox.setPrefWidth(30);
-
         TableColumn<Video, String> dateColumn = new TableColumn<>("Created At");
         TableColumn<Video, String> pathColumn = new TableColumn("Name");
         userColumn = new TableColumn<>("User");
@@ -126,9 +123,8 @@ public class ContainerView extends TranslatedView {
         columnsMap.put(totalColumn, "org.laeq.video.column.total");
         columnsMap.put(lastPointColumn, "org.laeq.video.column.last_point");
 
-        videoTable.getColumns().addAll(selectBox, dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn, lastPointColumn);
+        videoTable.getColumns().addAll(dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn, lastPointColumn);
 
-        selectBox.setCellFactory(addSelectBox());
         dateColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getCreatedFormatted()));
         pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty().asString());
@@ -153,31 +149,6 @@ public class ContainerView extends TranslatedView {
 
             }
         });
-    }
-
-    private Callback<TableColumn<Video, Void>, TableCell<Video, Void>> addSelectBox() {
-        return param -> {
-            final  TableCell<Video, Void> cell = new TableCell<Video, Void>(){
-                CheckBox selectBox = new CheckBox("");
-
-                Group btnGroup = new Group();
-                {
-                    btnGroup.getChildren().addAll(selectBox);
-                }
-
-                @Override
-                public void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        setGraphic(btnGroup);
-                    }
-                }
-            };
-
-            return cell;
-        };
     }
 
     private ChangeListener<String> filtering(){

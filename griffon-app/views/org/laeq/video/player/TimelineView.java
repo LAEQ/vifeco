@@ -16,6 +16,7 @@ import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Point;
 import org.laeq.model.icon.IconPointColorized;
+import org.laeq.model.icon.IconPointPNG;
 
 import javax.annotation.Nonnull;
 
@@ -33,7 +34,7 @@ public class TimelineView extends AbstractJavaFXGriffonView {
     private final Pane pane;
     private final ChangeListener<Number> widthPropertyListener;
     private final ChangeListener<Duration> currentTimeListener;
-    private final SetChangeListener<IconPointColorized> timelinePaneListener;
+    private final SetChangeListener<IconPointPNG> timelinePaneListener;
     private final EventHandler<MouseEvent> mouseEnterListener;
     private final EventHandler<? super MouseEvent> mouseExitedListener;
     private final EventHandler<? super MouseEvent> mouseClickListener;
@@ -59,15 +60,15 @@ public class TimelineView extends AbstractJavaFXGriffonView {
 
             Node node = event.getPickResult().getIntersectedNode();
 
-            if(node.getParent() instanceof IconPointColorized){
-                editor.reset((IconPointColorized)node.getParent());
+            if(node.getParent() instanceof IconPointPNG){
+                editor.reset((IconPointPNG)node.getParent());
             }
         };
         mouseExitedListener = event -> editor.reset();
         mouseClickListener = event -> {
             Node node = (Node) event.getTarget();
-            if(node.getParent() instanceof IconPointColorized){
-                Point point = editor.deleteTimelineIcon((IconPointColorized) node.getParent());
+            if(node.getParent() instanceof IconPointPNG){
+                Point point = editor.deleteTimelineIcon((IconPointPNG) node.getParent());
                 if(point != null){
                     controller.deletePoint(point);
                 }

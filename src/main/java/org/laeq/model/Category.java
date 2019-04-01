@@ -2,6 +2,7 @@ package org.laeq.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.File;
 import java.util.Objects;
 
 @JsonIgnoreProperties({"createdAt", "updatedAt" })

@@ -25,6 +25,7 @@ import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconPointColorized;
+import org.laeq.model.icon.IconPointPNG;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.video.VideoService;
 
@@ -93,7 +94,7 @@ public class PlayerView extends TranslatedView {
             nodeOver = (Node)(mouseEvent.getTarget());
         };
 
-        editor.getVideoPane().addListener((SetChangeListener<IconPointColorized>) change -> {
+        editor.getVideoPane().addListener((SetChangeListener<IconPointPNG>) change -> {
             if(change.wasAdded()){
                 change.getElementAdded().setOpacity(model.getOpacity());
                 change.getElementAdded().setScaleX(model.getSize() / 100);
@@ -291,8 +292,8 @@ public class PlayerView extends TranslatedView {
             return;
         }
 
-        if((event.getCode().equals(KeyCode.ESCAPE) || event.getCode().equals(KeyCode.DELETE)) && nodeOver !=  null && nodeOver.getParent() instanceof IconPointColorized){
-            Point point = editor.deleteVideoIcon((IconPointColorized)(nodeOver.getParent()));
+        if((event.getCode().equals(KeyCode.ESCAPE) || event.getCode().equals(KeyCode.DELETE)) && nodeOver !=  null && nodeOver.getParent() instanceof IconPointPNG){
+            Point point = editor.deleteVideoIcon((IconPointPNG) (nodeOver.getParent()));
 
             if(point != null){
                 controller.deletePoint(point);

@@ -11,6 +11,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.laeq.CRUDController;
 import org.laeq.db.*;
+import org.laeq.icon.IconService;
+import org.laeq.model.Category;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
@@ -24,6 +26,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends CRUDController<Video> {
@@ -32,6 +35,7 @@ public class ContainerController extends CRUDController<Video> {
 
     @Inject private MariaService dbService;
     @Inject private ExportService exportService;
+    @Inject private IconService iconService;
 
     private VideoDAO videoDAO;
     private UserDAO userDAO;
@@ -47,10 +51,12 @@ public class ContainerController extends CRUDController<Video> {
         categoryDAO = dbService.getCategoryDAO();
         pointDAO = dbService.getPointDAO();
 
+        Set<Category> categorySet = categoryDAO.findAll();
+
         model.getVideoList().addAll(videoDAO.findAll());
         model.getUserSet().addAll(userDAO.findAll());
         model.getCollectionSet().addAll(ccDAO.findAll());
-        model.addCategories(categoryDAO.findAll());
+        model.addCategories(categorySet);
 
         view.initForm();
 

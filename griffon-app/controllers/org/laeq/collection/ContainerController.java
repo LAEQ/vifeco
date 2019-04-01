@@ -39,11 +39,12 @@ public class ContainerController extends CRUDController<Collection> {
                 collectionDAO.save(collection);
                 model.update(collection);
             } catch (DAOException e) {
+                getLog().error(e.getMessage());
                 alert("org.laeq.title.error", e.getMessage());
             }
 
         } else {
-            System.out.println(model.getErrors());
+            getLog().error(model.getErrors());
             alert("org.laeq.model.collection.form.alert.title", model.getErrors());
         }
     }
@@ -61,6 +62,7 @@ public class ContainerController extends CRUDController<Collection> {
                     collectionDAO.delete(collection);
                     this.model.delete(collection);
                 } catch (DAOException e) {
+                    getLog().error(e.getMessage());
                     alert("org.laeq.dao.error", String.format("Cannot deleteVideoIcon %s", collection));
                 }
             }
