@@ -124,7 +124,7 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
             statement.setString(1, collection.getName());
 
             if(statement.executeUpdate() != 1)
-                throw new DAOException("Cannot update category collection name");
+                throw new DAOException("Cannot updateTranslation category collection name");
 
 
             //Bug hsqldb no support Array type

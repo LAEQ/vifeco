@@ -3,11 +3,9 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import griffon.transform.Threading;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,22 +13,22 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.util.Callback;
 import org.laeq.TranslatedView;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
-import org.laeq.model.icon.*;
+import org.laeq.model.icon.IconCounter;
+import org.laeq.model.icon.IconCounterMatrice;
+import org.laeq.model.icon.IconSVG;
+import org.laeq.model.icon.IconSquare;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ContainerView extends TranslatedView {

@@ -141,7 +141,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             int result = stmt.executeUpdate();
 
             if(result != 1){
-                throw new DAOException("UserDAO: cannot update.");
+                throw new DAOException("UserDAO: cannot updateTranslation.");
             }
         }
 
@@ -160,7 +160,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             int result = stmt.executeUpdate();
 
             if(result != 1){
-                throw new DAOException("UserDAO: cannot update.");
+                throw new DAOException("UserDAO: cannot updateTranslation.");
             }
         }
 
@@ -178,7 +178,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             int result = stmt.executeUpdate();
 
             if(result != 1){
-                throw new DAOException("VideoDAO: cannot update. USER_ID");
+                throw new DAOException("VideoDAO: cannot updateTranslation. USER_ID");
             }
         }
     }
@@ -195,7 +195,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
             int result = stmt.executeUpdate();
 
             if(result != 1){
-                throw new DAOException("VideoDAO: cannot update COLLECTION_ID");
+                throw new DAOException("VideoDAO: cannot updateTranslation COLLECTION_ID");
             }
         }
     }

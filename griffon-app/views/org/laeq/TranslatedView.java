@@ -25,7 +25,7 @@ public class TranslatedView extends AbstractJavaFXGriffonView {
 
     }
 
-    protected void translate(){
+    public void translate(){
         textFields.entrySet().forEach(t -> {
             t.getKey().setText(getTranslation(t.getValue()));
         });

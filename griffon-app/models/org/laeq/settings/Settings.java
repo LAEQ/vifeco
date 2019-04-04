@@ -8,4 +8,5 @@ public class Settings {
     public static String exportPath = String.format("%s%s%s",defaultPath,File.separator, "export");
     public static String svgPath = String.format("%s%s%s",defaultPath, File.separator, "svg");
 
+
 }

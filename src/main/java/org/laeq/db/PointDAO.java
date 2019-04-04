@@ -8,7 +8,6 @@ import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
 import java.sql.*;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;

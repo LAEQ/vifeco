@@ -46,8 +46,10 @@
               </Menu>
           </menus>
       </MenuBar>
-      <AnchorPane prefHeight="69.0" prefWidth="1366.0" maxHeight="69.0" fx:id="subMenuPane">
-         <children></children>
+      <AnchorPane fx:id="subMenuPane" maxHeight="69.0" prefHeight="69.0" prefWidth="1366.0">
+         <children>
+            <ChoiceBox fx:id="languageMenu" layoutX="1202.0" layoutY="22.0" prefWidth="150.0" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="10.0" />
+         </children>
       </AnchorPane>
    </children>
 </VBox>

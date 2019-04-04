@@ -2,29 +2,18 @@ package org.laeq.menu;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-
-import javax.annotation.Nonnull;
+import org.laeq.model.Preferences;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class MenuModel extends AbstractGriffonModel {
-    private StringProperty clickCount;
+    private Preferences prefs;
 
-    @Nonnull
-    public final StringProperty clickCountProperty() {
-        if (clickCount == null) {
-            clickCount = new SimpleStringProperty(this, "clickCount", "0");
-        }
-        return clickCount;
+    public Preferences getPrefs() {
+        return prefs;
     }
 
-    public void setClickCount(String clickCount) {
-        clickCountProperty().set(clickCount);
-    }
-
-    public String getClickCount() {
-        return clickCountProperty().get();
+    public void setPrefs(Preferences prefs) {
+        this.prefs = prefs;
     }
 }

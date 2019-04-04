@@ -60,7 +60,7 @@ public class ContainerController extends AbstractGriffonController {
             iconService.createPNG(category);
         } catch (SQLException | DAOException | IOException | TranscoderException e) {
             getLog().error(e.getMessage());
-            alert("Failed to update category: " + category.getName());
+            alert("Failed to updateTranslation category: " + category.getName());
         }
     }
 

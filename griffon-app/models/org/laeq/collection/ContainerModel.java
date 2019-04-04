@@ -115,7 +115,7 @@ public class ContainerModel extends AbstractGriffonModel {
             result = false;
         }
 
-        errors = messageSource.getMessage("org.laeq.model.invalid_fields", Locale.CANADA);
+//        errors = messageSource.getMessage("org.laeq.model.invalid_fields", Locale.CANADA);
         errors +=  builder.toString();
 
         return result;
