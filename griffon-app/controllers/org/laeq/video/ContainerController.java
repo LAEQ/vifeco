@@ -94,7 +94,7 @@ public class ContainerController extends CRUDController<Video> {
     }
 
     public void clear(){
-        view.reset();
+        runInsideUISync(() -> view.reset());
     }
 
     public void delete(){
@@ -151,8 +151,12 @@ public class ContainerController extends CRUDController<Video> {
 
     public void updateUser(TableColumn.CellEditEvent<Video, User> event) {
         try {
-            videoDAO.updateUser(event.getRowValue(), event.getNewValue());
-            event.getRowValue().setUser(event.getNewValue());
+            Boolean confirm = confirm("org.laeq.video.user.confirm");
+
+            if(confirm){
+                videoDAO.updateUser(event.getRowValue(), event.getNewValue());
+                event.getRowValue().setUser(event.getNewValue());
+            }
         } catch (SQLException | DAOException e) {
             alert("org.laeq.title.error", e.getMessage());
         }
@@ -160,8 +164,18 @@ public class ContainerController extends CRUDController<Video> {
 
     public void updateCollection(TableColumn.CellEditEvent<Video, Collection> event) {
         try {
-            videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
-            event.getRowValue().setCollection(event.getNewValue());
+            Boolean confirm = confirm("org.laeq.video.collection.confirm");
+
+            if(confirm){
+                videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
+                event.getRowValue().setCollection(event.getNewValue());
+                setCategories(event.getRowValue());
+                pointDAO.updateOnCollectionChange(event.getRowValue());
+                event.getRowValue().getPointSet().clear();
+                event.getRowValue().setTotal(pointDAO.findByVideo(event.getRowValue()).size());
+                runInsideUISync(() -> view.reset());
+            }
+
         } catch (SQLException | DAOException e) {
             alert("org.laeq.title.error", e.getMessage());
         }
@@ -169,10 +183,19 @@ public class ContainerController extends CRUDController<Video> {
 
     public void showDetail() {
         if(model.getSelectedVideo() != null){
-            model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
-            model.getSelectedVideo().getCollection().getCategorySet().addAll(categoryDAO.findByCollection(model.getSelectedVideo().getCollection()));
+            setPoints(model.getSelectedVideo());
+            setCategories(model.getSelectedVideo());
             view.showDetails();
         }
+    }
+
+    private void setPoints(Video video){
+        model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
+    }
+
+    private void setCategories(Video video){
+        Set<Category> categories = categoryDAO.findByCollection(video.getCollection());
+        video.getCollection().getCategorySet().addAll(categories);
     }
 
     private Map<String, RunnableWithArgs> listeners(){

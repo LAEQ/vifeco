@@ -96,6 +96,18 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.edit", objects -> {
             Video video = (Video) objects[0];
 
+            File file = new File(video.getPath());
+
+            if(! file.exists()){
+                getLog().error(String.format("PlayerView: file not exits %s", file));
+                String title = getApplication().getMessageSource().getMessage("org.laeq.title.error");
+                runInsideUISync(() -> {
+                    dialogService.simpleAlert(title, String.format("PlayerView: file not exits %s", file));
+                });
+
+                return;
+            }
+
             VideoEditor editor = null;
             try {
                 editor = new VideoEditor(video, dbService.getPointDAO());
@@ -108,7 +120,18 @@ public class MiddlePaneController extends AbstractGriffonController {
             } catch (IOException | TranscoderException e) {
                 getLog().error(e.getMessage());
                 dialogService.simpleAlert(getApplication().getMessageSource().getMessage("org.laeq.title.error"), e.getMessage());
+            } catch (MediaException | javafx.scene.media.MediaException e) {
+                getLog().error(e.getMessage());
+                String title = getApplication().getMessageSource().getMessage("org.laeq.title.error");
+                String message = getApplication().getMessageSource().getMessage("org.laeq.video.media_file.error");
+                dialogService.simpleAlert(title, message);
+            } catch (Exception e){
+                getLog().error(e.getMessage());
+                String title = getApplication().getMessageSource().getMessage("org.laeq.title.error");
+                String message = getApplication().getMessageSource().getMessage("org.laeq.video.file.error");
+                dialogService.simpleAlert(title, message);
             }
+
         });
 
         return list;

@@ -1,12 +1,14 @@
 package org.laeq.db;
 
 import javafx.util.Duration;
+import org.apache.commons.lang3.StringUtils;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
 import java.sql.*;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -54,6 +56,22 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
         return result;
     }
 
+    public int updateOnCollectionChange(Video video) throws SQLException {
+
+        String query = "DELETE FROM POINT WHERE VIDEO_ID=? AND CATEGORY_ID NOT IN (SELECT CATEGORY_ID FROM CATEGORY_COLLECTION WHERE COLLECTION_ID=?);";
+
+        try(Connection connection = getManager().getConnection();
+        PreparedStatement statement = connection.prepareStatement(query)){
+
+            String ids = StringUtils.join(video.getCollection().getCategoryIds(), ",");
+
+            statement.setInt(1, video.getId());
+            statement.setInt(2, video.getCollection().getId());
+
+            return statement.executeUpdate();
+        }
+    }
+
     public int count() {
         int result = 0;
 
@@ -61,6 +79,29 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query)){
+
+            ResultSet queryResult = statement.executeQuery();
+
+            if(queryResult.next()){
+                result = queryResult.getInt("total");
+            }
+
+        } catch (SQLException e){
+            getLogger().error(e.getMessage());
+        }
+
+        return result;
+    }
+
+    public int count(Video video) {
+        int result = 0;
+
+        String query = "SELECT count(*) AS total FROM POINT WHERE VIDEO_ID=?";
+
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query)){
+
+            statement.setInt(1, video.getId());
 
             ResultSet queryResult = statement.executeQuery();
 

@@ -152,9 +152,12 @@ class VideoDAOTest extends AbstractDAOTest {
         when:
         repository.updateCollection(video, collection)
         def videoUpdated = repository.findAll().find { it.id == 1}
+        def points = pointRepository
+
 
         then:
         videoUpdated.collection.id == 2
+
         noExceptionThrown()
     }
 }

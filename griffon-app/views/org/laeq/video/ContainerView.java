@@ -3,9 +3,11 @@ package org.laeq.video;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import griffon.transform.Threading;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,22 +15,22 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.util.Callback;
 import org.laeq.TranslatedView;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
-import org.laeq.model.icon.IconCounter;
-import org.laeq.model.icon.IconCounterMatrice;
-import org.laeq.model.icon.IconSVG;
-import org.laeq.model.icon.IconSquare;
+import org.laeq.model.icon.*;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ContainerView extends TranslatedView {
@@ -42,11 +44,9 @@ public class ContainerView extends TranslatedView {
     @FXML private Label videoTitleTxt;
     @FXML private Label durationTxt;
     @FXML private Label totalTxt;
-    @FXML private Label lastPointTxt;
     @FXML private Label titleValue;
     @FXML private Label durationValue;
     @FXML private Label totalValue;
-    @FXML private Label lastPointValue;
     @FXML private Group categoryGroup;
     @FXML private TextField filterNameField;
     @FXML private Label filterLabel;
@@ -74,7 +74,6 @@ public class ContainerView extends TranslatedView {
         textFields.put(videoTitleTxt, "org.laeq.video.video_title_text");
         textFields.put(durationTxt, "org.laeq.video.duration_text");
         textFields.put(totalTxt, "org.laeq.video.total_text");
-        textFields.put(lastPointTxt, "org.laeq.video.last_point_text");
         textFields.put(filterLabel, "org.laeq.video.filter_label");
         textFields.put(exportActionTarget, "org.laeq.video.export_btn");
         textFields.put(clearActionTarget, "org.laeq.video.clear_btn");
@@ -101,18 +100,17 @@ public class ContainerView extends TranslatedView {
     }
 
     private void init(){
-        reset();
-
         categoryGroupMap = new HashMap<>();
         videoTable.setEditable(true);
 
+        TableColumn<Video, Number> idColumn = new TableColumn<>("#");
         TableColumn<Video, String> dateColumn = new TableColumn<>("Created At");
         TableColumn<Video, String> pathColumn = new TableColumn("Name");
         userColumn = new TableColumn<>("User");
         TableColumn<Video, String> durationColumn = new TableColumn("Duration");
         collectionColumn = new TableColumn("Collection");
         TableColumn<Video, Number> totalColumn = new TableColumn<>("Total");
-        TableColumn<Video, Number> lastPointColumn = new TableColumn<>("Last point");
+
 
         columnsMap.put(dateColumn, "org.laeq.video.column.created_at");
         columnsMap.put(pathColumn, "org.laeq.video.column.name");
@@ -120,13 +118,13 @@ public class ContainerView extends TranslatedView {
         columnsMap.put(durationColumn, "org.laeq.video.column.duration");
         columnsMap.put(collectionColumn, "org.laeq.video.column.collection");
         columnsMap.put(totalColumn, "org.laeq.video.column.total");
-        columnsMap.put(lastPointColumn, "org.laeq.video.column.last_point");
 
-        videoTable.getColumns().addAll(dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn, lastPointColumn);
+        videoTable.getColumns().addAll(idColumn, dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn);
 
+        idColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(()-> new Integer(param.getValue().getId())));
         dateColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getCreatedFormatted()));
         pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty().asString());
+        durationColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getDurationFormatted()));
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
 
         videoTable.setItems(this.model.getFilteredList());
@@ -145,7 +143,6 @@ public class ContainerView extends TranslatedView {
                 }else{
                     alert("org.laeq.title.error", "org.laeq.video.duration.error");
                 }
-
             }
         });
     }
@@ -153,12 +150,12 @@ public class ContainerView extends TranslatedView {
     private ChangeListener<String> filtering(){
         return (observable, oldValue, newValue) -> {
             model.getFilteredList().setPredicate(video -> {
-                if(newValue == null || newValue.isEmpty()){
+                if((newValue == null || newValue.isEmpty()) && video.isEditable()){
                     return true;
                 }
 
                 String filter = newValue.toLowerCase();
-                if(video.getName().toLowerCase().contains(filter)){
+                if(video.getName().toLowerCase().contains(filter) && video.isEditable()){
                     return true;
                 }
 
@@ -168,6 +165,7 @@ public class ContainerView extends TranslatedView {
     }
 
     public void showDetails() {
+        setCategoryGroup();
         Map<Category, Long> pointsByCategory = this.model.getTotalByCategory();
 
         categoryGroupMap.forEach((category, categoryIcon) -> {
@@ -186,7 +184,6 @@ public class ContainerView extends TranslatedView {
         titleValue.setText(model.getSelectedVideo().getName());
         durationValue.setText(model.getSelectedVideo().getDurationFormatted());
         totalValue.setText(String.format("%d", model.getSelectedVideo().totalPoints()));
-        lastPointValue.setText("to do");
     }
 
     public void initForm(){
@@ -202,24 +199,27 @@ public class ContainerView extends TranslatedView {
         collectionColumn.setMinWidth(140);
         collectionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
         collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));
+    }
 
-        IconCounterMatrice matrix = new IconCounterMatrice(model.getCategorySet());
-        categoryGroupMap = matrix.getIconMap();
+    private void setCategoryGroup(){
+        if(this.model.getSelectedVideo() instanceof Video){
+            IconCounterMatrice matrix = new IconCounterMatrice(this.model.getSelectedVideo().getCollection().getCategorySet());
+            categoryGroupMap = matrix.getIconMap();
 
-        categoryGroup.getChildren().addAll(matrix.getIconMap().values());
+            categoryGroup.getChildren().addAll(matrix.getIconMap().values());
+        }
     }
 
     public void reset() {
         titleValue.setText("");
         durationValue.setText("");
         totalValue.setText("");
-        lastPointValue.setText("");
 
-        model.getCategorySet().forEach(c -> {
-            categoryGroupMap.get(c).setText("-");
-        });
+        categoryGroupMap.clear();
 
+        videoTable.refresh();
         videoTable.getSelectionModel().clearSelection();
+        categoryGroup.getChildren().clear();
     }
 
     public void refresh() {

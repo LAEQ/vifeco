@@ -19,7 +19,7 @@ import java.util.Set;
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
     private ObservableList<Video> videoList = FXCollections.observableArrayList();
-    private FilteredList<Video> filteredList = new FilteredList<>(videoList, p -> true);
+    private FilteredList<Video> filteredList = new FilteredList<>(videoList, p -> p.isEditable());
 
     private Set<User> userSet = new HashSet<>();
     private Set<Collection> collectionSet = new HashSet<>();
@@ -57,7 +57,6 @@ public class ContainerModel extends AbstractGriffonModel {
     }
 
     public void update(Video video) {
-        System.out.println(video);
         this.selectedVideo.setUser(video.getUser());
         this.selectedVideo.setCollection(video.getCollection());
     }

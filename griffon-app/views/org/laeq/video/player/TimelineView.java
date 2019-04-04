@@ -110,9 +110,9 @@ public class TimelineView extends AbstractJavaFXGriffonView {
                 double diff = mousePosition.getX() - event.getX();
 
                 if(diff < 0){
-                    editor.seekPlus(50);
-                } else {
                     editor.seekMinus(50);
+                } else {
+                    editor.seekPlus(50);
                 }
 
                 mousePosition = new Point2D(event.getX() , 0);

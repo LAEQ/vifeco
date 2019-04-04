@@ -13,6 +13,7 @@ class AbstractDAOTest extends Specification {
     def setupSpec() {
         DBConfigurationBuilder config = DBConfigurationBuilder.newBuilder();
         config.setPort(0)
+
         db = DB.newEmbeddedDB(config.build())
 
         db.start()
