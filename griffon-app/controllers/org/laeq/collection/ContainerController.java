@@ -1,5 +1,6 @@
 package org.laeq.collection;
 
+import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
@@ -12,6 +13,8 @@ import org.laeq.service.MariaService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -28,6 +31,8 @@ public class ContainerController extends CRUDController<Collection> {
         model.addCategories(categoryDAO.findAll());
 
         view.initForm();
+
+        getApplication().getEventRouter().addEventListener(listeners());
     }
 
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
@@ -67,5 +72,17 @@ public class ContainerController extends CRUDController<Collection> {
                 }
             }
         });
+    }
+
+    private Map<String, RunnableWithArgs> listeners() {
+        Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        list.put("change.language", objects -> {
+            Locale locale = (Locale) objects[0];
+            model.getPreferences().locale = locale;
+            view.changeLocale();
+        });
+
+        return list;
     }
 }

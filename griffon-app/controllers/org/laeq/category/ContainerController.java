@@ -14,17 +14,21 @@ import org.laeq.icon.IconService;
 import org.laeq.model.Category;
 import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
+import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull private ContainerModel model;
+    @MVCMember @Nonnull private ContainerView view;
+
     @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
     @Inject private IconService iconService;
@@ -34,6 +38,8 @@ public class ContainerController extends AbstractGriffonController {
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         categoryDAO = dbService.getCategoryDAO();
         model.getCategoryList().addAll(categoryDAO.findAll());
+
+        getApplication().getEventRouter().addEventListener(listeners());
     }
 
     @ControllerAction
@@ -85,6 +91,13 @@ public class ContainerController extends AbstractGriffonController {
 
     private Map<String, RunnableWithArgs> listeners() {
         Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        list.put("change.language", objects -> {
+            Locale locale = (Locale) objects[0];
+            model.prefs.locale = locale;
+            view.changeLocale(locale);
+        });
+
 
         return list;
     }

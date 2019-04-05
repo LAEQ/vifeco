@@ -32,5 +32,7 @@ build
 out
 target
 
+venv/
+
 # HSQLDB #
 *.iml

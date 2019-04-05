@@ -23,10 +23,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends CRUDController<Video> {
@@ -213,6 +210,12 @@ public class ContainerController extends CRUDController<Video> {
                 model.getVideoList().add(video);
                 getVideoDuration(video);
             });
+        });
+
+        list.put("change.language", objects -> {
+            Locale locale = (Locale) objects[0];
+            model.getPrefs().locale = locale;
+            view.changeLocale(locale);
         });
 
         return list;

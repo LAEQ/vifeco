@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import org.laeq.TranslatedView;
+import org.laeq.TranslationService;
 import org.laeq.model.Category;
 import org.laeq.model.CategoryCheckedBox;
 import org.laeq.model.Collection;
@@ -19,8 +20,11 @@ import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconDescriptorMatrice;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
+import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.io.IOException;
 import java.util.Set;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -38,8 +42,12 @@ public class ContainerView extends TranslatedView {
     @FXML private Button saveActionTarget;
     @FXML private Button clearActionTarget;
 
+    @Inject private PreferencesService preferencesService;
+    private TranslationService translationService;
+
     @Override
     public void initUI() {
+        model.setPreferences(preferencesService.getPreferences());
         Node node = loadFromFXML();
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
         connectActions(node, controller);
@@ -52,7 +60,7 @@ public class ContainerView extends TranslatedView {
         textFields.put(saveActionTarget, "org.laeq.collection.save_btn");
         textFields.put(clearActionTarget, "org.laeq.collection.clear_btn");
 
-        translate();
+        setTranslatedText();
     }
 
     private void init(){
@@ -97,6 +105,32 @@ public class ContainerView extends TranslatedView {
 
             categoryContainer.getChildren().add(checkedBox);
             checkedBox.getBox().selectedProperty().bindBidirectional(model.getSBP(category));
+        }
+    }
+
+    public void changeLocale() {
+        runInsideUISync(() -> {
+            setTranslatedText();
+        });
+    }
+
+    private void setTranslatedText(){
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPreferences().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
+
+        try{
+            textFields.entrySet().forEach(t -> {
+                t.getKey().setText(translationService.getMessage(t.getValue()));
+            });
+
+            columnsMap.entrySet().forEach( t -> {
+                t.getKey().setText(translationService.getMessage(t.getValue()));
+            });
+        } catch (Exception e){
+            getLog().error(e.getMessage());
         }
     }
 
@@ -174,7 +208,6 @@ public class ContainerView extends TranslatedView {
             return cell;
         };
     }
-
     public void clear() {
         translate(titleLabel, "org.laeq.collection.title_create");
     }

@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
+import org.laeq.model.Preferences;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -24,6 +25,8 @@ public class ContainerModel extends AbstractGriffonModel {
     private SimpleBooleanProperty isDefault = new SimpleBooleanProperty(this, "isDefault", false);
     private SimpleStringProperty name = new SimpleStringProperty(this, "name", "");
     private Collection selectedCollection;
+
+    private Preferences preferences;
 
     private String errors = "";
 
@@ -160,5 +163,13 @@ public class ContainerModel extends AbstractGriffonModel {
 
     public void delete(Collection collection) {
         collections.remove(collection);
+    }
+
+    public Preferences getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(Preferences preferences) {
+        this.preferences = preferences;
     }
 }

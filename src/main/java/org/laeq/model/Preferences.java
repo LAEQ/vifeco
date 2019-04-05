@@ -1,6 +1,7 @@
 package org.laeq.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -28,6 +29,12 @@ public class Preferences {
         localAvailables.add(new Locale("es", "ES"));
     }
 
+    @JsonIgnore
+    public int getLocalIndex(){
+        return localAvailables.indexOf(locale);
+    }
+
+    @JsonIgnore
     public void setLocaleByIndex(int index){
         locale = localAvailables.get(index);
     }

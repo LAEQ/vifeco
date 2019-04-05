@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import org.laeq.TranslatedView;
+import org.laeq.TranslationService;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
@@ -24,10 +25,13 @@ import org.laeq.model.icon.IconSVG;
 import org.laeq.model.icon.IconSquare;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
+import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -60,9 +64,14 @@ public class ContainerView extends TranslatedView {
     private TableColumn<Video, Collection> collectionColumn;
 
     @Inject private DialogService dialogService;
+    @Inject private PreferencesService prefService;
+
+    private TranslationService translationService;
 
     @Override
     public void initUI() {
+        model.setPrefs(prefService.getPreferences());
+
         Node node = loadFromFXML();
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
         connectActions(node, controller);
@@ -78,23 +87,48 @@ public class ContainerView extends TranslatedView {
         textFields.put(deleteActionTarget, "org.laeq.video.delete_btn");
         textFields.put(editActionTarget, "org.laeq.video.edit_btn");
 
-        IconSquare exportIcon = new IconSquare(new Category("export", IconSVG.export, "#FFFFFFFF", "A"));
-        exportIcon.decorate();
-        exportActionTarget.setGraphic(exportIcon);
+//        IconSquare exportIcon = new IconSquare(new Category("export", IconSVG.export, "#FFFFFFFF", "A"));
+//        exportIcon.decorate();
+//        exportActionTarget.setGraphic(exportIcon);
 
-        IconSquare deleteIcon = new IconSquare(new Category("delete", IconSVG.trash, "#FFFFFFFF", "A"));
-        deleteIcon.decorate();
-        deleteActionTarget.setGraphic(deleteIcon);
+//        IconSquare deleteIcon = new IconSquare(new Category("delete", IconSVG.trash, "#FFFFFFFF", "A"));
+//        deleteIcon.decorate();
+//        deleteActionTarget.setGraphic(deleteIcon);
 
-        IconSquare editIcon = new IconSquare(new Category("delete", IconSVG.edit, "#FFFFFFFF", "A"));
-        editIcon.decorate();
-        editActionTarget.setGraphic(editIcon);
+//        IconSquare editIcon = new IconSquare(new Category("delete", IconSVG.edit, "#FFFFFFFF", "A"));
+//        editIcon.decorate();
+//        editActionTarget.setGraphic(editIcon);
 
-        IconSquare clearIcon = new IconSquare(new Category("clear", IconSVG.clear, "#000000FF", "A"));
-        clearIcon.decorate();
-        clearActionTarget.setGraphic(clearIcon);
+//        IconSquare clearIcon = new IconSquare(new Category("clear", IconSVG.clear, "#000000FF", "A"));
+//        clearIcon.decorate();
+//        clearActionTarget.setGraphic(clearIcon);
 
-        translate();
+        changeLocale(model.getPrefs().locale);
+    }
+
+    public void changeLocale(Locale locale) {
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
+
+        setTranslatedText();
+    }
+
+    private void setTranslatedText(){
+        try{
+            textFields.entrySet().forEach(t -> {
+                System.out.println(t.getKey() + " : " + t.getValue());
+                t.getKey().setText(translationService.getMessage(t.getValue()));
+            });
+
+            columnsMap.entrySet().forEach( t -> {
+                t.getKey().setText(translationService.getMessage(t.getValue()));
+            });
+        } catch (Exception e){
+            getLog().error("icit: " + e.getMessage());
+        }
     }
 
     private void init(){

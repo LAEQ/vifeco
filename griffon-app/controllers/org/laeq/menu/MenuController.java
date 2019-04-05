@@ -186,7 +186,6 @@ public class MenuController extends AbstractGriffonController {
     }
 
     public void changeLanguage() {
-        getApplication().getEventRouter().publishEventAsync("change.language", Arrays.asList(model.getPrefs().locale));
-        view.updateTranslation();
+        getApplication().getEventRouter().publishEvent("change.language", Arrays.asList(model.getPrefs().locale));
     }
 }

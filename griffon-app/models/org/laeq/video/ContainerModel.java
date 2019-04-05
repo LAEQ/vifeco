@@ -6,10 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-import org.laeq.model.Category;
-import org.laeq.model.Collection;
-import org.laeq.model.User;
-import org.laeq.model.Video;
+import org.laeq.model.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,6 +22,7 @@ public class ContainerModel extends AbstractGriffonModel {
     private Set<Collection> collectionSet = new HashSet<>();
     private Video selectedVideo;
     private String errors = "";
+    private Preferences prefs;
 
     public FilteredList<Video> getFilteredList() {
         return filteredList;
@@ -80,5 +78,13 @@ public class ContainerModel extends AbstractGriffonModel {
     public void deleteVideo() {
         videoList.remove(this.selectedVideo);
         this.selectedVideo = null;
+    }
+
+    public void setPrefs(Preferences preferences) {
+        this.prefs = preferences;
+    }
+
+    public Preferences getPrefs() {
+        return prefs;
     }
 }

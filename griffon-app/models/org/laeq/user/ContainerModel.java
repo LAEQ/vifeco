@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.laeq.model.Preferences;
 import org.laeq.model.User;
 
 import java.util.Collection;
@@ -24,6 +25,8 @@ public class ContainerModel extends AbstractGriffonModel {
     private String errors = "";
 
     private User selectedUser;
+
+    private Preferences prefs;
 
 
     public ObservableList<User> getUserList() {
@@ -158,5 +161,21 @@ public class ContainerModel extends AbstractGriffonModel {
 
     public void delete(User user) {
         userList.remove(user);
+    }
+
+    public Preferences getPrefs() {
+        return prefs;
+    }
+
+    public void setPrefs(Preferences prefs) {
+        this.prefs = prefs;
+    }
+
+    public void clear() {
+        this.selectedUser = null;
+        setId(0);
+        setFirstName("");
+        setLastName("");
+        setEmail("");
     }
 }

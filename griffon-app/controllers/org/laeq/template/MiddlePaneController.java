@@ -49,7 +49,6 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.section", objects -> createGroup("video_container"));
         list.put("database.section", objects -> createGroup("status"));
         list.put("statistic.section", objects -> createGroup("statistic_container"));
-
         list.put("video.create", objects -> {
             File videoFile = (File) objects[0];
                 if (videoFile.exists()) {
@@ -111,7 +110,6 @@ public class MiddlePaneController extends AbstractGriffonController {
             VideoEditor editor = null;
             try {
                 editor = new VideoEditor(video, dbService.getPointDAO());
-
                 editor.setImageViewMap(iconService.getImageViews(video.getCollection().getCategorySet()));
 
                 Map<String, Object> args = new HashMap<>();
@@ -131,7 +129,6 @@ public class MiddlePaneController extends AbstractGriffonController {
                 String message = getApplication().getMessageSource().getMessage("org.laeq.video.file.error");
                 dialogService.simpleAlert(title, message);
             }
-
         });
 
         return list;

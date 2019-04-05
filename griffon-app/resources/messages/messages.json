@@ -1,0 +1,488 @@
+[
+    {
+        "org.laeq.title.error": {
+            "en-CA": "An error has occurred",
+            "fr-CA": "Une erreur est survenue"
+        }
+    },
+    {
+        "org.laeq.model.invalid_fields": {
+            "en-CA": "Some fields are invalid:",
+            "fr-CA": "Les champs suivants sont invalides:"
+        }
+    },
+    {
+        "org.laeq.dao.error": {
+            "en-CA": "An error has occurred with the database",
+            "fr-CA": "Une erreur est survenue avec la base de donnée"
+        }
+    },
+    {
+        "org.laeq.menu.tooltip.video_list": {
+            "en-CA": "Open the video section",
+            "fr-CA": "Ouvrir la section vidéo"
+        }
+    },
+    {
+        "org.laeq.menu.tooltip.video_add": {
+            "en-CA": "Add a new video",
+            "fr-CA": "Ajouter une nouvelle vidéo"
+        }
+    },
+    {
+        "org.laeq.menu.tooltip.user": {
+            "en-CA": "Open the user section",
+            "fr-CA": "Organiser les utilisateurs"
+        }
+    },
+    {
+        "org.laeq.menu.tooltip.category": {
+            "en-CA": "Open the category section",
+            "fr-CA": "Gérer les catégories"
+        }
+    },
+    {
+        "org.laeq.menu.tooltip.collection": {
+            "en-CA": "Open the collection section",
+            "fr-CA": "Organiser les collections de catégories"
+        }
+    },
+    {
+        "org.laeq.menu.tooltip.database": {
+            "en-CA": "Open the database section",
+            "fr-CA": "Consulter la base de donnée"
+        }
+    },
+    {
+        "org.laeq.menu.tooltip.import_video": {
+            "en-CA": "Import a video",
+            "fr-CA": "Importer un comptage d'une vidéo"
+        }
+    },
+    {
+        "org.laeq.menu.tooltip.statistic": {
+            "en-CA": "Open the statistic section",
+            "fr-CA": "Analyse statistique des comptages"
+        }
+    },
+    {
+        "org.laeq.video.video_dao.error": {
+            "en-CA": "An error has occurred while saving video in the database",
+            "fr-CA": "La sauvegarde de la vidéo a échouée"
+        }
+    },
+    {
+        "org.laeq.video.file.error": {
+            "en-CA": "An error has occurred with the video file",
+            "fr-CA": "Une erreur est survenue avec le fichier de la vidéo"
+        }
+    },
+    {
+        "org.laeq.video.media_file.error": {
+            "en-CA": "An error has occurred the video file. Format unsupported",
+            "fr-CA": "Le format de la vidéo n'est pas supporté"
+        }
+    },
+    {
+        "org.laeq.video.validation.title_error": {
+            "en-CA": "Video form is invalid.",
+            "fr-CA": "Le formulaire est invalide."
+        }
+    },
+    {
+        "org.leaq.video.validation.no_video_selected": {
+            "en-CA": "Nothing to save. You must select a video first.",
+            "fr-CA": "Rien à sauvegarder. Vous devez sélectionner une vidéo."
+        }
+    },
+    {
+        "org.leaq.video.validation.no_user_selected": {
+            "en-CA": "You must select a user.",
+            "fr-CA": "Vous devez choisir un utilisateur"
+        }
+    },
+    {
+        "org.leaq.video.validation.no_colection_selected": {
+            "en-CA": "You must select a collection.",
+            "fr-CA": "Vous devez choisir une collection"
+        }
+    },
+    {
+        "org.laeq.video.no_selection": {
+            "en-CA": "You must select a video",
+            "fr-CA": "Vous devez choisir une vidéo"
+        }
+    },
+    {
+        "org.laeq.video.delete.confirm": {
+            "en-CA": "Are you sure you want to delete this video ?",
+            "fr-CA": "Veuillez confirmer avant la supppression."
+        }
+    },
+    {
+        "org.laeq.video.user.confirm": {
+            "en-CA": "Are you sure you want change the user of this video ?",
+            "fr-CA": "Veuillez confirmer la suppression de l'utilisateur ?"
+        }
+    },
+    {
+        "org.laeq.video.collection.confirm": {
+            "en-CA": "Are you sure you want change the collection of this video ? Some points might become obsolete and therefore will be deleted",
+            "fr-CA": "Veuillez confirmer le changement de collection ? Les points obsolètes seront supprimés"
+        }
+    },
+    {
+        "org.laeq.video.import.error": {
+            "en-CA": "Failed to import the video.",
+            "fr-CA": "Erreur lors de l'importation"
+        }
+    },
+    {
+        "org.laeq.video.duration.error": {
+            "en-CA": "Video duration is unknown.",
+            "fr-CA": "La durée de la vidéo est inconnue"
+        }
+    },
+    {
+        "org.laeq.video.title_text": {
+            "en-CA": "Details",
+            "fr-CA": "Détails"
+        }
+    },
+    {
+        "org.laeq.video.video_title_text": {
+            "en-CA": "Video name",
+            "fr-CA": "Nom de la vidéo"
+        }
+    },
+    {
+        "org.laeq.video.duration_text": {
+            "en-CA": "Duration",
+            "fr-CA": "Durée"
+        }
+    },
+    {
+        "org.laeq.video.total_text": {
+            "en-CA": "Total",
+            "fr-CA": "Total de points"
+        }
+    },
+    {
+        "org.laeq.video.last_point_text": {
+            "en-CA": "Last point",
+            "fr-CA": "Dernier point"
+        }
+    },
+    {
+        "org.laeq.video.filter_label": {
+            "en-CA": "Filter",
+            "fr-CA": "Filtre"
+        }
+    },
+    {
+        "org.laeq.video.export_btn": {
+            "en-CA": "Export",
+            "fr-CA": "Exporter"
+        }
+    },
+    {
+        "org.laeq.video.clear_btn": {
+            "en-CA": "Clear",
+            "fr-CA": "Effacer"
+        }
+    },
+    {
+        "org.laeq.video.delete_btn": {
+            "en-CA": "Delete",
+            "fr-CA": "Supprimer"
+        }
+    },
+    {
+        "org.laeq.video.edit_btn": {
+            "en-CA": "Edit",
+            "fr-CA": "Éditer"
+        }
+    },
+    {
+        "org.laeq.video.column.created_at": {
+            "en-CA": "Created At",
+            "fr-CA": "Créé le"
+        }
+    },
+    {
+        "org.laeq.video.column.name": {
+            "en-CA": "Name",
+            "fr-CA": "Nom"
+        }
+    },
+    {
+        "org.laeq.video.column.user": {
+            "en-CA": "User",
+            "fr-CA": "Utilisateur"
+        }
+    },
+    {
+        "org.laeq.video.column.duration": {
+            "en-CA": "Duration",
+            "fr-CA": "Durée"
+        }
+    },
+    {
+        "org.laeq.video.column.collection": {
+            "en-CA": "Collection",
+            "fr-CA": "Collection"
+        }
+    },
+    {
+        "org.laeq.video.column.total": {
+            "en-CA": "Total points",
+            "fr-CA": "Total de points"
+        }
+    },
+    {
+        "org.laeq.video.column.last_point": {
+            "en-CA": "Last point",
+            "fr-CA": "Dernier point"
+        }
+    },
+    {
+        "org.laeq.model.collection.delete.confirmation": {
+            "en-CA": "Are you sure you want to delete this collection",
+            "fr-CA": "Confirmer la suppression de la collection."
+        }
+    },
+    {
+        "org.laeq.model.collection.form.alert.title": {
+            "en-CA": "Collection form is invalid!",
+            "fr-CA": "Le formulaire est invalid"
+        }
+    },
+    {
+        "org.laeq.model.collection.validation.categories": {
+            "en-CA": "You must select at least one category.",
+            "fr-CA": "Vous devez sélectionner au moins une catégorie"
+        }
+    },
+    {
+        "org.laeq.collection.name": {
+            "en-CA": "Name",
+            "fr-CA": "Nom"
+        }
+    },
+    {
+        "org.laeq.collection.title_create": {
+            "en-CA": "Create a new collection",
+            "fr-CA": "Créer / Éditer une collection"
+        }
+    },
+    {
+        "org.laeq.collection.title_edit": {
+            "en-CA": "Create a new collection",
+            "fr-CA": "Éditer une collection"
+        }
+    },
+    {
+        "org.laeq.collection.category_title": {
+            "en-CA": "Categories",
+            "fr-CA": "Catégories"
+        }
+    },
+    {
+        "org.laeq.collection.clear_btn": {
+            "en-CA": "Clear",
+            "fr-CA": "Effacer"
+        }
+    },
+    {
+        "org.laeq.collection.save_btn": {
+            "en-CA": "Save",
+            "fr-CA": "Sauvegarder"
+        }
+    },
+    {
+        "org.laeq.collection.column.name": {
+            "en-CA": "Name",
+            "fr-CA": "Nom"
+        }
+    },
+    {
+        "org.laeq.collection.column.is_default": {
+            "en-CA": "Default",
+            "fr-CA": "Défault"
+        }
+    },
+    {
+        "org.laeq.collection.column.categories": {
+            "en-CA": "Categories",
+            "fr-CA": "Catégories"
+        }
+    },
+    {
+        "org.laeq.collection.column.actions": {
+            "en-CA": "Actions",
+            "fr-CA": "Actions"
+        }
+    },
+    {
+        "org.laeq.category.title_create": {
+            "en-CA": "Create a new category",
+            "fr-CA": "Créer une nouvelle catégorie"
+        }
+    },
+    {
+        "org.laeq.category.title_edit": {
+            "en-CA": "Edit a category",
+            "fr-CA": "Éditer une catégorie"
+        }
+    },
+    {
+        "org.laeq.category.name": {
+            "en-CA": "Name",
+            "fr-CA": "Nom"
+        }
+    },
+    {
+        "org.laeq.category.short_cut": {
+            "en-CA": "Shortcut",
+            "fr-CA": "Raccourci"
+        }
+    },
+    {
+        "org.laeq.category.path": {
+            "en-CA": "Path",
+            "fr-CA": "Chemin"
+        }
+    },
+    {
+        "org.laeq.category.color": {
+            "en-CA": "Color",
+            "fr-CA": "Couleur"
+        }
+    },
+    {
+        "org.laeq.category.preview": {
+            "en-CA": "Preview",
+            "fr-CA": "Apperçu"
+        }
+    },
+    {
+        "org.laeq.category.clear_btn": {
+            "en-CA": "Clear",
+            "fr-CA": "Effacer"
+        }
+    },
+    {
+        "org.laeq.category.save_btn": {
+            "en-CA": "Save",
+            "fr-CA": "Sauvegarder"
+        }
+    },
+    {
+        "org.laeq.category.column.name": {
+            "en-CA": "Name",
+            "fr-CA": "Nom"
+        }
+    },
+    {
+        "org.laeq.category.column.icon": {
+            "en-CA": "Icon",
+            "fr-CA": "Icon"
+        }
+    },
+    {
+        "org.laeq.category.column.short_cut": {
+            "en-CA": "Shortcut",
+            "fr-CA": "Raccourci"
+        }
+    },
+    {
+        "org.laeq.category.column.actions": {
+            "en-CA": "Actions",
+            "fr-CA": "Actions"
+        }
+    },
+    {
+        "org.laeq.user.delete.confirmation": {
+            "en-CA": "Are you sure you want to delete this user",
+            "fr-CA": "Confirmer la suppression de l'utilisateur"
+        }
+    },
+    {
+        "org.laeq.delete.default_user.error": {
+            "en-CA": "You cannot delete the default user",
+            "fr-CA": "Impossible de supprimer l'utilisateur défault"
+        }
+    },
+    {
+        "org.laeq.user.title_create": {
+            "en-CA": "Create a new user",
+            "fr-CA": "Créer un nouveau utilisateur"
+        }
+    },
+    {
+        "org.laeq.user.title_edit": {
+            "en-CA": "Edit a user",
+            "fr-CA": "Éditer un utilisateur"
+        }
+    },
+    {
+        "org.laeq.user.first_name": {
+            "en-CA": "First name",
+            "fr-CA": "Prénom"
+        }
+    },
+    {
+        "org.laeq.user.last_name": {
+            "en-CA": "Last name",
+            "fr-CA": "Nom"
+        }
+    },
+    {
+        "org.laeq.user.email": {
+            "en-CA": "Email",
+            "fr-CA": "Courriel"
+        }
+    },
+    {
+        "org.laeq.user.clear_btn": {
+            "en-CA": "Clear",
+            "fr-CA": "Effacer"
+        }
+    },
+    {
+        "org.laeq.user.save_btn": {
+            "en-CA": "Save",
+            "fr-CA": "Sauvegarder"
+        }
+    },
+    {
+        "org.laeq.user.column.first_name": {
+            "en-CA": "First name",
+            "fr-CA": "Prénom"
+        }
+    },
+    {
+        "org.laeq.user.column.last_name": {
+            "en-CA": "Last name",
+            "fr-CA": "Nom"
+        }
+    },
+    {
+        "org.laeq.user.column.email": {
+            "en-CA": "Email",
+            "fr-CA": "Courrier"
+        }
+    },
+    {
+        "org.laeq.user.column.default": {
+            "en-CA": "Default",
+            "fr-CA": "Défaut"
+        }
+    },
+    {
+        "org.laeq.user.column.actions": {
+            "en-CA": "Actions",
+            "fr-CA": "Actions"
+        }
+    }
+]

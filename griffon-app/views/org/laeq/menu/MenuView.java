@@ -10,6 +10,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import org.laeq.TranslatedView;
+import org.laeq.TranslationService;
 import org.laeq.VifecoView;
 import org.laeq.icon.IconService;
 import org.laeq.model.Category;
@@ -21,6 +22,7 @@ import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -42,17 +44,19 @@ public class MenuView extends TranslatedView {
     private final Map<IconButton, String> btnTooltipMessages = new HashMap<>();
     private final Map<IconButton, Tooltip> toolTips = new HashMap<>();
 
-
+    private TranslationService translationService;
 
     @Override
     public void initUI() {
-        System.out.println("-----------------------------------------------------------------");
-        System.out.println("ICIT: -------------------- " + getApplication().getMessageSource().getMessage("org.laeq.menu.tooltip.video_list"));
-//        getApplication().getMessageSource().
-        System.out.println("ICIT: -------------------- " + getApplication().getMessageSource().getMessage("org.laeq.menu.tooltip.video_list", Locale.CANADA_FRENCH));
-        System.out.println("-----------------------------------------------------------------");
 
         model.setPrefs(prefService.getPreferences());
+
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
+
 
         Node node = loadFromFXML();
         connectActions(node, controller);
@@ -93,9 +97,12 @@ public class MenuView extends TranslatedView {
 
         languageMenu.setItems(FXCollections.observableArrayList(model.getPrefs().getLocales()));
 
+        languageMenu.getSelectionModel().select(model.getPrefs().getLocalIndex());
+
         languageMenu.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
             model.getPrefs().setLocaleByIndex(newValue.intValue());
             runOutsideUI(() -> prefService.export(model.getPrefs()));
+
             controller.changeLanguage();
         });
     }
@@ -109,8 +116,8 @@ public class MenuView extends TranslatedView {
 
         btnTooltipMessages.put(btn, help);
 
-        btn.setOnMouseEntered(event -> Tooltip.install((Node) event.getSource(), generateToolTip((IconButton) event.getSource())));
-        btn.setOnMouseExited(event -> Tooltip.uninstall((Node) event.getSource(), generateToolTip((IconButton) event.getSource())));
+//        btn.setOnMouseEntered(event -> Tooltip.install((Node) event.getSource(), generateToolTip((IconButton) event.getSource())));
+//        btn.setOnMouseExited(event -> Tooltip.uninstall((Node) event.getSource(), generateToolTip((IconButton) event.getSource())));
 
         btn.setOnMouseClicked(event -> getApplication().getEventRouter().publishEvent(eventName));
 
@@ -119,13 +126,14 @@ public class MenuView extends TranslatedView {
 
     private Tooltip generateToolTip(IconButton btn){
         if(! toolTips.containsValue(btn)){
-            toolTips.put(btn, new Tooltip(getApplication().getMessageSource().getMessage(btnTooltipMessages.get(btn), model.getPrefs().locale)));
+            toolTips.put(btn, new Tooltip(translationService.getMessage(btnTooltipMessages.get(btn))));
         }
 
         return toolTips.get(btn);
     }
 
     public void updateTranslation() {
-        toolTips.clear();
+//        toolTips.clear();
+        
     }
 }

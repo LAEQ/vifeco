@@ -14,12 +14,17 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
 import org.laeq.TranslatedView;
+import org.laeq.TranslationService;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
+import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.util.Locale;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ContainerView extends TranslatedView {
@@ -42,12 +47,19 @@ public class ContainerView extends TranslatedView {
     @FXML private Button clearActionTarget;
     @FXML private Button saveActionTarget;
 
+
     @FXML private TableView<Category> categoryTable;
+
+    private TranslationService translationService;
+    @Inject
+    private PreferencesService prefService;
 
     private SVGPath svgPath;
 
     @Override
     public void initUI() {
+        model.setPrefs(prefService.getPreferences());
+
         Node node = loadFromFXML();
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
         connectActions(node, controller);
@@ -74,7 +86,28 @@ public class ContainerView extends TranslatedView {
         textFields.put(clearActionTarget, "org.laeq.category.clear_btn");
         textFields.put(saveActionTarget, "org.laeq.category.save_btn");
 
-        translate();
+        setTranslatedText();
+    }
+
+    private void setTranslatedText(){
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
+
+        try{
+            textFields.entrySet().forEach(t -> {
+                System.out.println(t.getKey() + " : " + t.getValue());
+                t.getKey().setText(translationService.getMessage(t.getValue()));
+            });
+
+            columnsMap.entrySet().forEach( t -> {
+                t.getKey().setText(translationService.getMessage(t.getValue()));
+            });
+        } catch (Exception e){
+            getLog().error("icit: " + e.getMessage());
+        }
     }
 
     public void initForm(){
@@ -195,5 +228,9 @@ public class ContainerView extends TranslatedView {
 
             return cell;
         };
+    }
+
+    public void changeLocale(Locale locale) {
+        setTranslatedText();
     }
 }

@@ -20,6 +20,7 @@ public class TranslatedView extends AbstractJavaFXGriffonView {
 
     @Inject private DialogService dialogService;
 
+
     @Override
     public void initUI() {
 

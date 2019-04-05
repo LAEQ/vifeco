@@ -1,5 +1,6 @@
 package org.laeq.user;
 
+import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
@@ -15,15 +16,18 @@ import org.laeq.ui.DialogService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends AbstractGriffonController{
     @MVCMember @Nonnull private ContainerModel model;
+    @MVCMember @Nonnull private ContainerView view;
 
     @Inject private MariaService dbService;
     @Inject protected DialogService dialogService;
+    @Inject private PreferencesService preferencesService;
 
     private UserDAO userDAO;
 
@@ -31,6 +35,21 @@ public class ContainerController extends AbstractGriffonController{
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         userDAO = dbService.getUserDAO();
         model.getUserList().addAll(userDAO.findAll());
+        model.setPrefs(preferencesService.getPreferences());
+        getApplication().getEventRouter().addEventListener(listeners());
+    }
+
+    private Map<String, RunnableWithArgs> listeners() {
+        Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        list.put("change.language", objects -> {
+            Locale locale = (Locale) objects[0];
+            model.getPrefs().locale = locale;
+            System.out.println("change.language");
+            view.changeLocale();
+        });
+
+        return list;
     }
 
     @ControllerAction
