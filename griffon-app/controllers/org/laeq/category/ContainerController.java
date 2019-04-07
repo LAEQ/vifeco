@@ -8,6 +8,7 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.apache.batik.transcoder.TranscoderException;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.TranslationService;
 import org.laeq.db.CategoryDAO;
 import org.laeq.db.DAOException;
 import org.laeq.icon.IconService;
@@ -32,12 +33,17 @@ public class ContainerController extends AbstractGriffonController {
     @Inject private MariaService dbService;
     @Inject private DialogService dialogService;
     @Inject private IconService iconService;
+    @Inject private PreferencesService preferencesService;
     private CategoryDAO categoryDAO;
+    private TranslationService translationService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         categoryDAO = dbService.getCategoryDAO();
         model.getCategoryList().addAll(categoryDAO.findAll());
+
+        model.setPrefs(preferencesService.getPreferences());
+        setTranslationService();
 
         getApplication().getEventRouter().addEventListener(listeners());
     }
@@ -52,7 +58,7 @@ public class ContainerController extends AbstractGriffonController {
                 createCategory();
             }
         } else {
-            alert(String.format("Some fields are invalid: \n%s", model.getErrors()));
+            alert(translationService.getMessage("org.laeq.model.invalid_fields") + "\n" + model.getErrors());
         }
     }
 
@@ -66,7 +72,7 @@ public class ContainerController extends AbstractGriffonController {
             iconService.createPNG(category);
         } catch (SQLException | DAOException | IOException | TranscoderException e) {
             getLog().error(e.getMessage());
-            alert("Failed to updateTranslation category: " + category.getName());
+            alert(translationService.getMessage("")  + category.getName());
         }
     }
 
@@ -79,7 +85,7 @@ public class ContainerController extends AbstractGriffonController {
             iconService.createPNG(category);
         } catch (DAOException | IOException | TranscoderException e) {
             getLog().error(e.getMessage());
-            alert("Failed to create category: " + category.getName());
+            alert(translationService.getMessage("org.laeq.category.save.error") + ": " + category.getName());
         }
     }
 
@@ -103,7 +109,7 @@ public class ContainerController extends AbstractGriffonController {
     }
 
     private void alert(String alertMsg){
-        dialogService.simpleAlert("org.laeq.title.error",alertMsg);
+        dialogService.simpleAlert(translationService.getMessage("org.laeq.title.error") ,alertMsg);
     }
 
     public void delete(Category category) {
@@ -112,7 +118,15 @@ public class ContainerController extends AbstractGriffonController {
             model.delete(category);
         } catch (DAOException e) {
             getLog().error(e.getMessage());
-            dialogService.simpleAlert("org.laeq.title.error", e.getMessage());
+            dialogService.simpleAlert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.category.delete.error") + ": " + category.getName());
+        }
+    }
+
+    private void setTranslationService(){
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
         }
     }
 }

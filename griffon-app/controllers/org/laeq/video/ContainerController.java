@@ -10,6 +10,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.laeq.CRUDController;
+import org.laeq.TranslationService;
 import org.laeq.db.*;
 import org.laeq.icon.IconService;
 import org.laeq.model.Category;
@@ -17,6 +18,7 @@ import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
+import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,15 +35,20 @@ public class ContainerController extends CRUDController<Video> {
     @Inject private MariaService dbService;
     @Inject private ExportService exportService;
     @Inject private IconService iconService;
+    @Inject private PreferencesService prefService;
 
     private VideoDAO videoDAO;
     private UserDAO userDAO;
     private CollectionDAO ccDAO;
     private CategoryDAO categoryDAO;
     private PointDAO pointDAO;
+    private TranslationService translationService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
+        model.setPrefs(prefService.getPreferences());
+        setTranslationService();
+
         videoDAO = dbService.getVideoDAO();
         ccDAO = dbService.getCollectionDAO();
         userDAO = dbService.getUserDAO();
@@ -97,12 +104,12 @@ public class ContainerController extends CRUDController<Video> {
     public void delete(){
 
         if(model.getSelectedVideo() == null){
-            alert("org.laeq.title.error", "org.laeq.video.no_selection");
+            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
             return;
         }
 
         runInsideUISync(() -> {
-            Boolean confirmation = confirm("org.laeq.video.delete.confirm");
+            Boolean confirmation = confirm(translationService.getMessage("org.laeq.video.delete.confirm"));
             if(confirmation){
                 try {
                     videoDAO.delete(model.getSelectedVideo());
@@ -117,7 +124,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void edit(){
         if(model.getSelectedVideo() == null){
-            alert("org.laeq.title.error", getMessage("org.laeq.video.no_selection"));
+            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
             return;
         }
 
@@ -126,7 +133,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void export(){
         if(model.getSelectedVideo() == null){
-            alert("org.laeq.title.error", getMessage("org.laeq.video.no_selection"));
+            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
             return;
         }
 
@@ -135,7 +142,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void editVideo(Video video) {
         if(model.getSelectedVideo() == null){
-            alert("org.laeq.title.error", getMessage("org.laeq.video.no_selection"));
+            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
             return;
         }
 
@@ -148,14 +155,14 @@ public class ContainerController extends CRUDController<Video> {
 
     public void updateUser(TableColumn.CellEditEvent<Video, User> event) {
         try {
-            Boolean confirm = confirm("org.laeq.video.user.confirm");
+            Boolean confirm = confirm(translationService.getMessage("org.laeq.video.user.confirm"));
 
             if(confirm){
                 videoDAO.updateUser(event.getRowValue(), event.getNewValue());
                 event.getRowValue().setUser(event.getNewValue());
             }
         } catch (SQLException | DAOException e) {
-            alert("org.laeq.title.error", e.getMessage());
+            alert(translationService.getMessage("org.laeq.title.error"), e.getMessage());
         }
     }
 
@@ -216,8 +223,17 @@ public class ContainerController extends CRUDController<Video> {
             Locale locale = (Locale) objects[0];
             model.getPrefs().locale = locale;
             view.changeLocale(locale);
+            setTranslationService();
         });
 
         return list;
+    }
+
+    private void setTranslationService(){
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
     }
 }

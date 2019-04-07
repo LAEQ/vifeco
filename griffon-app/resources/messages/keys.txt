@@ -51,6 +51,7 @@ org.laeq.video.column.last_point = Last point
 org.laeq.model.collection.delete.confirmation = Are you sure you want to delete this collection
 org.laeq.model.collection.form.alert.title = Collection form is invalid!
 org.laeq.model.collection.validation.categories = You must select at least one category.
+org.laeq.model.collection.default.error = You cannot delete the default category
 
 -- Collection UI
 org.laeq.collection.name = Name
@@ -81,10 +82,15 @@ org.laeq.category.column.icon = Icon
 org.laeq.category.column.short_cut = Shortcut
 org.laeq.category.column.actions = Actions
 
+org.laeq.category.save.error = Cannot save the category
+org.laeq.category.delete.error = Cannot delete the category
+
 
 -- User
 org.laeq.user.delete.confirmation = Are you sure you want to delete this user
 org.laeq.delete.default_user.error = You cannot delete the default user
+org.laeq.user.save.error = Cannot save the user
+org.laeq.user.delete.error = Cannot delete the user
 
 org.laeq.user.title_create = Create a new user
 org.laeq.user.title_edit = Edit a user

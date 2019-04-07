@@ -402,6 +402,18 @@
         }
     },
     {
+        "org.laeq.category.save.error": {
+            "en-CA": "Cannot save the category",
+            "fr-CA": "Erreur lors de la sauvegarde"
+        }
+    },
+    {
+        "org.laeq.category.delete.error": {
+            "en-CA": "Cannot delete the category",
+            "fr-CA": "Erreur lors de la suppression"
+        }
+    },
+    {
         "org.laeq.user.delete.confirmation": {
             "en-CA": "Are you sure you want to delete this user",
             "fr-CA": "Confirmer la suppression de l'utilisateur"
@@ -411,6 +423,18 @@
         "org.laeq.delete.default_user.error": {
             "en-CA": "You cannot delete the default user",
             "fr-CA": "Impossible de supprimer l'utilisateur défault"
+        }
+    },
+    {
+        "org.laeq.user.save.error": {
+            "en-CA": "Cannot save the user",
+            "fr-CA": "Erreur pendant la sauvegarde de l'utilisateur"
+        }
+    },
+    {
+        "org.laeq.user.delete.error": {
+            "en-CA": "Cannot delete the user",
+            "fr-CA": "Erreur lors de la suppression de l'utilisateur"
         }
     },
     {

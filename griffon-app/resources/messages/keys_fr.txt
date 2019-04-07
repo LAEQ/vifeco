@@ -51,6 +51,7 @@ org.laeq.video.column.last_point = Dernier point
 org.laeq.model.collection.delete.confirmation = Confirmer la suppression de la collection.
 org.laeq.model.collection.form.alert.title = Le formulaire est invalid
 org.laeq.model.collection.validation.categories = Vous devez sélectionner au moins une catégorie
+org.laeq.model.collection.default.error = Supprimer la collection défaut n'est pas permise
 
 -- Collection UI
 org.laeq.collection.name = Nom
@@ -71,6 +72,7 @@ org.laeq.video.import.error = Erreur lors de l'importation
 org.laeq.video.duration.error = La durée de la vidéo est inconnue
 
 
+
 -- Category 
 org.laeq.category.title_create = Créer une nouvelle catégorie
 org.laeq.category.title_edit = Éditer une catégorie
@@ -86,11 +88,14 @@ org.laeq.category.column.name = Nom
 org.laeq.category.column.icon = Icon
 org.laeq.category.column.short_cut = Raccourci
 org.laeq.category.column.actions = Actions
-
+org.laeq.category.save.error = Erreur lors de la sauvegarde
+org.laeq.category.delete.error = Erreur lors de la suppression
 
 -- User
 org.laeq.user.delete.confirmation = Confirmer la suppression de l'utilisateur
 org.laeq.delete.default_user.error = Impossible de supprimer l'utilisateur défault
+org.laeq.user.save.error = Erreur pendant la sauvegarde de l'utilisateur
+org.laeq.user.delete.error = Erreur lors de la suppression de l'utilisateur
 
 org.laeq.user.title_create = Créer un nouveau utilisateur
 org.laeq.user.title_edit = Éditer un utilisateur

@@ -5,14 +5,17 @@ import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.laeq.CRUDController;
+import org.laeq.TranslationService;
 import org.laeq.db.CategoryDAO;
 import org.laeq.db.CollectionDAO;
 import org.laeq.db.DAOException;
 import org.laeq.model.Collection;
 import org.laeq.service.MariaService;
+import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -20,8 +23,10 @@ import java.util.Map;
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends CRUDController<Collection> {
     @Inject private MariaService dbService;
+    @Inject private PreferencesService prefService;
     private CollectionDAO collectionDAO;
     private CategoryDAO categoryDAO;
+    private TranslationService translationService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -29,6 +34,9 @@ public class ContainerController extends CRUDController<Collection> {
         categoryDAO = dbService.getCategoryDAO();
         model.getCollections().addAll(collectionDAO.findAll());
         model.addCategories(categoryDAO.findAll());
+
+        model.setPreferences(prefService.getPreferences());
+        setTranslationService();
 
         view.initForm();
 
@@ -45,12 +53,13 @@ public class ContainerController extends CRUDController<Collection> {
                 model.update(collection);
             } catch (DAOException e) {
                 getLog().error(e.getMessage());
-                alert("org.laeq.title.error", e.getMessage());
+                alert(translationService.getMessage("org.laeq.title.error"),
+                        translationService.getMessage("org.laeq.model.invalid_fields") + ": " +e.getMessage());
             }
 
         } else {
             getLog().error(model.getErrors());
-            alert("org.laeq.model.collection.form.alert.title", model.getErrors());
+            alert(translationService.getMessage("org.laeq.model.collection.form.alert.title"), model.getErrors());
         }
     }
 
@@ -62,13 +71,14 @@ public class ContainerController extends CRUDController<Collection> {
 
     public void delete(Collection collection) {
         runInsideUISync(() -> {
-            if(confirm("org.laeq.model.collection.delete.confirmation")){
+            if(confirm(translationService.getMessage("org.laeq.model.collection.delete.confirmation"))){
                 try {
                     collectionDAO.delete(collection);
                     this.model.delete(collection);
                 } catch (DAOException e) {
                     getLog().error(e.getMessage());
-                    alert("org.laeq.dao.error", String.format("Cannot deleteVideoIcon %s", collection));
+                    alert(translationService.getMessage("org.laeq.dao.error"),
+                            translationService.getMessage("org.laeq.model.collection.default.error"));
                 }
             }
         });
@@ -80,9 +90,18 @@ public class ContainerController extends CRUDController<Collection> {
         list.put("change.language", objects -> {
             Locale locale = (Locale) objects[0];
             model.getPreferences().locale = locale;
+            setTranslationService();
             view.changeLocale();
         });
 
         return list;
+    }
+
+    private void setTranslationService(){
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPreferences().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
     }
 }

@@ -121,6 +121,8 @@ public class MenuView extends TranslatedView {
 
         btn.setOnMouseClicked(event -> getApplication().getEventRouter().publishEvent(eventName));
 
+        btn.setLayoutY(10);
+
         return btn;
     }
 
