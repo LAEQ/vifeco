@@ -14,38 +14,21 @@ import java.util.Locale;
 import java.util.Map;
 
 public class TranslatedView extends AbstractJavaFXGriffonView {
-    protected Map<Labeled, String> textFields = new HashMap<>();
-    protected Map<TableColumn, String> columnsMap = new HashMap<>();
-    private MessageSource messageSource;
-
+    protected final Map<Labeled, String> textFields = new HashMap<>();
+    protected final Map<TableColumn, String> columnsMap = new HashMap<>();
     @Inject private DialogService dialogService;
-
 
     @Override
     public void initUI() {
 
     }
 
-    public void translate(){
-        textFields.entrySet().forEach(t -> {
-            t.getKey().setText(getTranslation(t.getValue()));
-        });
-
-        columnsMap.entrySet().forEach( t -> {
-            t.getKey().setText(getTranslation(t.getValue()));
-        });
-    }
-
     protected void translate(Labeled node, String key){
-        node.setText(getTranslation(key));
-    }
-
-    protected String getTranslation(String key){
-        return getApplication().getMessageSource().getMessage(key, Locale.CANADA);
+        node.setText(key);
     }
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void alert(String key, String message){
-        dialogService.simpleAlert(getTranslation(key), getTranslation(message));
+        dialogService.simpleAlert(key, message);
     }
 }

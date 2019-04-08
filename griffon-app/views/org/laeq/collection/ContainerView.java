@@ -150,7 +150,7 @@ public class ContainerView extends TranslatedView {
                     edit.setGraphic(icon);
                     edit.setOnMouseClicked(event -> {
                         model.setSelectedCollection(collectionTable.getItems().get(getIndex()));
-                        translate(titleLabel, "org.laeq.collection.title_edit");
+                        translate(titleLabel, translationService.getMessage("org.laeq.collection.title_edit"));
                     });
 
                     delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));

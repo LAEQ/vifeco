@@ -87,22 +87,6 @@ public class ContainerView extends TranslatedView {
         textFields.put(deleteActionTarget, "org.laeq.video.delete_btn");
         textFields.put(editActionTarget, "org.laeq.video.edit_btn");
 
-//        IconSquare exportIcon = new IconSquare(new Category("export", IconSVG.export, "#FFFFFFFF", "A"));
-//        exportIcon.decorate();
-//        exportActionTarget.setGraphic(exportIcon);
-
-//        IconSquare deleteIcon = new IconSquare(new Category("delete", IconSVG.trash, "#FFFFFFFF", "A"));
-//        deleteIcon.decorate();
-//        deleteActionTarget.setGraphic(deleteIcon);
-
-//        IconSquare editIcon = new IconSquare(new Category("delete", IconSVG.edit, "#FFFFFFFF", "A"));
-//        editIcon.decorate();
-//        editActionTarget.setGraphic(editIcon);
-
-//        IconSquare clearIcon = new IconSquare(new Category("clear", IconSVG.clear, "#000000FF", "A"));
-//        clearIcon.decorate();
-//        clearActionTarget.setGraphic(clearIcon);
-
         changeLocale(model.getPrefs().locale);
     }
 
@@ -118,15 +102,10 @@ public class ContainerView extends TranslatedView {
 
     private void setTranslatedText(){
         try{
-            textFields.entrySet().forEach(t -> {
-                t.getKey().setText(translationService.getMessage(t.getValue()));
-            });
-
-            columnsMap.entrySet().forEach( t -> {
-                t.getKey().setText(translationService.getMessage(t.getValue()));
-            });
+            textFields.entrySet().forEach(t -> t.getKey().setText(translationService.getMessage(t.getValue())));
+            columnsMap.entrySet().forEach( t -> t.getKey().setText(translationService.getMessage(t.getValue())));
         } catch (Exception e){
-            getLog().error("icit: " + e.getMessage());
+            getLog().error(e.getMessage());
         }
     }
 
@@ -134,12 +113,12 @@ public class ContainerView extends TranslatedView {
         videoTable.setEditable(true);
 
         TableColumn<Video, Number> idColumn = new TableColumn<>("#");
-        TableColumn<Video, String> dateColumn = new TableColumn<>("Created At");
-        TableColumn<Video, String> pathColumn = new TableColumn("Name");
-        userColumn = new TableColumn<>("User");
-        TableColumn<Video, String> durationColumn = new TableColumn("Duration");
-        collectionColumn = new TableColumn("Collection");
-        TableColumn<Video, Number> totalColumn = new TableColumn<>("Total");
+        TableColumn<Video, String> dateColumn = new TableColumn<>("");
+        TableColumn<Video, String> pathColumn = new TableColumn("");
+        userColumn = new TableColumn<>("");
+        TableColumn<Video, String> durationColumn = new TableColumn("");
+        collectionColumn = new TableColumn("");
+        TableColumn<Video, Number> totalColumn = new TableColumn<>("");
 
         columnsMap.put(dateColumn, "org.laeq.video.column.created_at");
         columnsMap.put(pathColumn, "org.laeq.video.column.name");
@@ -170,7 +149,7 @@ public class ContainerView extends TranslatedView {
                 if(video.getDuration() != 0){
                     controller.editVideo(video);
                 }else{
-                    alert("org.laeq.title.error", "org.laeq.video.duration.error");
+                    alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.duration.error"));
                 }
             }
         });
