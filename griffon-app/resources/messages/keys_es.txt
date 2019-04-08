@@ -1,21 +1,21 @@
-org.laeq.title.error = An error has occurred
-org.laeq.model.invalid_fields = Some fields are invalid:
-org.laeq.dao.error = An error has occurred with the database 
+org.laeq.title.error = Se ha producido un error 
+org.laeq.model.invalid_fields = Algunos campos son inválidos:
+org.laeq.dao.error = Ha ocurrido un error con la base de datos 
 
 -- Menu
-org.laeq.menu.tooltip.video_list=Open the video section
-org.laeq.menu.tooltip.video_add = Add a new video
-org.laeq.menu.tooltip.user = Open the user section
-org.laeq.menu.tooltip.category = Open the category section
-org.laeq.menu.tooltip.collection = Open the collection section
-org.laeq.menu.tooltip.database = Open the database section
-org.laeq.menu.tooltip.import_video = Import a video
-org.laeq.menu.tooltip.statistic = Open the statistic section
+org.laeq.menu.tooltip.video_list=Sección de videos
+org.laeq.menu.tooltip.video_add = Añadir un nuevo video
+org.laeq.menu.tooltip.user = Sección de los usuarios
+org.laeq.menu.tooltip.category = Sección de las categorías
+org.laeq.menu.tooltip.collection = Sección de las colecciones
+org.laeq.menu.tooltip.database = Sección de la la base de datos
+org.laeq.menu.tooltip.import_video = Importar un video
+org.laeq.menu.tooltip.statistic = Sección de estadísticas
 
 -- Video
-org.laeq.video.video_dao.error = An error has occurred while saving video in the database
-org.laeq.video.file.error = An error has occurred with the video file
-org.laeq.video.media_file.error = An error has occurred the video file. Format unsupported
+org.laeq.video.video_dao.error = Se ha producido un error al guardar el video en la base de datos
+org.laeq.video.file.error = Ha ocurrido un error con el archivo de video.
+org.laeq.video.media_file.error = Ha ocurrido un error con el archivo de video. Formato incompatible.
 org.laeq.video.validation.title_error = Video form is invalid.
 org.leaq.video.validation.no_video_selected = Nothing to save. You must select a video first.
 org.leaq.video.validation.no_user_selected = You must select a user.
@@ -100,8 +100,8 @@ org.laeq.user.email = Email
 org.laeq.user.clear_btn = Clear
 org.laeq.user.save_btn = Save
 
-org.laeq.user.column.first_name = First name
-org.laeq.user.column.last_name = Last name
+org.laeq.user.column.first_name = Nombre
+org.laeq.user.column.last_name = Apellido
 org.laeq.user.column.email = Email
 org.laeq.user.column.default = Default
 org.laeq.user.column.actions = Actions
