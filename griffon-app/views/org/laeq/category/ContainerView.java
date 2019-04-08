@@ -98,7 +98,6 @@ public class ContainerView extends TranslatedView {
 
         try{
             textFields.entrySet().forEach(t -> {
-                System.out.println(t.getKey() + " : " + t.getValue());
                 t.getKey().setText(translationService.getMessage(t.getValue()));
             });
 
@@ -129,18 +128,20 @@ public class ContainerView extends TranslatedView {
     }
 
     private void init(){
+        TableColumn<Category, String> idColumn = new TableColumn<>("#");
         TableColumn<Category, Void> iconColumn = new TableColumn<>("");
         TableColumn<Category, String> nameColumn = new TableColumn("");
         TableColumn<Category, String> shortCutColumn = new TableColumn<>("");
         TableColumn<Category, Void> actionColumn = new TableColumn<>("");
 
-        categoryTable.getColumns().addAll(iconColumn, nameColumn, shortCutColumn, actionColumn);
+        categoryTable.getColumns().addAll(idColumn, iconColumn, nameColumn, shortCutColumn, actionColumn);
 
         columnsMap.put(iconColumn, "org.laeq.category.column.icon");
         columnsMap.put(nameColumn, "org.laeq.category.column.name");
         columnsMap.put(shortCutColumn, "org.laeq.category.column.short_cut");
         columnsMap.put(actionColumn, "org.laeq.category.column.actions");
 
+        idColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> String.valueOf(cellData.getValue().getId())));
         nameColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getName()));
         shortCutColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getShortcut()));
 
@@ -213,9 +214,8 @@ public class ContainerView extends TranslatedView {
                         icon.setFill(Paint.valueOf(category.getColor()));
 
                         colorPickerField.setValue(javafx.scene.paint.Color.valueOf(category.getColor()));
-
                     } catch (Exception e){
-                        getLog().error(e.getMessage());
+//                        getLog().error(e.getMessage());
                     }
 
                     if (empty) {
