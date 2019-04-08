@@ -118,16 +118,10 @@ public class ContainerView extends TranslatedView {
 
     private void setTranslatedText(){
         try{
-            textFields.entrySet().forEach(t -> {
-                System.out.println(t.getKey() + " : " + t.getValue());
-                t.getKey().setText(translationService.getMessage(t.getValue()));
-            });
-
-            columnsMap.entrySet().forEach( t -> {
-                t.getKey().setText(translationService.getMessage(t.getValue()));
-            });
+            textFields.entrySet().forEach(t -> t.getKey().setText(translationService.getMessage(t.getValue())));
+            columnsMap.entrySet().forEach( t -> t.getKey().setText(translationService.getMessage(t.getValue())));
         } catch (Exception e){
-            getLog().error("icit: " + e.getMessage());
+            getLog().error(e.getMessage());
         }
     }
 
@@ -136,12 +130,12 @@ public class ContainerView extends TranslatedView {
         videoTable.setEditable(true);
 
         TableColumn<Video, Number> idColumn = new TableColumn<>("#");
-        TableColumn<Video, String> dateColumn = new TableColumn<>("Created At");
-        TableColumn<Video, String> pathColumn = new TableColumn("Name");
-        userColumn = new TableColumn<>("User");
-        TableColumn<Video, String> durationColumn = new TableColumn("Duration");
-        collectionColumn = new TableColumn("Collection");
-        TableColumn<Video, Number> totalColumn = new TableColumn<>("Total");
+        TableColumn<Video, String> dateColumn = new TableColumn<>("");
+        TableColumn<Video, String> pathColumn = new TableColumn("");
+        userColumn = new TableColumn<>("");
+        TableColumn<Video, String> durationColumn = new TableColumn("");
+        collectionColumn = new TableColumn("");
+        TableColumn<Video, Number> totalColumn = new TableColumn<>("");
 
 
         columnsMap.put(dateColumn, "org.laeq.video.column.created_at");
@@ -173,7 +167,7 @@ public class ContainerView extends TranslatedView {
                 if(video.getDuration() != 0){
                     controller.editVideo(video);
                 }else{
-                    alert("org.laeq.title.error", "org.laeq.video.duration.error");
+                    alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.duration.error"));
                 }
             }
         });

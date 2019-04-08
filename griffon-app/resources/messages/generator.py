@@ -28,7 +28,17 @@ for l in lines:
         if key in r.keys():
             r[key]['fr-CA'] = message
 
+f = open("keys_es.txt", encoding="utf-8")
+lines = [l for l in (line.strip() for line in f) if (l and "-" not in l)]
 
+for l in lines:
+    words = l.split("=")
+    key = words[0].strip()
+    message = words[1].strip()
+
+    for r in result:
+        if key in r.keys():
+            r[key]['es-ES'] = message
 
 y = json.dumps(result, ensure_ascii=False, indent=4, sort_keys=True)
 f = io.open("messages.json", "w", encoding='utf8')

@@ -76,6 +76,7 @@ public class ContainerController extends CRUDController<Video> {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     private void getVideoDuration(Video video) {
+        getLog().info("Calculating the video duration: should be known already. Fix this issue");
         File file = new File(video.getPath());
 
         if (file.exists()) {
@@ -168,7 +169,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void updateCollection(TableColumn.CellEditEvent<Video, Collection> event) {
         try {
-            Boolean confirm = confirm("org.laeq.video.collection.confirm");
+            Boolean confirm = confirm(translationService.getMessage("org.laeq.video.collection.confirm"));
 
             if(confirm){
                 videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
@@ -181,7 +182,7 @@ public class ContainerController extends CRUDController<Video> {
             }
 
         } catch (SQLException | DAOException e) {
-            alert("org.laeq.title.error", e.getMessage());
+            alert(translationService.getMessage("org.laeq.title.error"), e.getMessage());
         }
     }
 
