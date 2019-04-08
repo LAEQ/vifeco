@@ -1,14 +1,14 @@
 org.laeq.title.error = Une erreur est survenue
 org.laeq.model.invalid_fields = Les champs suivants sont invalides:
-org.laeq.dao.error = Une erreur est survenue avec la base de donnée
+org.laeq.dao.error = Une erreur est survenue avec la base de données
 
 -- Menu
-org.laeq.menu.tooltip.video_list = Ouvrir la section vidéo
-org.laeq.menu.tooltip.video_add = Ajouter une nouvelle vidéo
-org.laeq.menu.tooltip.user = Organiser les utilisateurs
+org.laeq.menu.tooltip.video_list = Section vidéo
+org.laeq.menu.tooltip.video_add = Nouvelle vidéo
+org.laeq.menu.tooltip.user = Gérer les utilisateurs
 org.laeq.menu.tooltip.category = Gérer les catégories
-org.laeq.menu.tooltip.collection = Organiser les collections de catégories
-org.laeq.menu.tooltip.database = Consulter la base de donnée
+org.laeq.menu.tooltip.collection = Collections de catégories
+org.laeq.menu.tooltip.database = Consulter la base de données
 org.laeq.menu.tooltip.import_video = Importer un comptage d'une vidéo
 org.laeq.menu.tooltip.statistic = Analyse statistique des comptages
 
@@ -16,16 +16,16 @@ org.laeq.menu.tooltip.statistic = Analyse statistique des comptages
 org.laeq.video.video_dao.error = La sauvegarde de la vidéo a échouée
 org.laeq.video.file.error = Une erreur est survenue avec le fichier de la vidéo
 org.laeq.video.media_file.error = Le format de la vidéo n'est pas supporté
-org.laeq.video.validation.title_error = Le formulaire est invalide.
-org.leaq.video.validation.no_video_selected = Rien à sauvegarder. Vous devez sélectionner une vidéo.
+org.laeq.video.validation.title_error = Le formulaire est invalide
+org.leaq.video.validation.no_video_selected = Rien à sauvegarder. Sélectionnez une vidéo
 org.leaq.video.validation.no_user_selected = Vous devez choisir un utilisateur
 org.leaq.video.validation.no_colection_selected = Vous devez choisir une collection
 org.laeq.video.no_selection = Vous devez choisir une vidéo
-org.laeq.video.delete.confirm = Veuillez confirmer avant la supppression.
+org.laeq.video.delete.confirm = Veuillez confirmer avant la supppression
 org.laeq.video.user.confirm = Veuillez confirmer le changement d'utilisateur
 org.laeq.video.collection.confirm = Veuillez confirmer le changement de collection. Les points des catégories obsolètes seront supprimés.
 org.laeq.video.import.error = Echec lors de l'importation de la vidéo
-org.laeq.video.duration.error = La durée de la vidéo est inconnue.
+org.laeq.video.duration.error = La durée de la vidéo est inconnue
 
 -- Video UI
 org.laeq.video.title_text = Détails
@@ -49,7 +49,7 @@ org.laeq.video.column.last_point = Dernier point
 
 -- Collection
 org.laeq.model.collection.delete.confirmation = Confirmer la suppression de la collection.
-org.laeq.model.collection.form.alert.title = Le formulaire est invalid
+org.laeq.model.collection.form.alert.title = Le formulaire est invalide
 org.laeq.model.collection.validation.categories = Vous devez sélectionner au moins une catégorie
 org.laeq.model.collection.default.error = Supprimer la collection défaut n'est pas permise
 
@@ -66,8 +66,7 @@ org.laeq.collection.column.name = Nom
 org.laeq.collection.column.is_default = Défault
 org.laeq.collection.column.categories = Catégories
 org.laeq.collection.column.actions = Actions
-org.laeq.video.user.confirm = Veuillez confirmer la suppression de l'utilisateur ?
-org.laeq.video.collection.confirm = Veuillez confirmer le changement de collection ? Les points obsolètes seront supprimés
+org.laeq.video.collection.confirm = Veuillez confirmer le changement de collection. Les points obsolètes seront supprimés
 org.laeq.video.import.error = Erreur lors de l'importation
 org.laeq.video.duration.error = La durée de la vidéo est inconnue
 
@@ -80,12 +79,12 @@ org.laeq.category.name = Nom
 org.laeq.category.short_cut = Raccourci
 org.laeq.category.path = Chemin
 org.laeq.category.color = Couleur
-org.laeq.category.preview = Apperçu
+org.laeq.category.preview = Aperçu
 org.laeq.category.clear_btn = Effacer
 org.laeq.category.delete_btn = Supprimer
 org.laeq.category.save_btn = Sauvegarder
 org.laeq.category.column.name = Nom
-org.laeq.category.column.icon = Icon
+org.laeq.category.column.icon = Icône
 org.laeq.category.column.short_cut = Raccourci
 org.laeq.category.column.actions = Actions
 org.laeq.category.save.error = Erreur lors de la sauvegarde
@@ -93,7 +92,7 @@ org.laeq.category.delete.error = Erreur lors de la suppression
 
 -- User
 org.laeq.user.delete.confirmation = Confirmer la suppression de l'utilisateur
-org.laeq.delete.default_user.error = Impossible de supprimer l'utilisateur défault
+org.laeq.delete.default_user.error = Impossible de supprimer l'utilisateur par défaut
 org.laeq.user.save.error = Erreur pendant la sauvegarde de l'utilisateur
 org.laeq.user.delete.error = Erreur lors de la suppression de l'utilisateur
 
@@ -107,6 +106,6 @@ org.laeq.user.save_btn = Sauvegarder
 
 org.laeq.user.column.first_name = Prénom
 org.laeq.user.column.last_name = Nom
-org.laeq.user.column.email = Courrier
+org.laeq.user.column.email = Courriel
 org.laeq.user.column.default = Défaut
 org.laeq.user.column.actions = Actions
