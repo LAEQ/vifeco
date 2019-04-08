@@ -1,0 +1,107 @@
+org.laeq.title.error = An error has occurred
+org.laeq.model.invalid_fields = Some fields are invalid:
+org.laeq.dao.error = An error has occurred with the database 
+
+-- Menu
+org.laeq.menu.tooltip.video_list=Open the video section
+org.laeq.menu.tooltip.video_add = Add a new video
+org.laeq.menu.tooltip.user = Open the user section
+org.laeq.menu.tooltip.category = Open the category section
+org.laeq.menu.tooltip.collection = Open the collection section
+org.laeq.menu.tooltip.database = Open the database section
+org.laeq.menu.tooltip.import_video = Import a video
+org.laeq.menu.tooltip.statistic = Open the statistic section
+
+-- Video
+org.laeq.video.video_dao.error = An error has occurred while saving video in the database
+org.laeq.video.file.error = An error has occurred with the video file
+org.laeq.video.media_file.error = An error has occurred the video file. Format unsupported
+org.laeq.video.validation.title_error = Video form is invalid.
+org.leaq.video.validation.no_video_selected = Nothing to save. You must select a video first.
+org.leaq.video.validation.no_user_selected = You must select a user.
+org.leaq.video.validation.no_colection_selected = You must select a collection.
+org.laeq.video.no_selection = You must select a video
+org.laeq.video.delete.confirm = Are you sure you want to delete this video ?
+org.laeq.video.user.confirm = Are you sure you want change the user of this video ?
+org.laeq.video.collection.confirm = Are you sure you want change the collection of this video ? Some points might become obsolete and therefore will be deleted
+org.laeq.video.import.error = Failed to import the video.
+org.laeq.video.duration.error = Video duration is unknown.
+
+-- Video UI
+org.laeq.video.title_text = Details
+org.laeq.video.video_title_text  = Video name
+org.laeq.video.duration_text = Duration
+org.laeq.video.total_text = Total 
+org.laeq.video.last_point_text = Last point
+org.laeq.video.filter_label = Filter
+org.laeq.video.export_btn = Export
+org.laeq.video.clear_btn = Clear
+org.laeq.video.delete_btn = Delete
+org.laeq.video.edit_btn = Edit
+
+org.laeq.video.column.created_at = Created At
+org.laeq.video.column.name = Name
+org.laeq.video.column.user = User
+org.laeq.video.column.duration = Duration
+org.laeq.video.column.collection = Collection
+org.laeq.video.column.total = Total points
+org.laeq.video.column.last_point = Last point
+
+-- Collection
+org.laeq.model.collection.delete.confirmation = Are you sure you want to delete this collection
+org.laeq.model.collection.form.alert.title = Collection form is invalid!
+org.laeq.model.collection.validation.categories = You must select at least one category.
+org.laeq.model.collection.default.error = You cannot delete the default category
+
+-- Collection UI
+org.laeq.collection.name = Name
+org.laeq.collection.title_create = Create a new collection
+org.laeq.collection.title_edit = Create a new collection
+org.laeq.collection.category_title = Categories
+org.laeq.collection.clear_btn = Clear
+org.laeq.collection.save_btn = Save
+
+org.laeq.collection.column.name = Name
+org.laeq.collection.column.is_default = Default
+org.laeq.collection.column.categories = Categories
+org.laeq.collection.column.actions = Actions
+
+
+-- Category 
+org.laeq.category.title_create = Create a new category
+org.laeq.category.title_edit = Edit a category
+org.laeq.category.name = Name
+org.laeq.category.short_cut = Shortcut 
+org.laeq.category.path = Path
+org.laeq.category.color = Color
+org.laeq.category.preview = Preview
+org.laeq.category.clear_btn = Clear
+org.laeq.category.save_btn = Save
+org.laeq.category.column.name = Name
+org.laeq.category.column.icon = Icon
+org.laeq.category.column.short_cut = Shortcut
+org.laeq.category.column.actions = Actions
+
+org.laeq.category.save.error = Cannot save the category
+org.laeq.category.delete.error = Cannot delete the category
+
+
+-- User
+org.laeq.user.delete.confirmation = Are you sure you want to delete this user
+org.laeq.delete.default_user.error = You cannot delete the default user
+org.laeq.user.save.error = Cannot save the user
+org.laeq.user.delete.error = Cannot delete the user
+
+org.laeq.user.title_create = Create a new user
+org.laeq.user.title_edit = Edit a user
+org.laeq.user.first_name = First name
+org.laeq.user.last_name = Last name
+org.laeq.user.email = Email
+org.laeq.user.clear_btn = Clear
+org.laeq.user.save_btn = Save
+
+org.laeq.user.column.first_name = First name
+org.laeq.user.column.last_name = Last name
+org.laeq.user.column.email = Email
+org.laeq.user.column.default = Default
+org.laeq.user.column.actions = Actions
