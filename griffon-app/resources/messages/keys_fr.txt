@@ -5,12 +5,12 @@ org.laeq.dao.error = Une erreur est survenue avec la base de données
 -- Menu
 org.laeq.menu.tooltip.video_list = Section vidéo
 org.laeq.menu.tooltip.video_add = Nouvelle vidéo
-org.laeq.menu.tooltip.user = Gérer les utilisateurs
-org.laeq.menu.tooltip.category = Gérer les catégories
-org.laeq.menu.tooltip.collection = Collections de catégories
-org.laeq.menu.tooltip.database = Consulter la base de données
+org.laeq.menu.tooltip.user = Section des utilisateurs
+org.laeq.menu.tooltip.category = Section des catégories
+org.laeq.menu.tooltip.collection = Section des collections de catégories
+org.laeq.menu.tooltip.database = Section base de données
 org.laeq.menu.tooltip.import_video = Importer un comptage d'une vidéo
-org.laeq.menu.tooltip.statistic = Analyse statistique des comptages
+org.laeq.menu.tooltip.statistic = Analyses statistiques des comptages
 
 -- Video
 org.laeq.video.video_dao.error = La sauvegarde de la vidéo a échouée
@@ -21,8 +21,8 @@ org.leaq.video.validation.no_video_selected = Rien à sauvegarder. Sélectionnez
 org.leaq.video.validation.no_user_selected = Vous devez choisir un utilisateur
 org.leaq.video.validation.no_colection_selected = Vous devez choisir une collection
 org.laeq.video.no_selection = Vous devez choisir une vidéo
-org.laeq.video.delete.confirm = Veuillez confirmer avant la supppression
-org.laeq.video.user.confirm = Veuillez confirmer le changement d'utilisateur
+org.laeq.video.delete.confirm = Êtes-vous sûr de vouloir supprimer la vidéo?
+org.laeq.video.user.confirm = Êtes-vous sûr de vouloir changer l'utilisateur?
 org.laeq.video.collection.confirm = Veuillez confirmer le changement de collection. Les points des catégories obsolètes seront supprimés.
 org.laeq.video.import.error = Echec lors de l'importation de la vidéo
 org.laeq.video.duration.error = La durée de la vidéo est inconnue
@@ -48,10 +48,10 @@ org.laeq.video.column.total = Total de points
 org.laeq.video.column.last_point = Dernier point
 
 -- Collection
-org.laeq.model.collection.delete.confirmation = Confirmer la suppression de la collection.
+org.laeq.model.collection.delete.confirmation = Êtes-vous sûr de vouloir supprimer la collection.
 org.laeq.model.collection.form.alert.title = Le formulaire est invalide
 org.laeq.model.collection.validation.categories = Vous devez sélectionner au moins une catégorie
-org.laeq.model.collection.default.error = Supprimer la collection défaut n'est pas permise
+org.laeq.model.collection.default.error = La suppression de la collection par défaut n'est pas permise
 
 -- Collection UI
 org.laeq.collection.name = Nom
@@ -66,7 +66,7 @@ org.laeq.collection.column.name = Nom
 org.laeq.collection.column.is_default = Défault
 org.laeq.collection.column.categories = Catégories
 org.laeq.collection.column.actions = Actions
-org.laeq.video.collection.confirm = Veuillez confirmer le changement de collection. Les points obsolètes seront supprimés
+org.laeq.video.collection.confirm = Êtes-vous sûr de vouloir changer de collection? Les points obsolètes seront supprimés
 org.laeq.video.import.error = Erreur lors de l'importation
 org.laeq.video.duration.error = La durée de la vidéo est inconnue
 
