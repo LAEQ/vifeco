@@ -58,7 +58,7 @@ public class ContainerView extends TranslatedView {
     @FXML private Button deleteActionTarget;
     @FXML private Button editActionTarget;
 
-    Map<Category, IconCounter> categoryGroupMap;
+    private final Map<Category, IconCounter> categoryGroupMap = new HashMap<>();
 
     private TableColumn<Video, User> userColumn;
     private TableColumn<Video, Collection> collectionColumn;
@@ -119,7 +119,6 @@ public class ContainerView extends TranslatedView {
     private void setTranslatedText(){
         try{
             textFields.entrySet().forEach(t -> {
-                System.out.println(t.getKey() + " : " + t.getValue());
                 t.getKey().setText(translationService.getMessage(t.getValue()));
             });
 
@@ -132,7 +131,6 @@ public class ContainerView extends TranslatedView {
     }
 
     private void init(){
-        categoryGroupMap = new HashMap<>();
         videoTable.setEditable(true);
 
         TableColumn<Video, Number> idColumn = new TableColumn<>("#");
@@ -142,7 +140,6 @@ public class ContainerView extends TranslatedView {
         TableColumn<Video, String> durationColumn = new TableColumn("Duration");
         collectionColumn = new TableColumn("Collection");
         TableColumn<Video, Number> totalColumn = new TableColumn<>("Total");
-
 
         columnsMap.put(dateColumn, "org.laeq.video.column.created_at");
         columnsMap.put(pathColumn, "org.laeq.video.column.name");
@@ -197,7 +194,18 @@ public class ContainerView extends TranslatedView {
     }
 
     public void showDetails() {
-        setCategoryGroup();
+        // Display video information
+        titleValue.setText(model.getSelectedVideo().getName());
+        durationValue.setText(model.getSelectedVideo().getDurationFormatted());
+        totalValue.setText(String.format("%d", model.getSelectedVideo().totalPoints()));
+
+        IconCounterMatrice matrix = new IconCounterMatrice(this.model.getSelectedVideo().getCollection().getCategorySet());
+        categoryGroupMap.clear();
+        categoryGroupMap.putAll(matrix.getIconMap());
+
+        categoryGroup.getChildren().clear();
+        categoryGroup.getChildren().addAll(matrix.getIconMap().values());
+
         Map<Category, Long> pointsByCategory = this.model.getTotalByCategory();
 
         categoryGroupMap.forEach((category, categoryIcon) -> {
@@ -212,10 +220,6 @@ public class ContainerView extends TranslatedView {
                 categoryIcon.setText(pointsByCategory.get(category).toString());
             }
         });
-
-        titleValue.setText(model.getSelectedVideo().getName());
-        durationValue.setText(model.getSelectedVideo().getDurationFormatted());
-        totalValue.setText(String.format("%d", model.getSelectedVideo().totalPoints()));
     }
 
     public void initForm(){
@@ -233,25 +237,16 @@ public class ContainerView extends TranslatedView {
         collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));
     }
 
-    private void setCategoryGroup(){
-        if(this.model.getSelectedVideo() instanceof Video){
-            IconCounterMatrice matrix = new IconCounterMatrice(this.model.getSelectedVideo().getCollection().getCategorySet());
-            categoryGroupMap = matrix.getIconMap();
-
-            categoryGroup.getChildren().addAll(matrix.getIconMap().values());
-        }
-    }
-
     public void reset() {
         titleValue.setText("");
         durationValue.setText("");
         totalValue.setText("");
-
         categoryGroupMap.clear();
 
         videoTable.refresh();
         videoTable.getSelectionModel().clearSelection();
         categoryGroup.getChildren().clear();
+        categoryGroupMap.clear();
     }
 
     public void refresh() {

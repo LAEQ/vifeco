@@ -168,7 +168,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void updateCollection(TableColumn.CellEditEvent<Video, Collection> event) {
         try {
-            Boolean confirm = confirm("org.laeq.video.collection.confirm");
+            Boolean confirm = confirm(translationService.getMessage("org.laeq.video.collection.confirm"));
 
             if(confirm){
                 videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
@@ -181,7 +181,7 @@ public class ContainerController extends CRUDController<Video> {
             }
 
         } catch (SQLException | DAOException e) {
-            alert("org.laeq.title.error", e.getMessage());
+            alert(translationService.getMessage("org.laeq.title.error"), e.getMessage());
         }
     }
 
@@ -194,12 +194,16 @@ public class ContainerController extends CRUDController<Video> {
     }
 
     private void setPoints(Video video){
-        model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
+        if(video.getPointSet().size() == 0){
+            model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
+        }
     }
 
     private void setCategories(Video video){
-        Set<Category> categories = categoryDAO.findByCollection(video.getCollection());
-        video.getCollection().getCategorySet().addAll(categories);
+        if(video.getCollection().getCategorySet().size() == 0){
+            Set<Category> categories = categoryDAO.findByCollection(video.getCollection());
+            video.getCollection().getCategorySet().addAll(categories);
+        }
     }
 
     private Map<String, RunnableWithArgs> listeners(){
