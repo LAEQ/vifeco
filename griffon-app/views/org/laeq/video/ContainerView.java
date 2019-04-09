@@ -58,7 +58,7 @@ public class ContainerView extends TranslatedView {
     @FXML private Button deleteActionTarget;
     @FXML private Button editActionTarget;
 
-    Map<Category, IconCounter> categoryGroupMap;
+    private final Map<Category, IconCounter> categoryGroupMap = new HashMap<>();
 
     private TableColumn<Video, User> userColumn;
     private TableColumn<Video, Collection> collectionColumn;
@@ -87,22 +87,6 @@ public class ContainerView extends TranslatedView {
         textFields.put(deleteActionTarget, "org.laeq.video.delete_btn");
         textFields.put(editActionTarget, "org.laeq.video.edit_btn");
 
-//        IconSquare exportIcon = new IconSquare(new Category("export", IconSVG.export, "#FFFFFFFF", "A"));
-//        exportIcon.decorate();
-//        exportActionTarget.setGraphic(exportIcon);
-
-//        IconSquare deleteIcon = new IconSquare(new Category("delete", IconSVG.trash, "#FFFFFFFF", "A"));
-//        deleteIcon.decorate();
-//        deleteActionTarget.setGraphic(deleteIcon);
-
-//        IconSquare editIcon = new IconSquare(new Category("delete", IconSVG.edit, "#FFFFFFFF", "A"));
-//        editIcon.decorate();
-//        editActionTarget.setGraphic(editIcon);
-
-//        IconSquare clearIcon = new IconSquare(new Category("clear", IconSVG.clear, "#000000FF", "A"));
-//        clearIcon.decorate();
-//        clearActionTarget.setGraphic(clearIcon);
-
         changeLocale(model.getPrefs().locale);
     }
 
@@ -126,7 +110,6 @@ public class ContainerView extends TranslatedView {
     }
 
     private void init(){
-        categoryGroupMap = new HashMap<>();
         videoTable.setEditable(true);
 
         TableColumn<Video, Number> idColumn = new TableColumn<>("#");
@@ -136,7 +119,6 @@ public class ContainerView extends TranslatedView {
         TableColumn<Video, String> durationColumn = new TableColumn("");
         collectionColumn = new TableColumn("");
         TableColumn<Video, Number> totalColumn = new TableColumn<>("");
-
 
         columnsMap.put(dateColumn, "org.laeq.video.column.created_at");
         columnsMap.put(pathColumn, "org.laeq.video.column.name");
@@ -191,7 +173,18 @@ public class ContainerView extends TranslatedView {
     }
 
     public void showDetails() {
-        setCategoryGroup();
+        // Display video information
+        titleValue.setText(model.getSelectedVideo().getName());
+        durationValue.setText(model.getSelectedVideo().getDurationFormatted());
+        totalValue.setText(String.format("%d", model.getSelectedVideo().totalPoints()));
+
+        IconCounterMatrice matrix = new IconCounterMatrice(this.model.getSelectedVideo().getCollection().getCategorySet());
+        categoryGroupMap.clear();
+        categoryGroupMap.putAll(matrix.getIconMap());
+
+        categoryGroup.getChildren().clear();
+        categoryGroup.getChildren().addAll(matrix.getIconMap().values());
+
         Map<Category, Long> pointsByCategory = this.model.getTotalByCategory();
 
         categoryGroupMap.forEach((category, categoryIcon) -> {
@@ -206,10 +199,6 @@ public class ContainerView extends TranslatedView {
                 categoryIcon.setText(pointsByCategory.get(category).toString());
             }
         });
-
-        titleValue.setText(model.getSelectedVideo().getName());
-        durationValue.setText(model.getSelectedVideo().getDurationFormatted());
-        totalValue.setText(String.format("%d", model.getSelectedVideo().totalPoints()));
     }
 
     public void initForm(){
@@ -227,25 +216,16 @@ public class ContainerView extends TranslatedView {
         collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));
     }
 
-    private void setCategoryGroup(){
-        if(this.model.getSelectedVideo() instanceof Video){
-            IconCounterMatrice matrix = new IconCounterMatrice(this.model.getSelectedVideo().getCollection().getCategorySet());
-            categoryGroupMap = matrix.getIconMap();
-
-            categoryGroup.getChildren().addAll(matrix.getIconMap().values());
-        }
-    }
-
     public void reset() {
         titleValue.setText("");
         durationValue.setText("");
         totalValue.setText("");
-
         categoryGroupMap.clear();
 
         videoTable.refresh();
         videoTable.getSelectionModel().clearSelection();
         categoryGroup.getChildren().clear();
+        categoryGroupMap.clear();
     }
 
     public void refresh() {

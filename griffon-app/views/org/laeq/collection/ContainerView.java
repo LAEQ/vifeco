@@ -3,6 +3,7 @@ package org.laeq.collection;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -64,6 +65,7 @@ public class ContainerView extends TranslatedView {
     }
 
     private void init(){
+        TableColumn<Collection, String> idColumn = new TableColumn<>("#");
         TableColumn<Collection, String> nameColumn = new TableColumn("");
         TableColumn categoryListColumn = new TableColumn("");
         TableColumn<Collection, Icon>  isDefaultColumn = new TableColumn("");
@@ -74,13 +76,14 @@ public class ContainerView extends TranslatedView {
         columnsMap.put(categoryListColumn, "org.laeq.collection.column.categories");
         columnsMap.put(actionColumn, "org.laeq.collection.column.actions");
 
+        idColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> String.valueOf(cellData.getValue().getId())));
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         isDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().isIsDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
         actionColumn.setCellFactory(addActions());
         categoryListColumn.setCellValueFactory(new PropertyValueFactory<Collection, Boolean>("prout"));
         categoryListColumn.setCellFactory(iconAction());
 
-        collectionTable.getColumns().addAll(nameColumn, categoryListColumn, isDefaultColumn, actionColumn);
+        collectionTable.getColumns().addAll(idColumn, nameColumn, categoryListColumn, isDefaultColumn, actionColumn);
         collectionTable.setItems(this.model.getCollections());
     }
 

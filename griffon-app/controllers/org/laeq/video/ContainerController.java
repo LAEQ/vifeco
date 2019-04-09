@@ -195,12 +195,16 @@ public class ContainerController extends CRUDController<Video> {
     }
 
     private void setPoints(Video video){
-        model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
+        if(video.getPointSet().size() == 0){
+            model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
+        }
     }
 
     private void setCategories(Video video){
-        Set<Category> categories = categoryDAO.findByCollection(video.getCollection());
-        video.getCollection().getCategorySet().addAll(categories);
+        if(video.getCollection().getCategorySet().size() == 0){
+            Set<Category> categories = categoryDAO.findByCollection(video.getCollection());
+            video.getCollection().getCategorySet().addAll(categories);
+        }
     }
 
     private Map<String, RunnableWithArgs> listeners(){

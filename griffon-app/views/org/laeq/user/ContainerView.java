@@ -3,6 +3,7 @@ package org.laeq.user;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -56,6 +57,7 @@ public class ContainerView extends TranslatedView {
     }
 
     private void init(){
+        TableColumn<User, String> idColumn = new TableColumn<>("#");
         TableColumn<User, String> firstNameColumn = new TableColumn("");
         TableColumn<User, String> lastNameColumn = new TableColumn<>("");
         TableColumn<User, String> emailColumn = new TableColumn("");
@@ -75,8 +77,9 @@ public class ContainerView extends TranslatedView {
         textFields.put(saveActionTarget, "org.laeq.user.save_btn");
         textFields.put(clearActionTarget, "org.laeq.user.clear_btn");
 
-        userTable.getColumns().addAll(firstNameColumn, lastNameColumn, emailColumn, defaultColumn, actionsColumn);
+        userTable.getColumns().addAll(idColumn, firstNameColumn, lastNameColumn, emailColumn, defaultColumn, actionsColumn);
 
+        idColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> String.valueOf(cellData.getValue().getId())));
         firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
         emailColumn.setCellValueFactory(cellData -> cellData.getValue().emailProperty());

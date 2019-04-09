@@ -51,7 +51,7 @@ org.laeq.video.column.last_point = Last point
 org.laeq.model.collection.delete.confirmation = confirm the collection suppression
 org.laeq.model.collection.form.alert.title = Invalid collection form !
 org.laeq.model.collection.validation.categories = You must select at least one category.
-org.laeq.model.collection.default.error = You cannot delete the default category
+org.laeq.model.collection.default.error = You cannot delete the default collection
 
 -- Collection UI
 org.laeq.collection.name = Name
