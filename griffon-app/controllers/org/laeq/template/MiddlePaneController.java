@@ -131,6 +131,8 @@ public class MiddlePaneController extends AbstractGriffonController {
             }
         });
 
+        list.put("about.section", objects -> createGroup("about_container"));
+
         return list;
     }
 
