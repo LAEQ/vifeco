@@ -15,6 +15,4 @@ public class TimelineModel extends AbstractGriffonModel {
     public void setLineDuration(double lineDuration) {
         this.lineDuration = lineDuration;
     }
-
-
 }

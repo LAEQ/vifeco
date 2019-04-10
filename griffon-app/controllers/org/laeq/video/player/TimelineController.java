@@ -6,9 +6,11 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Point;
+import org.laeq.user.PreferencesService;
 import org.laeq.video.ControlsDefault;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,10 +19,11 @@ import java.util.Map;
 public class TimelineController extends AbstractGriffonController {
     @MVCMember @Nonnull private TimelineModel model;
     @MVCMember @Nonnull private TimelineView view;
+    @Inject private PreferencesService preferencesService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        model.setLineDuration(ControlsDefault.duration);
+        model.setLineDuration(preferencesService.getPreferences().duration);
         getApplication().getEventRouter().addEventListener(listenerList());
     }
 

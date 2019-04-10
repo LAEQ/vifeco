@@ -8,8 +8,11 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Point;
+import org.laeq.model.Preferences;
+import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +21,16 @@ import java.util.Map;
 public class PlayerController extends AbstractGriffonController {
     @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private PlayerView view;
+    @Inject private PreferencesService preferencesService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
+        Preferences preferences = preferencesService.getPreferences();
+        model.setSize(preferences.size);
+        model.setOpacity(preferences.opacity);
+        model.setDuration(preferences.duration);
+        model.setVolume(preferences.volume);
+        model.setRate(preferences.rate);
         getApplication().getEventRouter().addEventListener(listenerList());
     }
 
