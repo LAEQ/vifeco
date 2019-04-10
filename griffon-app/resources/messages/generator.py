@@ -24,9 +24,15 @@ for l in lines:
     key = words[0].strip()
     message = words[1].strip()
 
+    found = False
+
     for r in result:
         if key in r.keys():
             r[key]['fr-CA'] = message
+            found = True
+
+    if not found:
+        print("fr missing: " + key)
 
 f = open("keys_es.txt", encoding="utf-8")
 lines = [l for l in (line.strip() for line in f) if (l and "-" not in l)]
@@ -36,9 +42,15 @@ for l in lines:
     key = words[0].strip()
     message = words[1].strip()
 
+    found = False
+
     for r in result:
         if key in r.keys():
             r[key]['es-ES'] = message
+            found = True
+
+    if not found:
+        print("es: " + key)
 
 y = json.dumps(result, ensure_ascii=False, indent=4, sort_keys=True)
 f = io.open("messages.json", "w", encoding='utf8')

@@ -152,7 +152,6 @@ public class VideoEditor {
 
         SortedSet<Point> points = video.getPointSet().subSet(start, end);
         pointsToTimeline.retainAll(points);
-
         points.forEach(point -> {
             if( ! pointsToTimeline.contains(point)){
                 pointsToTimeline.add(point);
@@ -351,5 +350,9 @@ public class VideoEditor {
         } else {
             mediaPlayer.seek(mediaPlayer.getStartTime());
         }
+    }
+
+    public void reload() {
+        mediaPlayer.seek(mediaPlayer.getStartTime());
     }
 }

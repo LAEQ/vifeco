@@ -37,6 +37,7 @@ public class ContainerView extends TranslatedView {
     @FXML private TextField lastNameField;
     @FXML private TextField emailField;
 
+    @FXML private Label formTitle;
     @FXML private Label firstNameLabel;
     @FXML private Label lastNameLabel;
     @FXML private Label emailLabel;
@@ -71,6 +72,7 @@ public class ContainerView extends TranslatedView {
         columnsMap.put(defaultColumn, "org.laeq.user.column.default");
         columnsMap.put(actionsColumn, "org.laeq.user.column.actions");
 
+        textFields.put(formTitle, "org.laeq.user.title_create");
         textFields.put(firstNameLabel, "org.laeq.user.first_name");
         textFields.put(lastNameLabel, "org.laeq.user.last_name");
         textFields.put(emailLabel, "org.laeq.user.email");

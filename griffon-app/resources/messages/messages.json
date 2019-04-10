@@ -134,13 +134,13 @@
     },
     {
         "org.laeq.video.delete.confirm": {
-            "en-CA": "confirm befor you delete the video ?",
+            "en-CA": "Confirm before you delete the video ?",
             "es-ES": "¿Estás seguro de que quieres borrar este video?"
         }
     },
     {
         "org.laeq.video.user.confirm": {
-            "en-CA": "confirm the video user change  ?",
+            "en-CA": "Confirm the video user change  ?",
             "es-ES": "¿Estás seguro de que quieres cambiar el usuario de este video?"
         }
     },
@@ -287,8 +287,7 @@
     {
         "org.laeq.model.collection.delete.confirmation": {
             "en-CA": "confirm the collection suppression",
-            "es-ES": "¿Estás seguro de que quieres eliminar esta colección?",
-            "fr-CA": "Êtes-vous sûr de vouloir supprimer la collection?"
+            "es-ES": "¿Estás seguro de que quieres eliminar esta colección?"
         }
     },
     {

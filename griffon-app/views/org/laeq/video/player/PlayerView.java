@@ -392,4 +392,8 @@ public class PlayerView extends TranslatedView {
     public void rate(Double rate) {
         editor.getMediaPlayer().setRate(rate);
     }
+
+    public void reload() {
+        editor.reload();
+    }
 }

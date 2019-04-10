@@ -60,8 +60,7 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void backVideo() {
-
-//        view.reload();
+        view.reload();
     }
 
 

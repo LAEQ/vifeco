@@ -38,6 +38,8 @@ public class MiddlePaneController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
+
+        getApplication().getEventRouter().publishEventOutsideUI("video.section");
     }
 
     private Map<String, RunnableWithArgs> listenerList(){

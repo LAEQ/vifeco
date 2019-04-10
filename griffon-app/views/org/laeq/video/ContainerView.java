@@ -137,8 +137,10 @@ public class ContainerView extends TranslatedView {
 
         videoTable.setItems(this.model.getFilteredList());
         videoTable.getSelectionModel().selectedItemProperty().addListener(observable -> {
-            model.setSelectedVideo(videoTable.getSelectionModel().getSelectedItem());
-            controller.showDetail();
+            if(videoTable.getSelectionModel().getSelectedItem() != null){
+                model.setSelectedVideo(videoTable.getSelectionModel().getSelectedItem());
+                controller.showDetail();
+            }
         });
 
         filterNameField.textProperty().addListener(filtering());

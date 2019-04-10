@@ -46,7 +46,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         createMVCGroup("menu");
         createMVCGroup("middle");
 //        createMVCGroup("bottom");
-//        createMVCGroup("database");
+        createMVCGroup("database");
     }
 
     @Override
