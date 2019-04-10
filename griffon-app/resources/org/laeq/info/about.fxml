@@ -17,15 +17,15 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                             <children>
                                 <WebView fx:id="citationView" layoutY="6.0" prefHeight="200.0" prefWidth="200.0"
-                                         AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
-                                         AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0"/>
+                                         AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0"
+                                         AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0"/>
                             </children>
                         </AnchorPane>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                             <children>
                                 <WebView fx:id="aboutView" layoutX="59.0" layoutY="-20.0" prefHeight="200.0"
-                                         prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
-                                         AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0"/>
+                                         prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0"
+                                         AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0"/>
                             </children>
                         </AnchorPane>
                     </items>
