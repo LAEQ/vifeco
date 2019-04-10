@@ -87,12 +87,13 @@ dependencies {
     compile group: 'org.apache.xmlgraphics', name: 'batik-codec', version: '1.9'
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
 
+    implementation 'com.atlassian.commonmark:commonmark:0.12.1'
+
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
     testCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"
     testCompile "org.spockframework:spock-core:${spockVersion}"
-    testCompile 'org.hsqldb:hsqldb:2.4.1'
     testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
     
 
@@ -167,7 +168,7 @@ task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
     group = 'Reporting'
     description = 'Generate Jacoco coverage reports after running all tests.'
     executionData file("${buildDir}/jacoco/root.exec")
-    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)    
     classDirectories = files(sourceSets.main.output)
     reports {
         csv.enabled = false
