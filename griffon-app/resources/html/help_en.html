@@ -34,13 +34,11 @@
                         <li>Assign / change the user assigned to a video</li>
                         <li>Modify the collection assigned to the video</li>
                         <li>Show the numbers of points counted in total and per category</li>
-                        <li>Select a video to start or continue the counting</li>
+                        <li>Select a video to start or continue counting</li>
                     </ul>
                     <p class="alert alert-warning">
-                        Changing the collection assign with a video will remove the points from categories become
-                        obsolete, meaning that are not part of the new collection.
-                        The deletions are final and cannot be retrieved after the change is accepted. Precautionary you
-                        should export the video in case you want to revert your choice.
+                        Changing the collection assigned to a video will delete the points from categories that are not in the new collection.
+                        Export the video before making a change in case you want to revert your choice.
                     </p>
                 </td>
             </tr>
@@ -49,8 +47,7 @@
                 <td>Video management</td>
                 <td>
                     <p>Add a new video file in the system. (New database entry).</p>
-                    <p class="alert alert-warning">You cannot move the video to another location on the hard drive once
-                        it has been saved in the database.</p>
+                    <p class="alert alert-warning">You cannot move the video to another location once it has been saved.</p>
                 </td>
             </tr>
             <tr>
@@ -59,16 +56,16 @@
                 <td>This section allows you to:
                     <ul>
                         <li>Create a new user</li>
-                        <li>Edit the user information</li>
-                        <li>Delete a user from the application</li>
+                        <li>Edit user information</li>
+                        <li>Delete a user</li>
                     </ul>
                     <p class="alert alert-danger">
                         A default user is created during the first execution of the program. This user <b> must not be
                         deleted</b> under any circumstances.
                     </p>
                     <p class="alert alert-info">
-                        You cannot delete a user from system as long as he's with some videos. You must first reassign
-                        the videos to another user prior deletion.
+                        You cannot delete a user with videos assigned to the user. You must reassign
+                        the videos to another user prior to deletion.
                     </p>
                 </td>
             </tr>
@@ -78,16 +75,16 @@
                 <td>This section allows you to:
                     <ul>
                         <li>Create a new category</li>
-                        <li>Edit an existing one (color, svg path, shortcut, name)</li>
+                        <li>Edit an existing one (color, SVG path, shortcut, name)</li>
                         <li>Delete a category from the application</li>
                     </ul>
                     <p>
-                        This version support only a svg with a single path. You must be the <a
+                        This version support only a SVG with a single path. You must only use the <a
                             href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d" target="_blank">d
                         attribute</a> for the path.
                         The color must be chosen with the picker color. A preview will be display to help you check the
                         validity of the path value and it's rendering (size, position). You can find sites or open
-                        source softwares to manipulate SVG files (resizing, merge multiple paths, ...)
+                        source software to manipulate SVG files (resizing, merge multiple paths, ...)
                     </p>
                 </td>
             </tr>
@@ -103,7 +100,7 @@
                         not be deleted</b> under any circumstances.
                     </div>
                     <p class="alert alert-info">You cannot delete a collection that is associated with videos. You must
-                        first reassign the videos with another collection.
+                        first reassign the videos to another collection.
                     </p>
                 </td>
             </tr>
@@ -151,7 +148,7 @@
                         </li>
                     </ul>
                     <p class="alert alert-warning">
-                        You must check the ids user, collection and each categories exists in the database before
+                        You must check the ids of user, collection and each category that exist in the database before
                         importing a file.
                     </p>
                 </td>
@@ -159,7 +156,7 @@
             <tr>
                 <td><img src="images/icons/statistic.png "/></td>
                 <td>Statistic section</td>
-                <td>This section allows you to analyse the different counting jobs made by different users and calculate
+                <td>This section allows you to analyse the different counting jobs of different users and calculate
                     ....
                 </td>
             </tr>
@@ -167,7 +164,7 @@
         </table>
         <hr/>
         <hr/>
-        <h2>Video icons & shorcuts</h2>
+        <h2>Video icons & shortcuts</h2>
         <table class="table">
             <thead>
             <tr>
