@@ -114,7 +114,7 @@ public class ContainerModel extends AbstractGriffonModel {
 
         if(!isOneSelected){
             builder.append("\n - categories: ");
-            builder.append(messageSource.getMessage("org.laeq.model.collection.validation.categories", Locale.CANADA));
+            builder.append("org.laeq.model.collection.validation.categories");
             result = false;
         }
 

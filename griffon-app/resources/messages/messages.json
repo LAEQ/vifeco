@@ -287,7 +287,8 @@
     {
         "org.laeq.model.collection.delete.confirmation": {
             "en-CA": "confirm the collection suppression",
-            "es-ES": "¿Estás seguro de que quieres eliminar esta colección?"
+            "es-ES": "¿Estás seguro de que quieres eliminar esta colección?",
+            "fr-CA": "Êtes-vous sûr de vouloir supprimer la collection?"
         }
     },
     {
@@ -306,7 +307,7 @@
     },
     {
         "org.laeq.model.collection.default.error": {
-            "en-CA": "You cannot delete the default category",
+            "en-CA": "You cannot delete the default collection",
             "es-ES": "No puedes borrar la categoría por defecto",
             "fr-CA": "La suppression de la collection par défaut n'est pas permise"
         }

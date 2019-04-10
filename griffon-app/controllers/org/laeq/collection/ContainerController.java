@@ -54,12 +54,13 @@ public class ContainerController extends CRUDController<Collection> {
             } catch (DAOException e) {
                 getLog().error(e.getMessage());
                 alert(translationService.getMessage("org.laeq.title.error"),
-                        translationService.getMessage("org.laeq.model.invalid_fields") + ": " +e.getMessage());
+                        translationService.getMessage("org.laeq.model.invalid_fields") + ": " + e.getMessage());
             }
 
         } else {
             getLog().error(model.getErrors());
-            alert(translationService.getMessage("org.laeq.model.collection.form.alert.title"), model.getErrors());
+            String errorMessage = model.getErrors().replace("org.laeq.model.collection.validation.categories", translationService.getMessage("org.laeq.model.collection.validation.categories"));
+            alert(translationService.getMessage("org.laeq.model.collection.form.alert.title"), errorMessage);
         }
     }
 
