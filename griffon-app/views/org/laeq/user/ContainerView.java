@@ -10,7 +10,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.Callback;
-import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.TranslatedView;
 import org.laeq.TranslationService;
 import org.laeq.model.Icon;
@@ -22,7 +21,6 @@ import org.laeq.template.MiddlePaneView;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.Locale;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ContainerView extends TranslatedView {

@@ -1,7 +1,6 @@
 package org.laeq.model.serializer;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -21,7 +20,7 @@ public class MessageDeserializer extends StdDeserializer<Message> {
     }
 
     @Override
-    public Message deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Message deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         JsonNode node = p.getCodec().readTree(p);
 
         String key = node.fieldNames().next();

@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)

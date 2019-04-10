@@ -15,12 +15,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Preferences;
 import org.laeq.model.icon.IconPointPNG;
-import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 @ArtifactProviderFor(GriffonView.class)
 public class TimelineView extends AbstractJavaFXGriffonView {

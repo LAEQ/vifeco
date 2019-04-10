@@ -21,8 +21,6 @@ import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconCounter;
 import org.laeq.model.icon.IconCounterMatrice;
-import org.laeq.model.icon.IconSVG;
-import org.laeq.model.icon.IconSquare;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
 import org.laeq.user.PreferencesService;

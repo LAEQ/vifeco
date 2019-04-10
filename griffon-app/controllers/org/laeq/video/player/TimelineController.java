@@ -7,7 +7,6 @@ import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Point;
 import org.laeq.user.PreferencesService;
-import org.laeq.video.ControlsDefault;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

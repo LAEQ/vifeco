@@ -8,11 +8,9 @@ import org.laeq.collection.ContainerModel;
 import org.laeq.collection.ContainerView;
 import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
-import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Locale;
 
 public class CRUDController<T> extends AbstractGriffonController {
     @MVCMember @Nonnull protected ContainerModel model;

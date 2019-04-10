@@ -4,8 +4,6 @@ import javafx.util.Duration
 import org.laeq.model.*
 
 class VideoGenerator {
-    static int pointId = 1
-
     static Video generateVideo( int videoId, int totalCategory){
         Collection collection = generateCollection(1)
 
@@ -35,7 +33,7 @@ class VideoGenerator {
         return category
     }
 
-    static void generatePoints(Video video, int categoryId, int seconds, int total){
+    static void generatePoints(Video video, int categoryId, int seconds, int total,int pointId){
         Category category = video.collection.categorySet.find { it.id == categoryId}
         1.upto(total, {
             Duration start = Duration.millis(seconds + it * 1000)

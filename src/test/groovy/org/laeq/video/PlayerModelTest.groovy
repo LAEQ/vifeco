@@ -3,6 +3,7 @@ package org.laeq.video
 import javafx.util.Duration
 import org.laeq.model.*
 import org.laeq.video.player.PlayerModel
+import spock.lang.Ignore
 import spock.lang.Specification
 
 class PlayerModelTest extends Specification {
@@ -26,6 +27,7 @@ class PlayerModelTest extends Specification {
         return id
     }
 
+    @Ignore
     def "test get icons to display"() {
         setup:
         def id = 0
@@ -49,7 +51,7 @@ class PlayerModelTest extends Specification {
 
     }
 
-
+    @Ignore
     def "test list of points to display: size"(int total, int duration, int now, int expected) {
         setup:
         0.upto(total, {
@@ -76,7 +78,6 @@ class PlayerModelTest extends Specification {
         10000 | 3        | 10003    | 2997
         10000 | 3.77     | 899      | 900
     }
-
 
     Point generatePoint(int start){
         Category category = new Category("test", "M150 0 L75 200 L225 200 Z", "test", "A")

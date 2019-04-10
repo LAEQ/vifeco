@@ -7,10 +7,11 @@ import org.apache.commons.io.IOUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.settings.Message;
 
-import java.io.*;
-import java.net.URL;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 

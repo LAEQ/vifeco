@@ -25,13 +25,10 @@ public class IconPointColorized extends IconPoint {
         circleOver.setFill(Color.WHITE);
         circleOver.setOpacity(0);
 
-        Category c = null;
-        try {
-            c = (Category)(iconSize.category.clone());
-            c.setColor(Color.WHITE.toString());
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
+        Category c = new Category();
+        c.setName(iconSize.category.getName());
+        c.setIcon(iconSize.category.getIcon());
+        c.setColor(Color.WHITE.toString());
 
         iconSize2 = new IconSize(c, iconSize.size);
         this.iconSize2.decorate();

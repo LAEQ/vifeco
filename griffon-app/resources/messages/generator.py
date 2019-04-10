@@ -1,5 +1,5 @@
-import json
 import io
+import json
 
 # Parse english keys
 f = open("keys.txt", encoding="utf-8")

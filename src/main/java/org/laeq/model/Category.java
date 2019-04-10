@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Objects;
 
 @JsonIgnoreProperties({"createdAt", "updatedAt" })
-public class Category extends BaseEntity implements Cloneable{
+public class Category extends BaseEntity {
     private int id;
     private String name;
     private String icon;
@@ -84,12 +84,5 @@ public class Category extends BaseEntity implements Cloneable{
     @Override
     public String toString() {
         return "Cat{" + id + ' '+ name +'}';
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException{
-        Category category = new Category(this.name, this.icon, this.color, this.shortcut);
-
-        return category;
     }
 }

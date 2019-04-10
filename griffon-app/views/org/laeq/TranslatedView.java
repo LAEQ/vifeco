@@ -1,7 +1,6 @@
 package org.laeq;
 
 
-import griffon.core.i18n.MessageSource;
 import griffon.transform.Threading;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TableColumn;
@@ -10,7 +9,6 @@ import org.laeq.ui.DialogService;
 
 import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class TranslatedView extends AbstractJavaFXGriffonView {

@@ -13,7 +13,6 @@ import org.laeq.model.Collection;
 import org.laeq.model.Preferences;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;

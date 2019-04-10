@@ -39,6 +39,7 @@ public class Preferences {
         locale = localAvailables.get(index);
     }
 
+    @JsonIgnore
     public List<String> getLocales(){
         return localAvailables.stream().map(locale1 -> locale1.getDisplayLanguage(locale1)).collect(Collectors.toList());
     }
