@@ -3,9 +3,11 @@ package org.laeq.video
 
 import javafx.util.Duration
 import org.laeq.model.*
+import spock.lang.Ignore
 import spock.lang.Specification
 
 class CategoryModelTest extends Specification {
+    @Ignore
     def "GetTotalCount"() {
         given: "A number of categories"
 

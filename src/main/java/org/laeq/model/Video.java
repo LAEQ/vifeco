@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
+import java.io.File;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Map;
@@ -167,5 +168,10 @@ public class Video extends BaseEntity {
     @JsonIgnore
     public Map<Category, Long> getTotalByCategory() {
         return pointSet.stream().collect(Collectors.groupingBy(Point::getCategory, Collectors.counting()));
+    }
+
+    @JsonIgnore
+    public boolean isEditable(){
+        return new File(path.getValue()).exists();
     }
 }

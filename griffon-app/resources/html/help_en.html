@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Help</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css"/>
+</head>
+<body>
+<div class="container-fluid">
+    <section>
+        <h1>Help section</h1>
+        <hr/>
+        <h2>Navigation</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <td>#</td>
+                <td>Section</td>
+                <td>Actions</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><img src="images/icons/video.png"/></td>
+                <td>Video management</td>
+                <td>
+                    This section allows you to:
+                    <ul>
+                        <li>List the videos in the database and a short description (name, duration, user, collection,
+                            total points ...)
+                        </li>
+                        <li>Assign / change the user assigned to a video</li>
+                        <li>Modify the collection assigned to the video</li>
+                        <li>Show the numbers of points counted in total and per category</li>
+                        <li>Select a video to start or continue counting</li>
+                    </ul>
+                    <p class="alert alert-warning">
+                        Changing the collection assigned to a video will delete the points from categories that are not in the new collection.
+                        Export the video before making a change in case you want to revert your choice.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/add_video.png"/></td>
+                <td>Video management</td>
+                <td>
+                    <p>Add a new video file in the system. (New database entry).</p>
+                    <p class="alert alert-warning">You cannot move the video to another location once it has been saved.</p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/user.png "/></td>
+                <td>User management</td>
+                <td>This section allows you to:
+                    <ul>
+                        <li>Create a new user</li>
+                        <li>Edit user information</li>
+                        <li>Delete a user</li>
+                    </ul>
+                    <p class="alert alert-danger">
+                        A default user is created during the first execution of the program. This user <b> must not be
+                        deleted</b> under any circumstances.
+                    </p>
+                    <p class="alert alert-info">
+                        You cannot delete a user with videos assigned to the user. You must reassign
+                        the videos to another user prior to deletion.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/category.png"/></td>
+                <td>Category management</td>
+                <td>This section allows you to:
+                    <ul>
+                        <li>Create a new category</li>
+                        <li>Edit an existing one (color, SVG path, shortcut, name)</li>
+                        <li>Delete a category from the application</li>
+                    </ul>
+                    <p>
+                        This version support only a SVG with a single path. You must only use the <a
+                            href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d" target="_blank">d
+                        attribute</a> for the path.
+                        The color must be chosen with the picker color. A preview will be display to help you check the
+                        validity of the path value and it's rendering (size, position). You can find sites or open
+                        source software to manipulate SVG files (resizing, merge multiple paths, ...)
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/collection.png"/></td>
+                <td>Collection management</td>
+                <td>This section allows you to:
+                    <ul>
+                        <li>Create, update or delete a collection</li>
+                    </ul>
+                    <div class="alert alert-danger">
+                        A default collection is created during the first execution. This collection is permanent and <b>should
+                        not be deleted</b> under any circumstances.
+                    </div>
+                    <p class="alert alert-info">You cannot delete a collection that is associated with videos. You must
+                        first reassign the videos to another collection.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/database.png"/></td>
+                <td>Database management</td>
+                <td>This section allows you to:
+                    <ul>
+                        <li>Check the database status (connections, tables ...)</li>
+                        <li>Export and back up the different tables
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/import.png"/></td>
+                <td>Import a video count job</td>
+                <td>This section allows you to import a json from an exported video count job. The json structure is
+                    <ul>
+                        <li>path: the video file path</li>
+                        <li>user: (id, firstname, lastname, email, isDefault)</li>
+                        <li>duration: in milliseconds</li>
+                        <li>collection:
+                            <ul>
+                                <li>id</li>
+                                <li>name</li>
+                                <li>isDefault</li>
+                                <li>categorySet: list of categories for this collection
+                                    <ul>
+                                        <li>id</li>
+                                        <li>name</li>
+                                        <li>icon</li>
+                                        <li>color</li>
+                                        <li>shortcut</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>pointSet: list of points
+                            <ul>
+                                <li>id</li>
+                                <li>x and y coordinates</li>
+                                <li>startDouble (in milliseconds)</li>
+                                <li>categoryId</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p class="alert alert-warning">
+                        You must check the ids of user, collection and each category that exist in the database before
+                        importing a file.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/statistic.png "/></td>
+                <td>Statistic section</td>
+                <td>This section allows you to analyse the different counting jobs of different users and calculate
+                    ....
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr/>
+        <hr/>
+        <h2>Video icons & shortcuts</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Icon</th>
+                <th>Title</th>
+                <th>Min</th>
+                <th>Max</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><img src="images/icons/rate.png"/></td>
+                <td>Video rate</td>
+                <td>0.1</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/volume.png"/></td>
+                <td>Volume</td>
+                <td>0.1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/size.png"/></td>
+                <td>Icon size display on the video</td>
+                <td>10</td>
+                <td>100</td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/duration.png"/></td>
+                <td>Duration (in seconds) to display a icon</td>
+                <td>1</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/opacity.png"/></td>
+                <td>Icon opacity</td>
+                <td>0.1</td>
+                <td>1</td>
+            </tr>
+            </tbody>
+        </table>
+        <h3>Mouse events and key events (aka shortcuts)</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Keys</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Mouse click left</td>
+                <td>backward 5 seconds</td>
+            </tr>
+            <tr>
+                <td>Mouse click right</td>
+                <td>forward 5 seconds</td>
+            </tr>
+            <tr>
+                <td>Mouse scroll down</td>
+                <td>rate - 0.1</td>
+            </tr>
+            <tr>
+                <td>Mouse scroll up</td>
+                <td>rate + 0.1</td>
+            </tr>
+            <tr>
+                <td>esc (or) delete (+ mouse pointer hovering the point)</td>
+                <td>Delete icon</td>
+            </tr>
+            <tr>
+                <td>Shorcuts defined for each category</td>
+                <td>Add an icon to the video with the mouse pointer coordinates and the player current time.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+</body>
+</html>

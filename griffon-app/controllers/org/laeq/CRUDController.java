@@ -11,7 +11,6 @@ import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Locale;
 
 public class CRUDController<T> extends AbstractGriffonController {
     @MVCMember @Nonnull protected ContainerModel model;
@@ -20,20 +19,16 @@ public class CRUDController<T> extends AbstractGriffonController {
     @Inject protected DialogService dialogService;
 
     protected void alert(String key, String alertMsg){
-        runInsideUISync(() -> dialogService.simpleAlert(getMessage(key), alertMsg));
+        runInsideUISync(() -> dialogService.simpleAlert(key, alertMsg));
     }
 
     protected Boolean confirm(String key){
-        return dialogService.confirm(getMessage(key));
+        return dialogService.confirm((key));
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void clear(){
         model.clearForm();
-    }
-
-    protected String getMessage(String key){
-        return getApplication().getMessageSource().getMessage(key, Locale.CANADA);
     }
 }

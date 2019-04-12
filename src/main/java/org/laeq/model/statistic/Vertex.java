@@ -14,6 +14,10 @@ public class Vertex implements Comparable<Vertex>{
         this.point = point;
     }
 
+    public Point getPoint() {
+        return point;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

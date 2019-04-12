@@ -155,6 +155,7 @@ class VideoDAOTest extends AbstractDAOTest {
 
         then:
         videoUpdated.collection.id == 2
+
         noExceptionThrown()
     }
 }

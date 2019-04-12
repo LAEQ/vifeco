@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
@@ -52,6 +53,7 @@ public class PlayerView extends TranslatedView {
     @FXML private Button backVideoActionTarget;
     @FXML private Slider timeSlider;
     @FXML private Text durationLabel;
+    @FXML private Label videoTitle;
     @Inject private VideoService videoService;
 
     private VifecoView rootView;
@@ -193,6 +195,7 @@ public class PlayerView extends TranslatedView {
             mediaView.setMediaPlayer(editor.getMediaPlayer());
             playActionTarget.setDisable(false);
             updateValues();
+            videoTitle.setText(editor.getVideo().getName());
         } else {
             playActionTarget.setDisable(true);
             alert("org.laeq.title.error", "org.laeq.video.file.error");
@@ -388,5 +391,9 @@ public class PlayerView extends TranslatedView {
 
     public void rate(Double rate) {
         editor.getMediaPlayer().setRate(rate);
+    }
+
+    public void reload() {
+        editor.reload();
     }
 }

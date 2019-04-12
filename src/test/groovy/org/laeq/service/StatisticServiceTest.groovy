@@ -1,5 +1,6 @@
 package org.laeq.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import javafx.util.Duration
 import org.laeq.model.Category
 import org.laeq.model.Point
@@ -46,14 +47,18 @@ class StatisticServiceTest extends Specification {
 
     def "test category map"(){
         setup:
+        int pointId = 1
         service.setVideos(video1, video2)
         service.setDurationStep(Duration.seconds(10))
 
         when:
-        VideoGenerator.generatePoints(video1, 1, 0, 10)
-        VideoGenerator.generatePoints(video2, 2, 0, 10)
-        VideoGenerator.generatePoints(video1, 3, 0 ,10)
-        VideoGenerator.generatePoints(video2, 4, 0, 10)
+        VideoGenerator.generatePoints(video1, 1, 0, 10, pointId)
+        pointId += 10
+        VideoGenerator.generatePoints(video2, 2, 0, 10, pointId)
+        pointId += 10
+        VideoGenerator.generatePoints(video1, 3, 0 ,10, pointId)
+        pointId += 10
+        VideoGenerator.generatePoints(video2, 4, 0, 10, pointId)
 
         service.setDurationStep(Duration.millis(1000))
         service.init()
@@ -66,12 +71,14 @@ class StatisticServiceTest extends Specification {
 
     def "test graph generation (vertices and edges) for one category"() {
         setup:
+        int pointId= 1
         Video video_1 = VideoGenerator.generateVideo(1,1)
         Video video_2 = VideoGenerator.generateVideo(2, 1)
 
         // generate 10 points starting from 10 every seconds
-        VideoGenerator.generatePoints(video_1, 1, 10, 10)
-        VideoGenerator.generatePoints(video_2, 1, 10, 10)
+        VideoGenerator.generatePoints(video_1, 1, 10, 10, pointId)
+        pointId += 10
+        VideoGenerator.generatePoints(video_2, 1, 10, 10, pointId)
 
         when:
         service.setVideos(video_1, video_2)
@@ -161,14 +168,15 @@ class StatisticServiceTest extends Specification {
 
     def "test execute 3 points" () {
         setup:
+        int pointId = 1
         Video video1 = VideoGenerator.generateVideo(1,1)
         Video video2 = VideoGenerator.generateVideo(2, 1)
 
         Category category = video1.collection.categorySet.find { it.id == 1}
 
         when:
-        VideoGenerator.generatePoints(video1, 1, 0, 0) // 10 points starting at 10 every seconds
-        VideoGenerator.generatePoints(video2, 1, 0, 0)  // 10 points starting at 4 every seconds
+//        VideoGenerator.generatePoints(video1, 1, 0, 1, pointId) // 10 points starting at 10 every seconds
+//        VideoGenerator.generatePoints(video2, 1, 0, 0, pointId + 0)  // 10 points starting at 4 every seconds
 
         Point point1 = new Point(1, 10,10,Duration.millis(1000),video1, category)
         video1.pointSet.add(point1)
@@ -183,23 +191,21 @@ class StatisticServiceTest extends Specification {
         service.setDurationStep(Duration.seconds(1))
         def result = service.execute()
 
-        println result.get(category)
-
-
         then:
         result.get(category).collect{it.size()}.sort() == [1,2]
     }
 
-    def "test execute" () {
+    def "test execute"() {
         setup:
+        int pointId = 1;
         Video video1 = VideoGenerator.generateVideo(1,1)
         Video video2 = VideoGenerator.generateVideo(2,1)
 
         Category category = video1.collection.categorySet.find { it.id == 1}
 
         when:
-        VideoGenerator.generatePoints(video1, 1, 0, 4) // 10 points starting at 0 every seconds
-        VideoGenerator.generatePoints(video2, 1, 0, 2)  // 10 points starting at 0 every seconds
+        VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 10 points starting at 0 every seconds
+        VideoGenerator.generatePoints(video2, 1, 0, 2, pointId + 4)  // 10 points starting at 0 every seconds
 
 
         service.setVideos(video1, video2)
@@ -213,36 +219,16 @@ class StatisticServiceTest extends Specification {
 
     def "test connect the dots" () {
         setup:
+        int pointId = 1
         Video video1 = VideoGenerator.generateVideo(1,1)
         Video video2 = VideoGenerator.generateVideo(2,1)
 
         Category category = video1.collection.categorySet.find { it.id == 1}
 
         when:
-        VideoGenerator.generatePoints(video1, 1, 0, 4) // 10 points starting at 0 every seconds
-        VideoGenerator.generatePoints(video2, 1, 0, 2)  // 10 points starting at 0 every seconds
 
-
-        service.setVideos(video1, video2)
-        service.setDurationStep(Duration.seconds(1))
-        def result = service.execute()
-
-        then:
-        result.get(category).collect{it.collect{it.point.id}.sort()}.contains([1,2,3,5,6]) == true
-        result.get(category).collect{it.collect{it.point.id}.sort()}.contains([4]) == true
-    }
-
-    def "test draw the lines between connected dots" () {
-        setup:
-        Video video1 = VideoGenerator.generateVideo(1,1)
-        Video video2 = VideoGenerator.generateVideo(2,1)
-
-        Category category = video1.collection.categorySet.find { it.id == 1}
-
-        when:
-        VideoGenerator.generatePoints(video1, 1, 0, 6)
-        VideoGenerator.generatePoints(video2, 1, 1000, 3)
-
+        VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
+        VideoGenerator.generatePoints(video2, 1, 0, 2, pointId + 4)  // 2 points starting at 0 every seconds
 
         service.setVideos(video1, video2)
         service.setDurationStep(Duration.seconds(1))
@@ -278,6 +264,7 @@ class StatisticServiceTest extends Specification {
 
     def "test analyse with 3 categories" () {
         setup:
+        int pointId = 1
         Video video1 = VideoGenerator.generateVideo(1,3)
         Video video2 = VideoGenerator.generateVideo(2,3)
 
@@ -286,17 +273,22 @@ class StatisticServiceTest extends Specification {
         Category category3 = video1.collection.categorySet.find { it.id == 3}
 
         when:
-        VideoGenerator.generatePoints(video1, 1, 0, 4) // 4 points starting at 0 every seconds
-        VideoGenerator.generatePoints(video2, 1, 0, 2)  // 2 points starting at 0 every seconds
-
-        VideoGenerator.generatePoints(video1, 2, 0, 10)
-        VideoGenerator.generatePoints(video2, 2, 4, 3)
-
-        VideoGenerator.generatePoints(video1, 3, 20, 5)
-        VideoGenerator.generatePoints(video2, 3, 23, 3)
-        VideoGenerator.generatePoints(video1, 3, 1000, 15)
-        VideoGenerator.generatePoints(video2, 3, 1007, 10)
-
+        VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
+        pointId += 4
+        VideoGenerator.generatePoints(video2, 1, 0, 2, pointId)  // 2 points starting at 0 every seconds
+        pointId += 2
+        VideoGenerator.generatePoints(video1, 2, 0, 10, pointId)
+        pointId += 10
+        VideoGenerator.generatePoints(video2, 2, 4, 3, pointId)
+        pointId += 3
+        VideoGenerator.generatePoints(video1, 3, 20, 5, pointId)
+        pointId += 5
+        VideoGenerator.generatePoints(video2, 3, 23, 3 , pointId)
+        pointId += 3
+        VideoGenerator.generatePoints(video1, 3, 1000, 15 , pointId)
+        pointId += 15
+        VideoGenerator.generatePoints(video2, 3, 1007, 10 , pointId)
+        pointId += 10
 
         service.setVideos(video1, video2)
         service.setDurationStep(Duration.seconds(1))
@@ -308,8 +300,49 @@ class StatisticServiceTest extends Specification {
         result.get(category3).values().toArray() == [7,0]
     }
 
-    def "test total by video and category"() {
+    def "serialization" () {
+        setup:
+        int pointId = 1
+        Video video1 = VideoGenerator.generateVideo(1,3)
+        Video video2 = VideoGenerator.generateVideo(2,3)
 
+        Category category1 = video1.collection.categorySet.find { it.id == 1}
+        Category category2 = video1.collection.categorySet.find { it.id == 2}
+        Category category3 = video1.collection.categorySet.find { it.id == 3}
+
+        when:
+        VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
+        pointId += 4
+        VideoGenerator.generatePoints(video2, 1, 0, 2, pointId)  // 2 points starting at 0 every seconds
+        pointId += 2
+        VideoGenerator.generatePoints(video1, 2, 0, 10, pointId)
+        pointId += 10
+        VideoGenerator.generatePoints(video2, 2, 4, 3, pointId)
+        pointId += 3
+        VideoGenerator.generatePoints(video1, 3, 20, 5, pointId)
+        pointId += 5
+        VideoGenerator.generatePoints(video2, 3, 23, 3 , pointId)
+        pointId += 3
+        VideoGenerator.generatePoints(video1, 3, 1000, 15 , pointId)
+        pointId += 15
+        VideoGenerator.generatePoints(video2, 3, 1007, 10 , pointId)
+        pointId += 10
+
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(1))
+        service.analyse()
+        def tarjans = service.getTarjans()
+        def tarjansTime = service.test()
+//        def tarjansDiff = service.getTarjanDiffs()
+
+//        ObjectMapper mapper = new ObjectMapper()
+//        String tarjansDiffSerialized = new ObjectMapper().writeValueAsString(tarjansDiff)
+//        String tarjansSerialized = new ObjectMapper().writeValueAsString(tarjans)
+//
+//        println tarjansDiffSerialized
+//        println tarjansSerialized
+
+        then:
+        true == true
     }
-
 }

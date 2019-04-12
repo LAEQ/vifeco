@@ -75,6 +75,10 @@ public class Point extends BaseEntity implements Comparable<Point> {
         return start.toMillis();
     }
 
+    public int getVideoId(){
+        return video.getId();
+    }
+
     @JsonIgnore
     public Duration getStart() {
         return start;

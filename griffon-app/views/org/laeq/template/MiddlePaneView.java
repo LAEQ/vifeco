@@ -41,7 +41,6 @@ public class MiddlePaneView extends AbstractJavaFXGriffonView {
     }
 
     private void setMvcGroupId(String mvcGroupId) {
-        System.out.println("MVcgroupID" + this.mvcGroupId);
         if(this.mvcGroupId.length() > 0){
             destroyMVCGroup(this.mvcGroupId);
         }

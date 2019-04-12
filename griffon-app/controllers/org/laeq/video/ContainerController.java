@@ -10,6 +10,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.laeq.CRUDController;
+import org.laeq.TranslationService;
 import org.laeq.db.*;
 import org.laeq.icon.IconService;
 import org.laeq.model.Category;
@@ -17,16 +18,14 @@ import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
+import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends CRUDController<Video> {
@@ -36,15 +35,20 @@ public class ContainerController extends CRUDController<Video> {
     @Inject private MariaService dbService;
     @Inject private ExportService exportService;
     @Inject private IconService iconService;
+    @Inject private PreferencesService prefService;
 
     private VideoDAO videoDAO;
     private UserDAO userDAO;
     private CollectionDAO ccDAO;
     private CategoryDAO categoryDAO;
     private PointDAO pointDAO;
+    private TranslationService translationService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
+        model.setPrefs(prefService.getPreferences());
+        setTranslationService();
+
         videoDAO = dbService.getVideoDAO();
         ccDAO = dbService.getCollectionDAO();
         userDAO = dbService.getUserDAO();
@@ -72,6 +76,7 @@ public class ContainerController extends CRUDController<Video> {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     private void getVideoDuration(Video video) {
+        getLog().info("Calculating the video duration: should be known already. Fix this issue");
         File file = new File(video.getPath());
 
         if (file.exists()) {
@@ -94,18 +99,18 @@ public class ContainerController extends CRUDController<Video> {
     }
 
     public void clear(){
-        view.reset();
+        runInsideUISync(() -> view.reset());
     }
 
     public void delete(){
 
         if(model.getSelectedVideo() == null){
-            alert("org.laeq.title.error", "org.laeq.video.no_selection");
+            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
             return;
         }
 
         runInsideUISync(() -> {
-            Boolean confirmation = confirm("org.laeq.video.delete.confirm");
+            Boolean confirmation = confirm(translationService.getMessage("org.laeq.video.delete.confirm"));
             if(confirmation){
                 try {
                     videoDAO.delete(model.getSelectedVideo());
@@ -120,7 +125,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void edit(){
         if(model.getSelectedVideo() == null){
-            alert("org.laeq.title.error", getMessage("org.laeq.video.no_selection"));
+            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
             return;
         }
 
@@ -129,7 +134,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void export(){
         if(model.getSelectedVideo() == null){
-            alert("org.laeq.title.error", getMessage("org.laeq.video.no_selection"));
+            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
             return;
         }
 
@@ -138,7 +143,7 @@ public class ContainerController extends CRUDController<Video> {
 
     public void editVideo(Video video) {
         if(model.getSelectedVideo() == null){
-            alert("org.laeq.title.error", getMessage("org.laeq.video.no_selection"));
+            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
             return;
         }
 
@@ -151,27 +156,54 @@ public class ContainerController extends CRUDController<Video> {
 
     public void updateUser(TableColumn.CellEditEvent<Video, User> event) {
         try {
-            videoDAO.updateUser(event.getRowValue(), event.getNewValue());
-            event.getRowValue().setUser(event.getNewValue());
+            Boolean confirm = confirm(translationService.getMessage("org.laeq.video.user.confirm"));
+
+            if(confirm){
+                videoDAO.updateUser(event.getRowValue(), event.getNewValue());
+                event.getRowValue().setUser(event.getNewValue());
+            }
         } catch (SQLException | DAOException e) {
-            alert("org.laeq.title.error", e.getMessage());
+            alert(translationService.getMessage("org.laeq.title.error"), e.getMessage());
         }
     }
 
     public void updateCollection(TableColumn.CellEditEvent<Video, Collection> event) {
         try {
-            videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
-            event.getRowValue().setCollection(event.getNewValue());
+            Boolean confirm = confirm(translationService.getMessage("org.laeq.video.collection.confirm"));
+
+            if(confirm){
+                videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
+                event.getRowValue().setCollection(event.getNewValue());
+                setCategories(event.getRowValue());
+                pointDAO.updateOnCollectionChange(event.getRowValue());
+                event.getRowValue().getPointSet().clear();
+                event.getRowValue().setTotal(pointDAO.findByVideo(event.getRowValue()).size());
+                runInsideUISync(() -> view.reset());
+            }
+
         } catch (SQLException | DAOException e) {
-            alert("org.laeq.title.error", e.getMessage());
+            alert(translationService.getMessage("org.laeq.title.error"), e.getMessage());
         }
     }
 
     public void showDetail() {
         if(model.getSelectedVideo() != null){
-            model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
-            model.getSelectedVideo().getCollection().getCategorySet().addAll(categoryDAO.findByCollection(model.getSelectedVideo().getCollection()));
+            setPoints(model.getSelectedVideo());
+            setCategories(model.getSelectedVideo());
             view.showDetails();
+        }
+    }
+
+    private void setPoints(Video video){
+        if(video.getPointSet().size() == 0){
+            model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
+        }
+    }
+
+    private void setCategories(Video video){
+        if(video.getCollection().getCategorySet().size() == 0){
+            Set<Category> categories = categoryDAO.findByCollection(video.getCollection());
+            video.getCollection().getCategorySet().addAll(categories);
         }
     }
 
@@ -192,6 +224,21 @@ public class ContainerController extends CRUDController<Video> {
             });
         });
 
+        list.put("change.language", objects -> {
+            Locale locale = (Locale) objects[0];
+            model.getPrefs().locale = locale;
+            view.changeLocale(locale);
+            setTranslationService();
+        });
+
         return list;
+    }
+
+    private void setTranslationService(){
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
     }
 }

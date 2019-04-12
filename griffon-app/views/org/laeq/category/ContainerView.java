@@ -14,12 +14,17 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
 import org.laeq.TranslatedView;
+import org.laeq.TranslationService;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
+import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.util.Locale;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ContainerView extends TranslatedView {
@@ -42,12 +47,19 @@ public class ContainerView extends TranslatedView {
     @FXML private Button clearActionTarget;
     @FXML private Button saveActionTarget;
 
+
     @FXML private TableView<Category> categoryTable;
+
+    private TranslationService translationService;
+    @Inject
+    private PreferencesService prefService;
 
     private SVGPath svgPath;
 
     @Override
     public void initUI() {
+        model.setPrefs(prefService.getPreferences());
+
         Node node = loadFromFXML();
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
         connectActions(node, controller);
@@ -74,7 +86,27 @@ public class ContainerView extends TranslatedView {
         textFields.put(clearActionTarget, "org.laeq.category.clear_btn");
         textFields.put(saveActionTarget, "org.laeq.category.save_btn");
 
-        translate();
+        setTranslatedText();
+    }
+
+    private void setTranslatedText(){
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
+
+        try{
+            textFields.entrySet().forEach(t -> {
+                t.getKey().setText(translationService.getMessage(t.getValue()));
+            });
+
+            columnsMap.entrySet().forEach( t -> {
+                t.getKey().setText(translationService.getMessage(t.getValue()));
+            });
+        } catch (Exception e){
+            getLog().error("icit: " + e.getMessage());
+        }
     }
 
     public void initForm(){
@@ -96,18 +128,20 @@ public class ContainerView extends TranslatedView {
     }
 
     private void init(){
+        TableColumn<Category, String> idColumn = new TableColumn<>("#");
         TableColumn<Category, Void> iconColumn = new TableColumn<>("");
         TableColumn<Category, String> nameColumn = new TableColumn("");
         TableColumn<Category, String> shortCutColumn = new TableColumn<>("");
         TableColumn<Category, Void> actionColumn = new TableColumn<>("");
 
-        categoryTable.getColumns().addAll(iconColumn, nameColumn, shortCutColumn, actionColumn);
+        categoryTable.getColumns().addAll(idColumn, iconColumn, nameColumn, shortCutColumn, actionColumn);
 
         columnsMap.put(iconColumn, "org.laeq.category.column.icon");
         columnsMap.put(nameColumn, "org.laeq.category.column.name");
         columnsMap.put(shortCutColumn, "org.laeq.category.column.short_cut");
         columnsMap.put(actionColumn, "org.laeq.category.column.actions");
 
+        idColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> String.valueOf(cellData.getValue().getId())));
         nameColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getName()));
         shortCutColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getShortcut()));
 
@@ -180,9 +214,8 @@ public class ContainerView extends TranslatedView {
                         icon.setFill(Paint.valueOf(category.getColor()));
 
                         colorPickerField.setValue(javafx.scene.paint.Color.valueOf(category.getColor()));
-
                     } catch (Exception e){
-                        getLog().error(e.getMessage());
+//                        getLog().error(e.getMessage());
                     }
 
                     if (empty) {
@@ -195,5 +228,9 @@ public class ContainerView extends TranslatedView {
 
             return cell;
         };
+    }
+
+    public void changeLocale(Locale locale) {
+        setTranslatedText();
     }
 }

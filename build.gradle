@@ -53,7 +53,6 @@ apply from: 'gradle/integration-test.gradle'
 apply from: 'gradle/functional-test.gradle'
 apply from: 'gradle/package.gradle'
 apply from: 'gradle/docs.gradle'
-apply from: 'gradle/db.gradle'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'org.kordamp.gradle.stats'
 apply plugin: 'com.github.ben-manes.versions'
@@ -76,7 +75,6 @@ dependencies {
     compile 'org.kordamp.ikonli:ikonli-javafx:1.8.0'
     compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:1.8.0'
     compile 'eu.lestard:advanced-bindings:0.4.0'
-    compile 'org.hsqldb:hsqldb:2.4.1'
     compile 'de.jensd:fontawesomefx:8.9'
     compile 'com.abercap:mediainfo-java-api:1.0.0.RELEASE'
     compile group: 'ch.vorburger.mariaDB4j', name: 'mariaDB4j-app', version: '2.2.3'
@@ -84,24 +82,20 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
-
     compile group: 'org.apache.xmlgraphics', name: 'batik-util', version: '1.11'
     compile group: 'org.apache.xmlgraphics', name: 'batik-transcoder', version: '1.11'
     compile group: 'org.apache.xmlgraphics', name: 'batik-codec', version: '1.9'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
 
-
-
+    implementation 'com.atlassian.commonmark:commonmark:0.12.1'
 
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
     testCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"
     testCompile "org.spockframework:spock-core:${spockVersion}"
-    testCompile 'org.hsqldb:hsqldb:2.4.1'
-    testCompile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
-
-
-//    compile files('db/lib/hsqldb.jar')
+    testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
+    
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }
@@ -120,6 +114,7 @@ tasks.withType(JavaCompile) {
     sourceCompatibility = project.sourceCompatibility
     targetCompatibility = project.targetCompatibility
     run{
+        
         jvmArgs '-Dprism.vsync=false'
     }
 
@@ -173,7 +168,7 @@ task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
     group = 'Reporting'
     description = 'Generate Jacoco coverage reports after running all tests.'
     executionData file("${buildDir}/jacoco/root.exec")
-    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)    
     classDirectories = files(sourceSets.main.output)
     reports {
         csv.enabled = false

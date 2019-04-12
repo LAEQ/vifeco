@@ -134,7 +134,7 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             int result = stmt.executeUpdate();
 
             if(result != 1){
-                throw new DAOException(String.format("Error cannot update category: ", category.getName()));
+                throw new DAOException(String.format("Error cannot updateTranslation category: ", category.getName()));
             }
         }
     }

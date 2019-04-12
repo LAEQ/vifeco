@@ -10,7 +10,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.DAOException;
-import org.laeq.model.User;
 import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
 import org.laeq.video.ImportService;
@@ -21,10 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class MenuController extends AbstractGriffonController {
+    private Locale currentLocale;
     @MVCMember @Nonnull private MenuModel model;
     @MVCMember @Nonnull private MenuView view;
 
@@ -112,7 +113,6 @@ public class MenuController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void sendTo(){
         getApplication().getEventRouter().publishEvent("org.laeq.user.create");
-
         getApplication().getEventRouter().publishEvent("org.laeq.user.list");
     }
 
@@ -131,8 +131,6 @@ public class MenuController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void newCategory() {
-//        destroyMVCGroup(getMvcGroup().getMvcId());
-//        dialogService.dialog();
         getApplication().getEventRouter().publishEvent("category.create");
     }
 
@@ -187,7 +185,7 @@ public class MenuController extends AbstractGriffonController {
         return list;
     }
 
-    public void setActiveUser(User selectedItem) {
-        getApplication().getEventRouter().publishEventAsync("database.user.active", Arrays.asList(selectedItem));
+    public void changeLanguage() {
+        getApplication().getEventRouter().publishEvent("change.language", Arrays.asList(model.getPrefs().locale));
     }
 }

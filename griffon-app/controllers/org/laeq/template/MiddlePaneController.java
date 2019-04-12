@@ -38,6 +38,8 @@ public class MiddlePaneController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
+
+        getApplication().getEventRouter().publishEventOutsideUI("video.section");
     }
 
     private Map<String, RunnableWithArgs> listenerList(){
@@ -49,7 +51,6 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.section", objects -> createGroup("video_container"));
         list.put("database.section", objects -> createGroup("status"));
         list.put("statistic.section", objects -> createGroup("statistic_container"));
-
         list.put("video.create", objects -> {
             File videoFile = (File) objects[0];
                 if (videoFile.exists()) {
@@ -96,10 +97,21 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.edit", objects -> {
             Video video = (Video) objects[0];
 
+            File file = new File(video.getPath());
+
+            if(! file.exists()){
+                getLog().error(String.format("PlayerView: file not exits %s", file));
+                String title = getApplication().getMessageSource().getMessage("org.laeq.title.error");
+                runInsideUISync(() -> {
+                    dialogService.simpleAlert(title, String.format("PlayerView: file not exits %s", file));
+                });
+
+                return;
+            }
+
             VideoEditor editor = null;
             try {
                 editor = new VideoEditor(video, dbService.getPointDAO());
-
                 editor.setImageViewMap(iconService.getImageViews(video.getCollection().getCategorySet()));
 
                 Map<String, Object> args = new HashMap<>();
@@ -108,8 +120,20 @@ public class MiddlePaneController extends AbstractGriffonController {
             } catch (IOException | TranscoderException e) {
                 getLog().error(e.getMessage());
                 dialogService.simpleAlert(getApplication().getMessageSource().getMessage("org.laeq.title.error"), e.getMessage());
+            } catch (MediaException | javafx.scene.media.MediaException e) {
+                getLog().error(e.getMessage());
+                String title = getApplication().getMessageSource().getMessage("org.laeq.title.error");
+                String message = getApplication().getMessageSource().getMessage("org.laeq.video.media_file.error");
+                dialogService.simpleAlert(title, message);
+            } catch (Exception e){
+                getLog().error(e.getMessage());
+                String title = getApplication().getMessageSource().getMessage("org.laeq.title.error");
+                String message = getApplication().getMessageSource().getMessage("org.laeq.video.file.error");
+                dialogService.simpleAlert(title, message);
             }
         });
+
+        list.put("about.section", objects -> createGroup("about_container"));
 
         return list;
     }

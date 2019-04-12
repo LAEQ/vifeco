@@ -132,4 +132,27 @@ class PointDAOTest extends AbstractDAOTest {
         then:
         thrown DAOException
     }
+
+    def "delete point on updated collection"() {
+        setup:
+        try{
+            manager.loadFixtures("sql/test_fixtures.sql")
+        } catch (Exception e){
+            println e
+        }
+
+        when:
+        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), user, collection)
+        collection = new Collection(2, "mock", false)
+        video.setCollection(collection)
+
+        def result = repository.updateOnCollectionChange(video)
+        def points = repository.findByVideo(video)
+
+        then:
+        result == 4
+        points.size() == 4
+        points.collect { it.category.id }.sort() == [2,2,3,3]
+
+    }
 }

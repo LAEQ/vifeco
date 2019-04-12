@@ -54,7 +54,7 @@ class ImportServiceTest extends AbstractDAOTest {
         boolean result = service.execute(file)
         Set<Video> videos = videoDAO.findAll()
 
-        Video expected = videos.find { it.path == 'exported_video.wav'}
+        Video expected = videos.find { it.path == '/path/export/exported_video.wav'}
         SortedSet<Point> points = pointDAO.findByVideo(expected)
 
         then:

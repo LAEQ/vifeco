@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
 <SplitPane dividerPositions="0.6004464285714286" layoutY="7.0" prefHeight="365.0" prefWidth="883.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.user.ContainerController">
     <items>
         <AnchorPane fx:id="userListPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -11,7 +10,7 @@
         </children>
         </AnchorPane>
         <AnchorPane fx:id="userFormPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-            <Text fx:id="title" layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create a new user" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="14.0" />
+            <Label fx:id="formTitle" layoutX="14.0" layoutY="27.0" text="Create a new user" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="14.0" />
             <Separator layoutX="10.0" layoutY="33.0" prefWidth="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="33.0" />
             <GridPane layoutX="10.0" layoutY="47.0" prefHeight="161.0" prefWidth="328.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="50.0">
                 <columnConstraints>
@@ -24,16 +23,16 @@
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="First name" wrappingWidth="107.7294921875" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name" wrappingWidth="109.56396484375" GridPane.rowIndex="1" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" wrappingWidth="110.0673828125" GridPane.rowIndex="2" />
+                    <Label fx:id="firstNameLabel" />
+                    <Label fx:id="lastNameLabel" GridPane.rowIndex="1" />
+                    <Label fx:id="emailLabel" GridPane.rowIndex="2" />
                     <TextField fx:id="firstNameField" GridPane.columnIndex="1" />
                     <TextField fx:id="lastNameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 </children>
             </GridPane>
               <Button fx:id="saveActionTarget" layoutX="294.0" layoutY="323.0" mnemonicParsing="false" styleClass="btn, btn-success" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-         <Button fx:id="saveActionTarget1" layoutX="14.0" layoutY="323.0" mnemonicParsing="false" styleClass="btn, btn-default" text="Clear" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+              <Button fx:id="clearActionTarget" layoutX="14.0" layoutY="323.0" mnemonicParsing="false" styleClass="btn, btn-default" text="Clear" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
         </AnchorPane>
     </items>
 </SplitPane>

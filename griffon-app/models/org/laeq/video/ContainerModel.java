@@ -6,10 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-import org.laeq.model.Category;
-import org.laeq.model.Collection;
-import org.laeq.model.User;
-import org.laeq.model.Video;
+import org.laeq.model.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,12 +16,13 @@ import java.util.Set;
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
     private ObservableList<Video> videoList = FXCollections.observableArrayList();
-    private FilteredList<Video> filteredList = new FilteredList<>(videoList, p -> true);
+    private FilteredList<Video> filteredList = new FilteredList<>(videoList, p -> p.isEditable());
 
     private Set<User> userSet = new HashSet<>();
     private Set<Collection> collectionSet = new HashSet<>();
     private Video selectedVideo;
     private String errors = "";
+    private Preferences prefs;
 
     public FilteredList<Video> getFilteredList() {
         return filteredList;
@@ -57,7 +55,6 @@ public class ContainerModel extends AbstractGriffonModel {
     }
 
     public void update(Video video) {
-        System.out.println(video);
         this.selectedVideo.setUser(video.getUser());
         this.selectedVideo.setCollection(video.getCollection());
     }
@@ -81,5 +78,13 @@ public class ContainerModel extends AbstractGriffonModel {
     public void deleteVideo() {
         videoList.remove(this.selectedVideo);
         this.selectedVideo = null;
+    }
+
+    public void setPrefs(Preferences preferences) {
+        this.prefs = preferences;
+    }
+
+    public Preferences getPrefs() {
+        return prefs;
     }
 }

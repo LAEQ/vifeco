@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
+import org.laeq.model.Category;
 import org.laeq.model.Video;
+import org.laeq.service.statistic.StatisticService;
 import org.laeq.settings.Settings;
 
 import java.io.File;
@@ -12,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
@@ -41,6 +44,26 @@ public class ExportService extends AbstractGriffonService {
         } catch (Exception e) {
             getLog().error(e.getMessage());
         }
+    }
+
+    public String export(StatisticService statisticService){
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Long now = System.currentTimeMillis();
+
+        try{
+            String filename = String.format("Stat_%s-%s-%d", statisticService.getVideo1(), statisticService.getVideo2(), now);
+
+            System.out.println(filename);
+
+            return filename;
+
+
+        } catch (Exception exception){
+            getLog().error(exception.getMessage());
+        }
+
+        return "";
     }
 
     private String getPathExport(String filename){

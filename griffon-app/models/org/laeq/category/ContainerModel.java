@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
+import org.laeq.model.Preferences;
 
 import java.util.Optional;
 import java.util.Set;
@@ -25,6 +26,7 @@ public class ContainerModel extends AbstractGriffonModel {
     private SimpleStringProperty icon = new SimpleStringProperty(this, "icon", "");
     private SimpleStringProperty color = new SimpleStringProperty(this, "color", "#00000000");
     private String errors = "";
+    public Preferences prefs;
 
     public ObservableList<Category> getCategoryList() {
         return categoryList;
@@ -180,5 +182,13 @@ public class ContainerModel extends AbstractGriffonModel {
         setIcon("");
         setId(0);
         this.selectedCategory = null;
+    }
+
+    public Preferences getPrefs() {
+        return prefs;
+    }
+
+    public void setPrefs(Preferences prefs) {
+        this.prefs = prefs;
     }
 }

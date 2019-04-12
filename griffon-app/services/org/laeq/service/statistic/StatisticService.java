@@ -12,9 +12,10 @@ import org.laeq.model.statistic.Graph;
 import org.laeq.model.statistic.Vertex;
 import org.laeq.statistic.StatisticTimeline;
 
-import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
@@ -28,6 +29,19 @@ public class StatisticService extends AbstractGriffonService {
     public HashMap<Category, Set<Point>> video2CategoryMap = new HashMap<>();
 
     private Map<Category, List<List<Vertex>>> tarjans = new HashMap<>();
+
+    public Duration getStep() {
+        return step;
+    }
+
+    public Map<Category, List<List<Vertex>>> getTarjans() {
+        return tarjans;
+    }
+
+    public Map<Category, Map<Video, Long>> getTarjanDiffs() {
+        return tarjanDiffs;
+    }
+
     private Map<Category, Map<Video, Long>> tarjanDiffs = new HashMap<>();
 
     public void setDurationStep(Duration step){
@@ -95,6 +109,89 @@ public class StatisticService extends AbstractGriffonService {
         });
 
         return tarjans;
+    }
+
+    public void test(){
+        Map<Category, List<Edge>> result = new HashMap<>();
+
+        tarjans.keySet().forEach(category -> {
+            result.put(category, test1(category));
+        });
+    }
+
+    public List<Edge> test1(Category category){
+        List<List<Vertex>> tmp = tarjans.get(category);
+
+        List<Edge> result = new ArrayList<>();
+
+        tmp.forEach( vertices -> {
+            result.addAll(test2(vertices));
+        });
+
+        return result;
+    }
+
+    public List<Edge> test2(List<Vertex> vertices){
+        List<Edge> result = new ArrayList<>();
+
+        // Pick the smallest list
+        List<Vertex> videoA_vertices = vertices.parallelStream().filter(vertex -> vertex.getPoint().getVideo().equals(video1)).collect(Collectors.toList());
+        List<Vertex> videoB_vertices = vertices.parallelStream().filter(vertex -> vertex.getPoint().getVideo().equals(video2)).collect(Collectors.toList());
+
+
+        if(videoA_vertices.size() == 0 || videoB_vertices.size() == 0){
+            return result;
+        }
+
+        List<Vertex> selected = (videoA_vertices.size() <= videoB_vertices.size()) ? videoA_vertices : videoB_vertices;
+
+        int indexVertex = 0;
+        int indexEdges = 0;
+
+        Vertex v = selected.get(indexVertex++);
+
+        List<Edge> edges = getEdges(v);
+        while(result.size() !=  selected.size()){
+            result.add(edges.get(indexEdges++));
+
+            test3(selected, indexVertex, result);
+
+            if(result.size() != selected.size()){
+                result.remove(result.size() - 1);
+            }
+        }
+
+        return result;
+    }
+
+    private void test3(List<Vertex> vertices, int indexVertex, List<Edge> result) {
+        if(vertices.size() == indexVertex){
+            return;
+        }
+
+        List<Vertex> endVertices = result.stream().map(e -> e.end).collect(Collectors.toList());
+        Vertex v = vertices.get(indexVertex++);
+        List<Edge> edges = getEdges(v).stream().filter(e -> ! endVertices.contains(e)).collect(Collectors.toList());
+
+        if(edges.size() == 0){
+            return;
+        }
+
+        int edgeIndex = 0;
+        while(edgeIndex < edges.size() && vertices.size() != result.size()){
+            result.add(edges.get(edgeIndex++));
+            test3(vertices, indexVertex, result);
+
+            if(result.size() != vertices.size()){
+                result.remove(result.size() - 1);
+            }
+        }
+    }
+
+    private List<Edge> getEdges(Vertex v) {
+        Graph graph = graphs.get(v.point.getCategory());
+
+        return graph.edges.get(v).stream().sorted().collect(Collectors.toList());
     }
 
 
@@ -271,5 +368,11 @@ public class StatisticService extends AbstractGriffonService {
       return result;
     }
 
+    public Video getVideo1() {
+        return video1;
+    }
 
+    public Object getVideo2() {
+        return video2;
+    }
 }

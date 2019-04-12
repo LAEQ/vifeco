@@ -23,7 +23,6 @@ import org.laeq.service.statistic.StatisticException;
 import org.laeq.service.statistic.StatisticService;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.math.BigDecimal;
@@ -41,7 +40,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @Inject private DialogService dialogService;
 
     @FXML private TableView<Video> videoTable;
-    @FXML private Button compareBtn;
+//    @FXML private Button compareBtn;
     @FXML private Slider durationSlider;
     @FXML private GridPane gridResult;
     @FXML private AnchorPane visualTab;
@@ -63,18 +62,18 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         durationSlider.setShowTickMarks(true);
         durationSlider.setShowTickLabels(true);
 
-        durationSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            try{
-                BigDecimal bd = new BigDecimal(newValue.toString());
-                bd = bd.setScale(0, RoundingMode.HALF_EVEN);
-                durationSlider.setValue(bd.intValueExact());
-
-                compare(bd.intValueExact());
-
-            } catch (Exception e){
-                getLog().error(e.getMessage());
-            }
-        });
+//        durationSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+//            try{
+//                BigDecimal bd = new BigDecimal(newValue.toString());
+//                bd = bd.setScale(0, RoundingMode.HALF_EVEN);
+//                durationSlider.setValue(bd.intValueExact());
+//
+//                compare(bd.intValueExact());
+//
+//            } catch (Exception e){
+//                getLog().error(e.getMessage());
+//            }
+//        });
 
         selectBoxes = new DualHashBidiMap<>();
 
@@ -97,15 +96,14 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
         videoTable.setItems(this.model.getVideos());
 
-        compareBtn.setOnMouseClicked(event -> {
-            //Validate video selection
-            compare((int) durationSlider.getValue());
-        });
+//        compareBtn.setOnMouseClicked(event -> {
+//            //Validate video selection
+//            compare((int) durationSlider.getValue());
+//        });
 
         gridResult.setPadding(new Insets(10,10,10,10));
         gridResult.setVgap(5);
         gridResult.setHgap(5);
-
     }
 
     private void compare(int step){
@@ -149,7 +147,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
                 gridResult.add(new Label(String.valueOf(totalB)), 4, rowIndex[0]);
                 gridResult.add(new Label(e.getValue().get(video2).toString()), 5, rowIndex[0]);
 
-                percent = (totalA != 0)?  e.getValue().get(video2) / ((double)totalB) : 0;
+                percent = (totalB != 0)?  e.getValue().get(video2) / ((double)totalB) : 0;
 
                 gridResult.add(new Label(rounder(percent * 100) + "%"), 6, rowIndex[0]);
                 rowIndex[0]++;
@@ -166,7 +164,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         final int[] y = new int[]{0};
 
         graphMap.keySet().forEach(category -> {
-            StatisticTimeline timeline = statService.getStatisticTimeline_v2(category);
+            StatisticTimeline timeline = statService.getStatisticTimeline(category);
             timeline.setLayoutY(y[0]);
 
             y[0] += 110;

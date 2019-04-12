@@ -73,7 +73,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
 
         top = new VBox();
         top.setPrefWidth(900);
-        top.setPrefHeight(90);
+        top.setPrefHeight(60);
         root.setVgrow(top, Priority.NEVER);
 
 

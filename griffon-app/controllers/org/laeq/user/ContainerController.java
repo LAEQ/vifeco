@@ -1,11 +1,13 @@
 package org.laeq.user;
 
+import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.TranslationService;
 import org.laeq.db.DAOException;
 import org.laeq.db.UserDAO;
 import org.laeq.model.User;
@@ -14,23 +16,44 @@ import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends AbstractGriffonController{
     @MVCMember @Nonnull private ContainerModel model;
+    @MVCMember @Nonnull private ContainerView view;
 
     @Inject private MariaService dbService;
     @Inject protected DialogService dialogService;
+    @Inject private PreferencesService preferencesService;
 
     private UserDAO userDAO;
+    private TranslationService translationService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         userDAO = dbService.getUserDAO();
         model.getUserList().addAll(userDAO.findAll());
+        model.setPrefs(preferencesService.getPreferences());
+        getApplication().getEventRouter().addEventListener(listeners());
+        setTranslationService();
+    }
+
+    private Map<String, RunnableWithArgs> listeners() {
+        Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        list.put("change.language", objects -> {
+            Locale locale = (Locale) objects[0];
+            model.getPrefs().locale = locale;
+            setTranslationService();
+            view.changeLocale();
+        });
+
+        return list;
     }
 
     @ControllerAction
@@ -44,7 +67,8 @@ public class ContainerController extends AbstractGriffonController{
                 updateUser(user);
             }
         } else {
-            alert("org.laeq.title.error", String.format("Some fields are invalid: \n%s", model.getErrors()));
+            runInsideUISync(() -> dialogService.simpleAlert(translationService.getMessage("org.laeq.title.error"),
+                    translationService.getMessage("org.laeq.model.invalid_fields") +  model.getErrors()));
         }
     }
 
@@ -54,10 +78,8 @@ public class ContainerController extends AbstractGriffonController{
             model.addUser(user);
             model.clearForm();
         } catch (DAOException e) {
-            String message = String.format("Cannot save user: \n%s", user);
-            alert("org.laeq.title.error", message);
-
-            getLog().error(message);
+            runInsideUISync(() -> dialogService.simpleAlert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.user.save.error")));
+            getLog().error(e.getMessage());
         }
     }
 
@@ -67,10 +89,9 @@ public class ContainerController extends AbstractGriffonController{
             model.update(user);
             model.clearForm();
         } catch (DAOException | SQLException e) {
-            String message = String.format("Cannot save user: \n%s", model.getUser());
-            alert("org.laeq.title.error", message);
+            runInsideUISync(() -> dialogService.simpleAlert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.user.save.error")));
 
-            getLog().error(message);
+            getLog().error(e.getMessage());
         }
     }
 
@@ -82,21 +103,15 @@ public class ContainerController extends AbstractGriffonController{
                 userDAO.delete(user);
                 model.delete(user);
             } catch (DAOException e) {
-                String message = getMessage("org.laeq.delete.default_user.error");
-                alert("org.laeq.title.error", message);
-
-                getLog().error(String.format("UserDAO: failed to deleteVideoIcon %s.", user));
+                runInsideUISync(() -> dialogService.simpleAlert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.user.delete.error")));
+                getLog().error(e.getMessage());
             }
         }
     }
 
 
-    protected void alert(String key, String alertMsg){
-        runInsideUISync(() -> dialogService.simpleAlert(getMessage(key), alertMsg));
-    }
-
     protected Boolean confirm(String key){
-        return dialogService.confirm(getMessage(key));
+        return dialogService.confirm(translationService.getMessage(key));
     }
 
     @ControllerAction
@@ -105,7 +120,11 @@ public class ContainerController extends AbstractGriffonController{
         model.clearForm();
     }
 
-    protected String getMessage(String key){
-        return getApplication().getMessageSource().getMessage(key, Locale.CANADA);
+    private void setTranslationService(){
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
     }
 }

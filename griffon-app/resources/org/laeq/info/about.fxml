@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+<SplitPane dividerPositions="0.49498327759197325" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+           minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0"
+           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+           xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.category.ContainerController">
+    <items>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+            <children>
+                <SplitPane dividerPositions="0.5" layoutX="41.0" layoutY="77.0" orientation="VERTICAL"
+                           prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0"
+                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                            <children>
+                                <WebView fx:id="citationView" layoutY="6.0" prefHeight="200.0" prefWidth="200.0"
+                                         AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0"
+                                         AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0"/>
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                            <children>
+                                <WebView fx:id="aboutView" layoutX="59.0" layoutY="-20.0" prefHeight="200.0"
+                                         prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0"
+                                         AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0"/>
+                            </children>
+                        </AnchorPane>
+                    </items>
+                </SplitPane>
+            </children>
+        </AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+            <children>
+                <WebView fx:id="helpView" layoutX="49.0" layoutY="29.0" prefHeight="200.0" prefWidth="200.0"
+                         AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
+                         AnchorPane.topAnchor="5.0"/>
+            </children>
+        </AnchorPane>
+    </items>
+</SplitPane>

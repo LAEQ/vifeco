@@ -35,11 +35,6 @@ public class Edge implements Comparable<Edge>{
 
     @Override
     public int compareTo(Edge o) {
-        int diffEdges = end.totalEdges - o.end.totalEdges;
-        if(diffEdges != 0){
-            return diffEdges;
-        }
-
         if(getDeltaStart() <= o.getDeltaStart()){
             return -1;
         }

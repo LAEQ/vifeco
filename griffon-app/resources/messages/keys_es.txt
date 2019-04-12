@@ -1,0 +1,107 @@
+org.laeq.title.error = Se ha producido un error 
+org.laeq.model.invalid_fields = Algunos campos son inválidos:
+org.laeq.dao.error = Ha ocurrido un error con la base de datos 
+
+-- Menu
+org.laeq.menu.tooltip.video_list=Sección de videos
+org.laeq.menu.tooltip.video_add = Añadir un nuevo video
+org.laeq.menu.tooltip.user = Sección de los usuarios
+org.laeq.menu.tooltip.category = Sección de las categorías
+org.laeq.menu.tooltip.collection = Sección de las colecciones
+org.laeq.menu.tooltip.database = Sección de la la base de datos
+org.laeq.menu.tooltip.import_video = Importar un video
+org.laeq.menu.tooltip.statistic = Sección de estadísticas
+
+-- Video
+org.laeq.video.video_dao.error = Se ha producido un error al guardar el video en la base de datos
+org.laeq.video.file.error = Ha ocurrido un error con el archivo de video.
+org.laeq.video.media_file.error = Ha ocurrido un error con el archivo de video. Formato incompatible.
+org.laeq.video.validation.title_error = El formulario no es valido.
+org.leaq.video.validation.no_video_selected =  Nada para guadar. Debes seleccionar un video.
+org.leaq.video.validation.no_user_selected = Debes seleccionar un usuario
+org.leaq.video.validation.no_colection_selected = Debes seleccionar un colección
+org.laeq.video.no_selection =  Debes seleccionar un usuario
+org.laeq.video.delete.confirm = ¿Estás seguro de que quieres borrar este video?
+org.laeq.video.user.confirm = ¿Estás seguro de que quieres cambiar el usuario de este video?
+org.laeq.video.collection.confirm = Por favor, confirme el cambio de colección. Los puntos de las categorías obsoletas serán eliminados.
+org.laeq.video.import.error = Error al importar video
+org.laeq.video.duration.error = La duración del video es desconocida
+
+-- Video UI
+org.laeq.video.title_text = Detalles
+org.laeq.video.video_title_text  = Nombre del video
+org.laeq.video.duration_text = Duración
+org.laeq.video.total_text = Total 
+org.laeq.video.last_point_text = Ultimo punto
+org.laeq.video.filter_label = Filtrar
+org.laeq.video.export_btn = Exportar
+org.laeq.video.clear_btn = Borrar
+org.laeq.video.delete_btn = Eliminar
+org.laeq.video.edit_btn = Editar
+
+org.laeq.video.column.created_at = Creado en
+org.laeq.video.column.name = Nombre
+org.laeq.video.column.user = Usuario
+org.laeq.video.column.duration = Duración
+org.laeq.video.column.collection = Colección
+org.laeq.video.column.total = Puntos totales
+org.laeq.video.column.last_point = Ultimo punto
+
+-- Collection
+org.laeq.model.collection.delete.confirmation = ¿Estás seguro de que quieres eliminar esta colección?
+org.laeq.model.collection.form.alert.title = El formulario de la colección no es válido!
+org.laeq.model.collection.validation.categories = Debes seleccionar al menos una categoría
+org.laeq.model.collection.default.error = No puedes borrar la categoría por defecto
+
+-- Collection UI
+org.laeq.collection.name = Nombre
+org.laeq.collection.title_create = Crear una nueva colección
+org.laeq.collection.title_edit = Editar una colección
+org.laeq.collection.category_title = Categorías
+org.laeq.collection.clear_btn = Borrar
+org.laeq.collection.save_btn = Guardar
+
+org.laeq.collection.column.name = Nombre
+org.laeq.collection.column.is_default = Defecto
+org.laeq.collection.column.categories = Categorías
+org.laeq.collection.column.actions = Acciones
+
+
+-- Category 
+org.laeq.category.title_create = Crear una nueva categoría
+org.laeq.category.title_edit = Editar una categoria
+org.laeq.category.name = Nombre
+org.laeq.category.short_cut = Ataja 
+org.laeq.category.path = Ruta
+org.laeq.category.color = Color
+org.laeq.category.preview = Vista previa
+org.laeq.category.clear_btn = Borrar
+org.laeq.category.save_btn = Guardar
+org.laeq.category.column.name = Nombre
+org.laeq.category.column.icon = Icono
+org.laeq.category.column.short_cut = Atajo
+org.laeq.category.column.actions = Acciones
+
+org.laeq.category.save.error = No se puede guardar la categoría
+org.laeq.category.delete.error = No se puede eliminar la categoría
+
+
+-- User
+org.laeq.user.delete.confirmation = ¿Estás seguro de que quieres eliminar el usuario?
+org.laeq.delete.default_user.error = No puedes borrar el usuario predeterminado
+org.laeq.user.save.error = No se puede guardar el usuario
+org.laeq.user.delete.error = No se puede eliminar el usuario
+
+org.laeq.user.title_create = Crear un nuevo usuario
+org.laeq.user.title_edit = Editar un nuevo usuario
+org.laeq.user.first_name = Nombre
+org.laeq.user.last_name = Apellido
+org.laeq.user.email = Email
+org.laeq.user.clear_btn = Borrar
+org.laeq.user.save_btn = Guadar
+
+org.laeq.user.column.first_name = Nombre
+org.laeq.user.column.last_name = Apellido
+org.laeq.user.column.email = Email
+org.laeq.user.column.default = Por defecto
+org.laeq.user.column.actions = Acciones

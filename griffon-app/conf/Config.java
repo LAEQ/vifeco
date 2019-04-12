@@ -92,6 +92,11 @@ public class Config extends AbstractMapResourceBundle {
                 .e("database", map()
                         .e("controller", "org.laeq.db.DatabaseController")
                 )
+                .e("about_container", map()
+                        .e("model", "org.laeq.info.AboutModel")
+                        .e("view", "org.laeq.info.AboutView")
+                        .e("controller", "org.laeq.info.AboutController")
+                )
             );
     }
 }

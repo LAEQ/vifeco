@@ -10,9 +10,9 @@ import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
+import org.laeq.model.Preferences;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,6 +24,8 @@ public class ContainerModel extends AbstractGriffonModel {
     private SimpleBooleanProperty isDefault = new SimpleBooleanProperty(this, "isDefault", false);
     private SimpleStringProperty name = new SimpleStringProperty(this, "name", "");
     private Collection selectedCollection;
+
+    private Preferences preferences;
 
     private String errors = "";
 
@@ -111,11 +113,11 @@ public class ContainerModel extends AbstractGriffonModel {
 
         if(!isOneSelected){
             builder.append("\n - categories: ");
-            builder.append(messageSource.getMessage("org.laeq.model.collection.validation.categories", Locale.CANADA));
+            builder.append("org.laeq.model.collection.validation.categories");
             result = false;
         }
 
-        errors = messageSource.getMessage("org.laeq.model.invalid_fields", Locale.CANADA);
+//        errors = messageSource.getMessage("org.laeq.model.invalid_fields", Locale.CANADA);
         errors +=  builder.toString();
 
         return result;
@@ -160,5 +162,13 @@ public class ContainerModel extends AbstractGriffonModel {
 
     public void delete(Collection collection) {
         collections.remove(collection);
+    }
+
+    public Preferences getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(Preferences preferences) {
+        this.preferences = preferences;
     }
 }
