@@ -149,6 +149,10 @@ public class ContainerView extends TranslatedView {
                 if(video.getDuration() != 0){
                     controller.editVideo(video);
                 }else{
+                    runOutsideUIAsync(() -> {
+                       controller.getVideoDuration(video);
+                    });
+
                     alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.duration.error"));
                 }
             }
@@ -229,6 +233,8 @@ public class ContainerView extends TranslatedView {
     }
 
     public void refresh() {
-        videoTable.refresh();
+        runInsideUISync(() -> {
+            videoTable.refresh();
+        });
     }
 }

@@ -75,7 +75,7 @@ public class ContainerController extends CRUDController<Video> {
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    private void getVideoDuration(Video video) {
+    public void getVideoDuration(Video video) {
         getLog().info("Calculating the video duration: should be known already. Fix this issue");
         File file = new File(video.getPath());
 
@@ -86,6 +86,7 @@ public class ContainerController extends CRUDController<Video> {
 
                 mediaPlayer.setOnReady(()-> {
                     video.setDuration(mediaPlayer.getMedia().getDuration().toMillis());
+                    view.refresh();
                     try {
                         videoDAO.updateDuration(video);
                     } catch (SQLException | DAOException e) {
