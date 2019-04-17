@@ -41,6 +41,17 @@ public class MariaService extends AbstractGriffonService {
             }
         }
 
+        String importPathStr = Settings.imporPath;
+        Path importPath = Paths.get(importPathStr);
+
+        if(! Files.exists(importPath)) {
+            try {
+                Files.createDirectories(importPath);
+            } catch (IOException e) {
+                getLog().error("Import path creation: cannot create " + dbPathStr);
+            }
+        }
+
         config = DBConfigurationBuilder.newBuilder();
         config.setPort(3306);
         config.setDataDir(dbPathStr);

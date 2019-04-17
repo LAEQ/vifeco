@@ -3,6 +3,7 @@ package org.laeq.statistic;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -15,19 +16,25 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
+import org.apache.commons.io.FileUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Category;
 import org.laeq.model.Video;
 import org.laeq.model.statistic.Graph;
 import org.laeq.service.statistic.StatisticException;
 import org.laeq.service.statistic.StatisticService;
+import org.laeq.settings.Settings;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +47,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @Inject private DialogService dialogService;
 
     @FXML private TableView<Video> videoTable;
-//    @FXML private Button compareBtn;
+    @FXML private Button compareBtn;
     @FXML private Slider durationSlider;
     @FXML private GridPane gridResult;
     @FXML private AnchorPane visualTab;
@@ -62,48 +69,51 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         durationSlider.setShowTickMarks(true);
         durationSlider.setShowTickLabels(true);
 
-//        durationSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-//            try{
-//                BigDecimal bd = new BigDecimal(newValue.toString());
-//                bd = bd.setScale(0, RoundingMode.HALF_EVEN);
-//                durationSlider.setValue(bd.intValueExact());
-//
-//                compare(bd.intValueExact());
-//
-//            } catch (Exception e){
-//                getLog().error(e.getMessage());
-//            }
-//        });
-
         selectBoxes = new DualHashBidiMap<>();
 
-        TableColumn<Video, Void> selectBox = new TableColumn<>("#");
-        selectBox.setMinWidth(12);
+        TableColumn<Video, Number> idColumn = new TableColumn<>("#");
         TableColumn<Video, String> pathColumn = new TableColumn("Name");
-        TableColumn<Video, String> userColumn = new TableColumn<>("User");
-        TableColumn<Video, String> durationColumn = new TableColumn("Duration");
         TableColumn<Video, String> collectionColumn = new TableColumn("Collection");
-        TableColumn<Video, Number> totalColumn = new TableColumn<>("Total");
+        TableColumn<Video, Number> filesColumn = new TableColumn<>("Imports");
 
-        videoTable.getColumns().addAll(selectBox, pathColumn, durationColumn, userColumn, collectionColumn, totalColumn);
+        videoTable.getColumns().addAll(idColumn, pathColumn, collectionColumn, filesColumn);
 
-        selectBox.setCellFactory(addSelectBox());
+        idColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(()-> new Integer(param.getValue().getId())));
         pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        userColumn.setCellValueFactory(cellData -> cellData.getValue().getUser().getName());
         collectionColumn.setCellValueFactory(cellData -> cellData.getValue().getCollection().nameProperty());
-        durationColumn.setCellValueFactory(cellData -> cellData.getValue().durationProperty().asString());
-        totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
+        filesColumn.setCellValueFactory(param -> {
+           return Bindings.createIntegerBinding(() -> getTotalImports(param.getValue()));
+        });
 
         videoTable.setItems(this.model.getVideos());
 
-//        compareBtn.setOnMouseClicked(event -> {
-//            //Validate video selection
-//            compare((int) durationSlider.getValue());
-//        });
+        compareBtn.setOnMouseClicked(event -> {
+            //Validate video selection
+
+        });
 
         gridResult.setPadding(new Insets(10,10,10,10));
         gridResult.setVgap(5);
         gridResult.setHgap(5);
+    }
+
+    private int getTotalImports(Video video){
+        int total = 0;
+        Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
+
+        while (it.hasNext()){
+            File file = (File) it.next();
+
+            if(file.getName().contains(video.getName())){
+                System.out.println(video.getName());
+                total++;
+            } else {
+                System.out.println(file.getName());
+            }
+
+        }
+
+        return new Integer(total);
     }
 
     private void compare(int step){
