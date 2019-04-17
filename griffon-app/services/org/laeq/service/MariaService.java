@@ -52,6 +52,17 @@ public class MariaService extends AbstractGriffonService {
             }
         }
 
+        String statPathStr = Settings.statisticPath;
+        Path statPah = Paths.get(statPathStr);
+
+        if(! Files.exists(statPah)) {
+            try {
+                Files.createDirectories(statPah);
+            } catch (IOException e) {
+                getLog().error("Import path creation: cannot create " + statPathStr);
+            }
+        }
+
         config = DBConfigurationBuilder.newBuilder();
         config.setPort(3306);
         config.setDataDir(dbPathStr);
@@ -60,6 +71,8 @@ public class MariaService extends AbstractGriffonService {
         DatabaseConfigBean configBean = new DatabaseConfigBean(config.getURL(dbName), "root", "");
         manager = new DatabaseManager(configBean);
     }
+
+
 
     public void start() throws ManagedProcessException {
         db.start();

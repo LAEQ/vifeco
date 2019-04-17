@@ -21,13 +21,16 @@ public class StatisticSerializer extends StdSerializer<StatisticService> {
     @Override
     public void serialize(StatisticService service, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
 
+        jgen.writeStartObject();
+        jgen.writeObjectFieldStart("videos");
+        jgen.writeObjectField("video_1", service.getVideo1());
+        jgen.writeObjectField("video_2", service.getVideo2());
+        jgen.writeEndObject();
+        jgen.writeObjectField("tarjan_diff", service.getTarjanDiffs());
+        jgen.writeObjectField("tarjan_edge", service.getTarjanEdges());
+        jgen.writeObjectField("tarjan_edge", service.getTarjanEdges());
+        jgen.writeObjectField("lonely_points", service.getLonelyPoints());
 
-
-
-//        jgen.writeStartObject();
-//        jgen.writeNumberField("id", value.id);
-//        jgen.writeStringField("itemName", value.itemName);
-//        jgen.writeNumberField("owner", value.owner.id);
-//        jgen.writeEndObject();
+        jgen.writeEndObject();
     }
 }

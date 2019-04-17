@@ -1,11 +1,13 @@
 package org.laeq.video;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;
 import org.laeq.model.Video;
+import org.laeq.model.serializer.VideoSerializer;
 import org.laeq.service.statistic.StatisticService;
 import org.laeq.settings.Settings;
 
@@ -46,24 +48,24 @@ public class ExportService extends AbstractGriffonService {
         }
     }
 
-    public String export(StatisticService statisticService){
-
+    public void export(StatisticService service){
         ObjectMapper objectMapper = new ObjectMapper();
         Long now = System.currentTimeMillis();
 
         try{
-            String filename = String.format("Stat_%s-%s-%d", statisticService.getVideo1(), statisticService.getVideo2(), now);
+            String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, service.getVideo1().getName(), System.currentTimeMillis());
 
-            System.out.println(filename);
+            ObjectMapper mapper = new ObjectMapper();
 
-            return filename;
+            SimpleModule module = new SimpleModule();
+            module.addSerializer(Video.class, new VideoSerializer());
+            mapper.registerModule(module);
 
+            mapper.writeValue(new File(statFileName), service);
 
         } catch (Exception exception){
             getLog().error(exception.getMessage());
         }
-
-        return "";
     }
 
     private String getPathExport(String filename){

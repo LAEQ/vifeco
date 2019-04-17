@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.apache.commons.collections4.BidiMap;
@@ -26,6 +28,8 @@ import org.laeq.service.statistic.StatisticService;
 import org.laeq.settings.Settings;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
+import org.laeq.user.PreferencesService;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
@@ -45,12 +49,14 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private MiddlePaneView parentView;
     @Inject private StatisticService statService;
     @Inject private DialogService dialogService;
+    @Inject private PreferencesService preferenceService;
 
     @FXML private TableView<Video> videoTable;
     @FXML private Button compareBtn;
-    @FXML private Slider durationSlider;
     @FXML private GridPane gridResult;
     @FXML private AnchorPane visualTab;
+    @FXML private Spinner<Integer> durationSpinner;
+    @FXML private WebView statView;
 
     private BidiMap<CheckBox, Video> selectBoxes;
 
@@ -62,13 +68,6 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     }
 
     public void init(){
-        durationSlider.setMin(0);
-        durationSlider.setMax(10);
-        durationSlider.setMinorTickCount(1);
-        durationSlider.setMajorTickUnit(10);
-        durationSlider.setShowTickMarks(true);
-        durationSlider.setShowTickLabels(true);
-
         selectBoxes = new DualHashBidiMap<>();
 
         TableColumn<Video, Number> idColumn = new TableColumn<>("#");
@@ -87,14 +86,16 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
         videoTable.setItems(this.model.getVideos());
 
-        compareBtn.setOnMouseClicked(event -> {
-            //Validate video selection
-
-        });
-
         gridResult.setPadding(new Insets(10,10,10,10));
         gridResult.setVgap(5);
         gridResult.setHgap(5);
+    }
+
+    public void loadStatisticPage(){
+        WebEngine webEngine = statView.getEngine();
+        String aboutPath = String.format("html/statistic_%s.html", preferenceService.getPreferences().locale.getLanguage());
+        aboutPath = String.format("html/statistic_en.html", preferenceService.getPreferences().locale.getLanguage());
+        webEngine.load(getClass().getClassLoader().getResource(aboutPath).toExternalForm());
     }
 
     private int getTotalImports(Video video){
@@ -105,12 +106,8 @@ public class ContainerView extends AbstractJavaFXGriffonView {
             File file = (File) it.next();
 
             if(file.getName().contains(video.getName())){
-                System.out.println(video.getName());
                 total++;
-            } else {
-                System.out.println(file.getName());
             }
-
         }
 
         return new Integer(total);
@@ -136,11 +133,11 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         try {
             statService.setVideos(video1, video2);
             statService.setDurationStep(Duration.seconds(step));
-            Map<Category, Map<Video, Long>> result = statService.analyse();
+            statService.execute();
 
             final int[] rowIndex = new int[]{1};
 
-            result.entrySet().forEach(e -> {
+            statService.getTarjanDiffs().entrySet().forEach(e -> {
                 gridResult.add(new Label(e.getKey().getName()), 0, rowIndex[0]);
 
                 long totalA = statService.getTotalVideoAByCategory(e.getKey());

@@ -5,13 +5,10 @@ import java.util.Objects;
 public class Edge implements Comparable<Edge>{
     public Vertex start;
     public Vertex end;
-    public double weight;
 
     public Edge(Vertex start, Vertex end){
         this.start = start;
         this.end = end;
-
-        weight = Math.abs(start.point.getStartDouble() - end.point.getStartDouble());
     }
 
     public double getDeltaStart(){

@@ -1,9 +1,12 @@
 package org.laeq.model.statistic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.laeq.model.Point;
 
 import java.util.Objects;
 
+@JsonIgnoreProperties({"num", "min", "totalEdges"})
 public class Vertex implements Comparable<Vertex>{
     public Point point;
     public int num = -1;
