@@ -1,6 +1,6 @@
 package org.laeq.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
+
 import javafx.util.Duration
 import org.laeq.model.Category
 import org.laeq.model.Point
@@ -300,6 +300,102 @@ class StatisticServiceTest extends Specification {
         result.get(category3).values().toArray() == [7,0]
     }
 
+
+    def "tarjan edges for 1 second and 1 category" () {
+        setup:
+        int pointId = 1
+        Video video1 = VideoGenerator.generateVideo(1,3)
+        Video video2 = VideoGenerator.generateVideo(2,3)
+
+        Category category1 = video1.collection.categorySet.find { it.id == 1}
+        Category category2 = video1.collection.categorySet.find { it.id == 2}
+        Category category3 = video1.collection.categorySet.find { it.id == 3}
+
+        when:
+        VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
+        pointId += 4
+        VideoGenerator.generatePoints(video2, 1, 0, 2, pointId)  // 2 points starting at 0 every seconds
+
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(1))
+        service.analyse()
+        def tarjans = service.getTarjans()
+        def edges = service.tarjanEdges()
+
+        then:
+        edges.find {it.key.id == 1}.value.collect{[it.start.point.id, it.end.point.id]} == [[6,2], [5,1]]
+    }
+
+    def "tarjan edges for 2 second and 1 category" () {
+        setup:
+        int pointId = 1
+        Video video1 = VideoGenerator.generateVideo(1,3)
+        Video video2 = VideoGenerator.generateVideo(2,3)
+
+        Category category1 = video1.collection.categorySet.find { it.id == 1}
+        Category category2 = video1.collection.categorySet.find { it.id == 2}
+        Category category3 = video1.collection.categorySet.find { it.id == 3}
+
+        when:
+        VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
+        pointId += 4
+        VideoGenerator.generatePoints(video2, 1, 0, 2, pointId)  // 2 points starting at 0 every seconds
+        pointId += 2
+        VideoGenerator.generatePoints(video1, 1, 10, 10, pointId)
+        pointId += 10
+        VideoGenerator.generatePoints(video2, 1, 14, 3, pointId)
+        pointId += 3
+        VideoGenerator.generatePoints(video1, 1, 20, 5, pointId)
+        pointId += 5
+        VideoGenerator.generatePoints(video2, 1, 23, 3 , pointId)
+        pointId += 3
+        VideoGenerator.generatePoints(video1, 1, 1000, 15 , pointId)
+        pointId += 15
+        VideoGenerator.generatePoints(video2, 1, 1007, 10 , pointId)
+        pointId += 10
+
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(1))
+        service.analyse()
+        def tarjans = service.getTarjans()
+        def edges = service.tarjanEdges()
+        def result = edges.find {it.key.id == 1}.value.collect{[it.start.point.id, it.end.point.id]}.sort {it[0]}
+
+        then:
+        result == [[5,1], [6,2], [17,11], [18,12], [19,13], [22,25], [23,26], [24,27], [34,43], [35,44], [36,45], [37,46], [38,47], [39,48], [40,49], [41,50], [42,51]]
+    }
+
+    def "tarjan edges for 5 second and 1 category" () {
+        setup:
+        int pointId = 1
+        Video video1 = VideoGenerator.generateVideo(1,3)
+        Video video2 = VideoGenerator.generateVideo(2,3)
+
+        Category category1 = video1.collection.categorySet.find { it.id == 1}
+        Category category2 = video1.collection.categorySet.find { it.id == 2}
+        Category category3 = video1.collection.categorySet.find { it.id == 3}
+
+        when:
+        VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
+        pointId += 4
+        VideoGenerator.generatePoints(video2, 1, 7, 2, pointId)  // 2 points starting at 0 every seconds
+        pointId += 2
+        VideoGenerator.generatePoints(video1, 1, 10, 16, pointId)
+        pointId += 16
+        VideoGenerator.generatePoints(video2, 1, 18, 3, pointId)
+
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(3))
+        service.analyse()
+
+        def tarjans = service.getTarjans()
+        def edges = service.tarjanEdges()
+        def result = edges.find {it.key.id == 1}.value.collect{[it.start.point.id, it.end.point.id]}.sort {it[0]}
+
+        then:
+        result == [[7,5], [8,6], [23,15], [24,16], [25,17]]
+    }
+
     def "serialization" () {
         setup:
         int pointId = 1
@@ -332,7 +428,7 @@ class StatisticServiceTest extends Specification {
         service.setDurationStep(Duration.seconds(1))
         service.analyse()
         def tarjans = service.getTarjans()
-        def tarjansTime = service.test()
+        def tarjansTime = service.tarjanEdges()
 //        def tarjansDiff = service.getTarjanDiffs()
 
 //        ObjectMapper mapper = new ObjectMapper()

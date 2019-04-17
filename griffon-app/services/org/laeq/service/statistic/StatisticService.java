@@ -111,12 +111,14 @@ public class StatisticService extends AbstractGriffonService {
         return tarjans;
     }
 
-    public void test(){
+    public Map<Category, List<Edge>>  tarjanEdges(){
         Map<Category, List<Edge>> result = new HashMap<>();
 
         tarjans.keySet().forEach(category -> {
             result.put(category, test1(category));
         });
+
+        return result;
     }
 
     public List<Edge> test1(Category category){
@@ -134,11 +136,10 @@ public class StatisticService extends AbstractGriffonService {
     public List<Edge> test2(List<Vertex> vertices){
         List<Edge> result = new ArrayList<>();
 
-        // Pick the smallest list
         List<Vertex> videoA_vertices = vertices.parallelStream().filter(vertex -> vertex.getPoint().getVideo().equals(video1)).collect(Collectors.toList());
         List<Vertex> videoB_vertices = vertices.parallelStream().filter(vertex -> vertex.getPoint().getVideo().equals(video2)).collect(Collectors.toList());
 
-
+        // Case: no matching point
         if(videoA_vertices.size() == 0 || videoB_vertices.size() == 0){
             return result;
         }
@@ -171,7 +172,7 @@ public class StatisticService extends AbstractGriffonService {
 
         List<Vertex> endVertices = result.stream().map(e -> e.end).collect(Collectors.toList());
         Vertex v = vertices.get(indexVertex++);
-        List<Edge> edges = getEdges(v).stream().filter(e -> ! endVertices.contains(e)).collect(Collectors.toList());
+        List<Edge> edges = getEdges(v).stream().filter(e -> ! endVertices.contains(e.end)).collect(Collectors.toList());
 
         if(edges.size() == 0){
             return;
@@ -193,7 +194,6 @@ public class StatisticService extends AbstractGriffonService {
 
         return graph.edges.get(v).stream().sorted().collect(Collectors.toList());
     }
-
 
     public Map<Category, Map<Video, Long>> analyse() throws StatisticException {
         execute();
