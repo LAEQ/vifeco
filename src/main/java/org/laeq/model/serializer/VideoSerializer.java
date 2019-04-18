@@ -25,6 +25,7 @@ public class VideoSerializer extends StdSerializer<Video> {
         jgen.writeNumberField("duration", video.getDuration());
         jgen.writeObjectField("user", video.getUser());
         jgen.writeObjectField("collection", video.getCollection());
+        jgen.writeStringField("uuid", video.getUuid().toString());
         jgen.writeEndObject();
     }
 }

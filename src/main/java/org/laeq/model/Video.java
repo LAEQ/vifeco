@@ -15,11 +15,12 @@ import java.sql.Timestamp;
 import java.util.Map;
 import java.util.Objects;
 import java.util.SortedSet;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 
 @JsonIgnoreProperties({ "id", "name", "total", "createdAt", "updatedAt"})
-@JsonPropertyOrder({"path", "user", "duration", "collection", "pointSet"})
+@JsonPropertyOrder({"uuid", "path", "user", "duration", "collection", "pointSet"})
 public class Video extends BaseEntity {
     private Integer id;
     private SimpleStringProperty path;
@@ -31,6 +32,7 @@ public class Video extends BaseEntity {
     private User user;
     private SimpleLongProperty total;
     private SortedSet<Point> pointSet = new ConcurrentSkipListSet<>();
+    private UUID uuid = UUID.randomUUID();
 
     public Video(Integer id, String path, Duration duration, User user, Collection collection) {
         this.id = id;
@@ -145,12 +147,12 @@ public class Video extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Video video = (Video) o;
-        return id.equals(video.id);
+        return uuid.compareTo(video.uuid) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(uuid.toString());
     }
 
     private String pathToName(String path){
@@ -163,6 +165,14 @@ public class Video extends BaseEntity {
 
     public long totalPoints() {
         return pointSet.size();
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     @JsonIgnore

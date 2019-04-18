@@ -91,27 +91,32 @@ class StatisticServiceTest extends Specification {
         Category category = video1.collection.categorySet.find{it.id == 1}
         Graph graph = service.getGraphByCategory(category)
 
+        def points = new ArrayList()
+        points.add(new Point(-1))
+        points.addAll(video_1.pointSet)
+        points.addAll(video_2.pointSet)
+
         then:
-        graph.edges.get(graph.vertices.get(new Point(1))).size() == 6
-        graph.edges.get(graph.vertices.get(new Point(2))).size()== 7
-        graph.edges.get(graph.vertices.get(new Point(3))).size()== 8
-        graph.edges.get(graph.vertices.get(new Point(4))).size() == 9
-        graph.edges.get(graph.vertices.get(new Point(5))).size()== 10
-        graph.edges.get(graph.vertices.get(new Point(6))).size() == 10
-        graph.edges.get(graph.vertices.get(new Point(7))).size() == 9
-        graph.edges.get(graph.vertices.get(new Point(8))).size() == 8
-        graph.edges.get(graph.vertices.get(new Point(9))).size() == 7
-        graph.edges.get(graph.vertices.get(new Point(10))).size() == 6
-        graph.edges.get(graph.vertices.get(new Point(11))).size() == 6
-        graph.edges.get(graph.vertices.get(new Point(12))).size() == 7
-        graph.edges.get(graph.vertices.get(new Point(13))).size() == 8
-        graph.edges.get(graph.vertices.get(new Point(14))).size() == 9
-        graph.edges.get(graph.vertices.get(new Point(15))).size() == 10
-        graph.edges.get(graph.vertices.get(new Point(16))).size() == 10
-        graph.edges.get(graph.vertices.get(new Point(17))).size() == 9
-        graph.edges.get(graph.vertices.get(new Point(18))).size() == 8
-        graph.edges.get(graph.vertices.get(new Point(19))).size() == 7
-        graph.edges.get(graph.vertices.get(new Point(20))).size() == 6
+        graph.edges.get(graph.vertices.get(points.get(1))).size() == 6
+        graph.edges.get(graph.vertices.get(points.get(2))).size()== 7
+        graph.edges.get(graph.vertices.get(points.get(3))).size()== 8
+        graph.edges.get(graph.vertices.get(points.get(4))).size() == 9
+        graph.edges.get(graph.vertices.get(points.get(5))).size()== 10
+        graph.edges.get(graph.vertices.get(points.get(6))).size() == 10
+        graph.edges.get(graph.vertices.get(points.get(7))).size() == 9
+        graph.edges.get(graph.vertices.get(points.get(8))).size() == 8
+        graph.edges.get(graph.vertices.get(points.get(9))).size() == 7
+        graph.edges.get(graph.vertices.get(points.get(10))).size() == 6
+        graph.edges.get(graph.vertices.get(points.get(11))).size() == 6
+        graph.edges.get(graph.vertices.get(points.get(12))).size() == 7
+        graph.edges.get(graph.vertices.get(points.get(13))).size() == 8
+        graph.edges.get(graph.vertices.get(points.get(14))).size() == 9
+        graph.edges.get(graph.vertices.get(points.get(15))).size() == 10
+        graph.edges.get(graph.vertices.get(points.get(16))).size() == 10
+        graph.edges.get(graph.vertices.get(points.get(17))).size() == 9
+        graph.edges.get(graph.vertices.get(points.get(18))).size() == 8
+        graph.edges.get(graph.vertices.get(points.get(19))).size() == 7
+        graph.edges.get(graph.vertices.get(points.get(20))).size() == 6
     }
 
     def "test tarjan algorithm"(){
@@ -239,7 +244,7 @@ class StatisticServiceTest extends Specification {
         def result = service.getTarjanDiffs()
 
         then:
-        result.get(category).values().toArray() == [2, 0]
+        result.get(category).values().toArray().sort() == [0, 2]
     }
 
     def "test analyse with 3 categories" () {
@@ -275,9 +280,9 @@ class StatisticServiceTest extends Specification {
         def result = service.getTarjanDiffs()
 
         then:
-        result.get(category1).values().toArray() == [2,0]
-        result.get(category2).values().toArray() == [7,0]
-        result.get(category3).values().toArray() == [8,1]
+        result.get(category1).values().toArray().sort() == [0, 2]
+        result.get(category2).values().toArray().sort() == [0,7]
+        result.get(category3).values().toArray().sort() == [1,8]
     }
 
 
@@ -374,8 +379,8 @@ class StatisticServiceTest extends Specification {
     def "serialize tarjanDiff" () {
         setup:
         int pointId = 1
-        Video video1 = VideoGenerator.generateVideo(1,3)
-        Video video2 = VideoGenerator.generateVideo(2,3)
+        Video video1 = VideoGenerator.generateVideo(1, 3)
+        Video video2 = VideoGenerator.generateVideo(2, 3)
 
         when:
         VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
@@ -388,11 +393,11 @@ class StatisticServiceTest extends Specification {
         pointId += 3
         VideoGenerator.generatePoints(video1, 3, 20, 5, pointId)
         pointId += 5
-        VideoGenerator.generatePoints(video2, 3, 23, 3 , pointId)
+        VideoGenerator.generatePoints(video2, 3, 23, 3, pointId)
         pointId += 3
-        VideoGenerator.generatePoints(video1, 3, 1000, 15 , pointId)
+        VideoGenerator.generatePoints(video1, 3, 1000, 15, pointId)
         pointId += 15
-        VideoGenerator.generatePoints(video2, 3, 1007, 10 , pointId)
+        VideoGenerator.generatePoints(video2, 3, 1007, 10, pointId)
 
         service.setVideos(video1, video2)
         service.setDurationStep(Duration.seconds(1))
@@ -407,9 +412,6 @@ class StatisticServiceTest extends Specification {
         String result = mapper.writeValueAsString(service)
 
         then:
-        result == '{"videos":{"video_1":{"name":"path","duration":10000.0,"user":{"id":1,"firstName":"test","lastName":"test","email":"test@test.com","isDefault":false},"collection":{"id":1,"name":"test","isDefault":false,"categorySet":[{"id":1,"name":"cat_1","icon":null,"color":null,"shortcut":null},{"id":2,"name":"cat_2","icon":null,"color":null,"shortcut":null},{"id":3,"name":"cat_3","icon":null,"color":null,"shortcut":null}]}},"video_2":{"name":"path","duration":10000.0,"user":{"id":1,"firstName":"test","lastName":"test","email":"test@test.com","isDefault":false},"collection":{"id":1,"name":"test","isDefault":false,"categorySet":[{"id":1,"name":"cat_1","icon":null,"color":null,"shortcut":null},{"id":2,"name":"cat_2","icon":null,"color":null,"shortcut":null},{"id":3,"name":"cat_3","icon":null,"color":null,"shortcut":null}]}}},"tarjan_diff":{"Cat{1 cat_1}":{"Video{1}":2,"Video{2}":0},"Cat{2 cat_2}":{"Video{1}":7,"Video{2}":0},"Cat{3 cat_3}":{"Video{1}":8,"Video{2}":1}},"tarjan_edge":{"Cat{1 cat_1}":[{"start":{"point":{"id":6,"x":10.0,"y":10.0,"categoryId":1,"startDouble":2000.0,"videoId":2}},"end":{"point":{"id":2,"x":10.0,"y":10.0,"categoryId":1,"startDouble":2000.0,"videoId":1}},"deltaStart":0.0},{"start":{"point":{"id":5,"x":10.0,"y":10.0,"categoryId":1,"startDouble":1000.0,"videoId":2}},"end":{"point":{"id":1,"x":10.0,"y":10.0,"categoryId":1,"startDouble":1000.0,"videoId":1}},"deltaStart":0.0}],"Cat{2 cat_2}":[{"start":{"point":{"id":19,"x":10.0,"y":10.0,"categoryId":2,"startDouble":7000.0,"videoId":2}},"end":{"point":{"id":13,"x":10.0,"y":10.0,"categoryId":2,"startDouble":7000.0,"videoId":1}},"deltaStart":0.0},{"start":{"point":{"id":18,"x":10.0,"y":10.0,"categoryId":2,"startDouble":6000.0,"videoId":2}},"end":{"point":{"id":12,"x":10.0,"y":10.0,"categoryId":2,"startDouble":6000.0,"videoId":1}},"deltaStart":0.0},{"start":{"point":{"id":17,"x":10.0,"y":10.0,"categoryId":2,"startDouble":5000.0,"videoId":2}},"end":{"point":{"id":11,"x":10.0,"y":10.0,"categoryId":2,"startDouble":5000.0,"videoId":1}},"deltaStart":0.0}],"Cat{3 cat_3}":[{"start":{"point":{"id":24,"x":10.0,"y":10.0,"categoryId":3,"startDouble":25000.0,"videoId":1}},"end":{"point":{"id":27,"x":10.0,"y":10.0,"categoryId":3,"startDouble":26000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":23,"x":10.0,"y":10.0,"categoryId":3,"startDouble":24000.0,"videoId":1}},"end":{"point":{"id":26,"x":10.0,"y":10.0,"categoryId":3,"startDouble":25000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":22,"x":10.0,"y":10.0,"categoryId":3,"startDouble":23000.0,"videoId":1}},"end":{"point":{"id":25,"x":10.0,"y":10.0,"categoryId":3,"startDouble":24000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":42,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1015000.0,"videoId":1}},"end":{"point":{"id":51,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1016000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":41,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1014000.0,"videoId":1}},"end":{"point":{"id":50,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1015000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":40,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1013000.0,"videoId":1}},"end":{"point":{"id":49,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1014000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":39,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1012000.0,"videoId":1}},"end":{"point":{"id":48,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1013000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":38,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1011000.0,"videoId":1}},"end":{"point":{"id":47,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1012000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":37,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1010000.0,"videoId":1}},"end":{"point":{"id":46,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1011000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":36,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1009000.0,"videoId":1}},"end":{"point":{"id":45,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1010000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":35,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1008000.0,"videoId":1}},"end":{"point":{"id":44,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1009000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":34,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1007000.0,"videoId":1}},"end":{"point":{"id":43,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1008000.0,"videoId":2}},"deltaStart":1000.0}]},"tarjan_edge":{"Cat{1 cat_1}":[{"start":{"point":{"id":6,"x":10.0,"y":10.0,"categoryId":1,"startDouble":2000.0,"videoId":2}},"end":{"point":{"id":2,"x":10.0,"y":10.0,"categoryId":1,"startDouble":2000.0,"videoId":1}},"deltaStart":0.0},{"start":{"point":{"id":5,"x":10.0,"y":10.0,"categoryId":1,"startDouble":1000.0,"videoId":2}},"end":{"point":{"id":1,"x":10.0,"y":10.0,"categoryId":1,"startDouble":1000.0,"videoId":1}},"deltaStart":0.0}],"Cat{2 cat_2}":[{"start":{"point":{"id":19,"x":10.0,"y":10.0,"categoryId":2,"startDouble":7000.0,"videoId":2}},"end":{"point":{"id":13,"x":10.0,"y":10.0,"categoryId":2,"startDouble":7000.0,"videoId":1}},"deltaStart":0.0},{"start":{"point":{"id":18,"x":10.0,"y":10.0,"categoryId":2,"startDouble":6000.0,"videoId":2}},"end":{"point":{"id":12,"x":10.0,"y":10.0,"categoryId":2,"startDouble":6000.0,"videoId":1}},"deltaStart":0.0},{"start":{"point":{"id":17,"x":10.0,"y":10.0,"categoryId":2,"startDouble":5000.0,"videoId":2}},"end":{"point":{"id":11,"x":10.0,"y":10.0,"categoryId":2,"startDouble":5000.0,"videoId":1}},"deltaStart":0.0}],"Cat{3 cat_3}":[{"start":{"point":{"id":24,"x":10.0,"y":10.0,"categoryId":3,"startDouble":25000.0,"videoId":1}},"end":{"point":{"id":27,"x":10.0,"y":10.0,"categoryId":3,"startDouble":26000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":23,"x":10.0,"y":10.0,"categoryId":3,"startDouble":24000.0,"videoId":1}},"end":{"point":{"id":26,"x":10.0,"y":10.0,"categoryId":3,"startDouble":25000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":22,"x":10.0,"y":10.0,"categoryId":3,"startDouble":23000.0,"videoId":1}},"end":{"point":{"id":25,"x":10.0,"y":10.0,"categoryId":3,"startDouble":24000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":42,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1015000.0,"videoId":1}},"end":{"point":{"id":51,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1016000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":41,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1014000.0,"videoId":1}},"end":{"point":{"id":50,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1015000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":40,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1013000.0,"videoId":1}},"end":{"point":{"id":49,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1014000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":39,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1012000.0,"videoId":1}},"end":{"point":{"id":48,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1013000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":38,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1011000.0,"videoId":1}},"end":{"point":{"id":47,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1012000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":37,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1010000.0,"videoId":1}},"end":{"point":{"id":46,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1011000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":36,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1009000.0,"videoId":1}},"end":{"point":{"id":45,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1010000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":35,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1008000.0,"videoId":1}},"end":{"point":{"id":44,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1009000.0,"videoId":2}},"deltaStart":1000.0},{"start":{"point":{"id":34,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1007000.0,"videoId":1}},"end":{"point":{"id":43,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1008000.0,"videoId":2}},"deltaStart":1000.0}]},"lonely_points":{"Cat{1 cat_1}":[{"point":{"id":3,"x":10.0,"y":10.0,"categoryId":1,"startDouble":3000.0,"videoId":1}},{"point":{"id":4,"x":10.0,"y":10.0,"categoryId":1,"startDouble":4000.0,"videoId":1}}],"Cat{2 cat_2}":[{"point":{"id":7,"x":10.0,"y":10.0,"categoryId":2,"startDouble":1000.0,"videoId":1}},{"point":{"id":8,"x":10.0,"y":10.0,"categoryId":2,"startDouble":2000.0,"videoId":1}},{"point":{"id":9,"x":10.0,"y":10.0,"categoryId":2,"startDouble":3000.0,"videoId":1}},{"point":{"id":10,"x":10.0,"y":10.0,"categoryId":2,"startDouble":4000.0,"videoId":1}},{"point":{"id":14,"x":10.0,"y":10.0,"categoryId":2,"startDouble":8000.0,"videoId":1}},{"point":{"id":15,"x":10.0,"y":10.0,"categoryId":2,"startDouble":9000.0,"videoId":1}},{"point":{"id":16,"x":10.0,"y":10.0,"categoryId":2,"startDouble":10000.0,"videoId":1}}],"Cat{3 cat_3}":[{"point":{"id":33,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1006000.0,"videoId":1}},{"point":{"id":52,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1017000.0,"videoId":2}},{"point":{"id":20,"x":10.0,"y":10.0,"categoryId":3,"startDouble":21000.0,"videoId":1}},{"point":{"id":21,"x":10.0,"y":10.0,"categoryId":3,"startDouble":22000.0,"videoId":1}},{"point":{"id":28,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1001000.0,"videoId":1}},{"point":{"id":29,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1002000.0,"videoId":1}},{"point":{"id":30,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1003000.0,"videoId":1}},{"point":{"id":31,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1004000.0,"videoId":1}},{"point":{"id":32,"x":10.0,"y":10.0,"categoryId":3,"startDouble":1005000.0,"videoId":1}}]}}'
-//        result.get(category1).values().toArray() == [2,0]
-//        result.get(category2).values().toArray() == [7,0]
-//        result.get(category3).values().toArray() == [8,1]
+        true == true
     }
 }

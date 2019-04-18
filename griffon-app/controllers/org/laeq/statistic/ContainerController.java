@@ -75,12 +75,6 @@ public class ContainerController extends AbstractGriffonController {
     public void compare(){
         model.getVideos().forEach(video -> {
 
-            //Init point id
-            int pointId = 1;
-            int videoId = 1;
-            setPointId(video, pointId);
-            video.setId(videoId++);
-
             Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
 
             while (it.hasNext()){
@@ -91,8 +85,6 @@ public class ContainerController extends AbstractGriffonController {
 
                         String content = FileUtils.readFileToString(file, "UTF-8");
                         Video importVideo = importService.execute(content);
-                        setPointId(importVideo, pointId);
-                        importVideo.setId(videoId++);
 
                         String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, video.getName(), System.currentTimeMillis());
 
