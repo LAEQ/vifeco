@@ -66,6 +66,7 @@ public class ContainerController extends AbstractGriffonController {
     private void setPointId(Video video, int pointId){
         for (Point point : video.getPointSet()) {
             point.setId(pointId++);
+            point.setVideo(video);
         }
     }
 
