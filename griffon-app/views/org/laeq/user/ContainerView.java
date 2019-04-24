@@ -28,22 +28,19 @@ public class ContainerView extends TranslatedView {
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
-    @Inject private TranslationService translationService;
-
     @FXML private TableView<User> userTable;
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
     @FXML private TextField emailField;
-
     @FXML private Label formTitle;
     @FXML private Label firstNameLabel;
     @FXML private Label lastNameLabel;
     @FXML private Label emailLabel;
-
     @FXML private Button saveActionTarget;
     @FXML private Button clearActionTarget;
 
     @Inject private PreferencesService preferencesService;
+    @Inject private TranslationService translationService;
 
     @Override
     public void initUI() {

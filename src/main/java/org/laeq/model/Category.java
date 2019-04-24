@@ -83,6 +83,6 @@ public class Category extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Cat{" + id + ' '+ name +'}';
+        return "Cat_" + id ;
     }
 }

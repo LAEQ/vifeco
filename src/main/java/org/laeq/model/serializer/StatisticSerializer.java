@@ -28,7 +28,6 @@ public class StatisticSerializer extends StdSerializer<StatisticService> {
         jgen.writeEndObject();
         jgen.writeObjectField("tarjan_diff", service.getTarjanDiffs());
         jgen.writeObjectField("tarjan_edge", service.getTarjanEdges());
-        jgen.writeObjectField("tarjan_edge", service.getTarjanEdges());
         jgen.writeObjectField("lonely_points", service.getLonelyPoints());
 
         jgen.writeEndObject();

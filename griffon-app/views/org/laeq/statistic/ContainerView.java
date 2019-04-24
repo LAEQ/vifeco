@@ -4,11 +4,13 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -33,14 +35,17 @@ import org.laeq.user.PreferencesService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ContainerView extends AbstractJavaFXGriffonView {
@@ -58,7 +63,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @FXML private Spinner<Integer> durationSpinner;
     @FXML private WebView statView;
 
-    private BidiMap<CheckBox, Video> selectBoxes;
+    private WebEngine webEngine;
 
     @Override
     public void initUI() {
@@ -68,8 +73,6 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     }
 
     public void init(){
-        selectBoxes = new DualHashBidiMap<>();
-
         TableColumn<Video, Number> idColumn = new TableColumn<>("#");
         TableColumn<Video, String> pathColumn = new TableColumn("Name");
         TableColumn<Video, String> collectionColumn = new TableColumn("Collection");
@@ -86,16 +89,52 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
         videoTable.setItems(this.model.getVideos());
 
-        gridResult.setPadding(new Insets(10,10,10,10));
-        gridResult.setVgap(5);
-        gridResult.setHgap(5);
+        loadStatisticPage();
+
+        videoTable.setOnMouseClicked(event -> {
+            Video video = videoTable.getSelectionModel().getSelectedItem();
+//            String myFunction = String.format("setVideoFile('%s, %s')", Settings.statisticPath, video.getName());
+//            webEngine.executeScript(myFunction);
+
+            Path path = Paths.get(Settings.statisticPath);
+
+            try {
+                Stream<Path> list = Files.list(path);
+
+                list.filter(p ->{
+                    if(p.getFileName().toString().contains(video.getName())){
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }).forEach(path1 -> {
+                    try {
+                        String content = FileUtils.readFileToString(path1.toFile(), "UTF-8");
+                        String jsonFunction = String.format("addJsonContent(%s)", content);
+                        webEngine.executeScript(jsonFunction);
+
+                    } catch (IOException e) {
+                        getLog().error(e.getMessage());
+                    }
+                });
+
+
+            } catch (IOException e) {
+                getLog().error(e.getMessage());
+            }
+
+        });
     }
 
     public void loadStatisticPage(){
-        WebEngine webEngine = statView.getEngine();
-        String aboutPath = String.format("html/statistic_%s.html", preferenceService.getPreferences().locale.getLanguage());
-        aboutPath = String.format("html/statistic_en.html", preferenceService.getPreferences().locale.getLanguage());
+        webEngine = statView.getEngine();
+//        String aboutPath = String.format("html/statistic_%s.html", preferenceService.getPreferences().locale.getLanguage());
+        String aboutPath = String.format("html/statistic_en.html", preferenceService.getPreferences().locale.getLanguage());
         webEngine.load(getClass().getClassLoader().getResource(aboutPath).toExternalForm());
+
+//        String myFunction = String.format("setStatFolder('%s')", Settings.statisticPath);
+//        webEngine.executeScript(myFunction);
+
     }
 
     private int getTotalImports(Video video){
@@ -210,34 +249,5 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         colConstList.add(colConst2);
 
         return colConstList;
-    }
-
-    private Callback<TableColumn<Video, Void>, TableCell<Video, Void>> addSelectBox() {
-        return param -> {
-            final  TableCell<Video, Void> cell = new TableCell<Video, Void>(){
-                CheckBox selectBox = new CheckBox("");
-
-                Group btnGroup = new Group();
-                {
-                    Video video = videoTable.getSelectionModel().getSelectedItems().get(getIndex());
-                    if(video != null){
-                        btnGroup.getChildren().addAll(selectBox);
-                        selectBoxes.put(selectBox, video);
-                    }
-                }
-
-                @Override
-                public void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        setGraphic(btnGroup);
-                    }
-                }
-            };
-
-            return cell;
-        };
     }
 }

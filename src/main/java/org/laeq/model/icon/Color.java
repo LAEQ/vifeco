@@ -8,7 +8,7 @@ public class Color {
     public static String red = " #dc3545ff";
     public static String orange = "#fd7e14ff";
     public static String yellow = "#ffc107ff";
-    public static String green = "#28a745ff";
+    public static String green = "#28a745";
     public static String teal = "#20c997ff";
     public static String cyan = "#17a2b8ff";
     public static String white = "#ffffffff";

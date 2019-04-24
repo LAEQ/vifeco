@@ -13,14 +13,13 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.paint.Color;
 import org.laeq.TranslatedView;
 import org.laeq.TranslationService;
-import org.laeq.model.Category;
-import org.laeq.model.Collection;
-import org.laeq.model.User;
-import org.laeq.model.Video;
+import org.laeq.model.*;
 import org.laeq.model.icon.IconCounter;
 import org.laeq.model.icon.IconCounterMatrice;
+import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
 import org.laeq.user.PreferencesService;
@@ -117,6 +116,7 @@ public class ContainerView extends TranslatedView {
         TableColumn<Video, String> durationColumn = new TableColumn("");
         collectionColumn = new TableColumn("");
         TableColumn<Video, Number> totalColumn = new TableColumn<>("");
+        TableColumn<Video, Icon> editColumn = new TableColumn("");
 
         columnsMap.put(dateColumn, "org.laeq.video.column.created_at");
         columnsMap.put(pathColumn, "org.laeq.video.column.name");
@@ -124,14 +124,17 @@ public class ContainerView extends TranslatedView {
         columnsMap.put(durationColumn, "org.laeq.video.column.duration");
         columnsMap.put(collectionColumn, "org.laeq.video.column.collection");
         columnsMap.put(totalColumn, "org.laeq.video.column.total");
+        columnsMap.put(editColumn, "org.laeq.video.column.not_editable");
 
-        videoTable.getColumns().addAll(idColumn, dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn);
+
+        videoTable.getColumns().addAll(idColumn, dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn, editColumn);
 
         idColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(()-> new Integer(param.getValue().getId())));
         dateColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getCreatedFormatted()));
         pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         durationColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getDurationFormatted()));
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
+        editColumn.setCellValueFactory(cellData -> cellData.getValue().isEditable() ? null : new SimpleObjectProperty<>(new Icon(IconSVG.error, Color.DARKORANGE.toString())));
 
         videoTable.setItems(this.model.getFilteredList());
         videoTable.getSelectionModel().selectedItemProperty().addListener(observable -> {
@@ -162,12 +165,12 @@ public class ContainerView extends TranslatedView {
     private ChangeListener<String> filtering(){
         return (observable, oldValue, newValue) -> {
             model.getFilteredList().setPredicate(video -> {
-                if((newValue == null || newValue.isEmpty()) && video.isEditable()){
+                if((newValue == null || newValue.isEmpty())){
                     return true;
                 }
 
                 String filter = newValue.toLowerCase();
-                if(video.getName().toLowerCase().contains(filter) && video.isEditable()){
+                if(video.getName().toLowerCase().contains(filter)){
                     return true;
                 }
 

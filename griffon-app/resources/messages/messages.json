@@ -285,9 +285,17 @@
         }
     },
     {
+        "org.laeq.video.column.not_editable": {
+            "en-CA": "Editable",
+            "es-ES": "Editable",
+            "fr-CA": "Editable"
+        }
+    },
+    {
         "org.laeq.model.collection.delete.confirmation": {
             "en-CA": "confirm the collection suppression",
-            "es-ES": "¿Estás seguro de que quieres eliminar esta colección?"
+            "es-ES": "¿Estás seguro de que quieres eliminar esta colección?",
+            "fr-CA": "Êtes-vous sûr de vouloir supprimer la collection ?"
         }
     },
     {

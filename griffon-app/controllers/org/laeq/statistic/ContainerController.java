@@ -99,11 +99,10 @@ public class ContainerController extends AbstractGriffonController {
 
                 }
             }
-
         });
 
 
-        runInsideUISync(() -> view.loadStatisticPage());
+//        runInsideUISync(() -> view.loadStatisticPage());
 
 //        Video video1 = this.model.getVideos().get(0);
 //        Video video2 = this.model.getVideos().get(1);

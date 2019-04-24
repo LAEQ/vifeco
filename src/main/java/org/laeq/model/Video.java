@@ -120,7 +120,7 @@ public class Video extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Video{" + id + '}';
+        return "Video{" + uuid.toString() + '}';
     }
 
     public User getUser() {

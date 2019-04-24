@@ -1,0 +1,14 @@
+{
+  "name": "vifeco",
+  "version": "1.0.0",
+  "description": "video feature counter",
+  "main": "js/statistic.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Maignan",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "file-system": "^2.2.2"
+  }
+}

@@ -46,6 +46,7 @@ org.laeq.video.column.duration = Duración
 org.laeq.video.column.collection = Colección
 org.laeq.video.column.total = Puntos totales
 org.laeq.video.column.last_point = Ultimo punto
+org.laeq.video.column.not_editable = Editable
 
 -- Collection
 org.laeq.model.collection.delete.confirmation = ¿Estás seguro de que quieres eliminar esta colección?
