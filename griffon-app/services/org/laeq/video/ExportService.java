@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 @javax.inject.Singleton
@@ -35,18 +37,27 @@ public class ExportService extends AbstractGriffonService {
         }
     }
 
-    public void export(Video video){
+    public String export(Video video){
         ObjectMapper objectMapper = new ObjectMapper();
-        Long now = System.currentTimeMillis();
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+        Date now = new Date(System.currentTimeMillis());
 
         try {
-            String fileName = String.format("%s-%d.json", video.getName(), now);
+            String fileName = String.format("%s-%s.json", video.getName(), formatter.format(now));
             fileName = getPathExport(fileName);
             objectMapper.writeValue(new File(fileName), video);
+
+            return fileName;
         } catch (Exception e) {
             getLog().error(e.getMessage());
         }
+
+        return "";
     }
+
+
+
+
 
     public void export(StatisticService service){
         ObjectMapper objectMapper = new ObjectMapper();

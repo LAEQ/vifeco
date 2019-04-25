@@ -11,17 +11,37 @@
     <script src="js/jquery/jquery.js"></script>
     <script src="js/statistic.js"></script>
     <script src="js/data/jsons.js"></script>
+    <script type='text/javascript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
+    <style type="text/css">
+        body{
+            font: 10px sans-serif;
+            shape-rendering: crispEdges;
+        }
+        svg {
+          font: 10px sans-serif;
+          shape-rendering: crispEdges;
+        }
+      
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: #000;
+        }
+       
+        path.domain {
+          stroke: none;
+        }
+       
+        .y .tick line {
+          stroke: #ddd;
+        }
+        </style>
 </head>
 <body>
     <div class="container-fluid">
         <section>
-            <h4>Statistic</h4>
-            <div id="details"></div>
-            <hr />
-            <h5>Summary</h5>
+            <div id="info"></div>
             <div id="summary"></div>
-            <hr />
-
             <div id="chart"></div>
         </section>
     </div>

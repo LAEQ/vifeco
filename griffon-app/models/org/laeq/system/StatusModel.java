@@ -2,6 +2,7 @@ package org.laeq.system;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
@@ -11,12 +12,14 @@ public class StatusModel extends AbstractGriffonModel {
     private SimpleStringProperty tableStatus;
     private SimpleStringProperty userStatus;
     private SimpleStringProperty collectionStatus;
+    private SimpleIntegerProperty videoTotal;
 
     public StatusModel() {
         connectionStatus = new SimpleStringProperty(this, "connectionStatus", "");
         tableStatus = new SimpleStringProperty(this, "tableStatus", "");
         userStatus = new SimpleStringProperty(this, "userStatus", "");
         collectionStatus = new SimpleStringProperty(this, "collectionStatus", "");
+        videoTotal = new SimpleIntegerProperty(this, "videoTotal", 0);
     }
 
     public String getConnectionStatus() {
@@ -57,5 +60,15 @@ public class StatusModel extends AbstractGriffonModel {
     }
     public void setCollectionStatus(String collectionStatus) {
         this.collectionStatus.set(collectionStatus);
+    }
+
+    public int getVideoTotal() {
+        return videoTotal.get();
+    }
+    public SimpleIntegerProperty videoTotalProperty() {
+        return videoTotal;
+    }
+    public void setVideoTotal(int videoTotal) {
+        this.videoTotal.set(videoTotal);
     }
 }

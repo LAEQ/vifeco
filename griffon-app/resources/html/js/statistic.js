@@ -3,8 +3,10 @@ var statFolder = "/home/david/vifeco/statistic/";
 var jsonContents = []
 var categories = {};
 
-var g_file;
+var g_statistic;
 var g_datas;
+var g_uuid_1;
+var g_uuid_2;
 
 
 function setVideoFile(folder, value) {
@@ -16,54 +18,121 @@ function setVideoFile(folder, value) {
 function addJsonContent(json){
     jsonContents.push(json)
 
-    var keys = "";
+    g_statistic = json;
 
-    for (var property in json){
-        keys += property + ": " ;
-    }
+    setGlobals();
 
-    var summary = parseFile(json);
+    infos();
+
+    var summary = parseFile();
     displaySummary(summary);
-
-    // document.getElementById("test").innerHTML = keys
+    g_datas = parseData();
+    activateCategoryBtn();
 }
 
-function parseFile(video){
-    g_file = video;
+function getUser(index){
+    var vid = (index === 1)? "video_1" : "video_2"
+    var user = g_statistic['videos'][vid]['user']
 
-    video["videos"]["video_1"]["collection"]["categorySet"].forEach(element => {
+    return user['firstName'] + " " + user['lastName']
+
+}
+
+function infos(){
+   var table = `<table class="table">
+           <thead class="">
+               <tr>
+                   <th scope="col">Name</th>
+                   <th scope="col">Duration</th>
+                   <th scope="col">User 1</th>
+                   <th scope="col">User 2</th>
+               </tr>
+           </thead>
+           <tbody>
+               <tr>
+                   <td>${getName()}</td>
+                   <td>${getDuration()}</td>
+                   <td>${getUser(1)}</td>
+                   <td>${getUser(2)}</td>
+               </tr>
+            </tbody>
+            </table>`
+
+    $("#info").html(table)
+}
+
+function getName(){
+    return g_statistic['videos']['video_1']['name'];
+}
+
+function getDuration(){
+    var totalSeconds = g_statistic['videos']['video_1']['duration'] / 1000;
+    var hours = Math.floor(totalSeconds / 3600);
+    var minutes = Math.floor((totalSeconds - (3600 * hours)) / 60);
+    var seconds = Math.floor((totalSeconds - (3600 * hours)) % 60);
+
+    return `${hours}:${minutes}:${seconds}`;
+}
+
+
+function setGlobals(){
+    g_uuid_1 = g_statistic["videos"]["video_1"]["uuid"];
+    g_uuid_2 = g_statistic["videos"]["video_2"]["uuid"];
+    g_datas = undefined;
+    categories = [];
+    d3.select("#chart").html("");
+    d3.select("#info").html("");
+}
+
+function parseFile(){
+    categories = []
+
+    g_statistic["videos"]["video_1"]["collection"]["categorySet"].forEach(element => {
         categories["Cat_" + element.id] = element
     });
 
     var summary = {};
 
     for(var property in categories){
-        summary[property] = {};
         var video_1 = {}
-        video_1['total'] = getTotal(video["videos"], "video_1", property)
-        video_1['single'] = video["tarjan_diff"][property]["Video{" + video["videos"]["video_1"]["uuid"] + "}"]
+        video_1['total'] = getTotal("video_1", property)
+        video_1['single'] = g_statistic["tarjan_diff"][property]["Video{" + g_uuid_1 + "}"]
         video_1['match'] = getMatch(video_1)
         video_1['percent'] = getPercent(video_1)
 
         var video_2 = {}
-        video_2['total'] = getTotal(video["videos"], "video_2", property)
-        video_2['single'] = video["tarjan_diff"][property]["Video{" + video["videos"]["video_2"]["uuid"] + "}"]
+        video_2['total'] = getTotal("video_2", property)
+        video_2['single'] = g_statistic["tarjan_diff"][property]["Video{" + g_uuid_2 + "}"]
         video_2['match'] = getMatch(video_2)
         video_2['percent'] = getPercent(video_2)
 
+        summary[property] = {};
         summary[property]["video_1"] = video_1
         summary[property]["video_2"] = video_2
+
+        var total = video_1['total'] + video_2['total']
+        var totalSummary = 100;
+
+        if(total !== 0){
+            totalSummary = (total - (video_1['single'] + video_2['single'])) / total * 100
+        }
+
+        summary[property]['summary'] = {}
+        summary[property]['summary']['percent'] = totalSummary
+
     }
 
     return summary;
 }
 
-function getTotal(videos, videoStr, property){
-    if(videos[videoStr]["total_category"][property] === undefined){
+
+
+function getTotal(videoStr, property){
+    if(g_statistic['videos'][videoStr]["total_category"][property] === undefined){
         return 0
     }
 
-    return videos[videoStr]["total_category"][property];
+    return g_statistic['videos'][videoStr]["total_category"][property];
 }
 
 function getMatch(obj){
@@ -80,51 +149,91 @@ function getPercent(obj){
 
 function displaySummary(summary){
     var table = `<table class="table table-striped table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Category</th>
-                    <th scope="col" colspan="4">Video 1</th>
-                    <th scope="col" colspan="3">Video 2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row"></th>
-                    <td>Total</td>
-                    <td>Matched</td>
-                    <td>Singled</td>
-                    <td>%</td>
-                    <td>Total</td>
-                    <td>Singled</td>
-                    <td>%</td>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Category</th>
+                <th scope="col" colspan="4">Video 1</th>
+                <th scope="col" colspan="3">Video 2</th>
+                <th scope="col" >Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row"></th>
+                <td>Total</td>
+                <td>Matched</td>
+                <td>Singled</td>
+                <td>%</td>
+                <td>Total</td>summary
+                <td>Singled</td>
+                <td>%</td>
+                <td>% total</td>
+            </tr>`
 
-                </tr>`
+    for(var property in summary){
+        table += `<tr>
+                <th scope="row"><a class='displayChart' href='' data-category='${property}' onclick='return false;'>${categories[property]['name']}</a></th>
+                <td>${summary[property]['video_1']['total']}</td>
+                <td>${summary[property]['video_1']['match']}</td>
+                <td>${summary[property]['video_1']['single']}</td>
+                <td>${summary[property]['video_1']['percent']}</}td>
+                <td>${summary[property]['video_2']['total']}</td>
+                <td>${summary[property]['video_2']['single']}</td>
+                <td>${summary[property]['video_2']['percent']}</td>
+                <td>${summary[property]['summary']['percent']}</td>
+            </tr>`
 
-        for(var property in summary){
-            table += `<tr>
-                    <th scope="row"><a href='displayChartByCategory(${property})' onclick='return false;'>${categories[property]['name']}</a></th>
-                    <td>${summary[property]['video_1']['total']}</td>
-                    <td>${summary[property]['video_1']['match']}</td>
-                    <td>${summary[property]['video_1']['single']}</td>
-                    <td>${summary[property]['video_1']['percent']}</}td>
-                    <td>${summary[property]['video_2']['total']}</td>
-                    <td>${summary[property]['video_2']['single']}</td>
-                    <td>${summary[property]['video_2']['percent']}</td>
-                </tr>`
-
-            table += "</tr>";
-        }
-
-        table += "</table>"
-
-        $("#summary").html(table)
-
+        table += "</tr>";
+    }
+    table += "</table>"
+    $("#summary").html(table)
 }
 
-function displayChartByCategory(category){
-    console.log("display chart")
+
+function parseData(){
+    var data = {};
+
+    for(category in categories){
+        data[category] = [];
+
+        var duration = g_statistic['videos']['video_1']['duration'];
+        var total = Math.ceil(duration / (1000 * 60)) 
+
+        for(var i = 0; i < total; i++) {
+            var obj = { 'time': i.toString(), 'match': 0, 'video_1': 0, 'video_2': 0}
+            data[category].push(obj);
+        }
+
+        var edges = g_statistic['tarjan_edge'][category];
+
+        if(Array.isArray(edges)){
+            for(var i = 0; i < edges.length; i++ ){
+                var startPoint = Math.round(edges[i]['start']['point']['startDouble'] / 60000);
+                data[category][startPoint]['match'] += 1;
+            }
+
+            var singles = g_statistic['lonely_points'][category];
+
+            for(var i = 0; i < singles.length; i++){
+                var point = singles[i]['point'];
+                var startPoint = Math.round(point['startDouble'] / 60000);
+
+                if(isVideo1(point['videoId'])){
+                    data[category][startPoint]['video_1'] += 1
+                } else {
+                    data[category][startPoint]['video_2'] += 1
+                }
+            }
+        }
+
+    }
+
+    return data;
+}
 
 
+function isVideo1(uuid){
+    return uuid === g_uuid_1;
 }
 
 function displayChart(data){
@@ -142,8 +251,6 @@ function displayChart(data){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
-    // Transpose the data into layers
     var dataset = d3.layout.stack()(["match", "video_1", "video_2"].map(function (fruit) {
         return data.map(function (d) {
             return { x: (d.time), y: +d[fruit] };
@@ -151,7 +258,6 @@ function displayChart(data){
     }));
 
 
-    // Set x, y and colors
     var x = d3.scale.ordinal()
         .domain(dataset[0].map(function (d) { return d.x; }))
         .rangeRoundBands([10, width - 10], 0.2);
@@ -162,8 +268,6 @@ function displayChart(data){
 
     var colors = ["#d25c4d", "#f2b447", "#d9d574"];
 
-
-    // Define and draw axes
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left")
@@ -185,7 +289,6 @@ function displayChart(data){
         .call(xAxis);
 
 
-    // Create groups for each series, rects for each segment 
     var groups = svg.selectAll("g.cost")
         .data(dataset)
         .enter().append("g")
@@ -201,8 +304,6 @@ function displayChart(data){
         .attr("height", function (d) { return y(d.y0) - y(d.y0 + d.y); })
         .attr("width", x.rangeBand());
 
-
-    // Draw legend
     var legend = svg.selectAll(".legend")
         .data(colors)
         .enter().append("g")
@@ -229,127 +330,24 @@ function displayChart(data){
         });
 }
 
+function activateCategoryBtn(){
+    $('.displayChart').click(function(){
+        var category = event.srcElement.getAttribute('data-category');
+        displayChart(g_datas[category]);
+    })
+}
 
 $(document).ready(function () {
+//    var summary = parseFile(file1);
+//    var datas = parseData(file1);
+//    g_datas = datas;
+//
+//    displaySummary(summary);
+//    displayChart(datas['Cat_1']);''
+//
+//    $('.displayChart').click(function(){
+//        var category = event.srcElement.getAttribute('data-category');
+//        displayChart(g_datas[category]);
+//    })
 
-    var summary = parseFile(file1);
-    var datas = parseData(file1);
-
-    displaySummary(summary);
-    displayChart(datas['Cat_1']);
-
-    // Setup svg using Bostock's margin convention
-
-    // var margin = { top: 20, right: 160, bottom: 35, left: 30 };
-
-    // var width = 1500 - margin.left - margin.right,
-    //     height = 500 - margin.top - margin.bottom;
-
-    // var svg = d3.select("#chart")
-    //     .append("svg")
-    //     .attr("width", width + margin.left + margin.right)
-    //     .attr("height", height + margin.top + margin.bottom)
-    //     .append("g")
-    //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
-    // /* Data in strings like it would be if imported from a csv */
-    // var data = [
-    //     { time: "0", match: "10", mcintosh: "15", oranges: "9", pears: "6" },
-    //     { time: "1", match: "12", mcintosh: "18", oranges: "9", pears: "4" },
-    //     { time: "2", redDelicious: "05", mcintosh: "20", oranges: "8", pears: "2" },
-    //     { time: "3", redDelicious: "01", mcintosh: "15", oranges: "5", pears: "4" },
-    //     { time: "4", redDelicious: "02", mcintosh: "10", oranges: "4", pears: "2" }
-    // ];
-
-    // data = datas['Cat_1'];
-
-
-    // var parse = d3.time.format("%Y").parse;
-
-
-    // // Transpose the data into layers
-    // var dataset = d3.layout.stack()(["match", "video_1", "video_2"].map(function (fruit) {
-    //     return data.map(function (d) {
-    //         return { x: (d.time), y: +d[fruit] };
-    //     });
-    // }));
-
-
-    // // Set x, y and colors
-    // var x = d3.scale.ordinal()
-    //     .domain(dataset[0].map(function (d) { return d.x; }))
-    //     .rangeRoundBands([10, width - 10], 0.2);
-
-    // var y = d3.scale.linear()
-    //     .domain([0, d3.max(dataset, function (d) { return d3.max(d, function (d) { return d.y0 + d.y; }); })])
-    //     .range([height, 0]);
-
-    // var colors = ["#d25c4d", "#f2b447", "#d9d574"];
-
-
-    // // Define and draw axes
-    // var yAxis = d3.svg.axis()
-    //     .scale(y)
-    //     .orient("left")
-    //     .ticks(5)
-    //     .tickSize(-width, 0, 0)
-    //     .tickFormat(function (d) { return d });
-
-    // var xAxis = d3.svg.axis()
-    //     .scale(x)
-    //     .orient("bottom");
-
-    // svg.append("g")
-    //     .attr("class", "y axis")
-    //     .call(yAxis);
-
-    // svg.append("g")
-    //     .attr("class", "x axis")
-    //     .attr("transform", "translate(0," + height + ")")
-    //     .call(xAxis);
-
-
-    // // Create groups for each series, rects for each segment 
-    // var groups = svg.selectAll("g.cost")
-    //     .data(dataset)
-    //     .enter().append("g")
-    //     .attr("class", "cost")
-    //     .style("fill", function (d, i) { return colors[i]; });
-
-    // var rect = groups.selectAll("rect")
-    //     .data(function (d) { return d; })
-    //     .enter()
-    //     .append("rect")
-    //     .attr("x", function (d) { return x(d.x); })
-    //     .attr("y", function (d) { return y(d.y0 + d.y); })
-    //     .attr("height", function (d) { return y(d.y0) - y(d.y0 + d.y); })
-    //     .attr("width", x.rangeBand());
-
-
-    // // Draw legend
-    // var legend = svg.selectAll(".legend")
-    //     .data(colors)
-    //     .enter().append("g")
-    //     .attr("class", "legend")
-    //     .attr("transform", function (d, i) { return "translate(30," + i * 19 + ")"; });
-
-    // legend.append("rect")
-    //     .attr("x", width - 18)
-    //     .attr("width", 18)
-    //     .attr("height", 18)
-    //     .style("fill", function (d, i) { return colors.slice().reverse()[i]; });
-
-    // legend.append("text")
-    //     .attr("x", width + 5)
-    //     .attr("y", 9)
-    //     .attr("dy", ".35em")
-    //     .style("text-anchor", "start")
-    //     .text(function (d, i) {
-    //         switch (i) {
-    //             case 0: return "Video 2 Singled";
-    //             case 1: return "Video 1 Singled";
-    //             case 2: return "Matched";
-    //         }
-    //     });
 });

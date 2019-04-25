@@ -88,6 +88,9 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
 
     implementation 'com.atlassian.commonmark:commonmark:0.12.1'
+    compile 'org.projectlombok:lombok:1.18.4'
+    compile 'org.apache.httpcomponents:httpclient:4.5.6'
+//    compile 'com.fasterxml.jackson.core:jackson-databind:3.6'
 
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
 

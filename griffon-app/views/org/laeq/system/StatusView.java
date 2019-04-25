@@ -5,6 +5,7 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.template.MiddlePaneView;
@@ -21,6 +22,7 @@ public class StatusView extends AbstractJavaFXGriffonView {
     @FXML private Text tableStatus;
     @FXML private Text userStatus;
     @FXML private Text collectionStatus;
+    @FXML private Label totalVideo;
 
     @Override
     public void initUI() {
@@ -33,6 +35,8 @@ public class StatusView extends AbstractJavaFXGriffonView {
         tableStatus.textProperty().bind(model.tableStatusProperty());
         userStatus.textProperty().bind(model.userStatusProperty());
         collectionStatus.textProperty().bind(model.collectionStatusProperty());
+        totalVideo.textProperty().bind(model.videoTotalProperty().asString());
+
     }
 
     @Override
