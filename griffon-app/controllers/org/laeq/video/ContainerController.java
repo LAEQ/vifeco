@@ -64,11 +64,13 @@ public class ContainerController extends CRUDController<Video> {
 
         view.initForm();
 
-        model.getVideoList().forEach(video -> {
-            if(video.getDuration() == 0.0){
-                runInsideUISync(() ->getVideoDuration(video));
-            }
-        });
+        System.out.println(model.getVideoList().size());
+
+//        model.getVideoList().forEach(video -> {
+//            if(video.getDuration() == 0.0){
+//                runInsideUISync(() -> getVideoDuration(video));
+//            }
+//        });
 
         getApplication().getEventRouter().addEventListener(listeners());
     }

@@ -233,6 +233,7 @@ public class ContainerView extends TranslatedView {
         videoTable.getSelectionModel().clearSelection();
         categoryGroup.getChildren().clear();
         categoryGroupMap.clear();
+        model.setSelectedVideo(null);
     }
 
     public void refresh() {
