@@ -1,17 +1,22 @@
 var videoFile = "07074207.wav";
 var statFolder = "/home/david/vifeco/statistic/";
 var jsonContents = []
-
 var categories = {};
-
 var g_statistic;
 var g_datas = {}
 var g_uuid_1;
 var g_uuid_2;
 var g_summary;
 var g_div_id;
-var g_tooltip;
 
+function reset(){
+    jsonContents = []
+    g_datas = {}
+    g_statistic = []
+    g_uuid_1 = null
+    g_uuid_2 = null
+    g_summary = null
+}
 
 function createVideoContainer(index) {
     return `<div id='video-${index}'><div class='info'></div><div class='summary'></div><div class='chart'></div><div>`
@@ -31,24 +36,26 @@ function addJsonContent(json) {
 
 
 function setInfos() {
-    var table = `<table class="table table-bordered">
-    <thead class="thead-light">
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Duration</th>
-            <th scope="col">User 1</th>
-            <th scope="col">User 2</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>${getName()}</td>
-            <td>${getDuration()}</td>
-            <td>${getUser(1)}</td>
-            <td>${getUser(2)}</td>
-        </tr>
-     </tbody>
-     </table>`
+    var table = `<table class="table ">
+           <thead class="thead-light">
+               <tr>
+                   <th scope="col">Name</th>
+                   <th scope="col">Duration</th>
+                   <th scope="col">Step</th>
+                   <th scope="col">User 1</th>
+                   <th scope="col">User 2</th>
+               </tr>
+           </thead>
+           <tbody>
+               <tr>
+                   <td>${getName()}</td>
+                   <td>${getDuration()}</td>
+                   <td>${getStep()}</td>
+                   <td>${getUser(1)}</td>
+                   <td>${getUser(2)}</td>
+               </tr>
+            </tbody>
+            </table>`
 
     $(`${g_div_id} .info `).html(table)
 }
@@ -61,27 +68,8 @@ function getUser(index) {
 
 }
 
-function infos() {
-    var table = `<table class="table">
-           <thead class="">
-               <tr>
-                   <th scope="col">Name</th>
-                   <th scope="col">Duration</th>
-                   <th scope="col">User 1</th>
-                   <th scope="col">User 2</th>
-               </tr>
-           </thead>
-           <tbody>
-               <tr>
-                   <td>${getName()}</td>
-                   <td>${getDuration()}</td>
-                   <td>${getUser(1)}</td>
-                   <td>${getUser(2)}</td>
-               </tr>
-            </tbody>
-            </table>`
-
-    $("#info").html(table)
+function getStep(){
+    return g_statistic['step']
 }
 
 function getName() {
@@ -168,44 +156,44 @@ function getPercent(obj) {
 }
 
 function displaySummary(summary, index) {
-    var table = `<table class="table table-striped table-bordered">
+    var table = `<table class="table table-striped table-bordered table-sm">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">Category</th>
-                <th scope="col" colspan="4">Video 1</th>
+                <th scope="col" colspan="3">Video 1</th>
                 <th scope="col" colspan="3">Video 2</th>
-                <th scope="col" >Summary</th>
+                <th scope="col" colspan="2">Summary</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <th scope="row"></th>
                 <td>Total</td>
-                <td>Matched</td>
-                <td>Singled</td>
+                <td>Unmatched</td>
                 <td>%</td>
                 <td>Total</td>
-                <td>Singled</td>
+                <td>Unmatched</td>
                 <td>%</td>
-                <td>% total</td>
+                <td>Matched</td>
+                <td>%</td>
             </tr>`
 
     for (var property in summary) {
         table += `<tr>
                 <th scope="row"><a class='displayChart' href='' data-category='${property}' data-video='video-${index}'>${categories[property]['name']}</a></th>
                 <td>${summary[property]['video_1']['total']}</td>
-                <td>${summary[property]['video_1']['match']}</td>
                 <td>${summary[property]['video_1']['single']}</td>
                 <td>${summary[property]['video_1']['percent']}</}td>
                 <td>${summary[property]['video_2']['total']}</td>
                 <td>${summary[property]['video_2']['single']}</td>
                 <td>${summary[property]['video_2']['percent']}</td>
+                <td>${summary[property]['video_1']['match']}</td>
                 <td>${summary[property]['summary']['percent']}</td>
             </tr>`
 
         table += "</tr>";
     }
-    table += "</table>"
+    table += "</table><hr />"
 
     $(`${g_div_id} .summary`).html(table)
 }
@@ -257,11 +245,11 @@ function isVideo1(uuid) {
     return uuid === g_uuid_1;
 }
 
-function displayChart(data, id) {
+function displayChart(data, id, cat) {
     var margin = { top: 20, right: 160, bottom: 35, left: 30 };
 
-    var width = 1500 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+    var width = 1200 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
     d3.select(id).html("");
 
@@ -298,7 +286,8 @@ function displayChart(data, id) {
 
     var xAxis = d3.svg.axis()
         .scale(x)
-        .orient("bottom");
+        .orient("bottom")
+        .tickFormat(function(d) { return `${d}`})
 
     svg.append("g")
         .attr("class", "y axis")
@@ -308,6 +297,11 @@ function displayChart(data, id) {
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
+
+    svg.append("text")
+        .attr("x", width)
+        .attr("y", height + margin.top - 5)
+        .text("minutes")
 
     var groups = svg.selectAll("g.cost")
         .data(dataset)
@@ -331,6 +325,12 @@ function displayChart(data, id) {
             tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
             tooltip.select("text").text(d.y);
         });
+
+    svg.append("text")
+        .attr("x", 5)
+        .attr("y", 1)
+        .attr("class", "h6")
+        .text(categories[cat].name)
 
     var legend = svg.selectAll(".legend")
         .data(colors)
@@ -385,12 +385,25 @@ function activateCategoryBtn() {
         var video_id = event.srcElement.getAttribute('data-video');
         var category = event.srcElement.getAttribute('data-category');
         var divId = `#${video_id} .chart`;
-        var chart = displayChart(g_datas[video_id][category], divId);
+        var chart = displayChart(g_datas[video_id][category], divId, category);
 
         return false;
     })
 }
+
+function sortStatistic(a, b){
+    if(a['step'] > b['step']){
+        return 1;
+    }
+
+    return -1;
+}
+
 function render() {
+    $('#container').html("");
+
+    jsonContents.sort(sortStatistic)
+
     for (var i = 0; i < jsonContents.length; i++) {
         var div = createVideoContainer(i);
         $('#container').append(div)
@@ -410,6 +423,6 @@ function render() {
 
 $(document).ready(function () {
     addJsonContent(file1)
-    addJsonContent(file1)
+    addJsonContent(file2)
     render();
 });

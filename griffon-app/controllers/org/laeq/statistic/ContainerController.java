@@ -1,5 +1,6 @@
 package org.laeq.statistic;
 
+import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
@@ -7,18 +8,17 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.util.Duration;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.db.CategoryDAO;
 import org.laeq.db.PointDAO;
 import org.laeq.db.VideoDAO;
 import org.laeq.model.Category;
-import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
 import org.laeq.service.statistic.StatisticException;
 import org.laeq.service.statistic.StatisticService;
 import org.laeq.settings.Settings;
+import org.laeq.user.PreferencesService;
 import org.laeq.video.ExportService;
 import org.laeq.video.ImportService;
 
@@ -26,20 +26,18 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private ContainerView view;
 
-
     @Inject private StatisticService statService;
     @Inject private MariaService dbService;
     @Inject private ImportService importService;
     @Inject private ExportService exportService;
+    @Inject private PreferencesService preferenceService;
 
     private VideoDAO videoDAO;
     private PointDAO pointDAO;
@@ -59,15 +57,11 @@ public class ContainerController extends AbstractGriffonController {
             video.getCollection().getCategorySet().addAll(categorySet);
         });
 
+        model.setPrefs(preferenceService.getPreferences());
         model.addVideos(videos);
         view.init();
-    }
 
-    private void setPointId(Video video, int pointId){
-        for (Point point : video.getPointSet()) {
-            point.setId(pointId++);
-            point.setVideo(video);
-        }
+        getApplication().getEventRouter().addEventListener(listeners());
     }
 
     @ControllerAction
@@ -89,7 +83,7 @@ public class ContainerController extends AbstractGriffonController {
                         String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, video.getName(), System.currentTimeMillis());
 
                         statService.setVideos(video, importVideo);
-                        statService.setDurationStep(Duration.seconds(1));
+                        statService.setDurationStep(Duration.seconds(model.getDurationStep()));
                         statService.execute();
                         exportService.export(statService);
 
@@ -100,23 +94,20 @@ public class ContainerController extends AbstractGriffonController {
                 }
             }
         });
+    }
 
+    private Map<String, RunnableWithArgs> listeners(){
+        Map<String, RunnableWithArgs> list = new HashMap<>();
+        list.put("change.language", objects -> {
+            Locale locale = (Locale) objects[0];
+            model.getPrefs().locale = locale;
+            view.changeLocale();
+        });
 
-//        runInsideUISync(() -> view.loadStatisticPage());
+        return list;
+    }
 
-//        Video video1 = this.model.getVideos().get(0);
-//        Video video2 = this.model.getVideos().get(1);
-//
-//        statService.setVideos(video1, video2);
-//        statService.setDurationStep(Duration.seconds(10));
-//
-//        try {
-//            Map<Category, Map<Video, Long>> result = statService.tarjanDiff();
-//
-//        } catch (StatisticException e) {
-//            e.printStackTrace();
-//        }
-
-        System.out.println("compare");
+    public void savePreferences() {
+        preferenceService.export(model.getPrefs());
     }
 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
-import org.laeq.model.Category;
 import org.laeq.model.Video;
 import org.laeq.model.serializer.VideoSerializer;
 import org.laeq.service.statistic.StatisticService;
@@ -18,7 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)

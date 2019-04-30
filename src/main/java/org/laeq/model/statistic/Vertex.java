@@ -1,6 +1,5 @@
 package org.laeq.model.statistic;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.laeq.model.Point;
 

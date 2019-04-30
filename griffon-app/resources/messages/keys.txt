@@ -106,3 +106,10 @@ org.laeq.user.column.last_name = Last name
 org.laeq.user.column.email = Email
 org.laeq.user.column.default = Default
 org.laeq.user.column.actions = Actions
+
+-- Statistic
+org.laeq.statistic.column.name = Name
+org.laeq.statistic.column.collection = Collection
+org.laeq.statistic.column.import = Imports
+org.laeq.statistic.btn.compare = Compare
+org.laeq.statistic.label.duration_step = Step

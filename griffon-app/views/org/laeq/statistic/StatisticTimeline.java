@@ -14,7 +14,6 @@ import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.statistic.Edge;
 import org.laeq.model.statistic.Graph;
-import org.laeq.model.statistic.Vertex;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -4,24 +4,18 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.util.Callback;
 import javafx.util.Duration;
-import org.apache.commons.collections4.BidiMap;
-import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.apache.commons.io.FileUtils;
-import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.laeq.TranslatedView;
+import org.laeq.TranslationService;
 import org.laeq.model.Category;
 import org.laeq.model.Video;
 import org.laeq.model.statistic.Graph;
@@ -30,7 +24,6 @@ import org.laeq.service.statistic.StatisticService;
 import org.laeq.settings.Settings;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
-import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,29 +34,27 @@ import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ContainerView extends AbstractJavaFXGriffonView {
+public class ContainerView extends TranslatedView {
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private ContainerController controller;
     @MVCMember @Nonnull private MiddlePaneView parentView;
     @Inject private StatisticService statService;
     @Inject private DialogService dialogService;
-    @Inject private PreferencesService preferenceService;
 
     @FXML private TableView<Video> videoTable;
-    @FXML private Button compareBtn;
+    @FXML private Button compareActionTarget;
     @FXML private GridPane gridResult;
     @FXML private AnchorPane visualTab;
     @FXML private Spinner<Integer> durationSpinner;
     @FXML private WebView statView;
+    @FXML private Label durationStepLabel;
 
     private WebEngine webEngine;
+    private TranslationService translationService;
 
     @Override
     public void initUI() {
@@ -73,28 +64,41 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     }
 
     public void init(){
-        TableColumn<Video, Number> idColumn = new TableColumn<>("#");
-        TableColumn<Video, String> pathColumn = new TableColumn("Name");
-        TableColumn<Video, String> collectionColumn = new TableColumn("Collection");
-        TableColumn<Video, Number> filesColumn = new TableColumn<>("Imports");
+        TableColumn<Video, Number> idColumn = new TableColumn<>("id");
+        TableColumn<Video, String> pathColumn = new TableColumn("");
+        TableColumn<Video, String> collectionColumn = new TableColumn("");
+        TableColumn<Video, Number> importColumn = new TableColumn<>("");
 
-        videoTable.getColumns().addAll(idColumn, pathColumn, collectionColumn, filesColumn);
+        videoTable.getColumns().addAll(idColumn, pathColumn, collectionColumn, importColumn);
 
         idColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(()-> new Integer(param.getValue().getId())));
         pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         collectionColumn.setCellValueFactory(cellData -> cellData.getValue().getCollection().nameProperty());
-        filesColumn.setCellValueFactory(param -> {
-           return Bindings.createIntegerBinding(() -> getTotalImports(param.getValue()));
-        });
+        importColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(() -> getTotalImports(param.getValue())));
+
+        columnsMap.put(pathColumn, "org.laeq.statistic.column.name");
+        columnsMap.put(collectionColumn, "org.laeq.statistic.column.collection");
+        columnsMap.put(importColumn, "org.laeq.statistic.column.import");
+        columnsMap.put(collectionColumn, "org.laeq.video.column.collection");
+        textFields.put(compareActionTarget, "org.laeq.statistic.btn.compare");
+        textFields.put(durationStepLabel, "org.laeq.statistic.label.duration_step");
 
         videoTable.setItems(this.model.getVideos());
+
+        durationSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 3600));
+        durationSpinner.getValueFactory().setValue(model.getPrefs().durationStep);
+
+        durationSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            model.getPrefs().durationStep = newValue;
+            controller.savePreferences();
+        });
 
         loadStatisticPage();
 
         videoTable.setOnMouseClicked(event -> {
+            webEngine.executeScript("reset()");
+
             Video video = videoTable.getSelectionModel().getSelectedItem();
-//            String myFunction = String.format("setVideoFile('%s, %s')", Settings.statisticPath, video.getName());
-//            webEngine.executeScript(myFunction);
 
             Path path = Paths.get(Settings.statisticPath);
 
@@ -110,33 +114,71 @@ public class ContainerView extends AbstractJavaFXGriffonView {
                 }).forEach(path1 -> {
                     try {
                         String content = FileUtils.readFileToString(path1.toFile(), "UTF-8");
-                        String jsonFunction = String.format("addJsonContent(%s)", content);
-                        webEngine.executeScript(jsonFunction);
+                        System.out.println(path1.toFile());
+                        String addFunction = String.format("addJsonContent(%s)", content);
+                        webEngine.executeScript(addFunction);
 
                     } catch (IOException e) {
                         getLog().error(e.getMessage());
                     }
                 });
 
-
             } catch (IOException e) {
                 getLog().error(e.getMessage());
             }
 
+            String jsonFunction = String.format("render()");
+            webEngine.executeScript(jsonFunction);
+        });
+
+        setTranslatedText();
+
+        model.durationStepProperty().bind(durationSpinner.valueProperty());
+    }
+
+    public void changeLocale() {
+        runInsideUISync(() -> {
+            setTranslatedText();
         });
     }
 
     public void loadStatisticPage(){
         webEngine = statView.getEngine();
 //        String aboutPath = String.format("html/statistic_%s.html", preferenceService.getPreferences().locale.getLanguage());
-        String aboutPath = String.format("html/statistic_en.html", preferenceService.getPreferences().locale.getLanguage());
+        String aboutPath = String.format("html/statistic_en.html", model.getPrefs().locale.getLanguage());
         webEngine.load(getClass().getClassLoader().getResource(aboutPath).toExternalForm());
-
-//        String myFunction = String.format("setStatFolder('%s')", Settings.statisticPath);
-//        webEngine.executeScript(myFunction);
-
     }
 
+    public void changeLocale(Locale locale) {
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
+
+        setTranslatedText();
+    }
+
+    private void setTranslatedText(){
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
+
+        try{
+            textFields.entrySet().forEach(t -> {
+                t.getKey().setText(translationService.getMessage(t.getValue()));
+            });
+
+            columnsMap.entrySet().forEach( t -> {
+                t.getKey().setText(translationService.getMessage(t.getValue()));
+            });
+
+        } catch (Exception e){
+            getLog().error(e.getMessage());
+        }
+    }
     private int getTotalImports(Video video){
         int total = 0;
         Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
@@ -151,7 +193,6 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
         return new Integer(total);
     }
-
     private void compare(int step){
         gridResult.getChildren().clear();
         gridResult.getColumnConstraints().clear();
@@ -218,14 +259,12 @@ public class ContainerView extends AbstractJavaFXGriffonView {
             visualTab.getChildren().add(timeline);
         });
     }
-
     private String rounder(double value){
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(0, RoundingMode.HALF_EVEN);
 
         return bd.toString();
     }
-
     private List<ColumnConstraints> getColumnConstraints(){
 
         List<ColumnConstraints> colConstList = new ArrayList<>();

@@ -22,6 +22,7 @@ public class StatisticSerializer extends StdSerializer<StatisticService> {
     public void serialize(StatisticService service, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
 
         jgen.writeStartObject();
+        jgen.writeNumberField("step", service.getStep().toSeconds());
         jgen.writeObjectFieldStart("videos");
         jgen.writeObjectField("video_1", service.getVideo1());
         jgen.writeObjectField("video_2", service.getVideo2());
