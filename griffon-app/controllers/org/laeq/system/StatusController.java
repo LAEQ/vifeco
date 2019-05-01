@@ -120,9 +120,6 @@ public class StatusController extends AbstractGriffonController {
             srcFiles.add(fileName);
         }
 
-        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
-        Date now = new Date(System.currentTimeMillis());
-
         String userDefault = "";
         try {
             userDefault = userDAO.findDefault().toString();
@@ -130,7 +127,7 @@ public class StatusController extends AbstractGriffonController {
             userDefault = UUID.randomUUID().toString().substring(0, 8);
         }
 
-        String zipFileName = String.format("%s-%s.zip", userDefault, formatter.format(now));
+        String zipFileName = String.format("%s-%s.zip", userDefault, System.currentTimeMillis());
 
         try {
             FileOutputStream fos = new FileOutputStream(getPathExport(zipFileName));

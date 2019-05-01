@@ -37,11 +37,9 @@ public class ExportService extends AbstractGriffonService {
 
     public String export(Video video){
         ObjectMapper objectMapper = new ObjectMapper();
-        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
-        Date now = new Date(System.currentTimeMillis());
 
         try {
-            String fileName = String.format("%s-%s.json", video.getName(), formatter.format(now));
+            String fileName = String.format("%s-%s.json", video.getName(), System.currentTimeMillis());
             fileName = getPathExport(fileName);
             objectMapper.writeValue(new File(fileName), video);
 
@@ -52,10 +50,6 @@ public class ExportService extends AbstractGriffonService {
 
         return "";
     }
-
-
-
-
 
     public void export(StatisticService service){
         ObjectMapper objectMapper = new ObjectMapper();
@@ -78,6 +72,6 @@ public class ExportService extends AbstractGriffonService {
     }
 
     private String getPathExport(String filename){
-        return String.format("%s/%s", Settings.exportPath, filename);
+        return String.format("%s%s%s", Settings.exportPath, File.separator, filename);
     }
 }
