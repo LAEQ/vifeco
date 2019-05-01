@@ -11,7 +11,7 @@ class PreferencesTest extends Specification {
         when:
         String result = new ObjectMapper().writeValueAsString(preferences)
 
-        String expected = '{"rate":1.0,"volume":1.0,"size":60.0,"duration":5.0,"opacity":0.65,"locale":"fr_CA"}'
+        String expected = '{"rate":1.0,"volume":1.0,"size":60.0,"duration":5.0,"opacity":0.65,"durationStep":5,"locale":"fr_CA"}'
 
         then:
         result == expected
@@ -19,7 +19,7 @@ class PreferencesTest extends Specification {
 
     def "deserialize with no default language" () {
         setup:
-        String json = '{"rate":1.0,"volume":1.0,"size":60.0,"duration":5.0,"opacity":0.65,"locale":"fr_CA"}'
+        String json = '{"rate":1.0,"volume":1.0,"size":60.0,"duration":5.0,"opacity":0.65,"durationStep":5,"locale":"fr_CA"}'
 
         ObjectMapper mapper = new ObjectMapper()
 
@@ -33,6 +33,7 @@ class PreferencesTest extends Specification {
         result.duration == 5.0
         result.opacity == 0.65
         result.locale == Locale.CANADA_FRENCH
+        result.durationStep == 5
     }
 
     def "deserialize with english" () {

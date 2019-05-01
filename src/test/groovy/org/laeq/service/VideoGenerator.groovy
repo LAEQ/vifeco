@@ -36,7 +36,7 @@ class VideoGenerator {
     static void generatePoints(Video video, int categoryId, int seconds, int total,int pointId){
         Category category = video.collection.categorySet.find { it.id == categoryId}
         1.upto(total, {
-            Duration start = Duration.millis(seconds + it * 1000)
+            Duration start = Duration.seconds(seconds + it)
             Point point = new Point(pointId++,10, 10, start, video, category)
             video.pointSet.add(point)
         })

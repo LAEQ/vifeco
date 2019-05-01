@@ -8,8 +8,10 @@ import javafx.util.Duration;
 import org.laeq.model.serializer.PointDeserializer;
 
 import java.util.Objects;
-@JsonIgnoreProperties({"video", "icon", "duration", "createdAt", "updatedAt", "category"})
-@JsonPropertyOrder({"id", "x", "y", "categoryId", "start"})
+import java.util.UUID;
+
+@JsonIgnoreProperties({"video", "icon", "duration", "createdAt", "updatedAt", "category", "uuid"})
+@JsonPropertyOrder({"id", "x", "y", "categoryId", "startDouble", "videoId"})
 @JsonDeserialize(using = PointDeserializer.class)
 public class Point extends BaseEntity implements Comparable<Point> {
     private int id;
@@ -18,6 +20,7 @@ public class Point extends BaseEntity implements Comparable<Point> {
     private Duration start;
     private Category category;
     private Video video;
+    private UUID uuid = UUID.randomUUID();
 
     public Point() {}
 
@@ -75,6 +78,10 @@ public class Point extends BaseEntity implements Comparable<Point> {
         return start.toMillis();
     }
 
+    public String getVideoId(){
+        return video.getUuid().toString();
+    }
+
     @JsonIgnore
     public Duration getStart() {
         return start;
@@ -91,13 +98,13 @@ public class Point extends BaseEntity implements Comparable<Point> {
 
     @Override
     public int compareTo(Point o) {
-        if(id == o.id && id != 0){
+        if(uuid.compareTo(o.uuid) == 0){
             return 0;
         }
 
         int compare = this.start.compareTo(o.start);
         if(compare == 0){
-            return id - o.id;
+            return uuid.compareTo(o.uuid);
         }
 
         return compare;
@@ -108,7 +115,7 @@ public class Point extends BaseEntity implements Comparable<Point> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Point point = (Point) o;
-        return id == point.id;
+        return uuid.compareTo(point.uuid) == 0;
     }
 
     @Override

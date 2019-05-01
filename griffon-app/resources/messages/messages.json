@@ -285,6 +285,13 @@
         }
     },
     {
+        "org.laeq.video.column.not_editable": {
+            "en-CA": "Editable",
+            "es-ES": "Editable",
+            "fr-CA": "Editable"
+        }
+    },
+    {
         "org.laeq.model.collection.delete.confirmation": {
             "en-CA": "confirm the collection suppression",
             "es-ES": "¿Estás seguro de que quieres eliminar esta colección?"
@@ -596,6 +603,41 @@
             "en-CA": "Actions",
             "es-ES": "Acciones",
             "fr-CA": "Actions"
+        }
+    },
+    {
+        "org.laeq.statistic.column.name": {
+            "en-CA": "Name",
+            "es-ES": "Name",
+            "fr-CA": "Nom"
+        }
+    },
+    {
+        "org.laeq.statistic.column.collection": {
+            "en-CA": "Collection",
+            "es-ES": "Collection",
+            "fr-CA": "Collection"
+        }
+    },
+    {
+        "org.laeq.statistic.column.import": {
+            "en-CA": "Imports",
+            "es-ES": "Importaciones",
+            "fr-CA": "Importés"
+        }
+    },
+    {
+        "org.laeq.statistic.btn.compare": {
+            "en-CA": "Compare",
+            "es-ES": "Comparar",
+            "fr-CA": "Comparer"
+        }
+    },
+    {
+        "org.laeq.statistic.label.duration_step": {
+            "en-CA": "Step",
+            "es-ES": "Medida",
+            "fr-CA": "Pas"
         }
     }
 ]

@@ -46,6 +46,7 @@ org.laeq.video.column.duration = Duración
 org.laeq.video.column.collection = Colección
 org.laeq.video.column.total = Puntos totales
 org.laeq.video.column.last_point = Ultimo punto
+org.laeq.video.column.not_editable = Editable
 
 -- Collection
 org.laeq.model.collection.delete.confirmation = ¿Estás seguro de que quieres eliminar esta colección?
@@ -105,3 +106,10 @@ org.laeq.user.column.last_name = Apellido
 org.laeq.user.column.email = Email
 org.laeq.user.column.default = Por defecto
 org.laeq.user.column.actions = Acciones
+
+-- Statistic
+org.laeq.statistic.column.name = Name
+org.laeq.statistic.column.collection = Collection
+org.laeq.statistic.column.import = Importaciones
+org.laeq.statistic.btn.compare = Comparar
+org.laeq.statistic.label.duration_step = Medida

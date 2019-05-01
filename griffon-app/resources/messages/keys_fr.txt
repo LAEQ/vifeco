@@ -46,9 +46,10 @@ org.laeq.video.column.duration = Durée
 org.laeq.video.column.collection = Collection
 org.laeq.video.column.total = Total de points
 org.laeq.video.column.last_point = Dernier point
+org.laeq.video.column.not_editable = Editable
 
 -- Collection
-org.laeq.model.collection.delete.confirmation = Êtes-vous sûr de vouloir supprimer la collection.
+org.laeq.model.collection.delete.confirmation = Êtes-vous sûr de vouloir supprimer la collection?
 org.laeq.model.collection.form.alert.title = Le formulaire est invalide
 org.laeq.model.collection.validation.categories = Vous devez sélectionner au moins une catégorie
 org.laeq.model.collection.default.error = La suppression de la collection par défaut n'est pas permise
@@ -109,3 +110,10 @@ org.laeq.user.column.last_name = Nom
 org.laeq.user.column.email = Courriel
 org.laeq.user.column.default = Défaut
 org.laeq.user.column.actions = Actions
+
+-- Statistic
+org.laeq.statistic.column.name = Nom
+org.laeq.statistic.column.collection = Collection
+org.laeq.statistic.column.import = Importés
+org.laeq.statistic.btn.compare = Comparer
+org.laeq.statistic.label.duration_step = Pas

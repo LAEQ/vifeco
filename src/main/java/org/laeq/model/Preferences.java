@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-@JsonPropertyOrder({"rate", "volume", "size", "duration", "opacity", "locale"})
+@JsonPropertyOrder({"rate", "volume", "size", "duration", "opacity", "durationStep", "locale"})
 @JsonIgnoreProperties({"localAvailables"})
 public class Preferences {
     public  Double rate = 1d;
@@ -19,6 +19,7 @@ public class Preferences {
     public  Double duration = 5d;
     public  Double opacity = 0.65;
     public  Locale locale = Locale.CANADA_FRENCH;
+    public  Integer durationStep = 5;
 
     public List<Locale> localAvailables;
 

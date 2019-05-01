@@ -16,7 +16,7 @@ import java.util.Set;
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
     private ObservableList<Video> videoList = FXCollections.observableArrayList();
-    private FilteredList<Video> filteredList = new FilteredList<>(videoList, p -> p.isEditable());
+    private FilteredList<Video> filteredList = new FilteredList<>(videoList, p -> true);
 
     private Set<User> userSet = new HashSet<>();
     private Set<Collection> collectionSet = new HashSet<>();

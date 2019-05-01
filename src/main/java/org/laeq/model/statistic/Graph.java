@@ -3,6 +3,7 @@ package org.laeq.model.statistic;
 import org.laeq.model.Point;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Graph {
     public Map<Vertex, List<Edge>> edges;
@@ -26,7 +27,9 @@ public class Graph {
 
 
     public void addEdges(Point start, Point end){
-        edges.get(vertices.get(start)).add(new Edge(vertices.get(start), vertices.get(end)));
+        Vertex startVertex = vertices.get(start);
+        startVertex.totalEdges++;
+        edges.get(startVertex).add(new Edge(vertices.get(start), vertices.get(end)));
     }
 
     public List<List<Vertex>> tarjan(){
@@ -44,6 +47,10 @@ public class Graph {
         });
 
         return result;
+    }
+
+    public Set<Edge> getDistinctEdges(){
+        return edges.values().stream().flatMap(List::stream).collect(Collectors.toSet());
     }
 
     private void visit(Vertex vertex, int counter, Stack<Vertex> stack, List<List<Vertex>> result) {
