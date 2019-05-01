@@ -19,7 +19,7 @@ public class VideoSerializer extends StdSerializer<Video> {
     }
 
     @Override
-    public void serialize(Video video, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+    public void serialize(Video video, JsonGenerator jgen, SerializerProvider provider) throws IOException {
         jgen.writeStartObject();
         jgen.writeStringField("name", video.getName());
         jgen.writeNumberField("duration", video.getDuration());

@@ -1,7 +1,6 @@
 package org.laeq.model.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.laeq.service.statistic.StatisticService;
@@ -19,8 +18,7 @@ public class StatisticSerializer extends StdSerializer<StatisticService> {
     }
 
     @Override
-    public void serialize(StatisticService service, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
-
+    public void serialize(StatisticService service, JsonGenerator jgen, SerializerProvider provider) throws IOException {
         jgen.writeStartObject();
         jgen.writeNumberField("step", service.getStep().toSeconds());
         jgen.writeObjectFieldStart("videos");

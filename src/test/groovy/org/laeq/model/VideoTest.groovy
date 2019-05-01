@@ -21,17 +21,14 @@ class VideoTest extends Specification {
 
         video.pointSet.add(point1)
         video.pointSet.add(point2)
+        def uuid = video.uuid.toString()
 
         when:
         String result = new ObjectMapper().writeValueAsString(video)
-        String expected = '{"path":"path/to/video.mp4","user":{"id":1,"firstName":"test","lastName":"test","email":"test","isDefault":false},"duration":10000.0,' +
-                '"collection":{"id":1,"name":"collection 1","isDefault":false,' +
-                '"categorySet":[{"id":1,"name":"category 1","icon":"icon 1","color":"color 1","shortcut":"A"},' +
-                '{"id":2,"name":"category 2","icon":"icon 2","color":"color 2","shortcut":"B"}]},' +
-                '"pointSet":[{"id":1,"x":10.0,"y":11.0,"categoryId":1,"startDouble":1000.0},{"id":2,"x":11.0,"y":10.0,"categoryId":2,"startDouble":2000.0}]}'
+        String expected = "{'uuid':'${uuid}','path':'path/to/video.mp4','user':{'id':1,'firstName':'test','lastName':'test','email':'test','isDefault':false},'duration':10000.0,'collection':{'id':1,'name':'collection 1','isDefault':false,'categorySet':[{'id':1,'name':'category 1','icon':'icon 1','color':'color 1','shortcut':'A'},{'id':2,'name':'category 2','icon':'icon 2','color':'color 2','shortcut':'B'}]},'pointSet':[{'id':1,'x':10.0,'y':11.0,'categoryId':1,'startDouble':1000.0,'videoId':'${uuid}'},{'id':2,'x':11.0,'y':10.0,'categoryId':2,'startDouble':2000.0,'videoId':'${uuid}'}]}"
 
         then:
-        result == expected
+        result == expected.replace("'", "\"")
     }
 
     def "deserialization" (){
@@ -49,6 +46,6 @@ class VideoTest extends Specification {
         result.collection.categorySet.size() == 4
         result.collection.categorySet.contains(new Category(1, 'Moving car', 'mock', '#000000', 'A'))
         result.pointSet.size() == 3
-        result.pointSet.contains(new Point(1, Duration.millis(0.0)))
+        result.pointSet.collect { it.category.id }.sort() == [1,2,3]
     }
 }

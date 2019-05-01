@@ -1,5 +1,3 @@
-var videoFile = "07074207.wav";
-var statFolder = "/home/david/vifeco/statistic/";
 var jsonContents = []
 var categories = {};
 var g_statistic;
@@ -22,18 +20,9 @@ function createVideoContainer(index) {
     return `<div id='video-${index}'><div class='info'></div><div class='summary'></div><div class='chart'></div><div>`
 }
 
-
-function setVideoFile(folder, value) {
-    statFolder = folder;
-    videoFile = value;
-    document.getElementById("test").innerHTML = statFolder + ": " + value;
-}
-
 function addJsonContent(json) {
     jsonContents.push(json)
 }
-
-
 
 function setInfos() {
     var table = `<table class="table ">
@@ -420,9 +409,8 @@ function render() {
     activateCategoryBtn();
 }
 
-
 $(document).ready(function () {
-    addJsonContent(file1)
-    addJsonContent(file2)
-    render();
+    // addJsonContent(file1)
+    // addJsonContent(file2)
+    // render();
 });

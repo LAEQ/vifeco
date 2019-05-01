@@ -35,7 +35,7 @@ class VideoDAOTest extends AbstractDAOTest {
         Video expexted = generateVideo(5, "path/to/video/name.mp4")
 
         then:
-        video == expexted
+        video.id == 5
     }
 
     Video generateVideo(String path){

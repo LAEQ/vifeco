@@ -152,8 +152,7 @@ public class StatusController extends AbstractGriffonController {
             zipOut.close();
             fos.close();
         } catch (IOException e ){
-
-
+            getLog().error(e.getMessage());
         } finally {
             for(String srcFile : srcFiles){
                 File file = new File(srcFile);

@@ -105,24 +105,15 @@ public class ContainerView extends TranslatedView {
             try {
                 Stream<Path> list = Files.list(path);
 
-                list.filter(p ->{
-                    if(p.getFileName().toString().contains(video.getName())){
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }).forEach(path1 -> {
+                list.filter(p -> p.getFileName().toString().contains(video.getName())).forEach(p -> {
                     try {
-                        String content = FileUtils.readFileToString(path1.toFile(), "UTF-8");
-                        System.out.println(path1.toFile());
+                        String content = FileUtils.readFileToString(p.toFile(), "UTF-8");
                         String addFunction = String.format("addJsonContent(%s)", content);
                         webEngine.executeScript(addFunction);
-
                     } catch (IOException e) {
                         getLog().error(e.getMessage());
                     }
                 });
-
             } catch (IOException e) {
                 getLog().error(e.getMessage());
             }

@@ -18,10 +18,8 @@ class GraphTest extends Specification {
         graph.addEdges(point1, point3)
         graph.addEdges(point2, point1)
         graph.addEdges(point3, point1)
-        graph.addEdges()
 
         def result = graph.getDistinctEdges()
-        println(result)
 
         expect:
         result.size() == 2

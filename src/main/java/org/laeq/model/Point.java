@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @JsonIgnoreProperties({"video", "icon", "duration", "createdAt", "updatedAt", "category", "uuid"})
-@JsonPropertyOrder({"id", "x", "y", "categoryId", "start", "videoId"})
+@JsonPropertyOrder({"id", "x", "y", "categoryId", "startDouble", "videoId"})
 @JsonDeserialize(using = PointDeserializer.class)
 public class Point extends BaseEntity implements Comparable<Point> {
     private int id;
