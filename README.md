@@ -6,21 +6,21 @@
 | ------------- | ------------- |
 | Master  |  ![build status](https://travis-ci.org/LAEQ/vifeco.svg?branch=master)|
 
-If you want to try this project you must have a JDK (>=1.8) installed with JavaFX. The gradle version used is 4.7. 
+If you want to try this project you must have a JDK (>=1.8) installed with JavaFX. The gradle version is 4.7. 
 
 
 ```jshelllanguage
 git clone https://github.com/LAEQ/vifeco.git
-gradle run
+gradle test run
 ```
 
 For a shadowJar
 ```jshelllanguage
-gradle build
+gradle clean test build
 ```
 
-> The project creates a folder named **Vifeco** at the root of the user. 
-It will create all the necessary files to run the project (database, preferences, exports, imports, images, etc.).
+
+> The project will create a folder named **Vifeco** (~/vifeco) and will save all the necessary files to run the project (database, preferences, exports, imports, images, etc.).
 
 
 ### How to cite VIFECO?
