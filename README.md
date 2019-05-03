@@ -4,7 +4,7 @@
 
 | Branch | status |
 | ------------- | ------------- |
-| Master  |  ![build status](https://travis-ci.com/LAEQ/vifeco.svg?branch=master)|
+| Master  |  ![build status](https://travis-ci.org/LAEQ/vifeco.svg?branch=master)|
 
 If you want to try this project you must have a JDK (>=1.8) installed with JavaFX. The gradle version used is 4.7. 
 
