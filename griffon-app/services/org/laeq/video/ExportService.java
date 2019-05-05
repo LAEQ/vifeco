@@ -53,7 +53,6 @@ public class ExportService extends AbstractGriffonService {
 
     public void export(StatisticService service){
         ObjectMapper objectMapper = new ObjectMapper();
-        Long now = System.currentTimeMillis();
 
         try{
             String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, service.getVideo1().getName(), System.currentTimeMillis());
