@@ -57,7 +57,7 @@ org.laeq.model.collection.default.error = You cannot delete the default collecti
 -- Collection UI
 org.laeq.collection.name = Name
 org.laeq.collection.title_create = Create a new collection
-org.laeq.collection.title_edit = Edit a new collection
+org.laeq.collection.title_edit = Edit a collection
 org.laeq.collection.category_title = Categories
 org.laeq.collection.clear_btn = Clear
 org.laeq.collection.save_btn = Save
@@ -88,7 +88,7 @@ org.laeq.category.delete.error = Cannot delete the category
 
 
 -- User
-org.laeq.user.delete.confirmation = Confirm the user suppression 
+org.laeq.user.delete.confirmation = Confirm the user removal
 org.laeq.delete.default_user.error = You cannot delete the default user
 org.laeq.user.save.error = Save error occurred
 org.laeq.user.delete.error = Cannot delete the default user
