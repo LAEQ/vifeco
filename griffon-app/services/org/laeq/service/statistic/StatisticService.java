@@ -9,6 +9,7 @@ import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.serializer.StatisticSerializer;
+import org.laeq.model.statistic.ConnectedGraph;
 import org.laeq.model.statistic.Edge;
 import org.laeq.model.statistic.Graph;
 import org.laeq.model.statistic.Vertex;
@@ -17,8 +18,6 @@ import org.laeq.statistic.StatisticTimeline;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@javax.inject.Singleton
-@ArtifactProviderFor(GriffonService.class)
 @JsonSerialize(using = StatisticSerializer.class)
 public class StatisticService extends AbstractGriffonService {
     private Video video1;
@@ -133,10 +132,12 @@ public class StatisticService extends AbstractGriffonService {
     private List<Edge> tarjanEdgeRecu_1(Category category){
         List<List<Vertex>> tmp = tarjans.get(category);
 
+        System.out.println(tmp.size());
+
         List<Edge> result = new ArrayList<>();
 
         tmp.forEach( vertices -> {
-            result.addAll(tarjanEdgeRecu_2(vertices));
+            result.addAll(test(vertices));
         });
 
         happyPoints.put(category, result.stream().map(edge -> edge.start).collect(Collectors.toList()));
@@ -144,11 +145,37 @@ public class StatisticService extends AbstractGriffonService {
 
         return result;
     }
+
+    private List<Edge> test(List<Vertex> vertices){
+        List<Edge> result = new ArrayList<>();
+
+        if(vertices.size() == 1){
+            return result;
+        }
+
+        List<Vertex> vAs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video1)).collect(Collectors.toList());
+        List<Vertex> vBs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video2)).collect(Collectors.toList());
+
+        List<Vertex> selected = (vAs.size() <= vBs.size())? vAs : vBs;
+        LinkedList<Edge> edges = new LinkedList<>();
+
+        selected.forEach( vertex -> {
+            getEdges(vertex).forEach(edge -> edges.add(edge));
+        });
+
+        ConnectedGraph connectedGraph = new ConnectedGraph(edges, selected.size());
+        connectedGraph.execute();
+
+        return connectedGraph.getResult();
+    }
+
+
+
     private List<Edge> tarjanEdgeRecu_2(List<Vertex> vertices){
         List<Edge> result = new ArrayList<>();
 
-        List<Vertex> videoA_vertices = vertices.parallelStream().filter(vertex -> vertex.getPoint().getVideo().equals(video1)).collect(Collectors.toList());
-        List<Vertex> videoB_vertices = vertices.parallelStream().filter(vertex -> vertex.getPoint().getVideo().equals(video2)).collect(Collectors.toList());
+        List<Vertex> videoA_vertices = vertices.stream().filter(vertex -> vertex.getPoint().getVideo().equals(video1)).sorted().collect(Collectors.toList());
+        List<Vertex> videoB_vertices = vertices.stream().filter(vertex -> vertex.getPoint().getVideo().equals(video2)).sorted().collect(Collectors.toList());
 
         // Case: no matching point
         if(videoA_vertices.size() == 0 || videoB_vertices.size() == 0){
@@ -180,7 +207,7 @@ public class StatisticService extends AbstractGriffonService {
             return;
         }
 
-        List<Vertex> endVertices = result.stream().map(e -> e.end).collect(Collectors.toList());
+        List<Vertex> endVertices = result.stream().map(e -> e.end).sorted().collect(Collectors.toList());
         Vertex v = vertices.get(indexVertex++);
         List<Edge> edges = getEdges(v).stream().filter(e -> ! endVertices.contains(e.end)).collect(Collectors.toList());
 

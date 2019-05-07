@@ -42,7 +42,10 @@ public class ImportService extends AbstractGriffonService {
     public Video execute(String json) throws IOException {
         Video result = new ObjectMapper().readValue(json, Video.class);
 
-        result.getPointSet().parallelStream().forEach(point -> point.setVideo(result));
+        result.getPointSet().stream().forEach(point -> {
+            point.setVideo(result);
+
+        });
 
         return result;
     }

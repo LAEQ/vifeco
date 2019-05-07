@@ -33,7 +33,6 @@ public class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull private ContainerModel model;
     @MVCMember @Nonnull private ContainerView view;
 
-    @Inject private StatisticService statService;
     @Inject private MariaService dbService;
     @Inject private ImportService importService;
     @Inject private ExportService exportService;
@@ -67,15 +66,17 @@ public class ContainerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void compare(){
-        model.getVideos().forEach(video -> {
-
+        model.getVideos().parallelStream().forEach(video -> {
             Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
 
             while (it.hasNext()){
                 File file = (File) it.next();
 
                 if(file.getName().contains(video.getName())){
+                    System.out.println(video.getName() + ": " + file.getName());
                     try {
+
+                        StatisticService statService = new StatisticService();
 
                         String content = FileUtils.readFileToString(file, "UTF-8");
                         Video importVideo = importService.execute(content);
@@ -90,7 +91,6 @@ public class ContainerController extends AbstractGriffonController {
                     } catch (IOException | StatisticException e) {
                         getLog().error(e.getMessage());
                     }
-
                 }
             }
         });

@@ -197,6 +197,8 @@ function parseData() {
         var duration = g_statistic['videos']['video_1']['duration'];
         var total = Math.ceil(duration / (1000 * 60))
 
+        console.log(duration, total)
+
         for (var i = 0; i < total; i++) {
             var obj = { 'time': i.toString(), 'match': 0, 'video_1': 0, 'video_2': 0 }
             data[category].push(obj);
@@ -215,6 +217,8 @@ function parseData() {
             for (var i = 0; i < singles.length; i++) {
                 var point = singles[i]['point'];
                 var startPoint = Math.round(point['startDouble'] / 60000);
+
+                console.log(point)
 
                 if (isVideo1(point['videoId'])) {
                     data[category][startPoint]['video_1'] += 1
@@ -362,8 +366,6 @@ function displayChart(data, id, cat) {
         .style("text-anchor", "middle")
         .attr("font-size", "12px")
         .attr("font-weight", "bold");
-
-
 }
 
 function activateCategoryBtn() {

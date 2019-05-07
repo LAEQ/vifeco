@@ -311,7 +311,7 @@ class StatisticServiceTest extends Specification {
         edges.find {it.key.id == 1}.value.collect{[it.start.point.id, it.end.point.id]} == [[6,2], [5,1]]
     }
 
-    def "tarjan edges for 2 second and 1 category" () {
+    def "tarjan edges for 2 seconds and 1 category" () {
         setup:
         int pointId = 1
         Video video1 = VideoGenerator.generateVideo(1,3)
