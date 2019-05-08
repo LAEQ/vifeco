@@ -356,28 +356,30 @@ public class VideoEditor {
     public void previousPoint(Category category) {
         Point pt = new Point();
         pt.setVideo(this.video);
-        pt.setStart(mediaPlayer.getCurrentTime());
+        pt.setStart(mediaPlayer.getCurrentTime().subtract(Duration.millis(1)));
         pt.setCategory(category);
 
-        List<Point> pointList = video.getPointSet().headSet(pt).stream().filter(point -> point.getCategory().equals(category)).sorted().collect(Collectors.toList());
+        Point previousPoint = pointDAO.findPrevious(pt);
 
-        if(pointList.size() > 0){
-            Point lastPoint = pointList.get(pointList.size() - 1);
-            mediaPlayer.seek(lastPoint.getStart());
+        System.out.println(previousPoint);
+
+        if(previousPoint != null){
+            mediaPlayer.seek(previousPoint.getStart());
         }
     }
 
     public void nextPoint(Category category) {
         Point pt = new Point();
         pt.setVideo(this.video);
-        pt.setStart(mediaPlayer.getCurrentTime());
+        pt.setStart(mediaPlayer.getCurrentTime().add(Duration.millis(1)));
         pt.setCategory(category);
 
-        List<Point> pointList = video.getPointSet().tailSet(pt).stream().filter(point -> point.getCategory().equals(category)).sorted().collect(Collectors.toList());
+        Point nextPoint = pointDAO.findNext(pt);
 
-        if(pointList.size() > 0){
-            Point lastPoint = pointList.get(0);
-            mediaPlayer.seek(lastPoint.getStart());
+        System.out.println(nextPoint);
+
+        if(nextPoint != null){
+            mediaPlayer.seek(nextPoint.getStart());
         }
     }
 }
