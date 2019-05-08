@@ -213,4 +213,29 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
             connection.commit();
         }
     }
+
+    public Point findPrevious(Point point){
+        Point result = null;
+        String query = "SELECT START FROM POINT WHERE VIDEO_ID=? AND CATEGORY_ID = ? and `START` < ? ORDER BY `START` DESC LIMIT 1";
+
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query)){
+
+            statement.setInt(1, point.getVideo().getId());
+            statement.setInt(2, point.getCategoryId());
+            statement.setDouble(3, point.getStartDouble());
+
+            ResultSet queryResult = statement.executeQuery();
+
+            if(queryResult.next()){
+                Double startDouble = queryResult.getDouble(1);
+                result.setStart(Duration.millis(startDouble));
+            }
+
+        } catch (SQLException e){
+            getLogger().error(e.getMessage());
+        }
+
+        return result;
+    }
 }

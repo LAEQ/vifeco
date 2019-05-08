@@ -30,10 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class VideoEditor {
@@ -354,5 +351,33 @@ public class VideoEditor {
 
     public void reload() {
         mediaPlayer.seek(mediaPlayer.getStartTime());
+    }
+
+    public void previousPoint(Category category) {
+        Point pt = new Point();
+        pt.setVideo(this.video);
+        pt.setStart(mediaPlayer.getCurrentTime());
+        pt.setCategory(category);
+
+        List<Point> pointList = video.getPointSet().headSet(pt).stream().filter(point -> point.getCategory().equals(category)).sorted().collect(Collectors.toList());
+
+        if(pointList.size() > 0){
+            Point lastPoint = pointList.get(pointList.size() - 1);
+            mediaPlayer.seek(lastPoint.getStart());
+        }
+    }
+
+    public void nextPoint(Category category) {
+        Point pt = new Point();
+        pt.setVideo(this.video);
+        pt.setStart(mediaPlayer.getCurrentTime());
+        pt.setCategory(category);
+
+        List<Point> pointList = video.getPointSet().tailSet(pt).stream().filter(point -> point.getCategory().equals(category)).sorted().collect(Collectors.toList());
+
+        if(pointList.size() > 0){
+            Point lastPoint = pointList.get(0);
+            mediaPlayer.seek(lastPoint.getStart());
+        }
     }
 }

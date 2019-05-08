@@ -7,6 +7,7 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Preferences;
 import org.laeq.user.PreferencesService;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class PlayerController extends AbstractGriffonController {
     @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private PlayerView view;
+    @MVCMember @Nonnull private VideoEditor editor;
+
     @Inject private PreferencesService preferencesService;
 
     @Override
@@ -98,6 +101,17 @@ public class PlayerController extends AbstractGriffonController {
             Double value = (Double) objects[0];
             model.setDuration(value);
             view.setDuration(value);
+        });
+
+        list.put("point.go_previous", objects -> {
+            Category category = (Category) objects[0];
+            editor.previousPoint(category);
+
+        });
+
+        list.put("point.go_next", objects -> {
+            Category category = (Category) objects[0];
+            editor.nextPoint(category);
         });
 
         return list;

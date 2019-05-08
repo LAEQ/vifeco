@@ -3,13 +3,16 @@ package org.laeq.video.category;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Category;
+import org.laeq.video.CategoryController;
 import org.laeq.video.CategoryModel;
 import org.laeq.video.player.ContainerView;
 
@@ -22,6 +25,7 @@ import static javafx.scene.layout.AnchorPane.setRightAnchor;
 @ArtifactProviderFor(GriffonView.class)
 public class CategoryView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private CategoryModel model;
+    @MVCMember @Nonnull private CategoryController controller;
     @MVCMember @Nonnull private ContainerView parentView;
 
     @FXML private Pane categoryPane;
@@ -62,6 +66,14 @@ public class CategoryView extends AbstractJavaFXGriffonView {
             setRightAnchor(group, 1d);
             categoryList.put(category, group);
             ++i;
+
+            group.getPrevBtn().setOnMouseClicked(event -> {
+                controller.previousPoint(category);
+            });
+
+            group.getNextBtn().setOnMouseClicked(event -> {
+                controller.nextPoint(category);
+            });
         }
 
         ((AnchorPane) parent).getChildren().addAll(categoryList.values());
@@ -72,4 +84,5 @@ public class CategoryView extends AbstractJavaFXGriffonView {
 
         totalLabel.textProperty().bind(model.totalProperty().asString());
     }
+
 }
