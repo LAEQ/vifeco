@@ -114,8 +114,6 @@ public class MiddlePaneController extends AbstractGriffonController {
 
             File file = new File(video.getAbsolutePath());
 
-            System.out.println(video.getAbsolutePath());
-
             if(! file.exists()){
                 getLog().error(String.format("PlayerView: file not exits %s", file));
                 String title = translationService.getMessage("org.laeq.title.error");
