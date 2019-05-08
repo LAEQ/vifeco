@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.laeq.settings.Settings;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -118,6 +119,11 @@ public class Video extends BaseEntity {
         return DurationFormatUtils.formatDuration(duration.getValue().longValue(), "H:mm:ss", true);
     }
 
+    @JsonIgnore
+    public String getAbsolutePath(){
+        return String.format("%s%s%s", Settings.videoPath, File.separator, this.path.getValue());
+    }
+
     @Override
     public String toString() {
         return "Video{" + uuid.toString() + '}';
@@ -182,6 +188,6 @@ public class Video extends BaseEntity {
 
     @JsonIgnore
     public boolean isEditable(){
-        return new File(path.getValue()).exists();
+        return new File(getAbsolutePath()).exists();
     }
 }

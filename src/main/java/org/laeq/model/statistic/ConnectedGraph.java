@@ -10,8 +10,8 @@ public class ConnectedGraph {
     private List<Edge> result;
     private int total;
 
-    public ConnectedGraph(LinkedList<Edge> start, int total) {
-        this.edges = start;
+    public ConnectedGraph(LinkedList<Edge> edges, int total) {
+        this.edges = edges;
         this.total = total;
         this.starts = new ArrayList<>();
         this.ends = new ArrayList<>();

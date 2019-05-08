@@ -134,7 +134,7 @@ public class MariaService extends AbstractGriffonService {
         User defaultUser = userDAO.findDefault();
         Collection defaultCollection = collectionDAO.findDefault();
 
-        Video video = new Video(file.getPath(), duration, defaultUser, defaultCollection);
+        Video video = new Video(file.getName(), duration, defaultUser, defaultCollection);
         getVideoDAO().insert(video);
 
         return video;

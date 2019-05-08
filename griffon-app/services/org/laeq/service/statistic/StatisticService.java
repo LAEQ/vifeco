@@ -132,8 +132,6 @@ public class StatisticService extends AbstractGriffonService {
     private List<Edge> tarjanEdgeRecu_1(Category category){
         List<List<Vertex>> tmp = tarjans.get(category);
 
-        System.out.println(tmp.size());
-
         List<Edge> result = new ArrayList<>();
 
         tmp.forEach( vertices -> {

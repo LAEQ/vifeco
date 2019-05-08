@@ -64,13 +64,11 @@ public class ContainerController extends CRUDController<Video> {
 
         view.initForm();
 
-        System.out.println(model.getVideoList().size());
-
-//        model.getVideoList().forEach(video -> {
-//            if(video.getDuration() == 0.0){
-//                runInsideUISync(() -> getVideoDuration(video));
-//            }
-//        });
+        model.getVideoList().forEach(video -> {
+            if(video.getDuration() == 0.0){
+                runInsideUIAsync(() -> getVideoDuration(video));
+            }
+        });
 
         getApplication().getEventRouter().addEventListener(listeners());
     }
@@ -79,7 +77,7 @@ public class ContainerController extends CRUDController<Video> {
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void getVideoDuration(Video video) {
         getLog().info("Calculating the video duration: should be known already. Fix this issue");
-        File file = new File(video.getPath());
+        File file = new File(video.getAbsolutePath());
 
         if (file.exists()) {
             try {

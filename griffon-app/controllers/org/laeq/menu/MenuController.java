@@ -173,7 +173,6 @@ public class MenuController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-
         list.put("video.open", objects -> {
             open();
         });

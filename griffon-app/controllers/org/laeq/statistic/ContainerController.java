@@ -73,7 +73,7 @@ public class ContainerController extends AbstractGriffonController {
                 File file = (File) it.next();
 
                 if(file.getName().contains(video.getName())){
-                    System.out.println(video.getName() + ": " + file.getName());
+                    System.out.printf("File: %s\n", file.getName());
                     try {
 
                         StatisticService statService = new StatisticService();
@@ -86,6 +86,9 @@ public class ContainerController extends AbstractGriffonController {
                         statService.setVideos(video, importVideo);
                         statService.setDurationStep(Duration.seconds(model.getDurationStep()));
                         statService.execute();
+
+                        System.out.printf("%s - %s : completed\n", video.getName(), file.getName());
+
                         exportService.export(statService);
 
                     } catch (IOException | StatisticException e) {

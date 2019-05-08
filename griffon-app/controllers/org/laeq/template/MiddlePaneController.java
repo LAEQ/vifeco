@@ -10,12 +10,14 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.util.Duration;
 import org.apache.batik.transcoder.TranscoderException;
+import org.apache.commons.io.FileUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.TranslationService;
 import org.laeq.db.DAOException;
 import org.laeq.icon.IconService;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
+import org.laeq.settings.Settings;
 import org.laeq.ui.DialogService;
 import org.laeq.user.PreferencesService;
 import org.laeq.video.player.VideoEditor;
@@ -24,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -63,6 +66,10 @@ public class MiddlePaneController extends AbstractGriffonController {
             File videoFile = (File) objects[0];
                 if (videoFile.exists()) {
                     try{
+
+                        String destPath = String.format("%s%s%s", Settings.videoPath, File.separator, videoFile.getName());
+                        FileUtils.copyFile(videoFile, new File(destPath));
+
                         Video video = dbService.createVideo(videoFile, Duration.millis(0));
                         MVCGroup group = getApplication().getMvcGroupManager().findGroup("video_container");
 
@@ -105,7 +112,9 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.edit", objects -> {
             Video video = (Video) objects[0];
 
-            File file = new File(video.getPath());
+            File file = new File(video.getAbsolutePath());
+
+            System.out.println(video.getAbsolutePath());
 
             if(! file.exists()){
                 getLog().error(String.format("PlayerView: file not exits %s", file));
