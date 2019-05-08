@@ -52,6 +52,17 @@ public class MariaService extends AbstractGriffonService {
             }
         }
 
+        String videoPathStr = Settings.videoPath;
+        Path videoPath = Paths.get(videoPathStr);
+
+        if(! Files.exists(videoPath)) {
+            try {
+                Files.createDirectories(videoPath);
+            } catch (IOException e) {
+                getLog().error("Import path creation: cannot create " + videoPathStr);
+            }
+        }
+
         String statPathStr = Settings.statisticPath;
         Path statPah = Paths.get(statPathStr);
 

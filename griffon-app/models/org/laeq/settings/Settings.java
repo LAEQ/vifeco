@@ -9,4 +9,5 @@ public class Settings {
     public static String imporPath = String.format("%s%s%s",defaultPath,File.separator, "import");
     public static String svgPath = String.format("%s%s%s",defaultPath, File.separator, "svg");
     public static String statisticPath = String.format("%s%s%s",defaultPath, File.separator, "statistic");
+    public static String videoPath = String.format("%s%s%s", defaultPath, File.separator, "videos");
 }
