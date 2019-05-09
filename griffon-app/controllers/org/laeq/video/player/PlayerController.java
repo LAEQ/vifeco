@@ -105,12 +105,14 @@ public class PlayerController extends AbstractGriffonController {
 
         list.put("point.go_previous", objects -> {
             Category category = (Category) objects[0];
+            System.out.println("go_previous:" + category.getName());
             editor.previousPoint(category);
 
         });
 
         list.put("point.go_next", objects -> {
             Category category = (Category) objects[0];
+            System.out.println("go_next:" + category.getName());
             editor.nextPoint(category);
         });
 

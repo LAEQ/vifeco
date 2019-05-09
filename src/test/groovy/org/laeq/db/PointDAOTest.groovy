@@ -3,6 +3,8 @@ package org.laeq.db
 import javafx.util.Duration
 import org.laeq.model.*
 
+import static spock.util.matcher.HamcrestMatchers.closeTo
+
 class PointDAOTest extends AbstractDAOTest {
     PointDAO repository
     Collection collection
@@ -67,6 +69,94 @@ class PointDAOTest extends AbstractDAOTest {
         result.size() == 0
     }
 
+    def "test find previous"() {
+        setup:
+        try{
+            manager.loadFixtures("sql/test_fixtures.sql")
+        } catch (Exception e){
+            println e
+        }
+        Point point = new Point()
+        Category category = new Category(1, 'test', 'test' ,'test', 'a')
+        Video video = new Video(1, 'test', Duration.millis(1000), new User(), new Collection());
+
+        point.setCategory(category)
+        point.setVideo(video)
+        point.setStart(Duration.millis(2223))
+
+        when:
+        def result = repository.findPrevious(point)
+
+        then:
+        result.getId() == 4
+    }
+
+    def "test find previous not exist"() {
+        setup:
+        try{
+            manager.loadFixtures("sql/test_fixtures.sql")
+        } catch (Exception e){
+            println e
+        }
+        Point point = new Point()
+        Category category = new Category(1, 'test', 'test' ,'test', 'a')
+        Video video = new Video(1, 'test', Duration.millis(1000), new User(), new Collection());
+
+        point.setCategory(category)
+        point.setVideo(video)
+        point.setStart(Duration.millis(2219))
+
+        when:
+        def result = repository.findPrevious(point)
+
+        then:
+        result == null
+    }
+
+    def "test find next"() {
+        setup:
+        try{
+            manager.loadFixtures("sql/test_fixtures.sql")
+        } catch (Exception e){
+            println e
+        }
+        Point point = new Point()
+        Category category = new Category(1, 'test', 'test' ,'test', 'a')
+        Video video = new Video(1, 'test', Duration.millis(1000), new User(), new Collection());
+
+        point.setCategory(category)
+        point.setVideo(video)
+        point.setStart(Duration.millis(3333))
+
+        when:
+        def result = repository.findNext(point)
+
+        then:
+        result.getId() == 1
+    }
+
+    def "test find next not exist"() {
+        setup:
+        try{
+            manager.loadFixtures("sql/test_fixtures.sql")
+        } catch (Exception e){
+            println e
+        }
+        Point point = new Point()
+        Category category = new Category(1, 'test', 'test' ,'test', 'a')
+        Video video = new Video(1, 'test', Duration.millis(1000), new User(), new Collection());
+
+        point.setCategory(category)
+        point.setVideo(video)
+        point.setStart(Duration.millis(5555))
+
+        when:
+        def result = repository.findNext(point)
+
+        then:
+        result == null
+    }
+
     def "test findByVideo"() {
         setup:
         try{
@@ -86,7 +176,6 @@ class PointDAOTest extends AbstractDAOTest {
         result.size() == 2
         result.collect{it.id} == [6, 7]
     }
-
 
     def "test delete"(){
         setup:

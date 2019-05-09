@@ -33,23 +33,6 @@ import java.util.Set;
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
 public class IconService extends AbstractGriffonService {
-    private int width = 100;
-    private int height = 100;
-    private float opacity = 0.65f;
-    private int duration = 10;
-    private int size = 100;
-    private String fillColor = "#EEEEEE";
-    private String defaultPath = "icons/iconmonstr-help-3-64.png";
-
-    private final String[] icons = new String[]{
-            "icons/truck-mvt-blk-64.png",
-            "icons/truck-mvt-red-64.png",
-            "icons/icon-bicycle-mvt-64.png",
-            "icons/icon-car-co2-black-64.png",
-            "icons/icon-constr-black-64.png",
-            "icons/iconmonstr-car-23-64.png",
-            "icons/icon-car-elec-blk-64.png",
-    };
 
     public IconService(){
         String svgPath = Settings.svgPath;
@@ -208,15 +191,24 @@ public class IconService extends AbstractGriffonService {
         return Double.toString(i);
     }
 
-    public Icon generateIcon(int rand)  {
-        return generateIcon(new Category("", icons[rand], "#000000", ""), this.size, this.opacity);
-    }
-
-    public Icon generateIcon(Category category) {
-      return generateIcon(category, this.size, this.opacity);
-    }
 
     public Icon generateIcon(Category category, int size, double opacity) {
         return new Icon(category, size);
+    }
+
+    public void deletePNG(Category category) {
+        String[] extensions = new String[]{
+          "_off","_on", "_small_off", "_small_on"
+        };
+
+        for (int i = 0; i < extensions.length; i++) {
+            String path = getImagePath(category, extensions[i]);
+
+            File file = new File(path);
+
+            if(file.exists()){
+                file.delete();
+            }
+        }
     }
 }

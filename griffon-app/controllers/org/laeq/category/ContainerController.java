@@ -69,6 +69,7 @@ public class ContainerController extends AbstractGriffonController {
             categoryDAO.update(category);
             model.updateCategory(category);
             model.clear();
+            iconService.deletePNG(category);
             iconService.createPNG(category);
         } catch (SQLException | DAOException | IOException | TranscoderException e) {
             getLog().error(e.getMessage());
@@ -116,6 +117,7 @@ public class ContainerController extends AbstractGriffonController {
         try{
             categoryDAO.delete(category);
             model.delete(category);
+            iconService.deletePNG(category);
         } catch (DAOException e) {
             getLog().error(e.getMessage());
             dialogService.simpleAlert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.category.delete.error") + ": " + category.getName());

@@ -216,7 +216,7 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
 
     public Point findPrevious(Point point){
         Point result = null;
-        String query = "SELECT START FROM POINT WHERE VIDEO_ID=? AND CATEGORY_ID = ? and `START` < ? ORDER BY `START` DESC LIMIT 1";
+        String query = "SELECT * FROM POINT WHERE VIDEO_ID=? AND CATEGORY_ID = ? and `START` < ? ORDER BY `START` DESC LIMIT 1";
 
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query)){
@@ -228,7 +228,38 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
             ResultSet queryResult = statement.executeQuery();
 
             if(queryResult.next()){
-                Double startDouble = queryResult.getDouble(1);
+                int id = queryResult.getInt("ID");
+                Double startDouble = queryResult.getDouble("START");
+                result = new Point();
+                result.setId(id);
+                result.setStart(Duration.millis(startDouble));
+            }
+
+        } catch (SQLException e){
+            getLogger().error(e.getMessage());
+        }
+
+        return result;
+    }
+
+    public Point findNext(Point point){
+        Point result = null;
+        String query = "SELECT * FROM POINT WHERE VIDEO_ID=? AND CATEGORY_ID = ? and `START` > ? ORDER BY `START` ASC LIMIT 1";
+
+        try(Connection connection = getManager().getConnection();
+            PreparedStatement statement = connection.prepareStatement(query)){
+
+            statement.setInt(1, point.getVideo().getId());
+            statement.setInt(2, point.getCategoryId());
+            statement.setDouble(3, point.getStartDouble());
+
+            ResultSet queryResult = statement.executeQuery();
+
+            if(queryResult.next()){
+                int id = queryResult.getInt("ID");
+                Double startDouble = queryResult.getDouble("START");
+                result = new Point();
+                result.setId(id);
                 result.setStart(Duration.millis(startDouble));
             }
 
