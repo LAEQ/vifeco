@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Help</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css"/>
+</head>
+<body>
+<div class="container-fluid">
+    <section>
+        <h1>Page d'aide</h1>
+        <hr/>
+        <h2>Naviguer dans l'application</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <td>#</td>
+                <td>Section</td>
+                <td>Actions</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><img src="images/icons/video.png"/></td>
+                <td>gestion des vidéos</td>
+                <td>
+                    Cette section vous permet de:
+                    <ul>
+                        <li>afficher les vidéos enregistrées dans la base de données</li>
+                        <li>modifier l'usager assigné à une vidéo</li>
+                        <li>modifier la collection assignée à une vidéo</li>
+                        <li>afficher le total de points par catégorie pour une vidéo</li>
+                        <li>sélectionner une vidéo pour commencer un comptage</li>
+                    </ul>
+                    <p class="alert alert-warning">
+                        Modifiez la collection assignée à une vidéo supprimera tous les points des catégories qui ne sont plus présentes dans la nouvelle collection.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/add_video.png"/></td>
+                <td>ajout d'une vidéo</td>
+                <td>
+                    <p>Ajouter une nouvelle vidéo dans la base de données.</p>
+                    <p class="alert alert-info">La vidéo est copiée dans un répertoire spécifique de l'application.</p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/user.png "/></td>
+                <td>gestion des utilisateurs</td>
+                <td>Cette section vous permet de:
+                    <ul>
+                        <li>créer un nouvel utilisateur</li>
+                        <li>éditer ses informations</li>
+                        <li>supprimer un utilisateur</li>
+                    </ul>
+                    <p class="alert alert-danger">
+                        Un utilisateur 'défaut' est créé au cours de la première exécution. Cet utilisateur est indispensable pour le bon fonctionnement de l'application et ne doit pas être supprimé.
+                    </p>
+                    <p class="alert alert-info">
+                        Un utilisateur ne peut pas être supprimé s'il est assigné à une vidéo.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/category.png"/></td>
+                <td>gestion des catégories</td>
+                <td>Cette section vous permet de:
+                    <ul>
+                        <li>créer une nouvelle catégorie</li>
+                        <li>éditer une catégorie existante</li>
+                        <li>supprimer une catégorie</li>
+                    </ul>
+                    <p>Cette version ne supporte uniquement les SVG ayant qu'un seul attribut <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d" target="_blank">'d'.</a>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/collection.png"/></td>
+                <td>gestion des collections</td>
+                <td>Cette section vous permet de:
+                    <ul>
+                        <li>créer une nouvelle collection</li>
+                        <li>éditer une collection existante</li>
+                        <li>supprimer une collection</li>
+                    </ul>
+                    <div class="alert alert-danger">
+                        Une collection 'défaut' est créée au cours de la première exécution. Cette collection est indispensable pour le bon fonctionnement de l'application et ne doit
+                        pas être supprimée.
+                    </div>
+                    <p class="alert alert-info">Une collection ne peut pas être supprimée si elle est assignée à une vidéo.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/database.png"/></td>
+                <td>base de données</td>
+                <td>Cette section vous permet de:
+                    <ul>
+                        <li>véfifier le status de la base de données. (connection, tables, ...)</li>
+                        <li>exporter les comptages de vidéos au format json et zip.
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/import.png"/></td>
+                <td>importer un fichier de comptage</td>
+                <td>Cette section vous permet d'importer un fichier json. La structure du json est:
+                    <ul>
+                        <li>path: nom de la vidéo</li>
+                        <li>user: (id, firstname, lastname, email, isDefault)</li>
+                        <li>duration: en millisecondes</li>
+                        <li>collection:
+                            <ul>
+                                <li>id</li>
+                                <li>name</li>
+                                <li>isDefault</li>
+                                <li>categorySet: liste des catégories
+                                    <ul>
+                                        <li>id</li>
+                                        <li>name</li>
+                                        <li>icon</li>
+                                        <li>color</li>
+                                        <li>shortcut</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>pointSet: liste des points
+                            <ul>
+                                <li>id</li>
+                                <li>x and y: coordonnées cardinales</li>
+                                <li>startDouble (en millisecondes)</li>
+                                <li>categoryId</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p class="alert alert-warning">
+                        L'identifiant (id) de l'utilisateur et des catégories doivent être présents dans la base de données.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/statistic.png "/></td>
+                <td>Section statistique</td>
+                <td>Cette section vous permet d'analyser les comptages faits par différents utilisateurs et de visualiser les différences par catégorie.</td>
+            </tr>
+            </tbody>
+        </table>
+        <hr/>
+        <hr/>
+        <h2>Contrôles & raccourcis clavier</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Icône</th>
+                <th>titre</th>
+                <th>Min</th>
+                <th>Max</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><img src="images/icons/rate.png"/></td>
+                <td>vitesse de lecture</td>
+                <td>0.1</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/volume.png"/></td>
+                <td>volume</td>
+                <td>0.1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/size.png"/></td>
+                <td>taille d'affichage des icônes</td>
+                <td>10</td>
+                <td>100</td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/duration.png"/></td>
+                <td>durée d'affichage des icônes en secondes</td>
+                <td>1</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/opacity.png"/></td>
+                <td>transparence des icônes</td>
+                <td>0.1</td>
+                <td>1</td>
+            </tr>
+            </tbody>
+        </table>
+        <h3>Évènements souris et clavier</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Touche</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>souris bouton gauche</td>
+                <td>recule 5 secondes</td>
+            </tr>
+            <tr>
+                <td>souris bouton droit</td>
+                <td>avance 5 seconds</td>
+            </tr>
+            <tr>
+                <td>souris roulette arrière</td>
+                <td>vitesse de lecture - 0.1</td>
+            </tr>
+            <tr>
+                <td>souris roulette avant</td>
+                <td>vitesse de lecture + 0.1</td>
+            </tr>
+            <tr>
+                <td>esc (ou) supprimer (et pointeur de la souris en survol de l'icône)</td>
+                <td>suppression d'une  icône</td>
+            </tr>
+            <tr>
+                <td>raccourcis clavier définis pour chaque catégorie</td>
+                <td>permet d'ajouter une icône sur la vidéo (avec la position du pointeur de la souris et à l'instant courant de la vidéo).</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+</body>
+</html>
