@@ -10,6 +10,7 @@ import org.laeq.model.serializer.VideoSerializer
 import org.laeq.model.statistic.Graph
 import org.laeq.service.statistic.StatisticException
 import org.laeq.service.statistic.StatisticService
+import org.laeq.video.ImportService
 import spock.lang.Specification
 
 class StatisticServiceTest extends Specification {
@@ -414,4 +415,58 @@ class StatisticServiceTest extends Specification {
         then:
         true == true
     }
+
+    def "test with 2 files"(){
+        setup:
+        Video video1
+        Video video2
+        try{
+            def json_video1 = getClass().classLoader.getResource("statistic/export.json").text
+            ImportService service = new ImportService()
+            video1 = service.execute(json_video1)
+
+            def json_video2 = getClass().classLoader.getResource("statistic/export.json").text
+            video2 = service.execute(json_video2)
+
+        } catch(Exception e){
+            println e
+        }
+
+        when:
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(1))
+        service.execute()
+
+        then:
+        true == true
+
+    }
+
+    def "test with 2 files with 1500 points"(){
+        setup:
+        Video video1
+        Video video2
+        try{
+            def json_video1 = getClass().classLoader.getResource("statistic/export-2018-08-31_TRAJET10.mp4.json").text
+            ImportService service = new ImportService()
+            video1 = service.execute(json_video1)
+
+            def json_video2 = getClass().classLoader.getResource("statistic/import-2018-08-31_TRAJET10.mp4.json").text
+            video2 = service.execute(json_video2)
+
+        } catch(Exception e){
+            println e
+        }
+
+        when:
+        service.setVideos(video1, video2)
+        service.setDurationStep(Duration.seconds(10))
+        service.execute()
+
+        then:
+        true == true
+
+    }
+
+
 }
