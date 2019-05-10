@@ -46,6 +46,6 @@ public class Vertex implements Comparable<Vertex>{
             return 1;
         }
 
-        return this.point.compareTo(o.point);
+        return 0;
     }
 }

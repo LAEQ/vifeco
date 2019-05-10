@@ -13,11 +13,11 @@ import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Locale;
 
 @ArtifactProviderFor(GriffonView.class)
 public class AboutView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private AboutController controller;
-    @MVCMember @Nonnull private AboutModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
     @Inject private PreferencesService preferenceService;
 
@@ -42,8 +42,21 @@ public class AboutView extends AbstractJavaFXGriffonView {
         String citationView = String.format("html/citation_%s.html", preferenceService.getPreferences().locale.getLanguage());
         webEngine.load(getClass().getClassLoader().getResource(citationView).toExternalForm());
 
-        parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
-        connectActions(node, controller);
     }
 
+
+    public void changeLocale(Locale locale) {
+        WebEngine webEngine = citationView.getEngine();
+        String aboutPath = String.format("html/about_%s.html", locale.getLanguage());
+        webEngine.load(getClass().getClassLoader().getResource(aboutPath).toExternalForm());
+
+        webEngine = helpView.getEngine();
+        String helpPath = String.format("html/help_%s.html", locale.getLanguage());
+        webEngine.load(getClass().getClassLoader().getResource(helpPath).toExternalForm());
+
+        webEngine = aboutView.getEngine();
+        String citationView = String.format("html/citation_%s.html", locale.getLanguage());
+        webEngine.load(getClass().getClassLoader().getResource(citationView).toExternalForm());
+
+    }
 }

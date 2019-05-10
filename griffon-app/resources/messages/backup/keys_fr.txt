@@ -116,4 +116,5 @@ org.laeq.statistic.column.name = Nom
 org.laeq.statistic.column.collection = Collection
 org.laeq.statistic.column.import = Importés
 org.laeq.statistic.btn.compare = Comparer
-org.laeq.statistic.label.duration_step = Pas
+org.laeq.statistic.label.duration_step =
+org.laeq.statistic.compare.done = Comparaison terminée

@@ -94,7 +94,7 @@ public class MenuView extends TranslatedView {
         statisticBtn.setLayoutX(415);
         subMenuPane.getChildren().add(statisticBtn);
 
-        IconButton aboutBtn = generateButton(IconSVG.about, "about", "org.laeq.menu.tooltip.about", "about.section");
+        IconButton aboutBtn = generateButton(IconSVG.question, "about", "org.laeq.menu.tooltip.about", "about.section");
         aboutBtn.setLayoutX(475);
         subMenuPane.getChildren().add(aboutBtn);
 

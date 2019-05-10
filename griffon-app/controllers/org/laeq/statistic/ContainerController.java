@@ -9,6 +9,7 @@ import griffon.transform.Threading;
 import javafx.util.Duration;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.TranslationService;
 import org.laeq.db.CategoryDAO;
 import org.laeq.db.PointDAO;
 import org.laeq.db.VideoDAO;
@@ -18,6 +19,7 @@ import org.laeq.service.MariaService;
 import org.laeq.service.statistic.StatisticException;
 import org.laeq.service.statistic.StatisticService;
 import org.laeq.settings.Settings;
+import org.laeq.ui.DialogService;
 import org.laeq.user.PreferencesService;
 import org.laeq.video.ExportService;
 import org.laeq.video.ImportService;
@@ -37,10 +39,12 @@ public class ContainerController extends AbstractGriffonController {
     @Inject private ImportService importService;
     @Inject private ExportService exportService;
     @Inject private PreferencesService preferenceService;
+    @Inject private DialogService dialogService;
 
     private VideoDAO videoDAO;
     private PointDAO pointDAO;
     private CategoryDAO categoryDAO;
+    private TranslationService translationService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -61,6 +65,7 @@ public class ContainerController extends AbstractGriffonController {
         view.init();
 
         getApplication().getEventRouter().addEventListener(listeners());
+        setTranslationService();
     }
 
     @ControllerAction
@@ -73,7 +78,6 @@ public class ContainerController extends AbstractGriffonController {
                 File file = (File) it.next();
 
                 if(file.getName().contains(video.getName())){
-                    System.out.printf("File: %s\n", file.getName());
                     try {
 
                         StatisticService statService = new StatisticService();
@@ -87,8 +91,6 @@ public class ContainerController extends AbstractGriffonController {
                         statService.setDurationStep(Duration.seconds(model.getDurationStep()));
                         statService.execute();
 
-                        System.out.printf("%s - %s : completed\n", video.getName(), file.getName());
-
                         exportService.export(statService);
 
                     } catch (IOException | StatisticException e) {
@@ -97,6 +99,11 @@ public class ContainerController extends AbstractGriffonController {
                 }
             }
         });
+
+        runInsideUISync(() -> {
+            dialogService.dialog(translationService.getMessage("org.laeq.statistic.compare.done"));
+        });
+
     }
 
     private Map<String, RunnableWithArgs> listeners(){
@@ -112,5 +119,13 @@ public class ContainerController extends AbstractGriffonController {
 
     public void savePreferences() {
         preferenceService.export(model.getPrefs());
+    }
+
+    private void setTranslationService(){
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
     }
 }

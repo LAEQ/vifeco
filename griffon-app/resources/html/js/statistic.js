@@ -7,6 +7,52 @@ var g_uuid_2;
 var g_summary;
 var g_div_id;
 
+var dictionnary = {
+    'en': {
+        "video": "Video",
+        "name": "Name",
+        "duration": "Duration",
+        "step": "Step (seconds)",
+        "user": "User",
+        "category": "Category",
+        "summary": "Summary",
+        "total": "Total",
+        "matched": "Matched",
+        "unmatched": "Unmatched"
+    },
+    'fr': {
+        "video": "Vidéo",
+         "name": "Nom",
+         "duration": "Durée",
+         "step": "Pas (secondes)",
+         "user": "Utilisateur",
+         "category": "Catégorie",
+         "summary": "Résumé",
+         "total": "Total",
+         "matched": "Couplé",
+         "unmatched": "Seul"
+     },
+    'es': {
+        "video": "Vídeo",
+        "name": "Nombre",
+        "duration": "Tiempo",
+        "step": "Paso (segundos)",
+        "user": "Usuario",
+        "category": "Categoría",
+        "summary": "Resumen",
+        "total": "Total",
+        "matched": "Emparejado",
+        "unmatched": "Sin pareja"
+    },
+}
+
+var texts = dictionnary['es'];
+
+function setLanguage(language){
+    texts = dictionnary[language]
+    console.log(texts)
+}
+
 function reset(){
     jsonContents = []
     g_datas = {}
@@ -28,11 +74,11 @@ function setInfos() {
     var table = `<table class="table ">
            <thead class="thead-light">
                <tr>
-                   <th scope="col">Name</th>
-                   <th scope="col">Duration</th>
-                   <th scope="col">Step</th>
-                   <th scope="col">User 1</th>
-                   <th scope="col">User 2</th>
+                   <th scope="col">${texts['name']}</th>
+                   <th scope="col">${texts['duration']}</th>
+                   <th scope="col">${texts['step']}</th>
+                   <th scope="col">${texts['user']} 1</th>
+                   <th scope="col">${texts['user']} 2</th>
                </tr>
            </thead>
            <tbody>
@@ -149,21 +195,21 @@ function displaySummary(summary, index) {
         <thead class="thead-dark">
             <tr>
                 <th scope="col">Category</th>
-                <th scope="col" colspan="3">Video 1</th>
-                <th scope="col" colspan="3">Video 2</th>
-                <th scope="col" colspan="2">Summary</th>
+                <th scope="col" colspan="3">${texts['video']} 1</th>
+                <th scope="col" colspan="3">${texts['video']} 2</th>
+                <th scope="col" colspan="2">${texts['summary']}</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <th scope="row"></th>
-                <td>Total</td>
-                <td>Unmatched</td>
+                <td>${texts['total']}</td>
+                <td>${texts['unmatched']}</td>
                 <td>%</td>
-                <td>Total</td>
-                <td>Unmatched</td>
+                <td>${texts['total']}</td>
+                <td>${texts['unmatched']}</td>
                 <td>%</td>
-                <td>Matched</td>
+                <td>${texts['matched']}</td>
                 <td>%</td>
             </tr>`
 
@@ -197,9 +243,7 @@ function parseData() {
         var duration = g_statistic['videos']['video_1']['duration'];
         var total = Math.ceil(duration / (1000 * 60))
 
-        console.log(duration, total)
-
-        for (var i = 0; i < total; i++) {
+        for (var i = 0; i <= total; i++) {
             var obj = { 'time': i.toString(), 'match': 0, 'video_1': 0, 'video_2': 0 }
             data[category].push(obj);
         }
@@ -209,6 +253,7 @@ function parseData() {
         if (Array.isArray(edges)) {
             for (var i = 0; i < edges.length; i++) {
                 var startPoint = Math.round(edges[i]['start']['point']['startDouble'] / 60000);
+
                 data[category][startPoint]['match'] += 1;
             }
 
@@ -217,8 +262,6 @@ function parseData() {
             for (var i = 0; i < singles.length; i++) {
                 var point = singles[i]['point'];
                 var startPoint = Math.round(point['startDouble'] / 60000);
-
-                console.log(point)
 
                 if (isVideo1(point['videoId'])) {
                     data[category][startPoint]['video_1'] += 1
@@ -344,9 +387,9 @@ function displayChart(data, id, cat) {
         .style("text-anchor", "start")
         .text(function (d, i) {
             switch (i) {
-                case 0: return "Video 2 Singled";
-                case 1: return "Video 1 Singled";
-                case 2: return "Matched";
+                case 0: return `${texts['video']} 2 ${texts['unmatched']}`;
+                case 1: return `${texts['video']} 1 ${texts['unmatched']}`;
+                case 2: return `${texts['matched']}`;
             }
         });
 
@@ -412,7 +455,7 @@ function render() {
 }
 
 $(document).ready(function () {
-    // addJsonContent(file1)
+     addJsonContent(file1)
     // addJsonContent(file2)
-    // render();
+     render();
 });

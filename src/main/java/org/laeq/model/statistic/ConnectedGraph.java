@@ -1,6 +1,7 @@
 package org.laeq.model.statistic;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ConnectedGraph {
     private LinkedList<Edge> edges;
@@ -9,6 +10,8 @@ public class ConnectedGraph {
     private Stack<Edge> stack;
     private List<Edge> result;
     private int total;
+    private Set<Vertex> tmp;
+    private Set<Vertex> debug;
 
     public ConnectedGraph(LinkedList<Edge> edges, int total) {
         this.edges = edges;
@@ -17,6 +20,8 @@ public class ConnectedGraph {
         this.ends = new ArrayList<>();
         this.result = new ArrayList<>();
         stack = new Stack<>();
+
+        debug = edges.stream().map( edge -> edge.start).collect(Collectors.toSet());
     }
 
     public List<Edge> execute(){
@@ -35,6 +40,7 @@ public class ConnectedGraph {
         edge = null;
 
         while(result.size() < total) {
+
             if(it.hasNext()){
                 edge = it.next();
             }
@@ -54,6 +60,15 @@ public class ConnectedGraph {
         }
 
         return result;
+    }
+
+    private void debugging(List<Vertex> result){
+        List<Vertex> tmp = this.debug.stream().filter( vertex -> ! result.contains(vertex)).collect(Collectors.toList());
+
+        SortedSet<Vertex> sortedSet = new TreeSet<>(tmp);
+
+
+        System.out.println(sortedSet);
     }
 
     private ListIterator<Edge> getIterator(){

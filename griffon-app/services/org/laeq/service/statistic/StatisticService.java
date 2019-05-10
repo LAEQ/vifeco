@@ -135,7 +135,7 @@ public class StatisticService extends AbstractGriffonService {
         List<Edge> result = new ArrayList<>();
 
         tmp.forEach( vertices -> {
-            result.addAll(test(vertices));
+            result.addAll(sortedSetEdges_algo(vertices));
         });
 
         happyPoints.put(category, result.stream().map(edge -> edge.start).collect(Collectors.toList()));
@@ -144,7 +144,45 @@ public class StatisticService extends AbstractGriffonService {
         return result;
     }
 
-    private List<Edge> test(List<Vertex> vertices){
+    private List<Edge> sortedSetEdges_algo(List<Vertex> vertices){
+        List<Edge> result = new ArrayList<>();
+
+        if(vertices.size() == 1){
+            return result;
+        }
+
+        List<Vertex> vAs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video1)).collect(Collectors.toList());
+        List<Vertex> vBs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video2)).collect(Collectors.toList());
+
+        List<Vertex> selected = (vAs.size() <= vBs.size())? vAs : vBs;
+
+        SortedSet<Edge> sortedSet = new TreeSet<>();
+
+        selected.forEach(vertex -> {
+            getEdges(vertex).forEach(edge -> sortedSet.add(edge));
+        });
+
+        List<Vertex> starts = new ArrayList<>();
+        List<Vertex> ends = new ArrayList<>();
+
+        while(result.size() != selected.size() && sortedSet.size() > 0){
+            Edge edge = sortedSet.first();
+
+            if(! starts.contains(edge.start) && ! ends.contains(edge.end)){
+                starts.add(edge.start);
+                ends.add(edge.end);
+                result.add(edge);
+                sortedSet.remove(edge);
+            } else {
+                sortedSet.remove(edge);
+            }
+
+        }
+
+        return result;
+    }
+
+    private List<Edge> edgesLinkedList_Stack_algo(List<Vertex> vertices){
         List<Edge> result = new ArrayList<>();
 
         if(vertices.size() == 1){
@@ -167,13 +205,11 @@ public class StatisticService extends AbstractGriffonService {
         return connectedGraph.getResult();
     }
 
-
-
     private List<Edge> tarjanEdgeRecu_2(List<Vertex> vertices){
         List<Edge> result = new ArrayList<>();
 
-        List<Vertex> videoA_vertices = vertices.stream().filter(vertex -> vertex.getPoint().getVideo().equals(video1)).sorted().collect(Collectors.toList());
-        List<Vertex> videoB_vertices = vertices.stream().filter(vertex -> vertex.getPoint().getVideo().equals(video2)).sorted().collect(Collectors.toList());
+        List<Vertex> videoA_vertices = vertices.stream().filter(vertex -> vertex.getPoint().getVideo().equals(video1)).collect(Collectors.toList());
+        List<Vertex> videoB_vertices = vertices.stream().filter(vertex -> vertex.getPoint().getVideo().equals(video2)).collect(Collectors.toList());
 
         // Case: no matching point
         if(videoA_vertices.size() == 0 || videoB_vertices.size() == 0){

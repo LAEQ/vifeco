@@ -135,13 +135,15 @@
     {
         "org.laeq.video.delete.confirm": {
             "en-CA": "Confirm before you delete the video ?",
-            "es-ES": "¿Estás seguro de que quieres borrar este video?"
+            "es-ES": "¿Estás seguro de que quieres borrar este video?",
+            "fr-CA": "Êtes vous sûr de supprimer cette vidéo ?"
         }
     },
     {
         "org.laeq.video.user.confirm": {
-            "en-CA": "Confirm the video user change  ?",
-            "es-ES": "¿Estás seguro de que quieres cambiar el usuario de este video?"
+            "en-CA": "Confirm the video user change ?",
+            "es-ES": "¿Estás seguro de que quieres cambiar el usuario de este video?",
+            "fr-CA": "Veuillez confirmer le changement d'utilisateur pour cette vidéo."
         }
     },
     {
@@ -495,7 +497,7 @@
     },
     {
         "org.laeq.user.delete.confirmation": {
-            "en-CA": "Confirm the user suppression",
+            "en-CA": "Confirm the user removal",
             "es-ES": "¿Estás seguro de que quieres eliminar el usuario?",
             "fr-CA": "Confirmer la suppression de l'utilisateur"
         }
@@ -637,7 +639,14 @@
         "org.laeq.statistic.label.duration_step": {
             "en-CA": "Step",
             "es-ES": "Medida",
-            "fr-CA": "Pas"
+            "fr-CA": ""
+        }
+    },
+    {
+        "org.laeq.statistic.compare.done": {
+            "en-CA": "Comparison completed",
+            "es-ES": "Comparacion terminada",
+            "fr-CA": "Comparaison terminée"
         }
     }
 ]

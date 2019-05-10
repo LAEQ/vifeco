@@ -439,7 +439,6 @@ class StatisticServiceTest extends Specification {
 
         then:
         true == true
-
     }
 
     def "test with 2 files with 1500 points"(){
@@ -465,8 +464,5 @@ class StatisticServiceTest extends Specification {
 
         then:
         true == true
-
     }
-
-
 }

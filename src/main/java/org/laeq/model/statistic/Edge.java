@@ -1,10 +1,12 @@
 package org.laeq.model.statistic;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Edge implements Comparable<Edge>{
     public Vertex start;
     public Vertex end;
+    private UUID uuid = UUID.randomUUID();
 
     public Edge(Vertex start, Vertex end){
         this.start = start;
@@ -27,11 +29,20 @@ public class Edge implements Comparable<Edge>{
 
     @Override
     public int hashCode() {
-        return Objects.hash(start.point.hashCode() + end.point.hashCode());
+        return Objects.hash(uuid);
     }
 
     @Override
     public int compareTo(Edge o) {
+        if(uuid.equals(o.uuid)){
+            return 0;
+        }
+        int diffTotalEdge = start.totalEdges - o.start.totalEdges;
+
+        if(diffTotalEdge != 0){
+            return diffTotalEdge;
+        }
+
         if(getDeltaStart() <= o.getDeltaStart()){
             return -1;
         }

@@ -130,12 +130,16 @@ public class ContainerView extends TranslatedView {
     public void changeLocale() {
         runInsideUISync(() -> {
             setTranslatedText();
+
+            webEngine.executeScript("reset()");
+
+            String addFunction = String.format("setLanguage(%s)", model.getPrefs().locale.getLanguage());
+            webEngine.executeScript(addFunction);
         });
     }
 
     public void loadStatisticPage(){
         webEngine = statView.getEngine();
-//        String aboutPath = String.format("html/statistic_%s.html", preferenceService.getPreferences().locale.getLanguage());
         String aboutPath = String.format("html/statistic_en.html", model.getPrefs().locale.getLanguage());
         webEngine.load(getClass().getClassLoader().getResource(aboutPath).toExternalForm());
     }

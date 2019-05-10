@@ -113,3 +113,4 @@ org.laeq.statistic.column.collection = Collection
 org.laeq.statistic.column.import = Importaciones
 org.laeq.statistic.btn.compare = Comparar
 org.laeq.statistic.label.duration_step = Medida
+org.laeq.statistic.compare.done = Comparacion terminada
