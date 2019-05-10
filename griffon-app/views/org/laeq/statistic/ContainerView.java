@@ -96,6 +96,8 @@ public class ContainerView extends TranslatedView {
         loadStatisticPage();
 
         videoTable.setOnMouseClicked(event -> {
+            String setLanguage = String.format("setLanguage('%s')", model.getPrefs().locale.getLanguage());
+            webEngine.executeScript(setLanguage);
             webEngine.executeScript("reset()");
 
             Video video = videoTable.getSelectionModel().getSelectedItem();
@@ -132,9 +134,8 @@ public class ContainerView extends TranslatedView {
             setTranslatedText();
 
             webEngine.executeScript("reset()");
-
-            String addFunction = String.format("setLanguage(%s)", model.getPrefs().locale.getLanguage());
-            webEngine.executeScript(addFunction);
+            webEngine.executeScript(String.format("setLanguage('%s')", model.getPrefs().locale.getLanguage().toString()));
+            webEngine.executeScript("render()");
         });
     }
 
@@ -174,6 +175,7 @@ public class ContainerView extends TranslatedView {
             getLog().error(e.getMessage());
         }
     }
+
     private int getTotalImports(Video video){
         int total = 0;
         Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
@@ -261,7 +263,6 @@ public class ContainerView extends TranslatedView {
         return bd.toString();
     }
     private List<ColumnConstraints> getColumnConstraints(){
-
         List<ColumnConstraints> colConstList = new ArrayList<>();
 
         ColumnConstraints colConst1 = new ColumnConstraints();

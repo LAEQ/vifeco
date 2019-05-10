@@ -6,6 +6,7 @@ var g_uuid_1;
 var g_uuid_2;
 var g_summary;
 var g_div_id;
+var texts;
 
 var dictionnary = {
     'en': {
@@ -46,11 +47,9 @@ var dictionnary = {
     },
 }
 
-var texts = dictionnary['es'];
 
-function setLanguage(language){
-    texts = dictionnary[language]
-    console.log(texts)
+function setLanguage(ln){
+    texts = dictionnary[ln]
 }
 
 function reset(){
@@ -455,7 +454,7 @@ function render() {
 }
 
 $(document).ready(function () {
-     addJsonContent(file1)
+    // addJsonContent(file1)
     // addJsonContent(file2)
-     render();
+    // render();
 });
