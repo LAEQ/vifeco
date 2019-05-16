@@ -10,116 +10,122 @@
 <body>
 <div class="container-fluid">
     <section>
-        <h1>Help section</h1>
+        <h1>Página de ayuda</h1>
         <hr/>
-        <h2>Navigation</h2>
+        <h2>Navegar por la aplicación</h2>
         <table class="table">
             <thead>
             <tr>
                 <td>#</td>
-                <td>Section</td>
-                <td>Actions</td>
+                <td>Sección</td>
+                <td>Acciones</td>
             </tr>
             </thead>
             <tbody>
             <tr>
                 <td><img src="images/icons/video.png"/></td>
-                <td>Video management</td>
                 <td>
-                    This section allows you to:
+                    Gestión de vídeo
+                </td>
+                <td>
+                    Esta sección le permite:
                     <ul>
-                        <li>List the videos in the database and a short description (name, duration, user, collection,
-                            total points ...)
-                        </li>
-                        <li>Assign / change the user assigned to a video</li>
-                        <li>Modify the collection assigned to the video</li>
-                        <li>Show the numbers of points counted in total and per category</li>
-                        <li>Select a video to start or continue counting</li>
+                        <li>Listar los vídeos en la base de datos con una corta descripción (nombre, duración, usuario, recopilación, total de puntos...)</li>
+                        <li>Cambiar el usuario asignado a un vídeo</li>
+                        <li>Modificar la recopilación asignada al vídeo</li>
+                        <li>Mostrar el número de puntos contados en total y por categoría</li>
+                        <li>Seleccionar un vídeo para iniciar o continuar el conteo</li>
                     </ul>
                     <p class="alert alert-warning">
-                        Changing the collection assigned to a video will delete the points from categories that are not in the new collection.
-                        Export the video before making a change in case you want to revert your choice.
+                        Cambiar la recopilación asignada a un vídeo eliminará los puntos de las categorías que no están en la nueva recopilación.
+                        Exporte el vídeo antes de realizar un cambio en caso de que desee revertir su selección
                     </p>
                 </td>
             </tr>
             <tr>
                 <td><img src="images/icons/add_video.png"/></td>
-                <td>Video management</td>
                 <td>
-                    <p>Add a new video file in the system. (New database entry).</p>
-                    <p class="alert alert-info">The video is copied to a folder created by the application.</p>
+                    Adición de un vídeo
+                </td>
+                <td>
+                    <p>
+                        Añadir un nuevo vídeo en el banco (base o archivo) de datos
+                    </p>
+                    <p class="alert alert-info">
+                        El vídeo se copia en una carpeta creada por la aplicación .
+                    </p>
                 </td>
             </tr>
             <tr>
                 <td><img src="images/icons/user.png "/></td>
-                <td>User management</td>
-                <td>This section allows you to:
+                <td>
+                    Gestión de usuarios
+                </td>
+                <td>Esta sección le permite:
                     <ul>
-                        <li>Create a new user</li>
-                        <li>Edit user information</li>
-                        <li>Delete a user</li>
+                        <li>Crear un nuevo usuario</li>
+                        <li>Editar las informaciones del usuario</li>
+                        <li>Eliminar un usuario</li>
                     </ul>
                     <p class="alert alert-danger">
-                        A default user is created during the first execution of the program. This user <b> must not be
-                        deleted</b> under any circumstances.
+                        Un usuario está creado por defecto durante la primera ejecución del programa. Este usuario es indispensable para el buen funcionamiento de la aplicación. No debe ser eliminado bajo ninguna circunstancia.
                     </p>
                     <p class="alert alert-info">
-                        You cannot delete a user with videos assigned to the user. You must reassign
-                        the videos to another user prior to deletion.
+                        No se puede eliminar un usuario que tenga vídeos asignados. Debe reasignar los vídeos a otro usuario antes de suprimirlo.
                     </p>
                 </td>
             </tr>
             <tr>
                 <td><img src="images/icons/category.png"/></td>
-                <td>Category management</td>
-                <td>This section allows you to:
+                <td>
+                    Gestión de las categorías
+                </td>
+                <td>Esta sección le permite:
                     <ul>
-                        <li>Create a new category</li>
-                        <li>Edit an existing one (color, SVG path, shortcut, name)</li>
-                        <li>Delete a category from the application</li>
+                        <li>Crear una nueva categoría</li>
+                        <li>Editar una categoría existente</li>
+                        <li>Eliminar una categoría</li>
                     </ul>
                     <p>
-                        This version support only a SVG with a single path. You must only use the <a
-                            href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d" target="_blank">d
-                        attribute</a> for the path.
-                        The color must be chosen with the picker color. A preview will be display to help you check the
-                        validity of the path value and it's rendering (size, position). You can find sites or open
-                        source software to manipulate SVG files (resizing, merge multiple paths, ...)
+                        Esta versión solo admite SVG con un atributo único
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d" target="_blank">d</a>
                     </p>
                 </td>
             </tr>
             <tr>
                 <td><img src="images/icons/collection.png"/></td>
-                <td>Collection management</td>
-                <td>This section allows you to:
+                <td>
+                    Gestión de las recopilaciones
+                </td>
+                <td>Esta sección le permite:
                     <ul>
-                        <li>Create, update or delete a collection</li>
+                        <li>Crear una nueva recopilación</li>
+                        <li>Editar una recopilación existente</li>
+                        <li>Eliminar una recopilación</li>
                     </ul>
                     <div class="alert alert-danger">
-                        A default collection is created during the first execution. This collection is permanent and <b>should
-                        not be deleted</b> under any circumstances.
+                        Se crea una recopilación por defecto durante la primera ejecución. Esta recopilación es permanente e indispensable para el buen funcionamiento de la aplicación. No debe ser eliminada bajo ninguna circunstancia
                     </div>
-                    <p class="alert alert-info">You cannot delete a collection that is associated with videos. You must
-                        first reassign the videos to another collection.
+                    <p class="alert alert-info">No se puede eliminar una recopilación asociada a vídeos.
                     </p>
                 </td>
             </tr>
             <tr>
                 <td><img src="images/icons/database.png"/></td>
-                <td>Database management</td>
-                <td>This section allows you to:
+                <td>Base de datos</td>
+                <td>Esta sección le permite:
                     <ul>
-                        <li>Check the database status (connections, tables ...)</li>
-                        <li>Export and back up the different tables
+                        <li>Averiguar el estado de la base de datos (conexión, tablas, …)</li>
+                        <li>Exportar el conteo de vídeos en el formato json y zip</li>
                     </ul>
                 </td>
             </tr>
             <tr>
                 <td><img src="images/icons/import.png"/></td>
-                <td>Import a video count job</td>
-                <td>This section allows you to import a json from an exported video count job. The json structure is
+                <td>Importar un archivo de conteo</td>
+                <td>Esta sección le permite importar un archivo json. La estructura del json es:
                     <ul>
-                        <li>path: the video file path</li>
+                        <li>path: nombre del vídeo</li>
                         <li>user: (id, firstname, lastname, email, isDefault)</li>
                         <li>duration: in milliseconds</li>
                         <li>collection:
@@ -127,7 +133,7 @@
                                 <li>id</li>
                                 <li>name</li>
                                 <li>isDefault</li>
-                                <li>categorySet: list of categories for this collection
+                                <li>categorySet: lista de categorías
                                     <ul>
                                         <li>id</li>
                                         <li>name</li>
@@ -138,38 +144,37 @@
                                 </li>
                             </ul>
                         </li>
-                        <li>pointSet: list of points
+                        <li>pointSet: lista de puntos
                             <ul>
                                 <li>id</li>
-                                <li>x and y coordinates</li>
-                                <li>startDouble (in milliseconds)</li>
+                                <li>x, y:  coordenadas cardinales</li>
+                                <li>startDouble (en milisegundos)</li>
                                 <li>categoryId</li>
                             </ul>
                         </li>
                     </ul>
                     <p class="alert alert-warning">
-                        You must check the ids of user, collection and each category that exist in the database before
-                        importing a file.
+                        El identificador (id) del usuario y las categorías deben estar presentes en la base de datos.
                     </p>
                 </td>
             </tr>
             <tr>
                 <td><img src="images/icons/statistic.png "/></td>
-                <td>Statistic section</td>
-                <td>This section allows you to analyse the different counting jobs of different users and calculate
-                    ....
+                <td>Sección Estadística</td>
+                <td>
+                    Esta sección le permite analizar los conteos realizados por los diferentes usuarios y visualizar las diferencias entre categorías
                 </td>
             </tr>
             </tbody>
         </table>
         <hr/>
         <hr/>
-        <h2>Video icons & shortcuts</h2>
+        <h2>Botones de control y atajos de teclado (acceso directo)</h2>
         <table class="table">
             <thead>
             <tr>
-                <th>Icon</th>
-                <th>Title</th>
+                <th>Iconos</th>
+                <th>Descripción</th>
                 <th>Min</th>
                 <th>Max</th>
             </tr>
@@ -177,37 +182,37 @@
             <tbody>
             <tr>
                 <td><img src="images/icons/rate.png"/></td>
-                <td>Video rate</td>
+                <td>Velocidad de lectura</td>
                 <td>0.1</td>
                 <td>4</td>
             </tr>
             <tr>
                 <td><img src="images/icons/volume.png"/></td>
-                <td>Volume</td>
+                <td>Volumen</td>
                 <td>0.1</td>
                 <td>1</td>
             </tr>
             <tr>
                 <td><img src="images/icons/size.png"/></td>
-                <td>Icon size display on the video</td>
+                <td>Tamaño de visualización de los iconos</td>
                 <td>10</td>
                 <td>100</td>
             </tr>
             <tr>
                 <td><img src="images/icons/duration.png"/></td>
-                <td>Duration (in seconds) to display a icon</td>
+                <td>Tiempo de visualización de iconos en segundos</td>
                 <td>1</td>
                 <td>10</td>
             </tr>
             <tr>
                 <td><img src="images/icons/opacity.png"/></td>
-                <td>Icon opacity</td>
+                <td>Transparencia de iconos</td>
                 <td>0.1</td>
                 <td>1</td>
             </tr>
             </tbody>
         </table>
-        <h3>Mouse events and key events (aka shortcuts)</h3>
+        <h3>Eventos ratón y acceso directo</h3>
         <table class="table">
             <thead>
             <tr>
@@ -217,28 +222,28 @@
             </thead>
             <tbody>
             <tr>
-                <td>Mouse click left</td>
-                <td>backward 5 seconds</td>
+                <td>Ratón botón izquierdo</td>
+                <td>Retrocede 5 segundos</td>
             </tr>
             <tr>
-                <td>Mouse click right</td>
-                <td>forward 5 seconds</td>
+                <td>Ratón botón derecha</td>
+                <td>Avanza 5 segundos</td>
             </tr>
             <tr>
-                <td>Mouse scroll down</td>
-                <td>rate - 0.1</td>
+                <td>Rueda de desplazamiento hacia atrás</td>
+                <td>rVelocidad de lectura - 0.1</td>
             </tr>
             <tr>
-                <td>Mouse scroll up</td>
-                <td>rate + 0.1</td>
+                <td>Rueda de desplazamiento hacia adelante</td>
+                <td>Velocidad de lectura + 0.1</td>
             </tr>
             <tr>
-                <td>esc (or) delete (+ mouse pointer hovering the point)</td>
-                <td>Delete icon</td>
+                <td>Esc (o) suprimir (y puntero ratón sobre icono)</td>
+                <td>Supresión de un icono</td>
             </tr>
             <tr>
-                <td>Shorcuts defined for each category</td>
-                <td>Add an icon to the video with the mouse pointer coordinates and the player current time.</td>
+                <td>Acceso directo definido para cada categoría</td>
+                <td>Permite añadir un icono en el vídeo (con la posición del puntero del ratón y en el momento actual del vídeo)</td>
             </tr>
             </tbody>
         </table>

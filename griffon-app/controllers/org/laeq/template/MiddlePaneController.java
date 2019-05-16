@@ -30,6 +30,7 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -49,7 +50,6 @@ public class MiddlePaneController extends AbstractGriffonController {
         setTranslationService();
 
         getApplication().getEventRouter().addEventListener(listenerList());
-
         getApplication().getEventRouter().publishEventOutsideUI("video.section");
     }
 
@@ -108,6 +108,11 @@ public class MiddlePaneController extends AbstractGriffonController {
                     dialogService.simpleAlert(title, String.format("PlayerView: file not exits %s", videoFile));
                 }
         });
+        list.put("change.language", objects -> {
+            Locale locale = (Locale) objects[0];
+            model.getPrefs().locale = locale;
+            setTranslationService();
+        });
 
         list.put("video.edit", objects -> {
             Video video = (Video) objects[0];
@@ -117,8 +122,9 @@ public class MiddlePaneController extends AbstractGriffonController {
             if(! file.exists()){
                 getLog().error(String.format("PlayerView: file not exits %s", file));
                 String title = translationService.getMessage("org.laeq.title.error");
+                String message = translationService.getMessage(("org.laeq.video.file.not_exist"));
                 runInsideUISync(() -> {
-                    dialogService.simpleAlert(title, String.format("PlayerView: file not exits %s", file));
+                    dialogService.simpleAlert(title, message);
                 });
 
                 return;

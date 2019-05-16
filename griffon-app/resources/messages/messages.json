@@ -86,6 +86,13 @@
     {
         "org.laeq.video.file.error": {
             "en-CA": "An error occurred with the video file",
+            "es-ES": "El archivo no existe",
+            "fr-CA": "Le fichier n'existe pas"
+        }
+    },
+    {
+        "org.laeq.video.file.not_exist": {
+            "en-CA": "The file does not exist.",
             "es-ES": "Ha ocurrido un error con el archivo de video.",
             "fr-CA": "Une erreur est survenue avec le fichier de la vidéo"
         }
