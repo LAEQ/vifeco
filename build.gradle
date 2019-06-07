@@ -16,7 +16,6 @@ buildscript {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
         classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:1.2.5'
         classpath 'net.nemerosa:versioning:2.6.1'
-        classpath 'org.hsqldb:hsqldb:2.4.1'
     }
 }
 
@@ -90,15 +89,12 @@ dependencies {
     implementation 'com.atlassian.commonmark:commonmark:0.12.1'
     compile 'org.projectlombok:lombok:1.18.4'
     compile 'org.apache.httpcomponents:httpclient:4.5.6'
-//    compile 'com.fasterxml.jackson.core:jackson-databind:3.6'
-
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
     testCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"
     testCompile "org.spockframework:spock-core:${spockVersion}"
     testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
-    
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }
