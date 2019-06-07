@@ -22,6 +22,6 @@ class GraphTest extends Specification {
         def result = graph.getDistinctEdges()
 
         expect:
-        result.size() == 2
+        result.size() == 4
     }
 }

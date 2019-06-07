@@ -7,7 +7,6 @@ import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.serializer.StatisticSerializer;
-import org.laeq.model.statistic.ConnectedGraph;
 import org.laeq.model.statistic.Edge;
 import org.laeq.model.statistic.Graph;
 import org.laeq.model.statistic.Vertex;
@@ -174,89 +173,11 @@ public class StatisticService extends AbstractGriffonService {
             } else {
                 sortedSet.remove(edge);
             }
-
         }
 
         return result;
     }
 
-    private List<Edge> edgesLinkedList_Stack_algo(List<Vertex> vertices){
-        List<Edge> result = new ArrayList<>();
-
-        if(vertices.size() == 1){
-            return result;
-        }
-
-        List<Vertex> vAs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video1)).collect(Collectors.toList());
-        List<Vertex> vBs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video2)).collect(Collectors.toList());
-
-        List<Vertex> selected = (vAs.size() <= vBs.size())? vAs : vBs;
-        LinkedList<Edge> edges = new LinkedList<>();
-
-        selected.forEach( vertex -> {
-            getEdges(vertex).forEach(edge -> edges.add(edge));
-        });
-
-        ConnectedGraph connectedGraph = new ConnectedGraph(edges, selected.size());
-        connectedGraph.execute();
-
-        return connectedGraph.getResult();
-    }
-
-    private List<Edge> tarjanEdgeRecu_2(List<Vertex> vertices){
-        List<Edge> result = new ArrayList<>();
-
-        List<Vertex> videoA_vertices = vertices.stream().filter(vertex -> vertex.getPoint().getVideo().equals(video1)).collect(Collectors.toList());
-        List<Vertex> videoB_vertices = vertices.stream().filter(vertex -> vertex.getPoint().getVideo().equals(video2)).collect(Collectors.toList());
-
-        // Case: no matching point
-        if(videoA_vertices.size() == 0 || videoB_vertices.size() == 0){
-            return result;
-        }
-
-        List<Vertex> selected = (videoA_vertices.size() <= videoB_vertices.size()) ? videoA_vertices : videoB_vertices;
-
-        int indexVertex = 0;
-        int indexEdges = 0;
-
-        Vertex v = selected.get(indexVertex++);
-
-        List<Edge> edges = getEdges(v);
-        while(result.size() !=  selected.size()){
-            result.add(edges.get(indexEdges++));
-
-            tarjanEdgeRecu_3(selected, indexVertex, result);
-
-            if(result.size() != selected.size()){
-                result.remove(result.size() - 1);
-            }
-        }
-
-        return result;
-    }
-    private void tarjanEdgeRecu_3(List<Vertex> vertices, int indexVertex, List<Edge> result) {
-        if(vertices.size() == indexVertex){
-            return;
-        }
-
-        List<Vertex> endVertices = result.stream().map(e -> e.end).sorted().collect(Collectors.toList());
-        Vertex v = vertices.get(indexVertex++);
-        List<Edge> edges = getEdges(v).stream().filter(e -> ! endVertices.contains(e.end)).collect(Collectors.toList());
-
-        if(edges.size() == 0){
-            return;
-        }
-
-        int edgeIndex = 0;
-        while(edgeIndex < edges.size() && vertices.size() != result.size()){
-            result.add(edges.get(edgeIndex++));
-            tarjanEdgeRecu_3(vertices, indexVertex, result);
-
-            if(result.size() != vertices.size()){
-                result.remove(result.size() - 1);
-            }
-        }
-    }
     private List<Edge> getEdges(Vertex v) {
         Graph graph = graphs.get(v.point.getCategory());
 

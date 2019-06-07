@@ -30,6 +30,6 @@ class EdgeTest extends Specification {
         set.add(edge2)
 
         then:
-        set.size() == 1
+        set.size() == 2
     }
 }

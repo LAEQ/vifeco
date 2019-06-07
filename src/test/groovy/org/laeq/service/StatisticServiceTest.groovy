@@ -11,6 +11,7 @@ import org.laeq.model.statistic.Graph
 import org.laeq.service.statistic.StatisticException
 import org.laeq.service.statistic.StatisticService
 import org.laeq.video.ImportService
+import spock.lang.Ignore
 import spock.lang.Specification
 
 class StatisticServiceTest extends Specification {
@@ -286,7 +287,7 @@ class StatisticServiceTest extends Specification {
         result.get(category3).values().toArray().sort() == [1,8]
     }
 
-
+    @Ignore
     def "tarjan edges for 1 second and 1 category" () {
         setup:
         int pointId = 1
@@ -312,6 +313,7 @@ class StatisticServiceTest extends Specification {
         edges.find {it.key.id == 1}.value.collect{[it.start.point.id, it.end.point.id]} == [[6,2], [5,1]]
     }
 
+    @Ignore
     def "tarjan edges for 2 seconds and 1 category" () {
         setup:
         int pointId = 1
