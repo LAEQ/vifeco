@@ -224,6 +224,11 @@ public class PlayerView extends TranslatedView {
 
         iconHeightPropertyListener = iconHeightPropertyListener();
         iconPane.heightProperty().addListener(iconHeightPropertyListener);
+        runInsideUISync(() -> {
+            playActionTarget.setFocusTraversable(true);
+            playActionTarget.requestFocus();
+        });
+
     }
 
     private void destroy(){

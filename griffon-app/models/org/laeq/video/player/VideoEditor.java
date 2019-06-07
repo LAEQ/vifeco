@@ -361,8 +361,6 @@ public class VideoEditor {
 
         Point previousPoint = pointDAO.findPrevious(pt);
 
-        System.out.println(previousPoint);
-
         if(previousPoint != null){
             mediaPlayer.seek(previousPoint.getStart());
         }
@@ -375,8 +373,6 @@ public class VideoEditor {
         pt.setCategory(category);
 
         Point nextPoint = pointDAO.findNext(pt);
-
-        System.out.println(nextPoint);
 
         if(nextPoint != null){
             mediaPlayer.seek(nextPoint.getStart());

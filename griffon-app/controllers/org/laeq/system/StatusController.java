@@ -92,10 +92,7 @@ public class StatusController extends AbstractGriffonController {
             video.getPointSet().addAll(pointDAO.findByVideo(video));
 
             String filename = exportService.export(video);
-            System.out.println("export: " + filename);
         }
-
-
     }
 
     @ControllerAction

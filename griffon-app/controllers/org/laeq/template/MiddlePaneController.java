@@ -68,7 +68,10 @@ public class MiddlePaneController extends AbstractGriffonController {
                     try{
 
                         String destPath = String.format("%s%s%s", Settings.videoPath, File.separator, videoFile.getName());
-                        FileUtils.copyFile(videoFile, new File(destPath));
+
+                        if(! new File(destPath).exists()){
+                            FileUtils.copyFile(videoFile, new File(destPath));
+                        }
 
                         Video video = dbService.createVideo(videoFile, Duration.millis(0));
                         MVCGroup group = getApplication().getMvcGroupManager().findGroup("video_container");
