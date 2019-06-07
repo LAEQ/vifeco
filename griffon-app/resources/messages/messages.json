@@ -302,8 +302,9 @@
     },
     {
         "org.laeq.model.collection.delete.confirmation": {
-            "en-CA": "confirm the collection suppression",
-            "es-ES": "¿Estás seguro de que quieres eliminar esta colección?"
+            "en-CA": "Confirm the collection suppression",
+            "es-ES": "¿Estás seguro de que quieres eliminar esta colección?",
+            "fr-CA": "Êtes vous sûr de vouloir supprimer cette collection ?"
         }
     },
     {
@@ -669,6 +670,55 @@
             "es-ES": "Archivar",
             "fr-CA": "Archiver"
         }
+    },
+    {
+        "org.laeq.status.title": {
+            "en-CA": "Database",
+            "es-ES": "Base de datos",
+            "fr-CA": "Base de données"
+        }
+    },
+    {
+        "org.laeq.status.connection": {
+            "en-CA": "Connection",
+            "es-ES": "Conexión",
+            "fr-CA": "Connexion"
+        }
+    },
+    {
+        "org.laeq.status.table": {
+            "en-CA": "Tables",
+            "es-ES": "Tablas",
+            "fr-CA": "Tables"
+        }
+    },
+    {
+        "org.laeq.status.collection": {
+            "en-CA": "Default collection",
+            "es-ES": "Categoría por defecto",
+            "fr-CA": "Collection par défaut"
+        }
+    },
+    {
+        "org.laeq.status.default_user": {
+            "en-CA": "Default user",
+            "es-ES": "Usuario predeterminado",
+            "fr-CA": "Utilisateur par défaut"
+        }
+    },
+    {
+        "org.laeq.video.label": {
+            "en-CA": "Videos",
+            "es-ES": "Videos",
+            "fr-CA": "Vidéos"
+        }
+    },
+    {
+        "org.laeq.table.title": {
+            "en-CA": "Tables",
+            "es-ES": "Tablas",
+            "fr-CA": "Tables"
+        }
     }
-
 ]
+

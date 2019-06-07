@@ -1,5 +1,6 @@
 package org.laeq.system;
 
+import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
@@ -32,8 +33,6 @@ public class StatusController extends AbstractGriffonController {
     @MVCMember @Nonnull private StatusView view;
     @Inject private MariaService dbService;
     @Inject private ExportService exportService;
-
-    private String slackToken = "xoxp-521832980311-520675523571-611242433713-7b82ae9a38b8eba1e5a65ef7e15e5030";
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -74,6 +73,18 @@ public class StatusController extends AbstractGriffonController {
         }
 
         model.setVideoTotal(dbService.getVideoDAO().findAll().size());
+        getApplication().getEventRouter().addEventListener(listeners());
+    }
+
+
+    private Map<String, RunnableWithArgs> listeners() {
+        Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        list.put("change.language", objects -> {
+            runInsideUISync(() -> view.translateText());
+        });
+
+        return list;
     }
 
     @ControllerAction
@@ -153,9 +164,6 @@ public class StatusController extends AbstractGriffonController {
             }
         }
     }
-
-
-
 
     private String getPathExport(String filename){
         return String.format("%s/%s", Settings.exportPath, filename);
