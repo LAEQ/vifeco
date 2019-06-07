@@ -3,8 +3,6 @@ package org.laeq.db
 import javafx.util.Duration
 import org.laeq.model.*
 
-import static spock.util.matcher.HamcrestMatchers.closeTo
-
 class PointDAOTest extends AbstractDAOTest {
     PointDAO repository
     Collection collection

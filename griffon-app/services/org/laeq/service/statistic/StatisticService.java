@@ -1,8 +1,6 @@
 package org.laeq.service.statistic;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import griffon.core.artifact.GriffonService;
-import griffon.metadata.ArtifactProviderFor;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;
