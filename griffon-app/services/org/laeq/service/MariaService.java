@@ -75,7 +75,7 @@ public class MariaService extends AbstractGriffonService {
         }
 
         config = DBConfigurationBuilder.newBuilder();
-        config.setPort(3306);
+        config.setPort(0);
         config.setDataDir(dbPathStr);
         db = DB.newEmbeddedDB(config.build());
 
