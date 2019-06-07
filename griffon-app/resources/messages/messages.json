@@ -655,5 +655,20 @@
             "es-ES": "Comparacion terminada",
             "fr-CA": "Comparaison terminée"
         }
+    },
+    {
+        "org.laeq.status.btn.export": {
+            "en-CA": "Export",
+            "es-ES": "Exportar",
+            "fr-CA": "Exporter"
+        }
+    },
+    {
+        "org.laeq.status.btn.archive": {
+            "en-CA": "Archive",
+            "es-ES": "Archivar",
+            "fr-CA": "Archiver"
+        }
     }
+
 ]
