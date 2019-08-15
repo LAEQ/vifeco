@@ -113,7 +113,6 @@ tasks.withType(JavaCompile) {
     sourceCompatibility = project.sourceCompatibility
     targetCompatibility = project.targetCompatibility
     run{
-        
         jvmArgs '-Dprism.vsync=false'
     }
 

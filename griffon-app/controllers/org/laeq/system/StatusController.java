@@ -7,6 +7,7 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.TranslationService;
 import org.laeq.db.*;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
@@ -14,6 +15,8 @@ import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
 import org.laeq.settings.Settings;
+import org.laeq.ui.DialogService;
+import org.laeq.user.PreferencesService;
 import org.laeq.video.ExportService;
 
 import javax.annotation.Nonnull;
@@ -33,6 +36,11 @@ public class StatusController extends AbstractGriffonController {
     @MVCMember @Nonnull private StatusView view;
     @Inject private MariaService dbService;
     @Inject private ExportService exportService;
+    @Inject private DialogService dialogService;
+    @Inject private PreferencesService preferencesService;
+
+
+    private TranslationService translationService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -74,6 +82,7 @@ public class StatusController extends AbstractGriffonController {
 
         model.setVideoTotal(dbService.getVideoDAO().findAll().size());
         getApplication().getEventRouter().addEventListener(listeners());
+        setTranslationService();
     }
 
 
@@ -103,6 +112,13 @@ public class StatusController extends AbstractGriffonController {
 
             String filename = exportService.export(video);
         }
+
+        alert(translationService.getMessage("org.laeq.model.invalid_fields"));
+    }
+
+
+    private void alert(String alertMsg){
+        dialogService.simpleAlert(translationService.getMessage("org.laeq.title.error") ,alertMsg);
     }
 
     @ControllerAction
@@ -165,8 +181,14 @@ public class StatusController extends AbstractGriffonController {
         }
     }
 
-    private String getPathExport(String filename){
-        return String.format("%s/%s", Settings.exportPath, filename);
+    private String getPathExport(String filename)
+
+    private void setTranslationService(){
+        try {
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+        } catch (IOException e) {
+            getLog().error("Cannot load file messages.json");
+        }
     }
 
 }

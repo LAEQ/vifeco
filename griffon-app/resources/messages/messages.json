@@ -224,6 +224,13 @@
         }
     },
     {
+        "org.laeq.video.export.success": {
+            "en-CA": "Export completed successfullly. Check: %s",
+            "es-ES": "Exportación completada. Verifica %s",
+            "fr-CA": "Export terminé. Vérifier %s"
+        }
+    },
+    {
         "org.laeq.video.clear_btn": {
             "en-CA": "Clear",
             "es-ES": "Borrar",

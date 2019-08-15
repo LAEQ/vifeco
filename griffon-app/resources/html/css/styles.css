@@ -1,26 +1,34 @@
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: arial;
-    }
-    header.laeq {
-        padding: 20px;
-        background-color:  #284255;
-    }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: arial;
+}
+header.laeq {
+    padding: 20px;
+    background-color:  #284255;
+}
 
-    section{
-        margin: 10px 10px 35px 10px;
-    }
+section{
+    margin: 10px 10px 35px 10px;
+}
 
-    section h2 {
-        margin: 5px;
+section h2 {
+    margin: 5px;
 
-    }
+}
 
-    section p{
-        margin: 5px;
-    }
+section p{
+    margin: 5px;
+}
 
-    section td{
-        padding: 10px;
-    }
+section td{
+    padding: 10px;
+}
+
+.axis-text{
+    font-size: .8rem;
+}
+
+.coef-line{
+    stroke-width: 1;
+}
