@@ -181,11 +181,13 @@ public class StatusController extends AbstractGriffonController {
         }
     }
 
-    private String getPathExport(String filename)
+    private String getPathExport(String filename) {
+        return String.format("%s/%s", Settings.exportPath, filename);
+    }
 
     private void setTranslationService(){
         try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), preferencesService.getPreferences().locale);
         } catch (IOException e) {
             getLog().error("Cannot load file messages.json");
         }

@@ -170,6 +170,7 @@ function parseFile() {
         summary[property]['summary']['percent'] = totalSummary
 
     }
+    
 
     return summary;
 }
@@ -196,8 +197,8 @@ function getPercent(obj) {
 }
 
 function displaySummary(summary, index) {
-    var table = `<table class="table table-striped table-bordered table-sm">
-        <thead class="thead-dark">
+    var table = `<table class="table table-striped table-bordered table-sm border-left">
+        <thead class="thead-custom">
             <tr>
                 <th></th>
                 <th colspan="3">${getUser(1)}</th>
@@ -206,38 +207,81 @@ function displaySummary(summary, index) {
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td scope="col">${texts['category']}</td>
+            <tr class="first">
+                <td scope="col" class="border-right">${texts['category']}</td>
                 <td scope="col" >${texts['total']}</td>
                 <td scope="col" >${texts['matched']}</td>
-                <td scope="col" >${texts['unmatched']}</td>
+                <td scope="col" class="border-right" >${texts['unmatched']}</td>
                 <td scope="col" ">${texts['total']}</td>
                 <td scope="col" >${texts['matched']}</td>
-                <td scope="col" >${texts['unmatched']}</td>
+                <td scope="col" class="border-right" >${texts['unmatched']}</td>
                 <td scope="col" ">${texts['matched']}</td>
                 <td scope="col" >${texts['unmatched']}</td>
                 <td scope="col" >${texts['index']}</td>
             </tr>`
 
+    let totals = {
+        'video_1': {
+            'total': 0,
+            'match': 0,
+            'single': 0
+        },
+        'video_2': {
+            'total': 0,
+            'match': 0,
+            'single': 0
+        },
+        'overall': {
+            'match': 0,
+            'single': 0,
+            'index': 0
+        }
+    }
+
     for (var property in summary) {
         let resultGlobal = calculateGlobal(summary[property]);
 
-        table += `<tr>
-                <th scope="row"><a class='displayChart' href='' data-category='${property}' data-video='video-${index}'>${categories[property]['name']}</a></th>
-                <td>${summary[property]['video_1']['total']}</td>
-                <td>${summary[property]['video_1']['match']}</td>
-                <td>${summary[property]['video_1']['single']}</}td>
-                <td>${summary[property]['video_2']['total']}</td>
-                <td>${summary[property]['video_2']['match']}</td>
-                <td>${summary[property]['video_2']['single']}</td>
-                <td>${resultGlobal['match']}</td>
-                <td>${resultGlobal['single']}</td>
-                <td>${resultGlobal['index']}%</td>
+        totals['video_1']['total'] += summary[property]['video_1']['total']
+        totals['video_1']['match'] += summary[property]['video_1']['match']
+        totals['video_1']['single'] += summary[property]['video_1']['single']
+        totals['video_2']['total'] += summary[property]['video_2']['total']
+        totals['video_2']['match'] += summary[property]['video_2']['match']
+        totals['video_2']['single'] += summary[property]['video_2']['single']
+
+        table += `<tr >
+                <td scope="row" class="border-right"><a class='displayChart' href='' data-category='${property}' data-video='video-${index}'>${categories[property]['name']}</a></td>
+                <td class="right">${summary[property]['video_1']['total']}</td>
+                <td class="right">${summary[property]['video_1']['match']}</td>
+                <td class="right border-right">${summary[property]['video_1']['single']}</}td>
+                <td class="right">${summary[property]['video_2']['total']}</td>
+                <td class="right">${summary[property]['video_2']['match']}</td>
+                <td class="right border-right">${summary[property]['video_2']['single']}</td>
+                <td class="right">${resultGlobal['match']}</td>
+                <td class="right">${resultGlobal['single']}</td>
+                <td class="right">${resultGlobal['index']}%</td>
             </tr>`
 
         table += "</tr>";
     }
-    table += "</table><hr />"
+
+    let total_videos =  totals['video_1']['total']  +  totals['video_2']['total'] 
+
+    totals['overall']['match'] = totals['video_1']['match'] + totals['video_2']['match']
+    totals['overall']['single'] = totals['video_1']['single'] + totals['video_2']['single']
+    totals['overall']['index'] = ((total_videos - totals['overall']['single']) / total_videos * 100).toFixed(2)
+
+    table += `<tr class="last"><td class="border-right"><a class='displayChart' href='' data-category='total' data-video='video-${index}'>${texts['total']}</a></td>`
+    table += `<td class="right">${totals['video_1']['total']}</td>`
+    table += `<td class="right">${totals['video_1']['match']}</td>`
+    table += `<td class="right border-right">${totals['video_1']['single']}</td>`
+    table += `<td class="right">${totals['video_2']['total']}</td>`
+    table += `<td class="right">${totals['video_2']['match']}</td>`
+    table += `<td class="right border-right">${totals['video_2']['single']}</td>`
+    table += `<td class="right">${totals['overall']['match']}</td>`
+    table += `<td class="right">${totals['overall']['single']}</td>`
+    table += `<td class="right">${totals['overall']['index']}%</td>`
+
+    table += "</tr></table><hr />"
 
     $(`${g_div_id} .summary`).html(table)
 }
@@ -301,6 +345,34 @@ function parseData() {
             }
         }
 
+    }
+
+    //Total
+    let tmpCat = Object.keys(categories)
+    total = data[tmpCat[0]].length
+    console.log(total)
+    data['total'] = []
+
+
+    for(let j = 0; j < total; j++){
+        data['total'][j] = {time: `${j}`, match: 0, video_1: 0, video_2: 0}
+    }
+
+    for(let j = 0; j < total; j++){
+        for(let i = 0; i < tmpCat.length; i++){
+            let c = tmpCat[i]
+            data['total'][j]['match'] += data[c][j]['match']
+            data['total'][j]['video_1'] += data[c][j]['video_1']
+            data['total'][j]['video_2'] += data[c][j]['video_2']
+        }
+
+    }
+    
+    
+    console.log(data)
+
+    categories['total'] = {
+        'name': 'Total'
     }
 
     return data;
@@ -368,7 +440,7 @@ function getNumberTicks(max){
 
     for(let i = 0; i <= result ; i++ ){
         list['n'].push(i * ratioN)
-        list['p'].push((i * ratioP).toFixed(2))
+        list['p'].push((i * ratioP).toFixed(1))
     }
 
     return list
@@ -377,9 +449,9 @@ function getNumberTicks(max){
 
 
 function displayChart(data, id, cat) {
-    var margin = { top: 60, right: 220, bottom: 35, left: 30 };
+    var margin = { top: 60, right: 250, bottom: 35, left: 30 };
 
-    var width = 1300 - margin.left - margin.right,
+    var width = 1330 - margin.left - margin.right,
         height = 430 - margin.top - margin.bottom;
 
     d3.select(id).html("");
@@ -424,7 +496,6 @@ function displayChart(data, id, cat) {
     var y_coef = d3.scale.linear().domain([0, 100]).range([height, 0])
 
     var colors = ["#3182bd", "#de2d26", "#feb24c"];
-
 
     var yAxis = d3.svg.axis()
         .scale(y)
@@ -501,25 +572,22 @@ function displayChart(data, id, cat) {
         .data(linesCoefs)
         .enter()
         .append("line")
-        .attr('class', 'coef-line')
         .attr("x1", d => d.x1)
         .attr("x2", d => d.x2)
         .attr("y1", d => d.y1)
         .attr("y2", d => d.y2)
-        .attr("stroke", 'lime')
-        .attr("")
+        .attr("stroke", 'black')
+        .attr("stroke-width", 1.1)
 
     var coefDots = svg.selectAll("g.coefs")
         .data(coefs)
         .enter()
         .append("circle")
         .attr("cx", (d, i) => x(i) + 12.5)
-        .attr("cy", d => {
-            console.log(d, y_coef(d))
-            return y_coef(d)
-        })
+        .attr("cy", d =>  y_coef(d))
         .attr("r", 5)
-        .style("fill", "lime")
+        .style("fill", "#3182bd")
+        .style("stroke", 'black')
         .on("mouseover", function() { tooltip.style("display", null); })
         .on("mouseout", function() { tooltip.style("display", "none"); })
         .on("mousemove", function(d, i) {
@@ -528,6 +596,8 @@ function displayChart(data, id, cat) {
             tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
             tooltip.select("text").text(d.toFixed(2));
         });
+
+    
 
     svg.append("text")
         .attr("x", 30)
@@ -545,7 +615,7 @@ function displayChart(data, id, cat) {
         .attr("x", width-30)
         .attr("y", -10)
         .attr('class', 'axis-text')
-        .text(texts['index'])
+        .text(texts['index'] + " (%)")
 
     var legend = svg.selectAll(".legend")
         .data(colors)
@@ -566,13 +636,34 @@ function displayChart(data, id, cat) {
         .style("text-anchor", "start")
         .text(function (d, i) {
             switch (i) {
-                case 0: return `${texts['video']} 2 ${texts['unmatched']}`;
-                case 1: return `${texts['video']} 1 ${texts['unmatched']}`;
+                case 0: return `${getUser(2)} `;
+                case 1: return `${getUser(1)} `;
                 case 2: return `${texts['matched']}`;
             }
         });
 
-    
+    svg.append("line")
+        .attr("x1", width + 60)
+        .attr("x2", width + 90)
+        .attr("y1", 120)
+        .attr("y2", 120)
+        .attr("stroke", 'black')
+        .attr("stroke-width", 1.1)
+
+    svg.append("circle")
+        .attr("cx", width + 75)
+        .attr("cy", 120)
+        .attr("r", 5)
+        .style("fill", "#3182bd")
+        .style("stroke", 'black')
+
+    svg.append("text")
+        .attr("x", width + 100)
+        .attr("y", 120)
+        .attr("dy", ".35em")
+        .style("text-anchor", "start")
+        .text(texts['index'])
+
 
     var tooltip = svg.append("g")
         .attr("class", "tooltip-2")
@@ -600,6 +691,9 @@ function activateCategoryBtn() {
         var category = event.srcElement.getAttribute('data-category');
         var divId = `#${video_id} .chart`;
         var chart = displayChart(g_datas[video_id][category], divId, category);
+        
+
+        
 
         return false;
     })
@@ -633,17 +727,16 @@ function render() {
 
     activateCategoryBtn();
 
-    var video_id = 'video-0'
-    var category = 'Cat_1'
-    var divId = `#${video_id} .chart`;
-    var chart = displayChart(g_datas[video_id][category], divId, category);
+    // var video_id = 'video-0'
+    // var category = 'Cat_1'
+    // var divId = `#${video_id} .chart`;
+    // var chart = displayChart(g_datas[video_id][category], divId, category);
 }
 
 $(document).ready(function () {
     setLanguage('en')
     addJsonContent(file1)
-    addJsonContent(file2)
-    render();
-
-    
+    // addJsonContent(file2)
+    render();    
+    console.log(g_datas)
 });

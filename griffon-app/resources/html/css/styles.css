@@ -30,5 +30,30 @@ section td{
 }
 
 .coef-line{
-    stroke-width: 1;
+    stroke-width: 2;
+    fill: black;
+}
+
+.table-sm td{
+    text-align: right;
+}
+
+td.border-right{
+    border-right: 1px solid gray !important;
+}
+
+.thead-custom {
+    background-color: #525252;
+    color: white;
+    text-align: center;
+}
+
+tr.last td{
+    font-weight: bold;
+    background-color: #dddddd;
+}
+
+tr.first td{
+    font-weight: bold;
+    background-color: #cccccc;
 }
