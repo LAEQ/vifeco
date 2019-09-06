@@ -1,26 +1,59 @@
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: arial;
-    }
-    header.laeq {
-        padding: 20px;
-        background-color:  #284255;
-    }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: arial;
+}
+header.laeq {
+    padding: 20px;
+    background-color:  #284255;
+}
 
-    section{
-        margin: 10px 10px 35px 10px;
-    }
+section{
+    margin: 10px 10px 35px 10px;
+}
 
-    section h2 {
-        margin: 5px;
+section h2 {
+    margin: 5px;
 
-    }
+}
 
-    section p{
-        margin: 5px;
-    }
+section p{
+    margin: 5px;
+}
 
-    section td{
-        padding: 10px;
-    }
+section td{
+    padding: 10px;
+}
+
+.axis-text{
+    font-size: .8rem;
+}
+
+.coef-line{
+    stroke-width: 2;
+    fill: black;
+}
+
+.table-sm td{
+    text-align: right;
+}
+
+td.border-right{
+    border-right: 1px solid gray !important;
+}
+
+.thead-custom {
+    background-color: #525252;
+    color: white;
+    text-align: center;
+}
+
+tr.last td{
+    font-weight: bold;
+    background-color: #dddddd;
+}
+
+tr.first td{
+    font-weight: bold;
+    background-color: #cccccc;
+}

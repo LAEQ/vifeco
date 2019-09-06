@@ -91,6 +91,27 @@
         }
     },
     {
+        "org.laeq.video.copy.progress": {
+            "en-CA": "Copy file: ",
+            "es-ES": "Copiar archivo: ",
+            "fr-CA": "Copie du fichier: "
+        }
+    },
+    {
+        "org.laeq.video.duration": {
+            "en-CA": "Get the video duration.",
+            "es-ES": "Obteniendo la duración del video. ",
+            "fr-CA": "Obtention de la durée de la vidéo"
+        }
+    },
+    {
+        "org.laeq.video.ready": {
+            "en-CA": "ready for counting",
+            "es-ES": "listo para contar",
+            "fr-CA": "prêt pour le comptage"
+        }
+    },
+    {
         "org.laeq.video.file.not_exist": {
             "en-CA": "The file does not exist.",
             "es-ES": "Ha ocurrido un error con el archivo de video.",
@@ -221,6 +242,13 @@
             "en-CA": "Export",
             "es-ES": "Exportar",
             "fr-CA": "Exporter"
+        }
+    },
+    {
+        "org.laeq.video.export.success": {
+            "en-CA": "Export completed successfullly. Check: %s",
+            "es-ES": "Exportación completada. Verifica %s",
+            "fr-CA": "Export terminé. Vérifier %s"
         }
     },
     {
