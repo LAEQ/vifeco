@@ -139,7 +139,14 @@ public class ContainerController extends CRUDController<Video> {
             return;
         }
 
-        exportService.export(model.getSelectedVideo());
+        try {
+            String filename = exportService.export(model.getSelectedVideo());
+            alert(translationService.getMessage("org.laeq.title.success"),
+                    String.format(translationService.getMessage("org.laeq.export.success"), filename)
+            );
+        } catch (IOException e) {
+            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.title.error"));
+        }
     }
 
     public void editVideo(Video video) {

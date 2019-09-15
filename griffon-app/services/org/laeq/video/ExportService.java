@@ -33,20 +33,14 @@ public class ExportService extends AbstractGriffonService {
         }
     }
 
-    public String export(Video video){
+    public String export(Video video) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
+        
+        String fileName = String.format("%s-%s.json", video.getName(), System.currentTimeMillis());
+        fileName = getPathExport(fileName);
+        objectMapper.writeValue(new File(fileName), video);
 
-        try {
-            String fileName = String.format("%s-%s.json", video.getName(), System.currentTimeMillis());
-            fileName = getPathExport(fileName);
-            objectMapper.writeValue(new File(fileName), video);
-
-            return fileName;
-        } catch (Exception e) {
-            getLog().error(e.getMessage());
-        }
-
-        return "";
+        return fileName;
     }
 
     public void export(StatisticService service){

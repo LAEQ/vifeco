@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.laeq.TranslationService;
 import org.laeq.model.Preferences;
 import org.laeq.model.User;
 
@@ -14,6 +15,7 @@ import java.util.Collection;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
+    private TranslationService translationService;
     //Table section
     private ObservableList<User> userList = FXCollections.observableArrayList();
 
@@ -27,7 +29,6 @@ public class ContainerModel extends AbstractGriffonModel {
     private User selectedUser;
 
     private Preferences prefs;
-
 
     public ObservableList<User> getUserList() {
         return userList;
@@ -76,25 +77,31 @@ public class ContainerModel extends AbstractGriffonModel {
         this.email.set(email);
     }
 
+    public void setTranslationService(TranslationService translationService) {
+        this.translationService = translationService;
+    }
+
     public Boolean valid(){
         Boolean result = true;
-        errors = "";
+        errors = "\n";
 
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder("\n");
 
         if(getFirstName().length() == 0){
             result = false;
-            builder.append(" - firstName is empty\n");
+            builder.append(translationService.getMessage("org.laeq.video.user.first_name.error"));
+            builder.append("\n");
         }
 
         if(getLastName().length() == 0){
             result = false;
-            builder.append(" - lastName is empty\n");
+            builder.append(translationService.getMessage("org.laeq.video.user.last_name.error"));
+            builder.append("\n");
         }
 
         if(getEmail().length() == 0){
             result = false;
-            builder.append(" - email is empty\n");
+            builder.append(translationService.getMessage("org.laeq.video.user.email.error"));
         }
 
         errors = builder.toString();

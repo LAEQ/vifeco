@@ -56,11 +56,9 @@ public class ContainerController extends CRUDController<Collection> {
                 alert(translationService.getMessage("org.laeq.title.error"),
                         translationService.getMessage("org.laeq.model.invalid_fields") + ": " + e.getMessage());
             }
-
         } else {
             getLog().error(model.getErrors());
-            String errorMessage = model.getErrors().replace("org.laeq.model.collection.validation.categories", translationService.getMessage("org.laeq.model.collection.validation.categories"));
-            alert(translationService.getMessage("org.laeq.model.collection.form.alert.title"), errorMessage);
+            alert(translationService.getMessage("org.laeq.model.collection.form.alert.title"), model.getErrors());
         }
     }
 
@@ -101,6 +99,7 @@ public class ContainerController extends CRUDController<Collection> {
     private void setTranslationService(){
         try {
             translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPreferences().locale);
+            model.setTranslationService(translationService);
         } catch (IOException e) {
             getLog().error("Cannot load file messages.json");
         }

@@ -734,9 +734,9 @@ function render() {
 }
 
 $(document).ready(function () {
-    setLanguage('en')
-    addJsonContent(file1)
-    // addJsonContent(file2)
-    render();    
-    console.log(g_datas)
+//    setLanguage('en')
+//    addJsonContent(file1)
+//    // addJsonContent(file2)
+//    render();
+//    console.log(g_datas)
 });

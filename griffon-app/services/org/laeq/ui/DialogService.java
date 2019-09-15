@@ -79,7 +79,7 @@ public class DialogService extends AbstractGriffonService {
 
     public void simpleAlert(String title, String text){
         runInsideUISync(() -> {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(title);
             alert.setWidth(250);
 

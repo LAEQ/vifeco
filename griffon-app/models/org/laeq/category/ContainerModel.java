@@ -7,6 +7,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.laeq.CRUDModelInterface;
+import org.laeq.TranslationService;
 import org.laeq.model.Category;
 import org.laeq.model.Preferences;
 
@@ -14,9 +16,10 @@ import java.util.Optional;
 import java.util.Set;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class ContainerModel extends AbstractGriffonModel {
+public class ContainerModel extends AbstractGriffonModel implements CRUDModelInterface {
     //Table section
     private ObservableList<Category> categoryList = FXCollections.observableArrayList();
+    private TranslationService translationService;
 
     // Form Section
     private Category selectedCategory;
@@ -95,26 +98,30 @@ public class ContainerModel extends AbstractGriffonModel {
     public Boolean valid() {
         Boolean result = true;
 
-        StringBuilder builder = new StringBuilder("Some fields are invalid: \n");
+        StringBuilder builder = new StringBuilder("\n");
 
         if(getName().length() == 0){
             result = false;
-            builder.append(" - name\n");
+            builder.append(translationService.getMessage("org.laeq.category.column.name"));
+            builder.append("\n");
         }
 
         if(getName().length() != 1 && validShortCut()){
             result = false;
-            builder.append(" - shortcut\n");
+            builder.append(translationService.getMessage("org.laeq.category.column.short_cut"));
+            builder.append("\n");
         }
 
         if(getIcon().length() == 0){
             result = false;
-            builder.append(" - icon\n");
+            builder.append(translationService.getMessage("org.laeq.category.column.icon"));
+            builder.append("\n");
         }
 
         if(! getColor().matches("^#[A-Za-z0-9]{6}$")){
             result = false;
-            builder.append(" - Color\n");
+            builder.append(translationService.getMessage("org.laeq.category.column.color"));
+            builder.append("\n");
         }
 
         errors = builder.toString();
@@ -190,5 +197,10 @@ public class ContainerModel extends AbstractGriffonModel {
 
     public void setPrefs(Preferences prefs) {
         this.prefs = prefs;
+    }
+
+    @Override
+    public void setTranslationService(TranslationService service) {
+        this.translationService = service;
     }
 }

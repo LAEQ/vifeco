@@ -8,6 +8,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.laeq.CRUDModelInterface;
+import org.laeq.TranslationService;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
 import org.laeq.model.Preferences;
@@ -18,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class ContainerModel extends AbstractGriffonModel {
+public class ContainerModel extends AbstractGriffonModel implements CRUDModelInterface {
     private ObservableList<Collection> collections = FXCollections.observableArrayList();
     private Map<Category, SimpleBooleanProperty> categorySBP = new HashMap<>();
     private SimpleBooleanProperty isDefault = new SimpleBooleanProperty(this, "isDefault", false);
@@ -26,6 +28,7 @@ public class ContainerModel extends AbstractGriffonModel {
     private Collection selectedCollection;
 
     private Preferences preferences;
+    private TranslationService translationService;
 
     private String errors = "";
 
@@ -102,22 +105,23 @@ public class ContainerModel extends AbstractGriffonModel {
 
         MessageSource messageSource = getApplication().getMessageSource();
 
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder(translationService.getMessage("org.laeq.model.invalid_fields"));
+        builder.append("\n");
 
         if(getName().length() == 0){
-            builder.append("\n - Name");
+            builder.append(translationService.getMessage("org.laeq.collection.name"));
+            builder.append("\n");
             result = false;
         }
 
         Boolean isOneSelected = categorySBP.values().stream().anyMatch( e-> e.getValue());
 
         if(!isOneSelected){
-            builder.append("\n - categories: ");
-            builder.append("org.laeq.model.collection.validation.categories");
+            builder.append(translationService.getMessage("org.laeq.model.collection.validation.categories"));
+            builder.append("\n");
             result = false;
         }
 
-//        errors = messageSource.getMessage("org.laeq.model.invalid_fields", Locale.CANADA);
         errors +=  builder.toString();
 
         return result;
@@ -170,5 +174,10 @@ public class ContainerModel extends AbstractGriffonModel {
 
     public void setPreferences(Preferences preferences) {
         this.preferences = preferences;
+    }
+
+    @Override
+    public void setTranslationService(TranslationService service) {
+        this.translationService = service;
     }
 }

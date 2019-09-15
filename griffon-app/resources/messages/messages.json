@@ -7,6 +7,27 @@
         }
     },
     {
+        "org.laeq.title.success": {
+            "en-CA": "Completed successfully",
+            "es-ES": "Completado con éxito.",
+            "fr-CA": "Complété  avec succès"
+        }
+    },
+    {
+        "org.laeq.export.success": {
+            "en-CA": "File path: %s",
+            "es-ES": "Chemin du fichier: %s",
+            "fr-CA": "Ruta del archivo: %s"
+        }
+    },
+    {
+        "org.laeq.export.error": {
+            "en-CA": "Cannot create the file %s",
+            "es-ES": "Chemin du fichier: %s",
+            "fr-CA": "Ruta del archivo: %s"
+        }
+    },
+    {
         "org.laeq.model.invalid_fields": {
             "en-CA": "Some fields are invalid:",
             "es-ES": "Algunos campos son inválidos:",
@@ -15,9 +36,9 @@
     },
     {
         "org.laeq.dao.error": {
-            "en-CA": "An error has occurred with the database",
-            "es-ES": "Ha ocurrido un error con la base de datos",
-            "fr-CA": "Une erreur est survenue avec la base de données"
+            "en-CA": "An error has occurred.",
+            "es-ES": "Ha ocurrido un error.",
+            "fr-CA": "Une erreur est survenue."
         }
     },
     {
@@ -29,35 +50,35 @@
     },
     {
         "org.laeq.menu.tooltip.video_add": {
-            "en-CA": "new video",
+            "en-CA": "New video",
             "es-ES": "Añadir un nuevo video",
             "fr-CA": "Nouvelle vidéo"
         }
     },
     {
         "org.laeq.menu.tooltip.user": {
-            "en-CA": "user section",
+            "en-CA": "User section",
             "es-ES": "Sección de los usuarios",
             "fr-CA": "Section des utilisateurs"
         }
     },
     {
         "org.laeq.menu.tooltip.category": {
-            "en-CA": "category section",
+            "en-CA": "Category section",
             "es-ES": "Sección de las categorías",
             "fr-CA": "Section des catégories"
         }
     },
     {
         "org.laeq.menu.tooltip.collection": {
-            "en-CA": "collection section",
+            "en-CA": "Collection section",
             "es-ES": "Sección de las colecciones",
             "fr-CA": "Section des collections de catégories"
         }
     },
     {
         "org.laeq.menu.tooltip.database": {
-            "en-CA": "database section",
+            "en-CA": "Database section",
             "es-ES": "Sección de la la base de datos",
             "fr-CA": "Section base de données"
         }
@@ -175,6 +196,27 @@
         }
     },
     {
+        "org.laeq.video.user.first_name.error": {
+            "en-CA": "FirstName",
+            "es-ES": "Nombre",
+            "fr-CA": "Prénom"
+        }
+    },
+    {
+        "org.laeq.video.user.last_name.error": {
+            "en-CA": "Lastname",
+            "es-ES": "Apellido",
+            "fr-CA": "Nom"
+        }
+    },
+    {
+        "org.laeq.video.user.email.error": {
+            "en-CA": "Email",
+            "es-ES": "Email",
+            "fr-CA": "Courriel"
+        }
+    },
+    {
         "org.laeq.video.collection.confirm": {
             "en-CA": "Are you sure you want to change the collection of this video ? Pay much attention as some points might become obsolete and therefore will be deleted",
             "es-ES": "Por favor, confirme el cambio de colección. Los puntos de las categorías obsoletas serán eliminados.",
@@ -246,9 +288,16 @@
     },
     {
         "org.laeq.video.export.success": {
-            "en-CA": "Export completed successfullly. Check: %s",
-            "es-ES": "Exportación completada. Verifica %s",
-            "fr-CA": "Export terminé. Vérifier %s"
+            "en-CA": "Export completed successfullly.",
+            "es-ES": "Exportación completada.",
+            "fr-CA": "Export terminé."
+        }
+    },
+    {
+        "org.laeq.video.export.error": {
+            "en-CA": "Export failed.",
+            "es-ES": "Exportación fallida",
+            "fr-CA": "L'export a échoué."
         }
     },
     {

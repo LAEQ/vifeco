@@ -127,6 +127,7 @@ public class ContainerController extends AbstractGriffonController {
     private void setTranslationService(){
         try {
             translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
+            model.setTranslationService(translationService);
         } catch (IOException e) {
             getLog().error("Cannot load file messages.json");
         }

@@ -11,6 +11,4 @@ import javax.annotation.Nonnull;
 public class BottomController extends AbstractGriffonController {
     @MVCMember @Nonnull private BottomModel model;
     @MVCMember @Nonnull private BottomView view;
-
-
 }

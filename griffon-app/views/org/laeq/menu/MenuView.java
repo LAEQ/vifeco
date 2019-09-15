@@ -82,7 +82,7 @@ public class MenuView extends TranslatedView {
         collectionBtn.setLayoutX(235);
         subMenuPane.getChildren().add(collectionBtn);
 
-        IconButton databaseBtn = generateButton(IconSVG.db, "database", "org.laeq.menu.tooltip.database", "database.section");
+        IconButton databaseBtn = generateButton(IconSVG.db, "database", "org.laeq.menu.tooltip.database", "database.backup");
         databaseBtn.setLayoutX(295);
         subMenuPane.getChildren().add(databaseBtn);
 
@@ -118,9 +118,6 @@ public class MenuView extends TranslatedView {
         btn.decorate();
 
         btnTooltipMessages.put(btn, help);
-
-//        btn.setOnMouseEntered(event -> Tooltip.install((Node) event.getSource(), generateToolTip((IconButton) event.getSource())));
-//        btn.setOnMouseExited(event -> Tooltip.uninstall((Node) event.getSource(), generateToolTip((IconButton) event.getSource())));
 
         btn.setOnMouseClicked(event -> getApplication().getEventRouter().publishEvent(eventName));
 
