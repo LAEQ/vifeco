@@ -2,9 +2,10 @@
 
 ### Build status
 
-| Branch | status |
-| ------------- | ------------- |
-| Master  |  ![build status](https://travis-ci.org/LAEQ/vifeco.svg?branch=master)|
+| Branch | status | DOI |
+| ------------- | ------------- | ---- |
+| Master  |  ![build status](https://travis-ci.org/LAEQ/vifeco.svg?branch=master)| [![DOI](https://zenodo.org/badge/165725219.svg)](https://zenodo.org/badge/latestdoi/165725219)
+
 
 If you want to try this project you must have a JDK (>=1.8) installed with JavaFX. The gradle version is 4.7. 
 
