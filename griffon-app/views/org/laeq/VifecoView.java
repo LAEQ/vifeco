@@ -45,7 +45,6 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
         createMVCGroup("menu");
         createMVCGroup("middle");
-//        createMVCGroup("bottom");
         createMVCGroup("database");
     }
 

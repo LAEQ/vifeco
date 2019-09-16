@@ -10,14 +10,12 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.util.Duration;
 import org.apache.batik.transcoder.TranscoderException;
-import org.apache.commons.io.FileUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.TranslationService;
 import org.laeq.db.DAOException;
 import org.laeq.icon.IconService;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
-import org.laeq.settings.Settings;
 import org.laeq.ui.DialogService;
 import org.laeq.user.PreferencesService;
 import org.laeq.video.player.VideoEditor;
@@ -112,14 +110,13 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.edit", objects -> {
             Video video = (Video) objects[0];
 
-            File file = new File(video.getAbsolutePath());
+            File file = new File(video.getPath());
 
             if(! file.exists()){
                 getLog().error(String.format("PlayerView: file not exits %s", file));
                 String title = translationService.getMessage("org.laeq.title.error");
-                String message = translationService.getMessage(("org.laeq.video.file.not_exist"));
                 runInsideUISync(() -> {
-                    dialogService.simpleAlert(title, message);
+                    dialogService.simpleAlert(title, String.format("PlayerView: file not exits %s", file));
                 });
 
                 return;

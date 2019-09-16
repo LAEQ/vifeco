@@ -66,7 +66,7 @@ public class VideoEditor {
         videoIconMap = new DualHashBidiMap<>();
         timelineIconMap = new DualHashBidiMap<>();
 
-        file = new File(video.getAbsolutePath());
+        file = new File(video.getPath());
         media = new Media(file.getCanonicalFile().toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 

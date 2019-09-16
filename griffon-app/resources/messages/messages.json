@@ -393,9 +393,9 @@
     },
     {
         "org.laeq.model.collection.validation.categories": {
-            "en-CA": "You must select at least one category.",
-            "es-ES": "Debes seleccionar al menos una categoría",
-            "fr-CA": "Vous devez sélectionner au moins une catégorie"
+            "en-CA": "Category: You must select at least one category.",
+            "es-ES": "Categoría: Debes seleccionar al menos una categoría",
+            "fr-CA": "Catégorie: evez sélectionner au moins une catégorie"
         }
     },
     {

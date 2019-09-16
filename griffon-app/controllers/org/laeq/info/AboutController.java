@@ -6,6 +6,7 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.user.PreferencesService;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashMap;

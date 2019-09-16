@@ -84,10 +84,14 @@ public class MariaService extends AbstractGriffonService {
     }
 
 
-
     public void start() throws ManagedProcessException {
-        db.start();
-        db.createDB(dbName);
+        try{
+            db.start();
+            db.createDB(dbName);
+        } catch (Exception e){
+            getLog().error("Cannot start mysql process. A mysqld process is already on the same port. You must stop this process." );
+
+        }
 
         boolean result = false;
         result = manager.loadFixtures("sql/create_tables.sql");
@@ -134,7 +138,7 @@ public class MariaService extends AbstractGriffonService {
         User defaultUser = userDAO.findDefault();
         Collection defaultCollection = collectionDAO.findDefault();
 
-        Video video = new Video(file.getName(), duration, defaultUser, defaultCollection);
+        Video video = new Video(file.getAbsolutePath(), duration, defaultUser, defaultCollection);
         getVideoDAO().insert(video);
 
         return video;

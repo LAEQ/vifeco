@@ -99,7 +99,6 @@ public class TimelineView extends AbstractJavaFXGriffonView {
 
         init();
         editor.play();
-        editor.play();
 
         parentView.getTimelinePane().getChildren().add(pane);
     }

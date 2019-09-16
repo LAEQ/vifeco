@@ -188,6 +188,6 @@ public class Video extends BaseEntity {
 
     @JsonIgnore
     public boolean isEditable(){
-        return new File(getAbsolutePath()).exists();
+        return new File(path.getValue()).exists();
     }
 }
