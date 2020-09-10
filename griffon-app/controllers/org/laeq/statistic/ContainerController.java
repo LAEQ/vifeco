@@ -52,7 +52,7 @@ public class ContainerController extends AbstractGriffonController {
         pointDAO = dbService.getPointDAO();
         categoryDAO = dbService.getCategoryDAO();
 
-        Set<Video> videos = videoDAO.findAll();
+        List<Video> videos = videoDAO.findAll();
 
         videos.forEach(video -> {
             video.getPointSet().addAll(pointDAO.findByVideo(video));

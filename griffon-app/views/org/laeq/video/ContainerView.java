@@ -47,8 +47,6 @@ public class ContainerView extends TranslatedView {
     @FXML private Label durationValue;
     @FXML private Label totalValue;
     @FXML private Group categoryGroup;
-    @FXML private TextField filterNameField;
-    @FXML private Label filterLabel;
 
     @FXML private Button exportActionTarget;
     @FXML private Button clearActionTarget;
@@ -78,7 +76,6 @@ public class ContainerView extends TranslatedView {
         textFields.put(videoTitleTxt, "org.laeq.video.video_title_text");
         textFields.put(durationTxt, "org.laeq.video.duration_text");
         textFields.put(totalTxt, "org.laeq.video.total_text");
-        textFields.put(filterLabel, "org.laeq.video.filter_label");
         textFields.put(exportActionTarget, "org.laeq.video.export_btn");
         textFields.put(clearActionTarget, "org.laeq.video.clear_btn");
         textFields.put(deleteActionTarget, "org.laeq.video.delete_btn");
@@ -136,15 +133,13 @@ public class ContainerView extends TranslatedView {
         totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
         editColumn.setCellValueFactory(cellData -> cellData.getValue().isEditable() ? null : new SimpleObjectProperty<>(new Icon(IconSVG.error, Color.DARKORANGE.toString())));
 
-        videoTable.setItems(this.model.getFilteredList());
+        videoTable.setItems(this.model.getVideoList());
         videoTable.getSelectionModel().selectedItemProperty().addListener(observable -> {
             if(videoTable.getSelectionModel().getSelectedItem() != null){
                 model.setSelectedVideo(videoTable.getSelectionModel().getSelectedItem());
                 controller.showDetail();
             }
         });
-
-        filterNameField.textProperty().addListener(filtering());
 
         videoTable.setOnMouseClicked(event -> {
             if(event.getClickCount() == 2){
@@ -160,23 +155,6 @@ public class ContainerView extends TranslatedView {
                 }
             }
         });
-    }
-
-    private ChangeListener<String> filtering(){
-        return (observable, oldValue, newValue) -> {
-            model.getFilteredList().setPredicate(video -> {
-                if((newValue == null || newValue.isEmpty())){
-                    return true;
-                }
-
-                String filter = newValue.toLowerCase();
-                if(video.getName().toLowerCase().contains(filter)){
-                    return true;
-                }
-
-                return false;
-            });
-        };
     }
 
     public void showDetails() {

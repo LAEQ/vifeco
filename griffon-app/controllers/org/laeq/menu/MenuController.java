@@ -133,7 +133,7 @@ public class MenuController extends AbstractGriffonController {
         UserDAO userDAO = dbService.getUserDAO();
         PointDAO pointDAO = dbService.getPointDAO();
 
-        Set<Video> videoList = videoDAO.findAll();
+        List<Video> videoList = videoDAO.findAll();
 
         List<String> srcFiles = new ArrayList<>();
 
