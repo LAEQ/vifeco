@@ -19,7 +19,7 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
         String query = "INSERT INTO USER (FIRST_NAME, LAST_NAME, EMAIL) VALUES (?, ?, ?);";
 
         try(Connection connection = getManager().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement statement = connection.prepareStatement(query))
         {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());

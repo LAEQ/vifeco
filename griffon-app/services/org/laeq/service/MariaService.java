@@ -1,8 +1,5 @@
 package org.laeq.service;
 
-import ch.vorburger.exec.ManagedProcessException;
-import ch.vorburger.mariadb4j.DB;
-import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.util.Duration;
@@ -23,12 +20,10 @@ import java.sql.SQLException;
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
 public class MariaService extends AbstractGriffonService {
-    private DB db;
-    private DBConfigurationBuilder config;
     private String dbName = "vifecodb";
     private DatabaseManager manager;
 
-    public MariaService() throws ManagedProcessException {
+    public MariaService()  {
         String dbPathStr = Settings.dbPath;
         Path dbPath = Paths.get(dbPathStr);
 
@@ -37,7 +32,7 @@ public class MariaService extends AbstractGriffonService {
                 Files.createDirectories(dbPath);
             } catch (IOException e) {
                 getLog().error("MariaService: cannot create " + dbPathStr);
-                throw new ManagedProcessException("Cannot instantiate the database.");
+
             }
         }
 
@@ -74,24 +69,23 @@ public class MariaService extends AbstractGriffonService {
             }
         }
 
-        config = DBConfigurationBuilder.newBuilder();
-        config.setPort(0);
-        config.setDataDir(dbPathStr);
-        db = DB.newEmbeddedDB(config.build());
-
-        DatabaseConfigBean configBean = new DatabaseConfigBean(config.getURL(dbName), "root", "");
+        String dbUrl = String.format("jdbc:sqlite:%s/%s.db", dbPathStr, dbName);
+        System.out.println(dbUrl);
+//        String mariaDbUrl = "jdbc:mariadb://localhost:3306";
+        DatabaseConfigBean configBean = new DatabaseConfigBean( dbUrl, "root", "");
         manager = new DatabaseManager(configBean);
+
     }
 
 
-    public void start() throws ManagedProcessException {
-        try{
-            db.start();
-            db.createDB(dbName);
-        } catch (Exception e){
-            getLog().error("Cannot start mysql process. A mysqld process is already on the same port. You must stop this process." );
-
-        }
+    public void start()  {
+//        try{
+//            db.start();
+//            db.createDB(dbName);
+//        } catch (Exception e){
+//            getLog().error("Cannot start mysql process. A mysqld process is already on the same port. You must stop this process." );
+//
+//        }
 
         boolean result = false;
         result = manager.loadFixtures("sql/create_tables.sql");
@@ -107,8 +101,8 @@ public class MariaService extends AbstractGriffonService {
         }
     }
 
-    public void stop() throws ManagedProcessException {
-        db.stop();
+    public void stop() {
+//        db.stop();
     }
 
     public UserDAO getUserDAO(){

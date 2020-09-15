@@ -15,7 +15,7 @@ public class DatabaseConfigBean implements DatabaseConfigInterface{
 
     @Override
     public String getUrl() {
-        return this.url + "?serverTimezone=EST";
+        return this.url;
     }
 
     @Override

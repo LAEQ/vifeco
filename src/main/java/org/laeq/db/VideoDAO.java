@@ -7,9 +7,7 @@ import org.laeq.model.Video;
 import javax.annotation.Nonnull;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
     private CollectionDAO collectionDAO;
@@ -53,14 +51,13 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
     @Override
     public List<Video> findAll() {
         String query = "select V.id as video_id,  V.path as path,  V.duration as duration, V.user_id AS user_id, \n" +
-                        "V.CREATED_AT AS CREATED_AT, \n" +
                         "U.first_name AS first_name, " +
                         "U.last_name AS last_name, CC.ID AS cc_id, CC.name AS cc_name, " +
                         "count(P.video_id) as total_point, CC.Name as c_name from VIDEO AS V \n" +
                         "left join USER AS U on V.user_id = U.id \n" +
                         "left join POINT as P ON P.video_id = V.id  \n" +
                         "left join COLLECTION AS CC on CC.id = V.collection_id \n" +
-                        "GROUP BY P.video_id, V.user_id, V.id, V.created_at, CC.id, U.first_name, U.last_name, CC.ID, CC.name ORDER BY V.id DESC;";
+                        "GROUP BY P.video_id, V.user_id, V.id, CC.id, U.first_name, U.last_name, CC.ID, CC.name ORDER BY V.id DESC;";
 
         List<Video> result = new ArrayList<>();
 
@@ -95,7 +92,6 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
         video.setId(datas.getInt("VIDEO_ID"));
         video.setPath(datas.getString("PATH"));
         video.setDuration((datas.getDouble("DURATION")));
-        video.setCreatedAt(datas.getTimestamp("CREATED_AT"));
         video.setTotal(datas.getInt("TOTAL_POINT"));
 
         User user = ResultHelper.generateUser(datas);

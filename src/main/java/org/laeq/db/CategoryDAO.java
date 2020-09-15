@@ -71,8 +71,6 @@ public class CategoryDAO extends AbstractDAO implements DAOInterface<Category> {
             category.setIcon(datas.getString("ICON"));
             category.setColor(datas.getString("COLOR"));
             category.setShortcut(datas.getString("SHORTCUT"));
-            category.setCreatedAt(datas.getTimestamp("CREATED_AT"));
-            category.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
             result.add(category);
         }
 

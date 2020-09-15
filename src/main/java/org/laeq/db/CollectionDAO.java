@@ -75,11 +75,11 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
                 collection.setIsDefault(result.getBoolean(3));
 
                 Category category = new Category();
-                category.setId(result.getInt(10));
-                category.setName(result.getString(11));
-                category.setIcon(result.getString(12));
-                category.setColor(result.getString(13));
-                category.setShortcut(result.getString(14));
+                category.setId(result.getInt(5));
+                category.setName(result.getString(6));
+                category.setIcon(result.getString(7));
+                category.setColor(result.getString(8));
+                category.setShortcut(result.getString(9));
 
                 if(category.getName() != null){
                     collection.addCategory(category);

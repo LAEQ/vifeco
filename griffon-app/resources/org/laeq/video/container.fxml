@@ -8,9 +8,7 @@
     <items>
         <AnchorPane fx:id="videoPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
             <children>
-                <TableView fx:id="videoTable" layoutX="40.0" layoutY="82.0" prefHeight="460.0" prefWidth="595.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                <TextField fx:id="filterNameField" layoutX="55.0" layoutY="465.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="55.0" />
-                <Label fx:id="filterLabel" layoutX="6.0" layoutY="470.0" prefHeight="16.0" prefWidth="42.0" text="Filter" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="6.0" />
+                <TableView fx:id="videoTable" layoutX="40.0" layoutY="82.0" prefHeight="460.0" prefWidth="595.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
         </AnchorPane>
         <AnchorPane fx:id="videoDetailsPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">

@@ -1,31 +1,27 @@
 package org.laeq.db
 
-import ch.vorburger.mariadb4j.DB
-import ch.vorburger.mariadb4j.DBConfigurationBuilder
+import org.laeq.settings.Settings
+import spock.lang.Shared
 import spock.lang.Specification
 
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.sql.Connection
 import java.sql.Statement
 
 class DatabaseManagerTest extends Specification {
-    private String dbName = "vifecodb"
-    private DB db
+    @Shared def dbName = String.format("%s/%s-%s", "/tmp", "vifecodb-test", UUID.randomUUID().toString())
+    @Shared def dbUrl = String.format("jdbc:sqlite:%s", dbName);
     private DatabaseManager manager
 
     def setup(){
-        DBConfigurationBuilder config = DBConfigurationBuilder.newBuilder();
-        config.setPort(0)
-        db = DB.newEmbeddedDB(config.build())
-
-        db.start()
-        db.createDB(dbName)
-
-        DatabaseConfigInterface configBean = new DatabaseConfigBean(config.getURL(dbName), "root", "")
+        Files.deleteIfExists(Paths.get(dbName))
+        DatabaseConfigInterface configBean = new DatabaseConfigBean(dbUrl, "root", "")
         manager = new DatabaseManager(configBean)
     }
 
     def cleanup(){
-        db.stop()
+        manager.getConnection().close()
     }
 
     def "test the db connection and create a table"() {
@@ -37,6 +33,7 @@ class DatabaseManagerTest extends Specification {
 
         try{
             Connection con = manager.getConnection()
+
             Statement stmt = con.createStatement()
 
             result = stmt.executeUpdate("CREATE TABLE hello(world VARCHAR(100))")

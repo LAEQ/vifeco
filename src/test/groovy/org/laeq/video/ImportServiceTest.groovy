@@ -87,6 +87,6 @@ class ImportServiceTest extends AbstractDAOTest {
         SortedSet<Point> points = pointDAO.findByVideo(expected)
 
         then:
-        thrown DAOException
+        notThrown DAOException
     }
 }

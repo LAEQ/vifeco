@@ -71,12 +71,9 @@ jfx {
 dependencies {
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
     compile 'org.kordamp.bootstrapfx:bootstrapfx-core:0.2.4'
-//    compile 'org.kordamp.ikonli:ikonli-javafx:1.8.0'
-//    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:1.8.0'
     compile 'eu.lestard:advanced-bindings:0.4.0'
     compile 'de.jensd:fontawesomefx:8.9'
     compile 'com.abercap:mediainfo-java-api:1.0.0.RELEASE'
-    compile group: 'ch.vorburger.mariaDB4j', name: 'mariaDB4j-app', version: '2.2.3'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
@@ -84,7 +81,7 @@ dependencies {
     compile group: 'org.apache.xmlgraphics', name: 'batik-util', version: '1.11'
     compile group: 'org.apache.xmlgraphics', name: 'batik-transcoder', version: '1.11'
     compile group: 'org.apache.xmlgraphics', name: 'batik-codec', version: '1.9'
-    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.32.3.2'
 
     implementation 'com.atlassian.commonmark:commonmark:0.12.1'
     compile 'org.projectlombok:lombok:1.18.4'
@@ -94,8 +91,6 @@ dependencies {
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
     testCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"
     testCompile "org.spockframework:spock-core:${spockVersion}"
-    testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
-
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }
 
