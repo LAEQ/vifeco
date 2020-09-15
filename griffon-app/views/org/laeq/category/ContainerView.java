@@ -35,7 +35,7 @@ public class ContainerView extends TranslatedView {
     @FXML private TextField nameField;
     @FXML private TextField shortCutField;
     @FXML private TextField pathField;
-    @FXML private ColorPicker colorPickerField;
+    @FXML private TextField colorPickerField;
     @FXML private Pane svgDisplayPane;
 
     @FXML private Label titleLabel;
@@ -112,12 +112,14 @@ public class ContainerView extends TranslatedView {
     public void initForm(){
         final String[] colorStr = new String[1];
 
-        colorPickerField.valueProperty().addListener((observable, oldValue, newValue) -> {
-            Color color = colorPickerField.getValue();
+//        colorPickerField.getText()
 
-            svgPath.setFill(color);
-            model.setColor(toRGBCode(color));
-        });
+//        colorPickerField.getText().addListener((observable, oldValue, newValue) -> {
+//            Color color = colorPickerField.getValue();
+//
+//            svgPath.setFill(color);
+//            model.setColor(toRGBCode(color));
+//        });
     }
 
     private String toRGBCode(Color color){
@@ -148,6 +150,7 @@ public class ContainerView extends TranslatedView {
         model.nameProperty().bindBidirectional(nameField.textProperty());
         model.shortCutProperty().bindBidirectional(shortCutField.textProperty());
         model.iconProperty().bindBidirectional(pathField.textProperty());
+        model.colorProperty().bindBidirectional(colorPickerField.textProperty());
 
         pathField.textProperty().addListener((observable, oldValue, newValue) -> {
            svgPath.setContent(newValue);
@@ -175,7 +178,7 @@ public class ContainerView extends TranslatedView {
                     edit.setOnAction(event -> {
                         model.setSelectedCategory(categoryTable.getItems().get(getIndex()));
                         Category category = categoryTable.getItems().get(getIndex());
-                        colorPickerField.setValue(Color.web(category.getColor()));
+                        colorPickerField.setText(category.getColor());
                     });
 
 
@@ -213,7 +216,7 @@ public class ContainerView extends TranslatedView {
                         icon.setContent(category.getIcon());
                         icon.setFill(Paint.valueOf(category.getColor()));
 
-                        colorPickerField.setValue(javafx.scene.paint.Color.valueOf(category.getColor()));
+                        colorPickerField.setText(category.getColor());
                     } catch (Exception e){
 //                        getLog().error(e.getMessage());
                     }

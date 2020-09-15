@@ -34,7 +34,7 @@
                         <TextField fx:id="shortCutField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="pathField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label fx:id="colorLabel" GridPane.rowIndex="3" />
-                        <ColorPicker fx:id="colorPickerField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="colorPickerField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label fx:id="previewLabel" layoutX="10.0" layoutY="281.0" prefHeight="16.0" prefWidth="104.0" GridPane.rowIndex="4" />
                         <Pane fx:id="svgDisplayPane" layoutX="119.0" layoutY="267.0" prefHeight="123.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                     </children>

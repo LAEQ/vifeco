@@ -79,14 +79,23 @@ public class ContainerController extends AbstractGriffonController {
 
     private void createCategory() {
         Category category = model.generateEntity();
-        try {
-            categoryDAO.insert(category);
-            model.addCategory(category);
-            model.clear();
+        boolean result = false;
+
+        try{
             iconService.createPNG(category);
-        } catch (DAOException | IOException | TranscoderException e) {
-            getLog().error(e.getMessage());
-            alert(translationService.getMessage("org.laeq.category.save.error") + ": " + category.getName());
+            result = true;
+        } catch (Exception e) {
+            alert(translationService.getMessage("org.laeq.category.icon.error") + ": " + category.getIcon() + " - eg: #FF00FF");
+        }
+
+        if(result){
+            try {
+                categoryDAO.insert(category);
+                model.addCategory(category);
+                model.clear();
+            } catch (DAOException e) {
+                alert(translationService.getMessage("org.laeq.category.save.error") + ": " + category.getName());
+            }
         }
     }
 

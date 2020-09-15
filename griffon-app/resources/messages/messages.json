@@ -574,6 +574,13 @@
         }
     },
     {
+        "org.laeq.category.icon.error": {
+            "en-CA": "Cannot create icon. Invalid path",
+            "es-ES": "Cannot create icon. Invalid path",
+            "fr-CA": "Cannot create icon. Invalid path"
+        }
+    },
+    {
         "org.laeq.category.delete.error": {
             "en-CA": "Cannot delete the category",
             "es-ES": "No se puede eliminar la categoría",
@@ -704,6 +711,13 @@
             "en-CA": "Collection",
             "es-ES": "Collection",
             "fr-CA": "Collection"
+        }
+    },
+    {
+        "org.laeq.category.column.color": {
+            "en-CA": "Color",
+            "es-ES": "Color",
+            "fr-CA": "Couleur"
         }
     },
     {

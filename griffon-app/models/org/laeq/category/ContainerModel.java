@@ -146,6 +146,8 @@ public class ContainerModel extends AbstractGriffonModel implements CRUDModelInt
         category.setColor(getColor());
         category.setShortcut(getShortCut());
 
+        System.out.println(getColor());
+
         if(this.selectedCategory != null){
             category.setId(this.selectedCategory.getId());
         }
