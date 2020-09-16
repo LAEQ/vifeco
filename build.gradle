@@ -67,15 +67,12 @@ jfx {
     vendor            = project.name
 }
 
-
 dependencies {
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
-    compile 'org.kordamp.bootstrapfx:bootstrapfx-core:0.2.4'
     compile 'eu.lestard:advanced-bindings:0.4.0'
     compile 'de.jensd:fontawesomefx:8.9'
     compile 'com.abercap:mediainfo-java-api:1.0.0.RELEASE'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
     compile group: 'org.apache.xmlgraphics', name: 'batik-util', version: '1.11'
@@ -85,7 +82,6 @@ dependencies {
 
     implementation 'com.atlassian.commonmark:commonmark:0.12.1'
     compile 'org.projectlombok:lombok:1.18.4'
-    compile 'org.apache.httpcomponents:httpclient:4.5.6'
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
@@ -93,7 +89,6 @@ dependencies {
     testCompile "org.spockframework:spock-core:${spockVersion}"
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }
-
 
 task sourceJar(type: Jar) {
     group 'Build'
@@ -110,7 +105,6 @@ tasks.withType(JavaCompile) {
     run{
         jvmArgs '-Dprism.vsync=false'
     }
-
 }
 
 tasks.withType(GroovyCompile) {
