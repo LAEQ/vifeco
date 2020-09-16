@@ -15,7 +15,7 @@ class AbstractDAOTest extends Specification {
     def setup(){
         def randomId = UUID.randomUUID().toString()
         dbName = String.format("%s/%s-%s", "/tmp", "vifecodb-test", randomId)
-        def dbUrl = String.format("jdbc:sqlite:%s", dbName);
+        def dbUrl = String.format("jdbc:sqlite:%s", dbName)
         DatabaseConfigInterface configBean = new DatabaseConfigBean(dbUrl, "", "")
         manager = new DatabaseManager(configBean)
         def sqlArray = ["sql/create_tables.sql"] as String[]

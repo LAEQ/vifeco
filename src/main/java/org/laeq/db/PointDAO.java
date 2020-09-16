@@ -52,6 +52,8 @@ public class PointDAO extends AbstractDAO implements DAOInterface<Point> {
     public Set<Point> findAll() {
         SortedSet<Point> result = new TreeSet<>();
 
+        String query = "SELECT * FROM POINT";
+
         return result;
     }
 

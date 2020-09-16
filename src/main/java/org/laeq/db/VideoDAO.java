@@ -11,13 +11,11 @@ import java.util.List;
 
 public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
     private CollectionDAO collectionDAO;
-    private UserDAO userDAO;
     private String insertQuery = "INSERT INTO VIDEO (PATH, DURATION, USER_ID, COLLECTION_ID) VALUES (?, ?, ?, ?);";
 
-    public VideoDAO(@Nonnull DatabaseManager manager, CollectionDAO collectionDAO, UserDAO userDAO) {
+    public VideoDAO(@Nonnull DatabaseManager manager, CollectionDAO collectionDAO) {
         super(manager);
         this.collectionDAO = collectionDAO;
-        this.userDAO = userDAO;
     }
 
     @Override
@@ -121,10 +119,6 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
 
         if(result !=1)
             throw new DAOException("Error deleting a video");
-    }
-
-    public void editVideo(Video video) {
-
     }
 
     public void updateDuration(Video video) throws SQLException, DAOException {

@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 buildscript {
     repositories {
         jcenter()
@@ -112,26 +114,29 @@ tasks.withType(GroovyCompile) {
     targetCompatibility = project.targetCompatibility
 }
 
-
-import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
-import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
-
-import java.text.SimpleDateFormat
-
-shadowJar {
-    transform(ServiceFileTransformer)
-    transform(ServiceFileTransformer) {
-        path = 'META-INF/griffon'
-    }
-    transform(ServiceFileTransformer) {
-        path = 'META-INF/types'
-    }
-    transform(PropertiesFileTransformer) {
-        paths = [
-            'META-INF/editors/java.beans.PropertyEditor'
-        ]
-    }
+task griffon{
+    print "ICI"
 }
+
+//import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
+//import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
+//
+//import java.text.SimpleDateFormat
+//
+//shadowJar {
+//    transform(ServiceFileTransformer)
+//    transform(ServiceFileTransformer) {
+//        path = 'META-INF/griffon'
+//    }
+//    transform(ServiceFileTransformer) {
+//        path = 'META-INF/types'
+//    }
+//    transform(PropertiesFileTransformer) {
+//        paths = [
+//            'META-INF/editors/java.beans.PropertyEditor'
+//        ]
+//    }
+//}
 
 startScripts {
     doLast {
@@ -146,22 +151,22 @@ if (hasProperty('debugRun') && ((project.debugRun as boolean))) {
     }
 }
 
-task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge, dependsOn: [test, jacocoTestReport, jacocoIntegrationTestReport, jacocoFunctionalTestReport]) {
-    executionData = files(jacocoTestReport.executionData, jacocoIntegrationTestReport.executionData, jacocoFunctionalTestReport.executionData)
-    destinationFile = file("${buildDir}/jacoco/root.exec")
-}
-
-task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
-    group = 'Reporting'
-    description = 'Generate Jacoco coverage reports after running all tests.'
-    executionData file("${buildDir}/jacoco/root.exec")
-    sourceDirectories = files(sourceSets.main.allSource.srcDirs)    
-    classDirectories = files(sourceSets.main.output)
-    reports {
-        csv.enabled = false
-        xml.enabled = true
-        html.enabled = true
-        html.destination = file("${buildDir}/reports/jacoco/root/html")
-        xml.destination = file("${buildDir}/reports/jacoco/root/root.xml")
-    }
-}
+//task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge, dependsOn: [test, jacocoTestReport, jacocoIntegrationTestReport, jacocoFunctionalTestReport]) {
+//    executionData = files(jacocoTestReport.executionData, jacocoIntegrationTestReport.executionData, jacocoFunctionalTestReport.executionData)
+//    destinationFile = file("${buildDir}/jacoco/root.exec")
+//}
+//
+//task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
+//    group = 'Reporting'
+//    description = 'Generate Jacoco coverage reports after running all tests.'
+//    executionData file("${buildDir}/jacoco/root.exec")
+//    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+//    classDirectories = files(sourceSets.main.output)
+//    reports {
+//        csv.enabled = false
+//        xml.enabled = true
+//        html.enabled = true
+//        html.destination = file("${buildDir}/reports/jacoco/root/html")
+//        xml.destination = file("${buildDir}/reports/jacoco/root/root.xml")
+//    }
+//}

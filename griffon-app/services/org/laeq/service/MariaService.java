@@ -110,7 +110,7 @@ public class MariaService extends AbstractGriffonService {
     }
 
     public VideoDAO getVideoDAO(){
-        return new VideoDAO(manager, new CollectionDAO(manager), new UserDAO(manager));
+        return new VideoDAO(manager, new CollectionDAO(manager));
     }
 
     public CategoryDAO getCategoryDAO(){

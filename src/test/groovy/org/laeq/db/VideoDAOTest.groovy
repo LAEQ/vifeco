@@ -13,7 +13,7 @@ class VideoDAOTest extends AbstractDAOTest {
     def setup() {
         userDAO = new UserDAO(manager)
         collectionDAO = new CollectionDAO(manager)
-        repository = new VideoDAO(manager, collectionDAO, userDAO)
+        repository = new VideoDAO(manager, collectionDAO)
         def result = false
 
         try{

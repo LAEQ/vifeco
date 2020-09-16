@@ -123,7 +123,7 @@ class CollectionDAOTest extends AbstractDAOTest {
         repository.insert(entity)
 
         then:
-        notThrown DAOException
+        thrown DAOException
     }
 
     def "test findById"() {

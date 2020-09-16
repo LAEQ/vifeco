@@ -2,14 +2,19 @@ package org.laeq.db
 
 import javafx.util.Duration
 import org.laeq.model.*
+import spock.lang.Ignore
 
 class PointDAOTest extends AbstractDAOTest {
     PointDAO repository
+    UserDAO userDAO
+    VideoDAO videoDAO
     Collection collection
     User user
 
     def setup() {
         repository = new PointDAO(manager)
+        userDAO = new UserDAO(manager)
+        videoDAO = new VideoDAO(manager, new CollectionDAO(manager))
         collection = new Collection(1, "mock", false)
         user = new User(1, "test", "test", "test")
     }
@@ -240,6 +245,29 @@ class PointDAOTest extends AbstractDAOTest {
         result == 4
         points.size() == 4
         points.collect { it.category.id }.sort() == [2,2,3,3]
+    }
 
+    @Ignore
+    def "test cascade"() {
+        setup:
+        try{
+            manager.loadFixtures("sql/test_fixtures.sql")
+        } catch (Exception e){
+            println e
+        }
+
+        when:
+        User user1 = userDAO.findById(2)
+
+        userDAO.delete(user1)
+
+        def users = userDAO.findAll()
+        def videos = videoDAO.findAll()
+        def total = repository.count()
+
+        then:
+        users.size() == 3
+        videos.size() == 3
+        total == 8
     }
 }

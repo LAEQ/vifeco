@@ -3,6 +3,7 @@ package org.laeq.db;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sqlite.SQLiteConfig;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -24,7 +25,10 @@ public class DatabaseManager {
 
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(this.config.getUrl(), this.config.getUser(), this.config.getPassword());
+        SQLiteConfig config = new SQLiteConfig();
+        config.enforceForeignKeys(true);
+
+        return DriverManager.getConnection(this.config.getUrl(), config.toProperties());
     }
 
     public boolean loadFixtures(String fixtures){

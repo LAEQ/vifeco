@@ -14,7 +14,7 @@ class ImportServiceTest extends AbstractDAOTest {
 
 
     def setup(){
-        videoDAO = new VideoDAO(manager, collectionDAO, userDAO)
+        videoDAO = new VideoDAO(manager, collectionDAO)
         pointDAO = new PointDAO(manager)
         service = new ImportService(videoDAO, pointDAO)
     }
@@ -87,6 +87,6 @@ class ImportServiceTest extends AbstractDAOTest {
         SortedSet<Point> points = pointDAO.findByVideo(expected)
 
         then:
-        notThrown DAOException
+        thrown DAOException
     }
 }

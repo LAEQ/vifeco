@@ -56,7 +56,7 @@ public class IconService extends AbstractGriffonService {
         transcoder.addTranscodingHint(PNGTranscoder.KEY_WIDTH, 80f);
         transcoder.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, 80f);
 
-        TranscoderInput input = new TranscoderInput(buildDocument(category, 40,2.2, category.getColor(), "white"));
+        TranscoderInput input = new TranscoderInput(buildDocument(category, 40,2.2, category.getColor(), "#FFFFFF"));
         String exportPath = getImagePath(category, "_off");
         File newFile = new File(exportPath);
         OutputStream ostream = new FileOutputStream(newFile);
@@ -65,7 +65,7 @@ public class IconService extends AbstractGriffonService {
         ostream.flush();
         ostream.close();
 
-        input = new TranscoderInput(buildDocument(category, 40,2.2, "white", category.getColor()));
+        input = new TranscoderInput(buildDocument(category, 40,2.2, "#FFFFFF", category.getColor()));
         exportPath = getImagePath(category, "_on");
         newFile = new File(exportPath);
         ostream = new FileOutputStream(newFile);
@@ -78,7 +78,7 @@ public class IconService extends AbstractGriffonService {
         transcoder.addTranscodingHint(PNGTranscoder.KEY_WIDTH, 20f);
         transcoder.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, 20f);
 
-        input = new TranscoderInput(buildDocument(category, 10, category.getColor(), "white"));
+        input = new TranscoderInput(buildDocument(category, 10, category.getColor(), "#FFFFFF"));
         exportPath = getImagePath(category, "_small_off");
         newFile = new File(exportPath);
         ostream = new FileOutputStream(newFile);
@@ -87,7 +87,7 @@ public class IconService extends AbstractGriffonService {
         ostream.flush();
         ostream.close();
 
-        input = new TranscoderInput(buildDocument(category, 10, "white", category.getColor()));
+        input = new TranscoderInput(buildDocument(category, 10, "#FFFFFF", category.getColor()));
         exportPath = getImagePath(category, "_small_on");
         newFile = new File(exportPath);
         ostream = new FileOutputStream(newFile);
@@ -154,7 +154,7 @@ public class IconService extends AbstractGriffonService {
 
         element.setAttribute("style", "fill:" + color1 + ";");
         element.setAttribute("transform", "translate(11 , 11) scale( " + scale + " , " + scale + " )");
-        svgRoot.appendChild(circle(doc ,width, width, width, color2 ));
+        svgRoot.appendChild(circle(doc ,width, width, width, color2));
         svgRoot.appendChild(element);
 
         return doc;
