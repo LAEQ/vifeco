@@ -84,7 +84,7 @@ public class ContainerModel extends AbstractGriffonModel implements CRUDModelInt
 
         this.selectedCollection = collection;
         setName(collection.getName());
-        setIsDefault(collection.isIsDefault());
+//        setIsDefault(collection.isIsDefault());
         collection.getCategorySet().forEach(category -> categorySBP.get(category).setValue(true));
     }
 
@@ -135,7 +135,7 @@ public class ContainerModel extends AbstractGriffonModel implements CRUDModelInt
         Collection collection = new Collection();
         collection.setCategorySet(this.categorySBP.entrySet().stream().filter(x -> x.getValue().getValue()).map(map -> map.getKey()).collect(Collectors.toSet()));
         collection.setName(getName());
-        collection.setIsDefault(isIsDefault());
+//        collection.setIsDefault(isIsDefault());
 
         if(this.selectedCollection != null) {
             collection.setId(this.selectedCollection.getId());
@@ -147,7 +147,7 @@ public class ContainerModel extends AbstractGriffonModel implements CRUDModelInt
     public void update(Collection collection) {
         if(this.selectedCollection != null){
             this.selectedCollection.setName(collection.getName());
-            this.selectedCollection.setIsDefault(collection.isIsDefault());
+//            this.selectedCollection.setIsDefault(collection.isIsDefault());
             this.selectedCollection.getCategorySet().clear();
             this.selectedCollection.getCategorySet().addAll(collection.getCategorySet());
         } else {
@@ -155,11 +155,6 @@ public class ContainerModel extends AbstractGriffonModel implements CRUDModelInt
         }
 
 
-        if(this.selectedCollection.getProut()){
-            this.selectedCollection.setProut(false);
-        } else {
-            this.selectedCollection.setProut(true);
-        }
 
         clearForm();
     }

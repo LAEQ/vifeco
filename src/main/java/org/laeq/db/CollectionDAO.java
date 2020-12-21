@@ -72,7 +72,7 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
             while(result.next()){
                 collection.setId(result.getInt(1));
                 collection.setName(result.getString(2));
-                collection.setIsDefault(result.getBoolean(3));
+//                collection.setIsDefault(result.getBoolean(3));
 
                 Category category = new Category();
                 category.setId(result.getInt(5));
@@ -113,59 +113,59 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
 
     public void update(Collection collection) throws DAOException {
 
-        String query = "UPDATE COLLECTION SET NAME=? WHERE ID=?";
+//        String query = "UPDATE COLLECTION SET NAME=? WHERE ID=?";
+//
+//        int result = 0;
+//
+//        try(Connection connection = getManager().getConnection();
+//            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
+//        {
+//            statement.setInt(2, collection.getId());
+//            statement.setString(1, collection.getName());
+//
+//            if(statement.executeUpdate() != 1)
+//                throw new DAOException("Cannot updateTranslation category collection name");
+//
+//
+//            //Bug hsqldb no support Array type
+//            StringBuilder builder = new StringBuilder();
+//            collection.getCategorySet().forEach(integer -> builder.append("?,"));
 
-        int result = 0;
-
-        try(Connection connection = getManager().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
-        {
-            statement.setInt(2, collection.getId());
-            statement.setString(1, collection.getName());
-
-            if(statement.executeUpdate() != 1)
-                throw new DAOException("Cannot updateTranslation category collection name");
-
-
-            //Bug hsqldb no support Array type
-            StringBuilder builder = new StringBuilder();
-            collection.getCategorySet().forEach(integer -> builder.append("?,"));
-
-            String deleteQuery = String.format("DELETE  FROM CATEGORY_COLLECTION WHERE COLLECTION_ID = ? " +
-                    "AND CATEGORY_ID NOT IN (%s) ;", builder.deleteCharAt(builder.lastIndexOf(",")).toString());
-
-            PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
-
-            deleteStatement.setInt(1, collection.getId());
-
-
-            ListIterator<Integer> it = collection.getCategoryIds().listIterator();
-            while(it.hasNext()){
-                deleteStatement.setInt(it.nextIndex() + 2, it.next());
-            }
-
-            deleteStatement.executeUpdate();
+//            String deleteQuery = String.format("DELETE  FROM CATEGORY_COLLECTION WHERE COLLECTION_ID = ? " +
+//                    "AND CATEGORY_ID NOT IN (%s) ;", builder.deleteCharAt(builder.lastIndexOf(",")).toString());
+//
+//            PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
+//
+//            deleteStatement.setInt(1, collection.getId());
 
 
-            List<Category> newCategories = collection.getNewCategories(findCollectionIdsById(collection));
+//            ListIterator<Integer> it = collection.getCategoryIds().listIterator();
+//            while(it.hasNext()){
+//                deleteStatement.setInt(it.nextIndex() + 2, it.next());
+//            }
 
-            if( ! newCategories.isEmpty()){
-                String query2 = "INSERT INTO CATEGORY_COLLECTION(COLLECTION_ID, CATEGORY_ID) VALUES(?, ?)";
-                PreparedStatement statement1 = connection.prepareStatement(query2);
+//            deleteStatement.executeUpdate();
 
-                for (Category category: newCategories) {
-                    statement1.setInt(1, collection.getId());
-                    statement1.setInt(2, category.getId());
 
-                    statement1.addBatch();
-                }
+//            List<Category> newCategories = collection.getNewCategories(findCollectionIdsById(collection));
 
-                statement1.executeBatch();
-            }
-        } catch (Exception e){
-            getLogger().error(e.getMessage());
-            throw new DAOException("Error for updating:" + collection + " - " + e.getMessage());
-        }
+//            if( ! newCategories.isEmpty()){
+//                String query2 = "INSERT INTO CATEGORY_COLLECTION(COLLECTION_ID, CATEGORY_ID) VALUES(?, ?)";
+//                PreparedStatement statement1 = connection.prepareStatement(query2);
+//
+//                for (Category category: newCategories) {
+//                    statement1.setInt(1, collection.getId());
+//                    statement1.setInt(2, category.getId());
+//
+//                    statement1.addBatch();
+//                }
+//
+//                statement1.executeBatch();
+//            }
+//        } catch (Exception e){
+//            getLogger().error(e.getMessage());
+//            throw new DAOException("Error for updating:" + collection + " - " + e.getMessage());
+//        }
     }
 
     public Set<Integer> findCollectionIdsById(Collection collection) throws SQLException {
@@ -197,55 +197,55 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
 
         Set<Collection> result = new HashSet<>();
 
-        String query = "SELECT C.ID as CAT_ID, C.NAME AS CAT_NAME, C.ICON, C.SHORTCUT, CC.ID, CC.NAME, CC.IS_DEFAULT as IS_DEFAULT, C.COLOR AS COLOR FROM COLLECTION as CC" +
-                " LEFT JOIN CATEGORY_COLLECTION as CCC ON CC.ID = CCC.COLLECTION_ID" +
-                " LEFT JOIN CATEGORY as C ON C.ID = CCC.CATEGORY_ID  ORDER BY CC.ID ASC;";
-
-        try(Connection connection = getManager().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);){
-
-
-            ResultSet queryResult = statement.executeQuery();
-
-            int id = 0;
-
-            Collection collection = null;
-
-            while(queryResult.next()){
-                id = queryResult.getInt("ID");
-
-                if(collection != null && collection.getId() == id) {
-                    Category category = new Category();
-                    category.setId(queryResult.getInt("CAT_ID"));
-                    category.setName(queryResult.getString("CAT_NAME"));
-                    category.setIcon(queryResult.getString("ICON"));
-                    category.setColor(queryResult.getString("COLOR"));
-                    category.setShortcut(queryResult.getString("SHORTCUT"));
-                    collection.addCategory(category);
-                } else {
-                    collection = new Collection();
-                    collection.setId(id);
-                    collection.setName(queryResult.getString("NAME"));
-                    collection.setIsDefault(queryResult.getBoolean("IS_DEFAULT"));
-
-                    Category category = new Category();
-                    category.setId(queryResult.getInt("CAT_ID"));
-                    category.setName(queryResult.getString("CAT_NAME"));
-                    category.setIcon(queryResult.getString("ICON"));
-                    category.setColor(queryResult.getString("COLOR"));
-                    category.setShortcut(queryResult.getString("SHORTCUT"));
-
-                    if(category.getName() != null){
-                        collection.addCategory(category);
-                    }
-
-                    result.add(collection);
-                }
-            }
-
-        } catch (SQLException e) {
-            getLogger().error("Error collection findAll() : " + e.getMessage());
-        }
+//        String query = "SELECT C.ID as CAT_ID, C.NAME AS CAT_NAME, C.ICON, C.SHORTCUT, CC.ID, CC.NAME, CC.IS_DEFAULT as IS_DEFAULT, C.COLOR AS COLOR FROM COLLECTION as CC" +
+//                " LEFT JOIN CATEGORY_COLLECTION as CCC ON CC.ID = CCC.COLLECTION_ID" +
+//                " LEFT JOIN CATEGORY as C ON C.ID = CCC.CATEGORY_ID  ORDER BY CC.ID ASC;";
+//
+//        try(Connection connection = getManager().getConnection();
+//            PreparedStatement statement = connection.prepareStatement(query);){
+//
+//
+//            ResultSet queryResult = statement.executeQuery();
+//
+//            int id = 0;
+//
+//            Collection collection = null;
+//
+//            while(queryResult.next()){
+//                id = queryResult.getInt("ID");
+//
+//                if(collection != null && collection.getId() == id) {
+//                    Category category = new Category();
+//                    category.setId(queryResult.getInt("CAT_ID"));
+//                    category.setName(queryResult.getString("CAT_NAME"));
+//                    category.setIcon(queryResult.getString("ICON"));
+//                    category.setColor(queryResult.getString("COLOR"));
+//                    category.setShortcut(queryResult.getString("SHORTCUT"));
+//                    collection.addCategory(category);
+//                } else {
+//                    collection = new Collection();
+//                    collection.setId(id);
+//                    collection.setName(queryResult.getString("NAME"));
+//                    collection.setIsDefault(queryResult.getBoolean("IS_DEFAULT"));
+//
+//                    Category category = new Category();
+//                    category.setId(queryResult.getInt("CAT_ID"));
+//                    category.setName(queryResult.getString("CAT_NAME"));
+//                    category.setIcon(queryResult.getString("ICON"));
+//                    category.setColor(queryResult.getString("COLOR"));
+//                    category.setShortcut(queryResult.getString("SHORTCUT"));
+//
+//                    if(category.getName() != null){
+//                        collection.addCategory(category);
+//                    }
+//
+//                    result.add(collection);
+//                }
+//            }
+//
+//        } catch (SQLException e) {
+//            getLogger().error("Error collection findAll() : " + e.getMessage());
+//        }
 
         return result;
     }
@@ -269,19 +269,19 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
     private Collection getCategoryResult(ResultSet datas) throws SQLException {
         Collection collection = new Collection();
 
-        while(datas.next()){
-            collection.setId(datas.getInt("ID"));
-            collection.setName(datas.getString("NAME"));
-            collection.setIsDefault(datas.getBoolean("IS_DEFAULT"));
-
-            Category category = new Category();
-            category.setId(datas.getInt("CAT_ID"));
-            category.setName(datas.getString("CAT_NAME"));
-            category.setIcon(datas.getString("ICON"));
-            category.setShortcut(datas.getString("SHORTCUT"));
-
-            collection.addCategory(category);
-        }
+//        while(datas.next()){
+//            collection.setId(datas.getInt("ID"));
+//            collection.setName(datas.getString("NAME"));
+//            collection.setIsDefault(datas.getBoolean("IS_DEFAULT"));
+//
+//            Category category = new Category();
+//            category.setId(datas.getInt("CAT_ID"));
+//            category.setName(datas.getString("CAT_NAME"));
+//            category.setIcon(datas.getString("ICON"));
+//            category.setShortcut(datas.getString("SHORTCUT"));
+//
+//            collection.addCategory(category);
+//        }
 
         return collection;
     }

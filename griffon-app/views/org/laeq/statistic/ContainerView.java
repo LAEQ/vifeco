@@ -71,10 +71,10 @@ public class ContainerView extends TranslatedView {
 
         videoTable.getColumns().addAll(idColumn, pathColumn, collectionColumn, importColumn);
 
-        idColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(()-> new Integer(param.getValue().getId())));
-        pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        collectionColumn.setCellValueFactory(cellData -> cellData.getValue().getCollection().nameProperty());
-        importColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(() -> getTotalImports(param.getValue())));
+//        idColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(()-> new Integer(param.getValue().getId())));
+//        pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+//        collectionColumn.setCellValueFactory(cellData -> cellData.getValue().getCollection().nameProperty());
+//        importColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(() -> getTotalImports(param.getValue())));
 
         columnsMap.put(pathColumn, "org.laeq.statistic.column.name");
         columnsMap.put(collectionColumn, "org.laeq.statistic.column.collection");

@@ -118,7 +118,7 @@ public class ContainerModel extends AbstractGriffonModel {
         user.setId(getId());
         user.setFirstName(getFirstName());
         user.setLastName(getLastName());
-        user.setIsDefault(false);
+//        user.setIsDefault(false);
         user.setEmail(getEmail());
 
         return user;

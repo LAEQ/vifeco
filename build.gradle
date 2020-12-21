@@ -4,6 +4,7 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url 'https://jitpack.io' }
         mavenLocal()
     }
 
@@ -80,6 +81,10 @@ dependencies {
     compile group: 'org.apache.xmlgraphics', name: 'batik-util', version: '1.11'
     compile group: 'org.apache.xmlgraphics', name: 'batik-transcoder', version: '1.11'
     compile group: 'org.apache.xmlgraphics', name: 'batik-codec', version: '1.9'
+    compile group: 'org.hibernate', name: 'hibernate-core', version:'5.4.25.Final'
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
+
+    compile group: 'com.github.gwenn', name: 'sqlite-dialect', version: '0.1.0'
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.32.3.2'
 
     implementation 'com.atlassian.commonmark:commonmark:0.12.1'

@@ -1,19 +1,33 @@
 package org.laeq.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.sun.istack.NotNull;
 
+
+import javax.persistence.*;
 import java.util.Objects;
 
+
+@Entity()
+@Table(name="category")
 @JsonIgnoreProperties({"createdAt", "updatedAt" })
 public class Category extends BaseEntity {
+    @Id @GeneratedValue(generator = "increment")
     private int id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String icon;
+
+    @Column(nullable = false)
     private String color;
+
+    @Column(nullable = false, unique = true)
     private String shortcut;
 
     public Category() {
-
     }
 
     public Category(int id){
@@ -73,16 +87,19 @@ public class Category extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return id == category.id;
+        return id == category.id && name.equals(category.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name);
     }
 
     @Override
     public String toString() {
-        return "Cat_" + id ;
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

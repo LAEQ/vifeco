@@ -126,11 +126,11 @@ public class UserDAO extends AbstractDAO implements DAOInterface<User> {
 
     private User generateUser(ResultSet datas) throws SQLException {
         User user = new User();
-        user.setId(datas.getInt("ID"));
-        user.setFirstName(datas.getString("FIRST_NAME"));
-        user.setLastName(datas.getString("LAST_NAME"));
-        user.setEmail(datas.getString("EMAIL"));
-        user.setIsDefault(datas.getBoolean("IS_DEFAULT"));
+//        user.setId(datas.getInt("ID"));
+//        user.setFirstName(datas.getString("FIRST_NAME"));
+//        user.setLastName(datas.getString("LAST_NAME"));
+//        user.setEmail(datas.getString("EMAIL"));
+//        user.setIsDefault(datas.getBoolean("IS_DEFAULT"));
 //        user.setCreatedAt(datas.getTimestamp("CREATED_AT"));
 //        user.setUpdatedAt(datas.getTimestamp("UPDATED_AT"));
 

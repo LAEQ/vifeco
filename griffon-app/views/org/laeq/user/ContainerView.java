@@ -76,11 +76,11 @@ public class ContainerView extends TranslatedView {
 
         userTable.getColumns().addAll(idColumn, firstNameColumn, lastNameColumn, emailColumn, defaultColumn, actionsColumn);
 
-        idColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> String.valueOf(cellData.getValue().getId())));
-        firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
-        lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
-        emailColumn.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
-        defaultColumn.setCellValueFactory(cellData -> cellData.getValue().getIsDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
+//        idColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> String.valueOf(cellData.getValue().getId())));
+//        firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+//        lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+//        emailColumn.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
+//        defaultColumn.setCellValueFactory(cellData -> cellData.getValue().getIsDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
 
         actionsColumn.setCellFactory(addActions());
 

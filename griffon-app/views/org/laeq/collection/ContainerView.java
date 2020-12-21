@@ -75,13 +75,13 @@ public class ContainerView extends TranslatedView {
         columnsMap.put(isDefaultColumn, "org.laeq.collection.column.is_default");
         columnsMap.put(categoryListColumn, "org.laeq.collection.column.categories");
         columnsMap.put(actionColumn, "org.laeq.collection.column.actions");
-
-        idColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> String.valueOf(cellData.getValue().getId())));
-        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        isDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().isIsDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
-        actionColumn.setCellFactory(addActions());
-        categoryListColumn.setCellValueFactory(new PropertyValueFactory<Collection, Boolean>("prout"));
-        categoryListColumn.setCellFactory(iconAction());
+//
+//        idColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> String.valueOf(cellData.getValue().getId())));
+//        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+//        isDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().isIsDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
+//        actionColumn.setCellFactory(addActions());
+//        categoryListColumn.setCellValueFactory(new PropertyValueFactory<Collection, Boolean>("prout"));
+//        categoryListColumn.setCellFactory(iconAction());
 
         collectionTable.getColumns().addAll(idColumn, nameColumn, categoryListColumn, isDefaultColumn, actionColumn);
         collectionTable.setItems(this.model.getCollections());
