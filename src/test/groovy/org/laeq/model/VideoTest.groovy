@@ -14,7 +14,7 @@ class VideoTest extends Specification {
         categoryCollection.addCategory(category1)
         categoryCollection.addCategory(category2)
 
-        Video video = new Video(1, "path/to/video.mp4", Duration.millis(10000), user, categoryCollection)
+        Point video = new Point(1, "path/to/video.mp4", Duration.millis(10000), user, categoryCollection)
 
         Point point1 = new Point(1, 10, 11, Duration.millis(1000),  video, category1)
         Point point2 = new Point(2, 11, 10, Duration.millis(2000),  video, category2)
@@ -37,7 +37,7 @@ class VideoTest extends Specification {
         ObjectMapper mapper = new ObjectMapper()
 
         when:
-        Video result = mapper.readValue(json, Video.class)
+        Point result = mapper.readValue(json, Point.class)
 
         then:
         result.path == '/path/export/exported_video.wav'

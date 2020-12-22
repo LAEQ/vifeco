@@ -29,7 +29,7 @@ class PointDAOTest extends AbstractDAOTest {
 
         User user = new User(1, 'luck', 'skywalker', 'luke@maytheforcebewithyou.com')
         Category category = new Category(1,  'Moving truck', 'icons/icon1.png', '#00000000','A')
-        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), user, collection)
+        Point video = new Point(1, 'path/to/video1.mp4', Duration.millis(12345.00), user, collection)
 
 
         Point point = new Point(12.0, 12.0, Duration.seconds(1200), video, category)
@@ -81,7 +81,7 @@ class PointDAOTest extends AbstractDAOTest {
         }
         Point point = new Point()
         Category category = new Category(1, 'test', 'test' ,'test', 'a')
-        Video video = new Video(1, 'test', Duration.millis(1000), new User(), new Collection());
+        Point video = new Point(1, 'test', Duration.millis(1000), new User(), new Collection());
 
         point.setCategory(category)
         point.setVideo(video)
@@ -103,7 +103,7 @@ class PointDAOTest extends AbstractDAOTest {
         }
         Point point = new Point()
         Category category = new Category(1, 'test', 'test' ,'test', 'a')
-        Video video = new Video(1, 'test', Duration.millis(1000), new User(), new Collection());
+        Point video = new Point(1, 'test', Duration.millis(1000), new User(), new Collection());
 
         point.setCategory(category)
         point.setVideo(video)
@@ -125,7 +125,7 @@ class PointDAOTest extends AbstractDAOTest {
         }
         Point point = new Point()
         Category category = new Category(1, 'test', 'test' ,'test', 'a')
-        Video video = new Video(1, 'test', Duration.millis(1000), new User(), new Collection());
+        Point video = new Point(1, 'test', Duration.millis(1000), new User(), new Collection());
 
         point.setCategory(category)
         point.setVideo(video)
@@ -147,7 +147,7 @@ class PointDAOTest extends AbstractDAOTest {
         }
         Point point = new Point()
         Category category = new Category(1, 'test', 'test' ,'test', 'a')
-        Video video = new Video(1, 'test', Duration.millis(1000), new User(), new Collection());
+        Point video = new Point(1, 'test', Duration.millis(1000), new User(), new Collection());
 
         point.setCategory(category)
         point.setVideo(video)
@@ -169,7 +169,7 @@ class PointDAOTest extends AbstractDAOTest {
         }
 
         def user = new User(1, "mock", "mock", "mock@email.mock")
-        Video video = new Video(2, "/path/to/video.mp4", Duration.millis(60000), user, collection)
+        Point video = new Point(2, "/path/to/video.mp4", Duration.millis(60000), user, collection)
 
         when:
         def result = repository.findByVideo(video)
@@ -190,7 +190,7 @@ class PointDAOTest extends AbstractDAOTest {
 
         User user = new User(1, 'luck', 'skywalker', 'luke@maytheforcebewithyou.com')
         Category category = new Category(1,  'Moving truck', 'icons/icon1.png', '#FFFFFFFF','A')
-        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), user, collection)
+        Point video = new Point(1, 'path/to/video1.mp4', Duration.millis(12345.00), user, collection)
 
         Point point = new Point(1, 12.0, 12.0, Duration.seconds(1200), video, category)
 
@@ -213,7 +213,7 @@ class PointDAOTest extends AbstractDAOTest {
 
         User user = new User(1, 'luck', 'skywalker', 'luke@maytheforcebewithyou.com')
         Category category = new Category(1,  'Moving truck', 'icons/icon1.png', '#FFFFFFFF','A')
-        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), user, collection)
+        Point video = new Point(1, 'path/to/video1.mp4', Duration.millis(12345.00), user, collection)
 
 
         Point point = new Point(-1, 12.0, 12.0, Duration.seconds(1200), video, category)
@@ -234,7 +234,7 @@ class PointDAOTest extends AbstractDAOTest {
         }
 
         when:
-        Video video = new Video(1, 'path/to/video1.mp4', Duration.millis(12345.00), user, collection)
+        Point video = new Point(1, 'path/to/video1.mp4', Duration.millis(12345.00), user, collection)
         collection = new Collection(2, "mock", false)
         video.setCollection(collection)
 

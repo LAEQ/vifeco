@@ -11,7 +11,7 @@ class PointTest extends Specification {
         setup:
         User user = new User(1, "test", "test", "test")
         Collection categoryCollection = new Collection()
-        Video video = new Video(1, "test", Duration.millis(1000), user, categoryCollection)
+        Point video = new Point(1, "test", Duration.millis(1000), user, categoryCollection)
         Category category = new Category(1, "test", "test", "test" ,"A")
         Point point = new Point(1, 10,10, Duration.millis(10000), video, category)
 

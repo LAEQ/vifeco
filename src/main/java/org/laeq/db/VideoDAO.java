@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
     private CollectionDAO collectionDAO;
     private String insertQuery = "INSERT INTO VIDEO (PATH, DURATION, USER_ID, COLLECTION_ID) VALUES (?, ?, ?, ?);";
@@ -34,9 +35,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
 
             ResultSet keys = statement.getGeneratedKeys();
 
-            if(keys.next()){
-                video.setId(keys.getInt(1));
-            }
+
         } catch (Exception e){
             String message = String.format("VideoDAO: insert - %s - $s", video, e.getMessage());
             getLogger().error(message);
@@ -87,17 +86,9 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
     private Video generateVideo(ResultSet datas) throws SQLException, DAOException {
         Video video = new Video();
 
-        video.setId(datas.getInt("VIDEO_ID"));
-        video.setPath(datas.getString("PATH"));
-        video.setDuration((datas.getDouble("DURATION")));
-        video.setTotal(datas.getInt("TOTAL_POINT"));
 
-        User user = ResultHelper.generateUser(datas);
-        video.setUser(user);
 
-        Collection collection = ResultHelper.generateCategoryCollection(datas);
 
-        video.setCollection(collection);
 
         return video;
     }
@@ -111,7 +102,7 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
         try(Connection connection = getManager().getConnection();
             PreparedStatement statement = connection.prepareStatement(query);)
         {
-            statement.setInt(1, video.getId());
+
             result = statement.executeUpdate();
         } catch (Exception e){
             getLogger().error(e.getMessage());
@@ -122,73 +113,20 @@ public class VideoDAO extends AbstractDAO implements DAOInterface<Video>{
     }
 
     public void updateDuration(Video video) throws SQLException, DAOException {
-        try(Connection connection = getManager().getConnection())
-        {
-            String query = "UPDATE VIDEO SET DURATION=?  WHERE ID = ?;";
-            PreparedStatement stmt = connection.prepareStatement(query);
 
-            stmt.setDouble(1, video.getDuration());
-            stmt.setInt(2, video.getId());
-
-            int result = stmt.executeUpdate();
-
-            if(result != 1){
-                throw new DAOException("UserDAO: cannot updateTranslation.");
-            }
-        }
 
     }
 
     public void update(Video video) throws SQLException, DAOException {
-        try(Connection connection = getManager().getConnection())
-        {
-            String query = "UPDATE VIDEO SET USER_ID=?, COLLECTION_ID=? WHERE ID = ?;";
-            PreparedStatement stmt = connection.prepareStatement(query);
 
-            stmt.setInt(1, video.getUser().getId());
-            stmt.setInt(2, video.getCollection().getId());
-            stmt.setInt(3, video.getId());
-
-            int result = stmt.executeUpdate();
-
-            if(result != 1){
-                throw new DAOException("UserDAO: cannot updateTranslation.");
-            }
-        }
 
     }
 
     public void updateUser(Video video, User user) throws SQLException, DAOException {
-        try(Connection connection = getManager().getConnection())
-        {
-            String query = "UPDATE VIDEO SET USER_ID=? WHERE ID = ?;";
-            PreparedStatement stmt = connection.prepareStatement(query);
 
-            stmt.setInt(1, user.getId());
-            stmt.setInt(2, video.getId());
-
-            int result = stmt.executeUpdate();
-
-            if(result != 1){
-                throw new DAOException("VideoDAO: cannot updateTranslation. USER_ID");
-            }
-        }
     }
 
     public void updateCollection(Video video, Collection collection) throws SQLException, DAOException {
-        try(Connection connection = getManager().getConnection())
-        {
-            String query = "UPDATE VIDEO SET COLLECTION_ID=? WHERE ID = ?;";
-            PreparedStatement stmt = connection.prepareStatement(query);
 
-            stmt.setInt(1, collection.getId());
-            stmt.setInt(2, video.getId());
-
-            int result = stmt.executeUpdate();
-
-            if(result != 1){
-                throw new DAOException("VideoDAO: cannot updateTranslation COLLECTION_ID");
-            }
-        }
     }
 }

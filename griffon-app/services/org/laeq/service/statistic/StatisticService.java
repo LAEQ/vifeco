@@ -58,25 +58,25 @@ public class StatisticService extends AbstractGriffonService {
     }
 
     public void init() throws StatisticException {
-        if(! this.video1.getCollection().equals(this.video2.getCollection())){
-            throw new StatisticException("Videos must have the same collection");
-        }
-
-        if(this.step == null){
-            throw new StatisticException("You must set the duration step tolerance to match 2 points together");
-        }
-
-        video1.getCollection().getCategorySet().forEach(category -> {
-            video1CategoryMap.put(category, new HashSet<>());
-            video2CategoryMap.put(category, new HashSet<>());
-        });
-
-        video1.getPointSet().stream().forEach(point -> {
-            video1CategoryMap.get(point.getCategory()).add(point);
-        });
-        video2.getPointSet().stream().forEach(point -> {
-            video2CategoryMap.get(point.getCategory()).add(point);
-        });
+//        if(! this.video1.getCollection().equals(this.video2.getCollection())){
+//            throw new StatisticException("Videos must have the same collection");
+//        }
+//
+//        if(this.step == null){
+//            throw new StatisticException("You must set the duration step tolerance to match 2 points together");
+//        }
+//
+//        video1.getCollection().getCategorySet().forEach(category -> {
+//            video1CategoryMap.put(category, new HashSet<>());
+//            video2CategoryMap.put(category, new HashSet<>());
+//        });
+//
+//        video1.getPointSet().stream().forEach(point -> {
+//            video1CategoryMap.get(point.getCategory()).add(point);
+//        });
+//        video2.getPointSet().stream().forEach(point -> {
+//            video2CategoryMap.get(point.getCategory()).add(point);
+//        });
     }
 
     public void generateGraphs() {
@@ -90,16 +90,16 @@ public class StatisticService extends AbstractGriffonService {
         this.video1CategoryMap.entrySet().forEach(e -> {
             Set<Point> points = this.video2CategoryMap.get(e.getKey());
 
-            e.getValue().stream().forEach( p1 -> {
-                points.stream().forEach(p2 -> {
-                    double diff = p1.getStart().subtract(p2.getStart()).toSeconds();
-
-                    if(Math.abs(diff) <= this.step.toSeconds()){
-                        graphs.get(e.getKey()).addEdges(p1, p2);
-                        graphs.get(e.getKey()).addEdges(p2, p1);
-                    }
-                });
-            });
+//            e.getValue().stream().forEach( p1 -> {
+//                points.stream().forEach(p2 -> {
+//                    double diff = p1.getStart().subtract(p2.getStart()).toSeconds();
+//
+//                    if(Math.abs(diff) <= this.step.toSeconds()){
+//                        graphs.get(e.getKey()).addEdges(p1, p2);
+//                        graphs.get(e.getKey()).addEdges(p2, p1);
+//                    }
+//                });
+//            });
         });
     }
 
@@ -144,66 +144,66 @@ public class StatisticService extends AbstractGriffonService {
     private List<Edge> sortedSetEdges_algo(List<Vertex> vertices){
         List<Edge> result = new ArrayList<>();
 
-        if(vertices.size() == 1){
-            return result;
-        }
-
-        List<Vertex> vAs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video1)).collect(Collectors.toList());
-        List<Vertex> vBs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video2)).collect(Collectors.toList());
-
-        List<Vertex> selected = (vAs.size() <= vBs.size())? vAs : vBs;
-
-        SortedSet<Edge> sortedSet = new TreeSet<>();
-
-        selected.forEach(vertex -> {
-            getEdges(vertex).forEach(edge -> sortedSet.add(edge));
-        });
-
-        List<Vertex> starts = new ArrayList<>();
-        List<Vertex> ends = new ArrayList<>();
-
-        while(result.size() != selected.size() && sortedSet.size() > 0){
-            Edge edge = sortedSet.first();
-
-            if(! starts.contains(edge.start) && ! ends.contains(edge.end)){
-                starts.add(edge.start);
-                ends.add(edge.end);
-                result.add(edge);
-                sortedSet.remove(edge);
-            } else {
-                sortedSet.remove(edge);
-            }
-        }
+//        if(vertices.size() == 1){
+//            return result;
+//        }
+//
+////        List<Vertex> vAs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video1)).collect(Collectors.toList());
+////        List<Vertex> vBs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video2)).collect(Collectors.toList());
+//
+//        List<Vertex> selected = (vAs.size() <= vBs.size())? vAs : vBs;
+//
+//        SortedSet<Edge> sortedSet = new TreeSet<>();
+//
+//        selected.forEach(vertex -> {
+//            getEdges(vertex).forEach(edge -> sortedSet.add(edge));
+//        });
+//
+//        List<Vertex> starts = new ArrayList<>();
+//        List<Vertex> ends = new ArrayList<>();
+//
+//        while(result.size() != selected.size() && sortedSet.size() > 0){
+//            Edge edge = sortedSet.first();
+//
+//            if(! starts.contains(edge.start) && ! ends.contains(edge.end)){
+//                starts.add(edge.start);
+//                ends.add(edge.end);
+//                result.add(edge);
+//                sortedSet.remove(edge);
+//            } else {
+//                sortedSet.remove(edge);
+//            }
+//        }
 
         return result;
     }
 
-    private List<Edge> getEdges(Vertex v) {
-        Graph graph = graphs.get(v.point.getCategory());
-
-        return graph.edges.get(v).stream().sorted().collect(Collectors.toList());
-    }
+//    private List<Edge> getEdges(Vertex v) {
+//        Graph graph = graphs.get(v.point.getCategory());
+//
+//        return graph.edges.get(v).stream().sorted().collect(Collectors.toList());
+//    }
     private void tarjanDiff() {
-        tarjans.entrySet().forEach(entry -> {
-            List<List<Vertex>> list = entry.getValue();
-
-            Map<Video, Long> datas = new HashMap<>();
-            datas.put(video1, 0L);
-            datas.put(video2, 0L);
-
-            tarjanDiffs.put(entry.getKey(), datas);
-
-            list.forEach( l -> {
-                long totalA = l.stream().filter(vertex -> vertex.point.getVideo() == video1).count();
-                long totalB = l.stream().filter(vertex -> vertex.point.getVideo() == video2).count();
-
-                Long newValueA = datas.get(video1) + Math.max(totalA - totalB, 0);
-                Long newValueB = datas.get(video2) + Math.max(totalB - totalA, 0);
-
-                datas.put(video1, newValueA);
-                datas.put(video2, newValueB);
-            });
-        });
+//        tarjans.entrySet().forEach(entry -> {
+//            List<List<Vertex>> list = entry.getValue();
+//
+//            Map<Video, Long> datas = new HashMap<>();
+//            datas.put(video1, 0L);
+//            datas.put(video2, 0L);
+//
+//            tarjanDiffs.put(entry.getKey(), datas);
+//
+//            list.forEach( l -> {
+//                long totalA = l.stream().filter(vertex -> vertex.point.getVideo() == video1).count();
+//                long totalB = l.stream().filter(vertex -> vertex.point.getVideo() == video2).count();
+//
+//                Long newValueA = datas.get(video1) + Math.max(totalA - totalB, 0);
+//                Long newValueB = datas.get(video2) + Math.max(totalB - totalA, 0);
+//
+//                datas.put(video1, newValueA);
+//                datas.put(video2, newValueB);
+//            });
+//        });
     }
 
     public StatisticTimeline getStatisticTimeline(Category category){
@@ -218,12 +218,12 @@ public class StatisticService extends AbstractGriffonService {
 
         return timeline;
     }
-    public long getTotalVideoAByCategory(Category category){
-        return video1.getPointSet().stream().filter(point -> point.getCategory().equals(category)).count();
-    }
-    public long getTotalVideoBByCategory(Category category){
-        return video2.getPointSet().stream().filter(point -> point.getCategory().equals(category)).count();
-    }
+//    public long getTotalVideoAByCategory(Category category){
+//        return video1.getPointSet().stream().filter(point -> point.getCategory().equals(category)).count();
+//    }
+//    public long getTotalVideoBByCategory(Category category){
+//        return video2.getPointSet().stream().filter(point -> point.getCategory().equals(category)).count();
+//    }
     public HashMap<Category, Set<Point>> getVideo1CategoryMap() {
         return video1CategoryMap;
     }

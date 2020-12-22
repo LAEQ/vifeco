@@ -2,7 +2,6 @@ package org.laeq.video
 
 import org.laeq.db.*
 import org.laeq.model.Point
-import org.laeq.model.Video
 
 class ImportServiceTest extends AbstractDAOTest {
     VideoDAO videoDAO
@@ -28,10 +27,10 @@ class ImportServiceTest extends AbstractDAOTest {
         }
 
         when:
-        Video result = service.execute(json)
+        Point result = service.execute(json)
 
         then:
-        result instanceof Video == true
+        result instanceof Point == true
     }
 
     def "import json file and save to database"() {
@@ -52,14 +51,14 @@ class ImportServiceTest extends AbstractDAOTest {
 
         when:
         boolean result = service.execute(file)
-        Set<Video> videos = videoDAO.findAll()
+        Set<Point> videos = videoDAO.findAll()
 
-        Video expected = videos.find { it.path == '/path/export/exported_video.wav'}
+        Point expected = videos.find { it.path == '/path/export/exported_video.wav'}
         SortedSet<Point> points = pointDAO.findByVideo(expected)
 
         then:
         result == true
-        expected instanceof Video
+        expected instanceof Point
         points.size() == 3
     }
 
@@ -81,9 +80,9 @@ class ImportServiceTest extends AbstractDAOTest {
 
         when:
         boolean result = service.execute(file)
-        Set<Video> videos = videoDAO.findAll()
+        Set<Point> videos = videoDAO.findAll()
 
-        Video expected = videos.find { it.path == 'exported_video.wav'}
+        Point expected = videos.find { it.path == 'exported_video.wav'}
         SortedSet<Point> points = pointDAO.findByVideo(expected)
 
         then:

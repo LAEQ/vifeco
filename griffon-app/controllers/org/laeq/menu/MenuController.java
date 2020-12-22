@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.TranslationService;
 import org.laeq.db.*;
-import org.laeq.model.Category;
+import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.service.MariaService;
 import org.laeq.settings.Settings;
@@ -138,10 +138,10 @@ public class MenuController extends AbstractGriffonController {
         List<String> srcFiles = new ArrayList<>();
 
         for(Video video : videoList){
-            Set<Category> categories = categoryDAO.findByCollection(video.getCollection());
-            video.getCollection().getCategorySet().addAll(categories);
-
-            video.getPointSet().addAll(pointDAO.findByVideo(video));
+//            Set<Category> categories = categoryDAO.findByCollection(video.getCollection());
+//            video.getCollection().getCategorySet().addAll(categories);
+//
+//            video.getPointSet().addAll(pointDAO.findByVideo(video));
 
             String fileName = exportService.export(video);
             srcFiles.add(fileName);

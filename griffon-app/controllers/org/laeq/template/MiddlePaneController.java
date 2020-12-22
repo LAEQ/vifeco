@@ -14,7 +14,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.TranslationService;
 import org.laeq.db.DAOException;
 import org.laeq.icon.IconService;
-import org.laeq.model.Video;
+import org.laeq.model.Point;
 import org.laeq.service.MariaService;
 import org.laeq.ui.DialogService;
 import org.laeq.user.PreferencesService;
@@ -47,7 +47,7 @@ public class MiddlePaneController extends AbstractGriffonController {
         setTranslationService();
 
         getApplication().getEventRouter().addEventListener(listenerList());
-        getApplication().getEventRouter().publishEventOutsideUI("video.section");
+        getApplication().getEventRouter().publishEventOutsideUI("user.section");
     }
 
     private Map<String, RunnableWithArgs> listenerList(){
@@ -62,45 +62,41 @@ public class MiddlePaneController extends AbstractGriffonController {
         list.put("video.create", objects -> {
             File videoFile = (File) objects[0];
                 if (videoFile.exists()) {
-                    try{
-                        Video video = dbService.createVideo(videoFile, Duration.millis(0));
-                        MVCGroup group = getApplication().getMvcGroupManager().findGroup("video_container");
-
-                        if(group != null && group.isAlive()){
-                            getApplication().getEventRouter().publishEvent("video.created", Arrays.asList(video));
-                        } else {
-                            createGroup("video_container");
-                        }
-
-                    } catch (IOException exception){
-                        getLog().error(exception.getMessage());
-                        String title = translationService.getMessage("org.laeq.title.error");
-                        String message = translationService.getMessage("org.laeq.video.file.error");
-                        dialogService.simpleAlert(title, message);
-
-                    } catch (SQLException | DAOException e) {
-                        getLog().error(e.getMessage());
-                        String title = translationService.getMessage("org.laeq.title.error");
-                        String message = translationService.getMessage("org.laeq.video.video_dao.error");
-                        dialogService.simpleAlert(title, message);
-                    } catch (MediaException | javafx.scene.media.MediaException e) {
-                        getLog().error(e.getMessage());
-                        String title = translationService.getMessage("org.laeq.title.error");
-                        String message = translationService.getMessage("org.laeq.video.media_file.error");
-                        dialogService.simpleAlert(title, message);
-                    } catch (Exception e){
-                        getLog().error(e.getMessage());
-                        String title = translationService.getMessage("org.laeq.title.error");
-                        String message = translationService.getMessage("org.laeq.video.file.error");
-                        dialogService.simpleAlert(title, message);
-                    }
-
-                } else {
-                    getLog().error(String.format("PlayerView: file not exits %s", videoFile));
-                    String title = translationService.getMessage("org.laeq.title.error");
-                    dialogService.simpleAlert(title, String.format("PlayerView: file not exits %s", videoFile));
+//                    try{
+//                        Point video = dbService.createVideo(videoFile, Duration.millis(0));
+//                        MVCGroup group = getApplication().getMvcGroupManager().findGroup("video_container");
+//
+//                        if(group != null && group.isAlive()){
+//                            getApplication().getEventRouter().publishEvent("video.created", Arrays.asList(video));
+//                        } else {
+//                            createGroup("video_container");
+//                        }
+//
+//                    } catch (IOException exception){
+//                        getLog().error(exception.getMessage());
+//                        String title = translationService.getMessage("org.laeq.title.error");
+//                        String message = translationService.getMessage("org.laeq.video.file.error");
+//                        dialogService.simpleAlert(title, message);
+//
+//                    } catch (SQLException | DAOException e) {
+//                        getLog().error(e.getMessage());
+//                        String title = translationService.getMessage("org.laeq.title.error");
+//                        String message = translationService.getMessage("org.laeq.video.video_dao.error");
+//                        dialogService.simpleAlert(title, message);
+//                    } catch (MediaException | javafx.scene.media.MediaException e) {
+//                        getLog().error(e.getMessage());
+//                        String title = translationService.getMessage("org.laeq.title.error");
+//                        String message = translationService.getMessage("org.laeq.video.media_file.error");
+//                        dialogService.simpleAlert(title, message);
+//                    } catch (Exception e){
+//                        getLog().error(e.getMessage());
+//                        String title = translationService.getMessage("org.laeq.title.error");
+//                        String message = translationService.getMessage("org.laeq.video.file.error");
+//                        dialogService.simpleAlert(title, message);
+//                    }
                 }
         });
+
         list.put("change.language", objects -> {
             Locale locale = (Locale) objects[0];
             model.getPrefs().locale = locale;
@@ -108,42 +104,42 @@ public class MiddlePaneController extends AbstractGriffonController {
         });
 
         list.put("video.edit", objects -> {
-            Video video = (Video) objects[0];
-
-            File file = new File(video.getPath());
-
-            if(! file.exists()){
-                getLog().error(String.format("PlayerView: file not exits %s", file));
-                String title = translationService.getMessage("org.laeq.title.error");
-                runInsideUISync(() -> {
-                    dialogService.simpleAlert(title, String.format("PlayerView: file not exits %s", file));
-                });
-
-                return;
-            }
-
-            VideoEditor editor = null;
-            try {
-                editor = new VideoEditor(video, dbService.getPointDAO());
-                editor.setImageViewMap(iconService.getImageViews(video.getCollection().getCategorySet()));
-
-                Map<String, Object> args = new HashMap<>();
-                args.put("editor", editor);
-                createGroup("player", args);
-            } catch (IOException | TranscoderException e) {
-                getLog().error(e.getMessage());
-                dialogService.simpleAlert(translationService.getMessage("org.laeq.title.error"), e.getMessage());
-            } catch (MediaException | javafx.scene.media.MediaException e) {
-                getLog().error(e.getMessage());
-                String title = translationService.getMessage("org.laeq.title.error");
-                String message = translationService.getMessage("org.laeq.video.media_file.error");
-                dialogService.simpleAlert(title, message);
-            } catch (Exception e){
-                getLog().error(e.getMessage());
-                String title = translationService.getMessage("org.laeq.title.error");
-                String message = translationService.getMessage("org.laeq.video.file.error");
-                dialogService.simpleAlert(title, message);
-            }
+//            Point video = (Point) objects[0];
+//
+//            File file = new File(video.getPath());
+//
+//            if(! file.exists()){
+//                getLog().error(String.format("PlayerView: file not exits %s", file));
+//                String title = translationService.getMessage("org.laeq.title.error");
+//                runInsideUISync(() -> {
+//                    dialogService.simpleAlert(title, String.format("PlayerView: file not exits %s", file));
+//                });
+//
+//                return;
+//            }
+//
+//            VideoEditor editor = null;
+//            try {
+//                editor = new VideoEditor(video, dbService.getPointDAO());
+//                editor.setImageViewMap(iconService.getImageViews(video.getCollection().getCategorySet()));
+//
+//                Map<String, Object> args = new HashMap<>();
+//                args.put("editor", editor);
+//                createGroup("player", args);
+//            } catch (IOException | TranscoderException e) {
+//                getLog().error(e.getMessage());
+//                dialogService.simpleAlert(translationService.getMessage("org.laeq.title.error"), e.getMessage());
+//            } catch (MediaException | javafx.scene.media.MediaException e) {
+//                getLog().error(e.getMessage());
+//                String title = translationService.getMessage("org.laeq.title.error");
+//                String message = translationService.getMessage("org.laeq.video.media_file.error");
+//                dialogService.simpleAlert(title, message);
+//            } catch (Exception e){
+//                getLog().error(e.getMessage());
+//                String title = translationService.getMessage("org.laeq.title.error");
+//                String message = translationService.getMessage("org.laeq.video.file.error");
+//                dialogService.simpleAlert(title, message);
+//            }
         });
 
         list.put("about.section", objects -> createGroup("about_container"));

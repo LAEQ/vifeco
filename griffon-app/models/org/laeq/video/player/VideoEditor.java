@@ -5,16 +5,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.geometry.Point2D;
-import javafx.scene.CacheHint;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
-import org.laeq.db.DAOException;
 import org.laeq.db.PointDAO;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
@@ -31,9 +28,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 public class VideoEditor {
@@ -70,59 +65,59 @@ public class VideoEditor {
         media = new Media(file.getCanonicalFile().toURI().toString());
         mediaPlayer = new MediaPlayer(media);
 
-        pointsToTimeline.addListener((SetChangeListener<Point>) change -> {
-            if(change.wasAdded()){
-                Point point = change.getElementAdded();
-                ImageView image1 = new ImageView(imageViewMap.get(point.getCategory())[2]);
-                ImageView image2 = new ImageView(imageViewMap.get(point.getCategory())[3]);
-                image1.setCache(true);
-                image1.setCacheHint(CacheHint.SPEED);
-                image2.setCache(true);
-                image2.setCacheHint(CacheHint.SPEED);
-
-                IconPointPNG icon = new IconPointPNG(image1, image2);
-                icon.setLayoutX(point.getStart().toSeconds());
-                icon.setLayoutY(0);
-                timelineIconMap.putIfAbsent(point, icon);
-                timelinePane.add(icon);
-            } else if(change.wasRemoved()){
-                IconPointPNG icon = timelineIconMap.remove(change.getElementRemoved());
-                timelinePane.remove(icon);
-            }
-        });
+//        pointsToTimeline.addListener((SetChangeListener<Point>) change -> {
+//            if(change.wasAdded()){
+//                Point point = change.getElementAdded();
+//                ImageView image1 = new ImageView(imageViewMap.get(point.getCategory())[2]);
+//                ImageView image2 = new ImageView(imageViewMap.get(point.getCategory())[3]);
+//                image1.setCache(true);
+//                image1.setCacheHint(CacheHint.SPEED);
+//                image2.setCache(true);
+//                image2.setCacheHint(CacheHint.SPEED);
+//
+//                IconPointPNG icon = new IconPointPNG(image1, image2);
+//                icon.setLayoutX(point.getStart().toSeconds());
+//                icon.setLayoutY(0);
+//                timelineIconMap.putIfAbsent(point, icon);
+//                timelinePane.add(icon);
+//            } else if(change.wasRemoved()){
+//                IconPointPNG icon = timelineIconMap.remove(change.getElementRemoved());
+//                timelinePane.remove(icon);
+//            }
+//        });
 
         pointsToVideo.addListener((SetChangeListener<Point>) change -> {
-            if(change.wasAdded()){
-                Point point = change.getElementAdded();
-                ImageView image1 = new ImageView(imageViewMap.get(point.getCategory())[0]);
-                ImageView image2 = new ImageView(imageViewMap.get(point.getCategory())[1]);
-
-                image1.setCache(true);
-                image1.setCacheHint(CacheHint.SPEED);
-                image2.setCache(true);
-                image2.setCacheHint(CacheHint.SPEED);
-
-                IconPointPNG iconVideo = new IconPointPNG(image1, image2);
-                iconVideo.setLayoutX(point.getX() * paneWidth);
-                iconVideo.setLayoutY(point.getY() * paneHeight);
-                videoIconMap.putIfAbsent(point, iconVideo);
-                videoPane.add(iconVideo);
-
-            } else if(change.wasRemoved()){
-                IconPointPNG icon = videoIconMap.remove(change.getElementRemoved());
-                videoPane.remove(icon);
-            }
+//            if(change.wasAdded()){
+//                Point point = change.getElementAdded();
+//                ImageView image1 = new ImageView(imageViewMap.get(point.getCategory())[0]);
+//                ImageView image2 = new ImageView(imageViewMap.get(point.getCategory())[1]);
+//
+//                image1.setCache(true);
+//                image1.setCacheHint(CacheHint.SPEED);
+//                image2.setCache(true);
+//                image2.setCacheHint(CacheHint.SPEED);
+//
+//                IconPointPNG iconVideo = new IconPointPNG(image1, image2);
+//                iconVideo.setLayoutX(point.getX() * paneWidth);
+//                iconVideo.setLayoutY(point.getY() * paneHeight);
+//                videoIconMap.putIfAbsent(point, iconVideo);
+//                videoPane.add(iconVideo);
+//
+//            } else if(change.wasRemoved()){
+//                IconPointPNG icon = videoIconMap.remove(change.getElementRemoved());
+//                videoPane.remove(icon);
+//            }
         });
     }
 
-    private IconPointColorized generateIconTimeline(Point point){
-            IconPointColorized icon = createIcon(point.getCategory(), 20);
-            icon.decorate();
-            icon.setLayoutX(point.getStart().toSeconds());
-            icon.setLayoutY(0);
-
-            return icon;
-    }
+//    private IconPointColorized generateIconTimeline(Point point){
+//            IconPointColorized icon = createIcon(point.getCategory(), 20);
+//            icon.decorate();
+//            icon.setLayoutX(point.getStart().toSeconds());
+//            icon.setLayoutY(0);
+//
+//            return icon;
+//    }
 
     public ObservableSet<IconPointPNG> getTimelinePane() {
         return timelinePane;
@@ -143,33 +138,33 @@ public class VideoEditor {
     }
 
     public void display(){
-        Duration currentTime = mediaPlayer.getCurrentTime();
-
-        Duration startDuration = currentTime.subtract(timelineIconDuration);
-        Duration endDuration = currentTime.add(timelineIconDuration);
-        Point start = new Point(0, startDuration);
-        Point end = new Point(0, endDuration);
-
-        SortedSet<Point> points = video.getPointSet().subSet(start, end);
-        pointsToTimeline.retainAll(points);
-        points.forEach(point -> {
-            if( ! pointsToTimeline.contains(point)){
-                pointsToTimeline.add(point);
-            }
-        });
-
-        startDuration = (currentTime.subtract(Duration.millis( this.duration * 1000)));
-        start = new Point(0, startDuration);
-        end = new Point(0, currentTime.add(Duration.millis(1)));
-
-        points = video.getPointSet().subSet(start, end);
-
-        pointsToVideo.retainAll(points);
-        points.forEach(point -> {
-            if( ! pointsToVideo.contains(point)){
-                pointsToVideo.add(point);
-            }
-        });
+//        Duration currentTime = mediaPlayer.getCurrentTime();
+//
+//        Duration startDuration = currentTime.subtract(timelineIconDuration);
+//        Duration endDuration = currentTime.add(timelineIconDuration);
+//        Point start = new Point(0, startDuration);
+//        Point end = new Point(0, endDuration);
+//
+//        SortedSet<Point> points = video.getPointSet().subSet(start, end);
+//        pointsToTimeline.retainAll(points);
+//        points.forEach(point -> {
+//            if( ! pointsToTimeline.contains(point)){
+//                pointsToTimeline.add(point);
+//            }
+//        });
+//
+//        startDuration = (currentTime.subtract(Duration.millis( this.duration * 1000)));
+//        start = new Point(0, startDuration);
+//        end = new Point(0, currentTime.add(Duration.millis(1)));
+//
+//        points = video.getPointSet().subSet(start, end);
+//
+//        pointsToVideo.retainAll(points);
+//        points.forEach(point -> {
+//            if( ! pointsToVideo.contains(point)){
+//                pointsToVideo.add(point);
+//            }
+//        });
     }
 
     public void setPaneWidth(double doubleValue) {
@@ -187,54 +182,54 @@ public class VideoEditor {
         Point point = videoIconMap.getKey(videoIcon);
         IconPointPNG timelineIcon = timelineIconMap.get(point);
 
-        if(point != null){
-            try {
-                pointDAO.delete(point);
-                pointsToTimeline.remove(point);
-                videoIconMap.remove(point);
-                timelineIconMap.remove(point);
-                videoPane.remove(videoIcon);
-                timelinePane.remove(timelineIcon);
-
-                video.getPointSet().remove(point);
-
-                return point;
-            } catch (DAOException e) {
-                logger.error("Failed to delete the point: " + e.getMessage());
-            }
-        }
+//        if(point != null){
+//            try {
+//                pointDAO.delete(point);
+//                pointsToTimeline.remove(point);
+//                videoIconMap.remove(point);
+//                timelineIconMap.remove(point);
+//                videoPane.remove(videoIcon);
+//                timelinePane.remove(timelineIcon);
+//
+//                video.getPointSet().remove(point);
+//
+//                return point;
+//            } catch (DAOException e) {
+//                logger.error("Failed to delete the point: " + e.getMessage());
+//            }
+//        }
 
         return null;
     }
     private void reposition() {
-        videoPane.forEach(icon -> {
-            Point pt = videoIconMap.getKey(icon);
-            icon.setLayoutX(pt.getX() * paneWidth);
-
-            icon.setLayoutY(pt.getY() * paneHeight);
-        });
+//        videoPane.forEach(icon -> {
+//            Point pt = videoIconMap.getKey(icon);
+//            icon.setLayoutX(pt.getX() * paneWidth);
+//
+//            icon.setLayoutY(pt.getY() * paneHeight);
+//        });
     }
 
     public Point deleteTimelineIcon(IconPointPNG icon) {
         Point point = timelineIconMap.getKey(icon);
         IconPointPNG videoIcon = videoIconMap.get(point);
 
-        if(point != null){
-            try {
-                pointDAO.delete(point);
-                pointsToTimeline.remove(point);
-                videoIconMap.remove(point);
-                timelineIconMap.remove(point);
-                videoPane.remove(videoIcon);
-                timelinePane.remove(icon);
-
-                video.getPointSet().remove(point);
-
-                return point;
-            } catch (DAOException e) {
-                logger.error("Failed to deleteVideoIcon point: " + e.getMessage());
-            }
-        }
+//        if(point != null){
+//            try {
+//                pointDAO.delete(point);
+//                pointsToTimeline.remove(point);
+//                videoIconMap.remove(point);
+//                timelineIconMap.remove(point);
+//                videoPane.remove(videoIcon);
+//                timelinePane.remove(icon);
+//
+////                video.getPointSet().remove(point);
+//
+//                return point;
+//            } catch (DAOException e) {
+//                logger.error("Failed to deleteVideoIcon point: " + e.getMessage());
+//            }
+//        }
 
         return null;
     }
@@ -274,26 +269,26 @@ public class VideoEditor {
     }
 
     public Point addPoint(Point2D mousePosition, KeyEvent event) {
-        if(this.shortcuts.contains(event.getCode().getName())){
-            Optional<Category> optionalCategory = video.getCollection().getCategorySet().stream().filter(category -> category.getShortcut().equals(event.getCode().getName())).findFirst();
-            Point point = new Point();
-            point.setX(mousePosition.getX());
-            point.setY(mousePosition.getY());
-            point.setCategory(optionalCategory.get());
-
-            try {
-                point.setVideo(video);
-                point.setStart(mediaPlayer.getCurrentTime());
-                pointDAO.insert(point);
-                video.getPointSet().add(point);
-                display();
-
-                return point;
-            } catch (DAOException e) {
-                logger.error("Error saving new point: " + e.getMessage());
-                return null;
-            }
-        }
+//        if(this.shortcuts.contains(event.getCode().getName())){
+//            Optional<Category> optionalCategory = video.getCollection().getCategorySet().stream().filter(category -> category.getShortcut().equals(event.getCode().getName())).findFirst();
+//            Point point = new Point();
+//            point.setX(mousePosition.getX());
+//            point.setY(mousePosition.getY());
+//            point.setCategory(optionalCategory.get());
+//
+//            try {
+//                point.setVideo(video);
+//                point.setStart(mediaPlayer.getCurrentTime());
+//                pointDAO.insert(point);
+//                video.getPointSet().add(point);
+//                display();
+//
+//                return point;
+//            } catch (DAOException e) {
+//                logger.error("Error saving new point: " + e.getMessage());
+//                return null;
+//            }
+//        }
 
         return null;
     }
@@ -357,28 +352,28 @@ public class VideoEditor {
     }
 
     public void previousPoint(Category category) {
-        Point pt = new Point();
-        pt.setVideo(this.video);
-        pt.setStart(mediaPlayer.getCurrentTime().subtract(Duration.millis(1)));
-        pt.setCategory(category);
-
-        Point previousPoint = pointDAO.findPrevious(pt);
-
-        if(previousPoint != null){
-            mediaPlayer.seek(previousPoint.getStart());
-        }
+//        Point pt = new Point();
+//        pt.setVideo(this.video);
+//        pt.setStart(mediaPlayer.getCurrentTime().subtract(Duration.millis(1)));
+//        pt.setCategory(category);
+//
+//        Point previousPoint = pointDAO.findPrevious(pt);
+//
+//        if(previousPoint != null){
+//            mediaPlayer.seek(previousPoint.getStart());
+//        }
     }
 
     public void nextPoint(Category category) {
-        Point pt = new Point();
-        pt.setVideo(this.video);
-        pt.setStart(mediaPlayer.getCurrentTime().add(Duration.millis(1)));
-        pt.setCategory(category);
-
-        Point nextPoint = pointDAO.findNext(pt);
-
-        if(nextPoint != null){
-            mediaPlayer.seek(nextPoint.getStart());
-        }
+//        Point pt = new Point();
+//        pt.setVideo(this.video);
+//        pt.setStart(mediaPlayer.getCurrentTime().add(Duration.millis(1)));
+//        pt.setCategory(category);
+//
+//        Point nextPoint = pointDAO.findNext(pt);
+//
+//        if(nextPoint != null){
+//            mediaPlayer.seek(nextPoint.getStart());
+//        }
     }
 }

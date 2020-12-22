@@ -3,7 +3,6 @@ package org.laeq.statistic;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -12,14 +11,12 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.util.Duration;
 import org.apache.commons.io.FileUtils;
 import org.laeq.TranslatedView;
 import org.laeq.TranslationService;
 import org.laeq.model.Category;
-import org.laeq.model.Video;
+import org.laeq.model.Point;
 import org.laeq.model.statistic.Graph;
-import org.laeq.service.statistic.StatisticException;
 import org.laeq.service.statistic.StatisticService;
 import org.laeq.settings.Settings;
 import org.laeq.template.MiddlePaneView;
@@ -45,7 +42,7 @@ public class ContainerView extends TranslatedView {
     @Inject private StatisticService statService;
     @Inject private DialogService dialogService;
 
-    @FXML private TableView<Video> videoTable;
+    @FXML private TableView<Point> videoTable;
     @FXML private Button compareActionTarget;
     @FXML private GridPane gridResult;
     @FXML private AnchorPane visualTab;
@@ -64,10 +61,10 @@ public class ContainerView extends TranslatedView {
     }
 
     public void init(){
-        TableColumn<Video, Number> idColumn = new TableColumn<>("id");
-        TableColumn<Video, String> pathColumn = new TableColumn("");
-        TableColumn<Video, String> collectionColumn = new TableColumn("");
-        TableColumn<Video, Number> importColumn = new TableColumn<>("");
+        TableColumn<Point, Number> idColumn = new TableColumn<>("id");
+        TableColumn<Point, String> pathColumn = new TableColumn("");
+        TableColumn<Point, String> collectionColumn = new TableColumn("");
+        TableColumn<Point, Number> importColumn = new TableColumn<>("");
 
         videoTable.getColumns().addAll(idColumn, pathColumn, collectionColumn, importColumn);
 
@@ -96,32 +93,32 @@ public class ContainerView extends TranslatedView {
         loadStatisticPage();
 
         videoTable.setOnMouseClicked(event -> {
-            String setLanguage = String.format("setLanguage('%s')", model.getPrefs().locale.getLanguage());
-            webEngine.executeScript(setLanguage);
-            webEngine.executeScript("reset()");
-
-            Video video = videoTable.getSelectionModel().getSelectedItem();
-
-            Path path = Paths.get(Settings.statisticPath);
-
-            try {
-                Stream<Path> list = Files.list(path);
-
-                list.filter(p -> p.getFileName().toString().contains(video.getName())).forEach(p -> {
-                    try {
-                        String content = FileUtils.readFileToString(p.toFile(), "UTF-8");
-                        String addFunction = String.format("addJsonContent(%s)", content);
-                        webEngine.executeScript(addFunction);
-                    } catch (IOException e) {
-                        getLog().error(e.getMessage());
-                    }
-                });
-            } catch (IOException e) {
-                getLog().error(e.getMessage());
-            }
-
-            String jsonFunction = String.format("render()");
-            webEngine.executeScript(jsonFunction);
+//            String setLanguage = String.format("setLanguage('%s')", model.getPrefs().locale.getLanguage());
+//            webEngine.executeScript(setLanguage);
+//            webEngine.executeScript("reset()");
+//
+//            Point video = videoTable.getSelectionModel().getSelectedItem();
+//
+//            Path path = Paths.get(Settings.statisticPath);
+//
+//            try {
+//                Stream<Path> list = Files.list(path);
+//
+//                list.filter(p -> p.getFileName().toString().contains(video.getName())).forEach(p -> {
+//                    try {
+//                        String content = FileUtils.readFileToString(p.toFile(), "UTF-8");
+//                        String addFunction = String.format("addJsonContent(%s)", content);
+//                        webEngine.executeScript(addFunction);
+//                    } catch (IOException e) {
+//                        getLog().error(e.getMessage());
+//                    }
+//                });
+//            } catch (IOException e) {
+//                getLog().error(e.getMessage());
+//            }
+//
+//            String jsonFunction = String.format("render()");
+//            webEngine.executeScript(jsonFunction);
         });
 
         setTranslatedText();
@@ -176,19 +173,19 @@ public class ContainerView extends TranslatedView {
         }
     }
 
-    private int getTotalImports(Video video){
-        int total = 0;
-        Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
+    private int getTotalImports(Point video){
+//        int total = 0;
+//        Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
+//
+//        while (it.hasNext()){
+//            File file = (File) it.next();
+//
+//            if(file.getName().contains(video.getName())){
+//                total++;
+//            }
+//        }
 
-        while (it.hasNext()){
-            File file = (File) it.next();
-
-            if(file.getName().contains(video.getName())){
-                total++;
-            }
-        }
-
-        return new Integer(total);
+        return new Integer(0);
     }
     private void compare(int step){
         gridResult.getChildren().clear();
@@ -204,42 +201,42 @@ public class ContainerView extends TranslatedView {
 
         gridResult.getColumnConstraints().addAll(getColumnConstraints());
 
-        Video video1 = this.model.getVideos().get(0);
-        Video video2 = this.model.getVideos().get(1);
+        Point video1 = this.model.getVideos().get(0);
+        Point video2 = this.model.getVideos().get(1);
 
-        try {
-            statService.setVideos(video1, video2);
-            statService.setDurationStep(Duration.seconds(step));
-            statService.execute();
-
-            final int[] rowIndex = new int[]{1};
-
-            statService.getTarjanDiffs().entrySet().forEach(e -> {
-                gridResult.add(new Label(e.getKey().getName()), 0, rowIndex[0]);
-
-                long totalA = statService.getTotalVideoAByCategory(e.getKey());
-
-                gridResult.add(new Label(String.valueOf(totalA)), 1, rowIndex[0]);
-                gridResult.add(new Label(e.getValue().get(video1).toString()), 2, rowIndex[0]);
-
-                double percent = (totalA != 0)?  e.getValue().get(video1) / ((double)totalA) : 0;
-
-                gridResult.add(new Label(rounder(percent * 100) + "%"), 3, rowIndex[0]);
-
-                long totalB = statService.getTotalVideoBByCategory(e.getKey());
-
-                gridResult.add(new Label(String.valueOf(totalB)), 4, rowIndex[0]);
-                gridResult.add(new Label(e.getValue().get(video2).toString()), 5, rowIndex[0]);
-
-                percent = (totalB != 0)?  e.getValue().get(video2) / ((double)totalB) : 0;
-
-                gridResult.add(new Label(rounder(percent * 100) + "%"), 6, rowIndex[0]);
-                rowIndex[0]++;
-            });
-
-        }catch (StatisticException e){
-            dialogService.simpleAlert("key.title.error", e.getMessage());
-        }
+//        try {
+//            statService.setVideos(video1, video2);
+//            statService.setDurationStep(Duration.seconds(step));
+//            statService.execute();
+//
+//            final int[] rowIndex = new int[]{1};
+//
+//            statService.getTarjanDiffs().entrySet().forEach(e -> {
+//                gridResult.add(new Label(e.getKey().getName()), 0, rowIndex[0]);
+//
+//                long totalA = statService.getTotalVideoAByCategory(e.getKey());
+//
+//                gridResult.add(new Label(String.valueOf(totalA)), 1, rowIndex[0]);
+//                gridResult.add(new Label(e.getValue().get(video1).toString()), 2, rowIndex[0]);
+//
+//                double percent = (totalA != 0)?  e.getValue().get(video1) / ((double)totalA) : 0;
+//
+//                gridResult.add(new Label(rounder(percent * 100) + "%"), 3, rowIndex[0]);
+//
+//                long totalB = statService.getTotalVideoBByCategory(e.getKey());
+//
+//                gridResult.add(new Label(String.valueOf(totalB)), 4, rowIndex[0]);
+//                gridResult.add(new Label(e.getValue().get(video2).toString()), 5, rowIndex[0]);
+//
+//                percent = (totalB != 0)?  e.getValue().get(video2) / ((double)totalB) : 0;
+//
+//                gridResult.add(new Label(rounder(percent * 100) + "%"), 6, rowIndex[0]);
+//                rowIndex[0]++;
+//            });
+//
+//        }catch (StatisticException e){
+//            dialogService.simpleAlert("key.title.error", e.getMessage());
+//        }
 
         visualTab.getChildren().clear();
 

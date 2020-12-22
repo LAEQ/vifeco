@@ -2,6 +2,7 @@ package org.laeq.db
 
 import javafx.util.Duration
 import org.laeq.model.Collection
+import org.laeq.model.Point
 import org.laeq.model.User
 import org.laeq.model.Video
 
@@ -28,25 +29,25 @@ class VideoDAOTest extends AbstractDAOTest {
 
     def "test insertion"() {
         setup:
-        Video video = generateVideo("path/to/video/name.mp4")
+        Point video = generateVideo("path/to/video/name.mp4")
 
         when:
         repository.insert(video)
-        Video expexted = generateVideo(5, "path/to/video/name.mp4")
+        Point expexted = generateVideo(5, "path/to/video/name.mp4")
 
         then:
         video.id == 5
     }
 
-    Video generateVideo(String path){
-        return new Video(path, Duration.millis(3600000),
+    Point generateVideo(String path){
+        return new Point(path, Duration.millis(3600000),
                 new User(1, "test", "test", "test"),
                 new Collection(1, "test", false)
         )
     }
 
-    Video generateVideo(int id, String path){
-        return new Video(id, path, Duration.millis(3600000),
+    Point generateVideo(int id, String path){
+        return new Point(id, path, Duration.millis(3600000),
                 new User(1, "test", "test", "test"),
                 new Collection(1, "test", false)
         )
@@ -54,14 +55,14 @@ class VideoDAOTest extends AbstractDAOTest {
 
     def "test findAll"(){
         setup:
-        Video video1 = generateVideo("path/to/video/name.mp4")
-        Video video2 = generateVideo("path/to/video/name2.mp4")
-        Video video3 = generateVideo("path/to/video/name3.mp4")
+        Point video1 = generateVideo("path/to/video/name.mp4")
+        Point video2 = generateVideo("path/to/video/name2.mp4")
+        Point video3 = generateVideo("path/to/video/name3.mp4")
 
 
         when:
         def result = repository.findAll()
-        Video video = result.find{ it.id == 1}
+        Point video = result.find{ it.id == 1}
 
         then:
         result.size() == 4
@@ -74,7 +75,7 @@ class VideoDAOTest extends AbstractDAOTest {
     }
 
     def "test delete an existing video"() {
-        Video video = generateVideo(1, "path/to/video.mp4")
+        Point video = generateVideo(1, "path/to/video.mp4")
 
         when:
         repository.delete(video)
@@ -95,7 +96,7 @@ class VideoDAOTest extends AbstractDAOTest {
     }
 
     def "update video user and category"(){
-        Video video = generateVideo(1, "path/to/video.mp4")
+        Point video = generateVideo(1, "path/to/video.mp4")
         def user = new User(2, "test", "test", "test")
         def collection = new Collection(2, "test", false)
         video.setUser(user)
@@ -113,7 +114,7 @@ class VideoDAOTest extends AbstractDAOTest {
     }
 
     def "update video"(){
-        Video video = generateVideo(1, "path/to/video.mp4")
+        Point video = generateVideo(1, "path/to/video.mp4")
         def user = new User(2, "test", "test", "test")
         def collection = new Collection(2, "test", false)
         video.setUser(user)
@@ -132,7 +133,7 @@ class VideoDAOTest extends AbstractDAOTest {
     }
 
     def "update video user"(){
-        Video video = generateVideo(1, "path/to/video.mp4")
+        Point video = generateVideo(1, "path/to/video.mp4")
         def user = new User(2, "test", "test", "test")
 
 
@@ -146,7 +147,7 @@ class VideoDAOTest extends AbstractDAOTest {
     }
 
     def "update video collection"(){
-        Video video = generateVideo(1, "path/to/video.mp4")
+        Point video = generateVideo(1, "path/to/video.mp4")
         def collection = new Collection(2, "test", false)
 
         when:

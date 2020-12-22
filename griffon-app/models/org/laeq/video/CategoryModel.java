@@ -29,13 +29,13 @@ public class CategoryModel extends AbstractGriffonModel {
     }
 
     public void generateProperties() {
-        editor.getVideo().getCollection().getCategorySet().forEach(category -> {
-            long total = editor.getVideo().getPointSet().stream().filter(point -> point.getCategory().equals(category)).count();
-
-            categoryPropertyList.put(category, new SimpleLongProperty(this, category.getName(), total));
-        });
-
-        total.set(editor.getVideo().getPointSet().size());
+//        editor.getVideo().getCollection().getCategorySet().forEach(category -> {
+//            long total = editor.getVideo().getPointSet().stream().filter(point -> point.getCategory().equals(category)).count();
+//
+//            categoryPropertyList.put(category, new SimpleLongProperty(this, category.getName(), total));
+//        });
+//
+//        total.set(editor.getVideo().getPointSet().size());
     }
 
     public SimpleLongProperty getCategoryProperty(Category category){
@@ -47,23 +47,23 @@ public class CategoryModel extends AbstractGriffonModel {
     }
 
     public void addPoint(Point point) {
-        SimpleLongProperty spl = getCategoryProperty(point.getCategory());
-
-        if(spl != null){
-            long value = spl.getValue();
-            spl.setValue(value + 1);
-            value = total.getValue();
-            total.setValue(value + 1);
-        } else {
-            getLog().error("No spl for: " + point.getCategory());
-        }
+//        SimpleLongProperty spl = getCategoryProperty(point.getCategory());
+//
+//        if(spl != null){
+//            long value = spl.getValue();
+//            spl.setValue(value + 1);
+//            value = total.getValue();
+//            total.setValue(value + 1);
+//        } else {
+//            getLog().error("No spl for: " + point.getCategory());
+//        }
     }
 
     public void deletePoint(Point point) {
-        SimpleLongProperty spl = getCategoryProperty(point.getCategory());
-        long value = spl.getValue();
-        spl.setValue(value - 1);
-        value = total.getValue();
-        total.setValue(value +- 1);
+//        SimpleLongProperty spl = getCategoryProperty(point.getCategory());
+//        long value = spl.getValue();
+//        spl.setValue(value - 1);
+//        value = total.getValue();
+//        total.setValue(value +- 1);
     }
 }

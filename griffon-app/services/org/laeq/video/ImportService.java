@@ -7,7 +7,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.db.DAOException;
 import org.laeq.db.PointDAO;
 import org.laeq.db.VideoDAO;
-import org.laeq.model.Video;
+import org.laeq.model.Point;
 import org.laeq.service.MariaService;
 
 import javax.inject.Inject;
@@ -39,28 +39,28 @@ public class ImportService extends AbstractGriffonService {
         this.pointDAO = pointDAO;
     }
 
-    public Video execute(String json) throws IOException {
-        Video result = new ObjectMapper().readValue(json, Video.class);
-
-        result.getPointSet().stream().forEach(point -> {
-            point.setVideo(result);
-
-        });
+    public Point execute(String json) throws IOException {
+        Point result = new ObjectMapper().readValue(json, Point.class);
+//
+//        result.getPointSet().stream().forEach(point -> {
+//            point.setVideo(result);
+//
+//        });
 
         return result;
     }
 
     public boolean execute(File selectedFile) throws IOException, DAOException {
-        Video result = new ObjectMapper().readValue(selectedFile, Video.class);
-
-        getVideoDAO().insert(result);
-
-        try {
-            getPointDAO().insert(result);
-            return true;
-        } catch (SQLException e) {
-            getVideoDAO().delete(result);
-        }
+//        Point result = new ObjectMapper().readValue(selectedFile, Point.class);
+//
+//        getVideoDAO().insert(result);
+//
+//        try {
+//            getPointDAO().insert(result);
+//            return true;
+//        } catch (SQLException e) {
+//            getVideoDAO().delete(result);
+//        }
 
         return false;
     }

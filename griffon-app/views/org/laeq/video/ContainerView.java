@@ -4,6 +4,8 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,13 +17,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.paint.Color;
 import org.laeq.TranslatedView;
 import org.laeq.TranslationService;
 import org.laeq.model.*;
 import org.laeq.model.icon.IconCounter;
 import org.laeq.model.icon.IconCounterMatrice;
-import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
 import org.laeq.user.PreferencesService;
@@ -108,14 +108,12 @@ public class ContainerView extends TranslatedView {
     private void init(){
         videoTable.setEditable(true);
 
-        TableColumn<Video, Number> idColumn = new TableColumn<>("#");
         TableColumn<Video, String> dateColumn = new TableColumn<>("");
         TableColumn<Video, String> pathColumn = new TableColumn("");
         userColumn = new TableColumn<>("");
-        TableColumn<Video, String> durationColumn = new TableColumn("");
+        TableColumn<Video, Double> durationColumn = new TableColumn("");
         collectionColumn = new TableColumn("");
         TableColumn<Video, Number> totalColumn = new TableColumn<>("");
-        TableColumn<Video, Icon> editColumn = new TableColumn("");
 
         columnsMap.put(dateColumn, "org.laeq.video.column.created_at");
         columnsMap.put(pathColumn, "org.laeq.video.column.name");
@@ -123,69 +121,68 @@ public class ContainerView extends TranslatedView {
         columnsMap.put(durationColumn, "org.laeq.video.column.duration");
         columnsMap.put(collectionColumn, "org.laeq.video.column.collection");
         columnsMap.put(totalColumn, "org.laeq.video.column.total");
-        columnsMap.put(editColumn, "org.laeq.video.column.not_editable");
 
 
-        videoTable.getColumns().addAll(idColumn, dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn, editColumn);
+        videoTable.getColumns().addAll(dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn);
 
-        idColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(()-> new Integer(param.getValue().getId())));
-        dateColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getCreatedFormatted()));
-        pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        durationColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getDurationFormatted()));
-        totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
-        editColumn.setCellValueFactory(cellData -> cellData.getValue().isEditable() ? null : new SimpleObjectProperty<>(new Icon(IconSVG.error, Color.DARKORANGE.toString())));
+//        dateColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getCreatedFormatted()));
+        pathColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPath()));
+//        durationColumn.setCellValueFactory(cellData -> new ReadOnlyDoubleWrapper(cellData.getValue().getDuration()));
+//        totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
+//        editColumn.setCellValueFactory(cellData -> cellData.getValue().isEditable() ? null : new SimpleObjectProperty<>(new Icon(IconSVG.error, Color.DARKORANGE.toString())));
+
 
         videoTable.setItems(this.model.getVideoList());
-        videoTable.getSelectionModel().selectedItemProperty().addListener(observable -> {
-            if(videoTable.getSelectionModel().getSelectedItem() != null){
-                model.setSelectedVideo(videoTable.getSelectionModel().getSelectedItem());
-                controller.showDetail();
-            }
-        });
+//        videoTable.getSelectionModel().selectedItemProperty().addListener(observable -> {
+//            if(videoTable.getSelectionModel().getSelectedItem() != null){
+//                model.setSelectedVideo(videoTable.getSelectionModel().getSelectedItem());
+//                controller.showDetail();
+//            }
+//        });
 
         videoTable.setOnMouseClicked(event -> {
-            if(event.getClickCount() == 2){
-                Video video = videoTable.getSelectionModel().getSelectedItem();
-                if(video.getDuration() != 0){
-                    controller.editVideo(video);
-                }else{
-                    runOutsideUIAsync(() -> {
-                       controller.getVideoDuration(video);
-                    });
-
-                    alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.duration.error"));
-                }
-            }
+//            if(event.getClickCount() == 2){
+//                Point video = videoTable.getSelectionModel().getSelectedItem();
+//                if(video.getDuration() != 0){
+//                    controller.editVideo(video);
+//                }else{
+//                    runOutsideUIAsync(() -> {
+//                       controller.getVideoDuration(video);
+//                    });
+//
+//                    alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.duration.error"));
+//                }
+//            }
         });
     }
 
     public void showDetails() {
         // Display video information
-        titleValue.setText(model.getSelectedVideo().getName());
-        durationValue.setText(model.getSelectedVideo().getDurationFormatted());
-        totalValue.setText(String.format("%d", model.getSelectedVideo().totalPoints()));
+//        titleValue.setText(model.getSelectedVideo().getName());
+//        durationValue.setText(model.getSelectedVideo().getDurationFormatted());
+//        totalValue.setText(String.format("%d", model.getSelectedVideo().totalPoints()));
 
-        IconCounterMatrice matrix = new IconCounterMatrice(this.model.getSelectedVideo().getCollection().getCategorySet());
-        categoryGroupMap.clear();
-        categoryGroupMap.putAll(matrix.getIconMap());
-
-        categoryGroup.getChildren().clear();
-        categoryGroup.getChildren().addAll(matrix.getIconMap().values());
-
-        Map<Category, Long> pointsByCategory = this.model.getTotalByCategory();
-
-        categoryGroupMap.forEach((category, categoryIcon) -> {
-            categoryIcon.reset();
-
-            if(this.model.getSelectedVideo().getCollection().getCategorySet().contains(category)){
-                categoryIcon.setText("0");
-                categoryIcon.setOpacity(1);
-            }
-
-            if(pointsByCategory.containsKey(category)){
-                categoryIcon.setText(pointsByCategory.get(category).toString());
-            }
-        });
+//        IconCounterMatrice matrix = new IconCounterMatrice(this.model.getSelectedVideo().getCollection().getCategorySet());
+//        categoryGroupMap.clear();
+//        categoryGroupMap.putAll(matrix.getIconMap());
+//
+//        categoryGroup.getChildren().clear();
+//        categoryGroup.getChildren().addAll(matrix.getIconMap().values());
+//
+//        Map<Category, Long> pointsByCategory = this.model.getTotalByCategory();
+//
+//        categoryGroupMap.forEach((category, categoryIcon) -> {
+//            categoryIcon.reset();
+//
+//            if(this.model.getSelectedVideo().getCollection().getCategorySet().contains(category)){
+//                categoryIcon.setText("0");
+//                categoryIcon.setOpacity(1);
+//            }
+//
+//            if(pointsByCategory.containsKey(category)){
+//                categoryIcon.setText(pointsByCategory.get(category).toString());
+//            }
+//        });
     }
 
     public void initForm(){

@@ -34,11 +34,11 @@ public class PointDeserializer extends StdDeserializer<Point> {
         category.setId(categoryId);
 
         Point point = new Point();
-        point.setId(id);
-        point.setCategory(category);
-        point.setStart(Duration.millis(start));
-        point.setX(x);
-        point.setY(y);
+//        point.setId(id);
+//        point.setCategory(category);
+//        point.setStart(Duration.millis(start));
+//        point.setX(x);
+//        point.setY(y);
 
         return point;
     }

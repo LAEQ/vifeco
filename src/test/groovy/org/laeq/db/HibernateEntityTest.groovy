@@ -5,7 +5,10 @@ import org.hibernate.Transaction
 import org.laeq.model.Category
 import org.laeq.model.Collection
 import org.laeq.model.User
+import org.laeq.model.Point
 import spock.lang.Specification
+
+import java.time.Duration
 
 
 class HibernateEntityTest extends Specification {
@@ -90,4 +93,44 @@ class HibernateEntityTest extends Specification {
         collection.getId() == 1
     }
 
+    def "test create video"(){
+        setup:
+        Collection collection = new Collection("mock collection")
+        User user = new User("David", "Maignan", "davidmaignan@email.com")
+        Point video = new Point("path", new Double(10), collection, user);
+
+
+        when:
+        session.save(collection)
+        session.save(user)
+        session.save(video)
+        transaction.commit()
+
+        then:
+        video.getId() != null
+    }
+
+    def "test create point"(){
+        setup:
+        Collection collection = new Collection("mock collection")
+        Category category = new Category("mock name", "mock icon", "#FFFFFF", "A")
+        collection.addCategory(category)
+        User user = new User("David", "Maignan", "davidmaignan@email.com")
+        Point video = new Point("path", new Double(10), collection, user)
+        Point point = new Point(1.0, 1.0, Duration.ofMillis(1000), category)
+
+        when:
+        session.save(collection)
+        session.save(category)
+        session.save(user)
+        session.save(video)
+        session.save(point)
+        transaction.commit()
+
+        then:
+        collection.getId() != null
+        category.getId() != null
+        user.getId() != null
+        point.getId() != null
+    }
 }

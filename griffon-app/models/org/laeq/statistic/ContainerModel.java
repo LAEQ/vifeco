@@ -7,21 +7,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Preferences;
-import org.laeq.model.Video;
+import org.laeq.model.Point;
 
 import java.util.Collection;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
-    private ObservableList<Video> videos = FXCollections.observableArrayList();
+    private ObservableList<Point> videos = FXCollections.observableArrayList();
     private SimpleIntegerProperty durationStep = new SimpleIntegerProperty(this, "durationStep", 5);
     private Preferences prefs;
 
-    public ObservableList<Video> getVideos() {
+    public ObservableList<Point> getVideos() {
         return videos;
     }
 
-    public void addVideos(Collection<Video> videos) {
+    public void addVideos(Collection<Point> videos) {
         this.videos.addAll(videos);
     }
 

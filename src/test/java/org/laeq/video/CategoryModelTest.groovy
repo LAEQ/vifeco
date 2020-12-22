@@ -16,7 +16,7 @@ class CategoryModelTest extends Specification {
 
         Collection collection = new Collection(1, "test", false)
 
-        Video video = new Video(1, "path", Duration.millis(1000), new User(1, "test", "test", "test"), collection)
+        Point video = new Point(1, "path", Duration.millis(1000), new User(1, "test", "test", "test"), collection)
 
         for (int i = 0; i < c.length; i++) {
             set.add(new Category(i + 1, c[i].toString(), c[i].toString(), "F000000", c[i]))

@@ -10,7 +10,8 @@ import javax.persistence.*;
 @Table(name = "user")
 @JsonIgnoreProperties({"createdAt", "updatedAt"})
 @JsonPropertyOrder({"id", "firstName", "lastName", "email", "isDefault"})
-public class User {
+public class User
+{
 
     @Id @GeneratedValue(generator = "increment")
     private Integer id;
@@ -78,5 +79,10 @@ public class User {
 
     public void setDefault(Boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s", this.firstName, this.lastName);
     }
 }

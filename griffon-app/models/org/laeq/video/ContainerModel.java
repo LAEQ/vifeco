@@ -16,17 +16,12 @@ import java.util.Set;
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
     private ObservableList<Video> videoList = FXCollections.observableArrayList();
-    private FilteredList<Video> filteredList = new FilteredList<>(videoList, p -> true);
 
     private Set<User> userSet = new HashSet<>();
     private Set<Collection> collectionSet = new HashSet<>();
     private Video selectedVideo;
     private String errors = "";
     private Preferences prefs;
-
-    public FilteredList<Video> getFilteredList() {
-        return filteredList;
-    }
 
     private Set<Category> categorySet = new HashSet<>();
 
@@ -55,8 +50,8 @@ public class ContainerModel extends AbstractGriffonModel {
     }
 
     public void update(Video video) {
-        this.selectedVideo.setUser(video.getUser());
-        this.selectedVideo.setCollection(video.getCollection());
+//        this.selectedVideo.setUser(video.getUser());
+//        this.selectedVideo.setCollection(video.getCollection());
     }
 
     public void addCategories(Set<Category> categories) {
@@ -68,11 +63,11 @@ public class ContainerModel extends AbstractGriffonModel {
     }
 
     public Map<Category, Long> getTotalByCategory(){
-        if(this.selectedVideo != null){
-            return this.selectedVideo.getTotalByCategory();
-        } else {
+//        if(this.selectedVideo != null){
+//            return this.selectedVideo.getTotalByCategory();
+//        } else {
             return new HashMap<>();
-        }
+//        }
     }
 
     public void deleteVideo() {

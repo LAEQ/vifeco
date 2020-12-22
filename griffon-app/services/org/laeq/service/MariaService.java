@@ -24,56 +24,56 @@ public class MariaService extends AbstractGriffonService {
     private DatabaseManager manager;
 
     public MariaService()  {
-        String dbPathStr = Settings.dbPath;
-        Path dbPath = Paths.get(dbPathStr);
 
-        if(! Files.exists(dbPath)){
-            try {
-                Files.createDirectories(dbPath);
-            } catch (IOException e) {
-                getLog().error("MariaService: cannot create " + dbPathStr);
+//        String dbPathStr = Settings.dbPath;
+//        Path dbPath = Paths.get(dbPathStr);
+//
+//        if(! Files.exists(dbPath)){
+//            try {
+//                Files.createDirectories(dbPath);
+//            } catch (IOException e) {
+//                getLog().error("MariaService: cannot create " + dbPathStr);
+//            }
+//        }
+//
+//        String importPathStr = Settings.importPath;
+//        Path importPath = Paths.get(importPathStr);
+//
+//        if(! Files.exists(importPath)) {
+//            try {
+//                Files.createDirectories(importPath);
+//            } catch (IOException e) {
+//                getLog().error("Import path creation: cannot create " + dbPathStr);
+//            }
+//        }
+//
+//        String videoPathStr = Settings.videoPath;
+//        Path videoPath = Paths.get(videoPathStr);
+//
+//        if(! Files.exists(videoPath)) {
+//            try {
+//                Files.createDirectories(videoPath);
+//            } catch (IOException e) {
+//                getLog().error("Import path creation: cannot create " + videoPathStr);
+//            }
+//        }
+//
+//        String statPathStr = Settings.statisticPath;
+//        Path statPah = Paths.get(statPathStr);
+//
+//        if(! Files.exists(statPah)) {
+//            try {
+//                Files.createDirectories(statPah);
+//            } catch (IOException e) {
+//                getLog().error("Import path creation: cannot create " + statPathStr);
+//            }
+//        }
 
-            }
-        }
-
-        String importPathStr = Settings.imporPath;
-        Path importPath = Paths.get(importPathStr);
-
-        if(! Files.exists(importPath)) {
-            try {
-                Files.createDirectories(importPath);
-            } catch (IOException e) {
-                getLog().error("Import path creation: cannot create " + dbPathStr);
-            }
-        }
-
-        String videoPathStr = Settings.videoPath;
-        Path videoPath = Paths.get(videoPathStr);
-
-        if(! Files.exists(videoPath)) {
-            try {
-                Files.createDirectories(videoPath);
-            } catch (IOException e) {
-                getLog().error("Import path creation: cannot create " + videoPathStr);
-            }
-        }
-
-        String statPathStr = Settings.statisticPath;
-        Path statPah = Paths.get(statPathStr);
-
-        if(! Files.exists(statPah)) {
-            try {
-                Files.createDirectories(statPah);
-            } catch (IOException e) {
-                getLog().error("Import path creation: cannot create " + statPathStr);
-            }
-        }
-
-        String dbUrl = String.format("jdbc:sqlite:%s/%s.db", dbPathStr, dbName);
-        System.out.println(dbUrl);
-//        String mariaDbUrl = "jdbc:mariadb://localhost:3306";
-        DatabaseConfigBean configBean = new DatabaseConfigBean( dbUrl, "root", "");
-        manager = new DatabaseManager(configBean);
+//        String dbUrl = String.format("jdbc:sqlite:%s/%s.db", dbPathStr, dbName);
+//
+////        String mariaDbUrl = "jdbc:mariadb://localhost:3306";
+//        DatabaseConfigBean configBean = new DatabaseConfigBean( dbUrl, "root", "");
+//        manager = new DatabaseManager(configBean);
 
     }
 
@@ -132,7 +132,7 @@ public class MariaService extends AbstractGriffonService {
         User defaultUser = userDAO.findDefault();
         Collection defaultCollection = collectionDAO.findDefault();
 
-        Video video = new Video(file.getAbsolutePath(), duration, defaultUser, defaultCollection);
+        Video video = new Video();
         getVideoDAO().insert(video);
 
         return video;

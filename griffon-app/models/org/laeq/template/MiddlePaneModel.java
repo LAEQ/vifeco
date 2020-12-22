@@ -4,18 +4,18 @@ import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Preferences;
-import org.laeq.model.Video;
+import org.laeq.model.Point;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class MiddlePaneModel extends AbstractGriffonModel {
-    private Video video;
+    private Point video;
     private Preferences preferences;
 
-    public Video getVideo() {
+    public Point getVideo() {
         return video;
     }
 
-    public void setVideo(Video video) {
+    public void setVideo(Point video) {
         this.video = video;
     }
 

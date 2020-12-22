@@ -191,15 +191,15 @@ public class PlayerView extends TranslatedView {
     }
 
     private void init() {
-        if(editor.isValid()){
-            mediaView.setMediaPlayer(editor.getMediaPlayer());
-            playActionTarget.setDisable(false);
-            updateValues();
-            videoTitle.setText(editor.getVideo().getName());
-        } else {
-            playActionTarget.setDisable(true);
-            alert("org.laeq.title.error", "org.laeq.video.file.error");
-        }
+//        if(editor.isValid()){
+//            mediaView.setMediaPlayer(editor.getMediaPlayer());
+//            playActionTarget.setDisable(false);
+//            updateValues();
+//            videoTitle.setText(editor.getVideo().getName());
+//        } else {
+//            playActionTarget.setDisable(true);
+//            alert("org.laeq.title.error", "org.laeq.video.file.error");
+//        }
 
         //Settings all the listeners ....
         currentTimeListener = currentTimeListener();

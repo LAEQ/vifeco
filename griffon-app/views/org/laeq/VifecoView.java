@@ -14,15 +14,16 @@ import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 
-
 @ArtifactProviderFor(GriffonView.class)
 public class VifecoView extends AbstractJavaFXGriffonView {
+    @Inject private DatabaseService dbService;
+
     private VBox top;
     private SplitPane middlePane;
-//    private AnchorPane
     private HBox bottom;
     private Scene scene;
 
@@ -45,7 +46,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
         createMVCGroup("menu");
         createMVCGroup("middle");
-        createMVCGroup("database");
+//        createMVCGroup("database");
     }
 
     @Override
@@ -61,7 +62,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
         scene.setRoot(generateView());
-        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
+//        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
         return scene;
     }
 

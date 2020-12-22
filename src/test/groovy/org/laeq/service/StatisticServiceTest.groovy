@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import javafx.util.Duration
 import org.laeq.model.Category
 import org.laeq.model.Point
-import org.laeq.model.Video
 import org.laeq.model.serializer.VideoSerializer
 import org.laeq.model.statistic.Graph
 import org.laeq.service.statistic.StatisticException
@@ -16,8 +15,8 @@ import spock.lang.Specification
 
 class StatisticServiceTest extends Specification {
     StatisticService service
-    Video video1
-    Video video2
+    Point video1
+    Point video2
 
     def setup(){
         service = new StatisticService()
@@ -76,8 +75,8 @@ class StatisticServiceTest extends Specification {
     def "test graph generation (vertices and edges) for one category"() {
         setup:
         int pointId= 1
-        Video video_1 = VideoGenerator.generateVideo(1,1)
-        Video video_2 = VideoGenerator.generateVideo(2, 1)
+        Point video_1 = VideoGenerator.generateVideo(1,1)
+        Point video_2 = VideoGenerator.generateVideo(2, 1)
 
         // generate 10 points starting from 10 every seconds
         VideoGenerator.generatePoints(video_1, 1, 10, 10, pointId)
@@ -177,8 +176,8 @@ class StatisticServiceTest extends Specification {
 
     def "test execute 3 points" () {
         setup:
-        Video video1 = VideoGenerator.generateVideo(1,1)
-        Video video2 = VideoGenerator.generateVideo(2, 1)
+        Point video1 = VideoGenerator.generateVideo(1,1)
+        Point video2 = VideoGenerator.generateVideo(2, 1)
 
         Category category = video1.collection.categorySet.find { it.id == 1}
 
@@ -204,8 +203,8 @@ class StatisticServiceTest extends Specification {
     def "test execute"() {
         setup:
         int pointId = 1
-        Video video1 = VideoGenerator.generateVideo(1,1)
-        Video video2 = VideoGenerator.generateVideo(2,1)
+        Point video1 = VideoGenerator.generateVideo(1,1)
+        Point video2 = VideoGenerator.generateVideo(2,1)
 
         Category category = video1.collection.categorySet.find { it.id == 1}
 
@@ -229,8 +228,8 @@ class StatisticServiceTest extends Specification {
     def "test analyse"() {
         setup:
         int pointId = 1
-        Video video1 = VideoGenerator.generateVideo(1,1)
-        Video video2 = VideoGenerator.generateVideo(2,1)
+        Point video1 = VideoGenerator.generateVideo(1,1)
+        Point video2 = VideoGenerator.generateVideo(2,1)
 
         Category category = video1.collection.categorySet.find { it.id == 1}
 
@@ -252,8 +251,8 @@ class StatisticServiceTest extends Specification {
     def "test analyse with 3 categories" () {
         setup:
         int pointId = 1
-        Video video1 = VideoGenerator.generateVideo(1,3)
-        Video video2 = VideoGenerator.generateVideo(2,3)
+        Point video1 = VideoGenerator.generateVideo(1,3)
+        Point video2 = VideoGenerator.generateVideo(2,3)
 
         Category category1 = video1.collection.categorySet.find { it.id == 1}
         Category category2 = video1.collection.categorySet.find { it.id == 2}
@@ -291,8 +290,8 @@ class StatisticServiceTest extends Specification {
     def "tarjan edges for 1 second and 1 category" () {
         setup:
         int pointId = 1
-        Video video1 = VideoGenerator.generateVideo(1,3)
-        Video video2 = VideoGenerator.generateVideo(2,3)
+        Point video1 = VideoGenerator.generateVideo(1,3)
+        Point video2 = VideoGenerator.generateVideo(2,3)
 
         Category category1 = video1.collection.categorySet.find { it.id == 1}
         Category category2 = video1.collection.categorySet.find { it.id == 2}
@@ -317,8 +316,8 @@ class StatisticServiceTest extends Specification {
     def "tarjan edges for 2 seconds and 1 category" () {
         setup:
         int pointId = 1
-        Video video1 = VideoGenerator.generateVideo(1,3)
-        Video video2 = VideoGenerator.generateVideo(2,3)
+        Point video1 = VideoGenerator.generateVideo(1,3)
+        Point video2 = VideoGenerator.generateVideo(2,3)
 
         when:
         VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
@@ -352,8 +351,8 @@ class StatisticServiceTest extends Specification {
     def "tarjan edges for 5 second and 1 category" () {
         setup:
         int pointId = 1
-        Video video1 = VideoGenerator.generateVideo(1,1)
-        Video video2 = VideoGenerator.generateVideo(2,1)
+        Point video1 = VideoGenerator.generateVideo(1,1)
+        Point video2 = VideoGenerator.generateVideo(2,1)
 
         when:
         VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
@@ -382,8 +381,8 @@ class StatisticServiceTest extends Specification {
     def "serialize tarjanDiff" () {
         setup:
         int pointId = 1
-        Video video1 = VideoGenerator.generateVideo(1, 3)
-        Video video2 = VideoGenerator.generateVideo(2, 3)
+        Point video1 = VideoGenerator.generateVideo(1, 3)
+        Point video2 = VideoGenerator.generateVideo(2, 3)
 
         when:
         VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
@@ -409,7 +408,7 @@ class StatisticServiceTest extends Specification {
         ObjectMapper mapper = new ObjectMapper();
 
         SimpleModule module = new SimpleModule();
-        module.addSerializer(Video.class, new VideoSerializer())
+        module.addSerializer(Point.class, new VideoSerializer())
         mapper.registerModule(module)
 
         String result = mapper.writeValueAsString(service)
@@ -420,8 +419,8 @@ class StatisticServiceTest extends Specification {
 
     def "test with 2 files"(){
         setup:
-        Video video1
-        Video video2
+        Point video1
+        Point video2
         try{
             def json_video1 = getClass().classLoader.getResource("statistic/export.json").text
             ImportService service = new ImportService()
@@ -445,8 +444,8 @@ class StatisticServiceTest extends Specification {
 
     def "test with 2 files with 1500 points"(){
         setup:
-        Video video1
-        Video video2
+        Point video1
+        Point video2
         try{
             def json_video1 = getClass().classLoader.getResource("statistic/export-2018-08-31_TRAJET10.mp4.json").text
             ImportService service = new ImportService()

@@ -2,12 +2,13 @@ package org.laeq.db
 
 import org.laeq.model.Category
 import org.laeq.model.Collection
+import spock.lang.Specification
 
-class CategoryDAOTest extends AbstractDAOTest {
+class CategoryDAOTest extends Specification{
     CategoryDAO repository
 
     def setup(){
-        repository = new CategoryDAO(manager)
+        repository = new CategoryDAO()
     }
 
     def "test insertion"() {

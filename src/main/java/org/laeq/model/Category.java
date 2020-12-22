@@ -18,7 +18,7 @@ public class Category extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String icon;
 
     @Column(nullable = false)
@@ -44,6 +44,14 @@ public class Category extends BaseEntity {
         this.icon = icon;
         this.shortcut = shortcut;
         this.color = color;
+    }
+
+    public Category(String[] values) {
+        super();
+        this.setName(values[0]);
+        this.setIcon(values[1]);
+        this.setColor(values[2]);
+        this.setShortcut(values[3]);
     }
 
     public int getId() {

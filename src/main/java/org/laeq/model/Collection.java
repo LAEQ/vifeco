@@ -92,13 +92,9 @@ public class Collection {
 
     @Override
     public String toString() {
-        return "Collection{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return name;
     }
-
-    //    @JsonIgnore
+//    @JsonIgnore
 //    public List<Integer> getCategoryIds() {
 //        return categorySet.stream().map(Category::getId).collect(toList());
 //    }

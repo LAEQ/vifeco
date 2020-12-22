@@ -13,8 +13,7 @@ import org.laeq.TranslationService;
 import org.laeq.db.CategoryDAO;
 import org.laeq.db.PointDAO;
 import org.laeq.db.VideoDAO;
-import org.laeq.model.Category;
-import org.laeq.model.Video;
+import org.laeq.model.Point;
 import org.laeq.service.MariaService;
 import org.laeq.service.statistic.StatisticException;
 import org.laeq.service.statistic.StatisticService;
@@ -52,16 +51,16 @@ public class ContainerController extends AbstractGriffonController {
         pointDAO = dbService.getPointDAO();
         categoryDAO = dbService.getCategoryDAO();
 
-        List<Video> videos = videoDAO.findAll();
+//        List<Point> videos = videoDAO.findAll();
 
-        videos.forEach(video -> {
-            video.getPointSet().addAll(pointDAO.findByVideo(video));
-            Set<Category> categorySet = categoryDAO.findByCollection(video.getCollection());
-            video.getCollection().getCategorySet().addAll(categorySet);
-        });
+//        videos.forEach(video -> {
+//            video.getPointSet().addAll(pointDAO.findByVideo(video));
+//            Set<Category> categorySet = categoryDAO.findByCollection(video.getCollection());
+//            video.getCollection().getCategorySet().addAll(categorySet);
+//        });
 
         model.setPrefs(preferenceService.getPreferences());
-        model.addVideos(videos);
+//        model.addVideos(videos);
         view.init();
 
         getApplication().getEventRouter().addEventListener(listeners());
@@ -72,32 +71,32 @@ public class ContainerController extends AbstractGriffonController {
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void compare(){
         model.getVideos().parallelStream().forEach(video -> {
-            Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
-
-            while (it.hasNext()){
-                File file = (File) it.next();
-
-                if(file.getName().contains(video.getName())){
-                    try {
-
-                        StatisticService statService = new StatisticService();
-
-                        String content = FileUtils.readFileToString(file, "UTF-8");
-                        Video importVideo = importService.execute(content);
-
-                        String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, video.getName(), System.currentTimeMillis());
-
-                        statService.setVideos(video, importVideo);
-                        statService.setDurationStep(Duration.seconds(model.getDurationStep()));
-                        statService.execute();
-
-                        exportService.export(statService);
-
-                    } catch (IOException | StatisticException e) {
-                        getLog().error(e.getMessage());
-                    }
-                }
-            }
+//            Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
+//
+//            while (it.hasNext()){
+//                File file = (File) it.next();
+//
+//                if(file.getName().contains(video.getName())){
+//                    try {
+//
+//                        StatisticService statService = new StatisticService();
+//
+//                        String content = FileUtils.readFileToString(file, "UTF-8");
+//                        Point importVideo = importService.execute(content);
+//
+//                        String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, video.getName(), System.currentTimeMillis());
+//
+//                        statService.setVideos(video, importVideo);
+//                        statService.setDurationStep(Duration.seconds(model.getDurationStep()));
+//                        statService.execute();
+//
+//                        exportService.export(statService);
+//
+//                    } catch (IOException | StatisticException e) {
+//                        getLog().error(e.getMessage());
+//                    }
+//                }
+//            }
         });
 
         runInsideUISync(() -> {
