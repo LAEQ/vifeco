@@ -16,27 +16,23 @@ public abstract class AbstractDAO<T> {
         this.hib = hib;
     }
 
-    protected void saveOrUpdate(T obj) {
+    protected void saveOrUpdate(T obj) throws Exception{
         try {
             startOperation();
             session.saveOrUpdate(obj);
             transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             session.close();
         }
     }
 
-    public abstract void create(T category);
+    public abstract void create(T category) throws Exception;
 
-    protected void delete(T obj) {
+    protected void delete(T obj) throws Exception {
         try {
             startOperation();
             session.delete(obj);
             transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             session.close();
         }

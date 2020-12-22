@@ -2,9 +2,7 @@ package org.laeq.model;
 
 import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
 @Entity
@@ -21,7 +19,7 @@ public class Collection {
     @ColumnDefault("False")
     private Boolean isDefault;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(name="collection_category", joinColumns = {@JoinColumn(name="collection_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
     private Set<Category> categorySet;
 

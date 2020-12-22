@@ -5,7 +5,7 @@
 <?import javafx.scene.text.*?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0"
             xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.laeq.category.CategoryController">
+            fx:controller="org.laeq.CategoryController">
    <children>
       <GridPane layoutX="31.0" layoutY="67.0" prefHeight="196.0" prefWidth="314.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="70.0">
         <columnConstraints>

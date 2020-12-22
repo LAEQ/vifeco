@@ -32,11 +32,15 @@ public class DatabaseService extends AbstractGriffonService {
         this.pointDAO = new PointDAO(this.hbu);
 
         if(this.userDAO.findAll().size() == 0){
-            setUpDefaults();
+            try {
+                setUpDefaults();
+            }catch (Exception e){
+                System.out.println("Affichier message set up fail");
+            }
         }
     }
 
-    private void setUpDefaults(){
+    private void setUpDefaults() throws Exception {
         User defaultUser = new User();
         defaultUser.setFirstName("default");
         defaultUser.setLastName("default");

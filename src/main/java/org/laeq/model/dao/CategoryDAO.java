@@ -11,12 +11,12 @@ public class CategoryDAO extends AbstractDAO<Category> {
     }
 
     @Override
-    public void create(Category category){
+    public void create(Category category) throws Exception {
         super.saveOrUpdate(category);
     }
 
     @Override
-    public void delete(Category category){
+    public void delete(Category category) throws Exception {
         super.delete(category);
     }
 

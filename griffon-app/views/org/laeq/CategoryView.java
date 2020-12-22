@@ -1,4 +1,4 @@
-package org.laeq.category;
+package org.laeq;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
@@ -13,8 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
-import org.laeq.TranslatedView;
-import org.laeq.TranslationService;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
 import org.laeq.model.icon.IconSVG;
@@ -27,9 +25,9 @@ import java.io.IOException;
 import java.util.Locale;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ContainerView extends TranslatedView {
-    @MVCMember @Nonnull private ContainerController controller;
-    @MVCMember @Nonnull private ContainerModel model;
+public class CategoryView extends TranslatedView {
+    @MVCMember @Nonnull private CategoryController controller;
+    @MVCMember @Nonnull private CategoryModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
     @FXML private TextField nameField;
@@ -147,10 +145,10 @@ public class ContainerView extends TranslatedView {
         nameColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getName()));
         shortCutColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getShortcut()));
 
-        model.nameProperty().bindBidirectional(nameField.textProperty());
-        model.shortCutProperty().bindBidirectional(shortCutField.textProperty());
-        model.iconProperty().bindBidirectional(pathField.textProperty());
-        model.colorProperty().bindBidirectional(colorPickerField.textProperty());
+        model.name.bindBidirectional(nameField.textProperty());
+        model.shortCut.bindBidirectional(shortCutField.textProperty());
+        model.icon.bindBidirectional(pathField.textProperty());
+        model.color.bindBidirectional(colorPickerField.textProperty());
 
         pathField.textProperty().addListener((observable, oldValue, newValue) -> {
            svgPath.setContent(newValue);
@@ -158,7 +156,7 @@ public class ContainerView extends TranslatedView {
 
         iconColumn.setCellFactory(iconAction());
         actionColumn.setCellFactory(addActions());
-        categoryTable.setItems(this.model.getCategoryList());
+        categoryTable.setItems(this.model.categoryList);
     }
 
     private Callback<TableColumn<Category, Void>, TableCell<Category, Void>> addActions() {

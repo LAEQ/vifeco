@@ -1,29 +1,28 @@
-package org.laeq.user;
+package org.laeq;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.Callback;
-import org.laeq.TranslatedView;
-import org.laeq.TranslationService;
 import org.laeq.model.Icon;
 import org.laeq.model.User;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
-
+import org.laeq.user.PreferencesService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ContainerView extends TranslatedView {
-    @MVCMember @Nonnull private ContainerController controller;
-    @MVCMember @Nonnull private ContainerModel model;
+public class UserView extends TranslatedView {
+    @MVCMember @Nonnull private UserController controller;
+    @MVCMember @Nonnull private UserModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
     @FXML private TableView<User> userTable;
@@ -74,19 +73,20 @@ public class ContainerView extends TranslatedView {
 
         userTable.getColumns().addAll(idColumn, firstNameColumn, lastNameColumn, emailColumn, defaultColumn, actionsColumn);
 
-//        idColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> String.valueOf(cellData.getValue().getId())));
-//        firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
-//        lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
-//        emailColumn.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
-//        defaultColumn.setCellValueFactory(cellData -> cellData.getValue().getIsDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
-
+        idColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
+        firstNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFirstName()));
+        lastNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLastName()));
+        emailColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
+        defaultColumn.setCellValueFactory(cellData -> cellData.getValue().getDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
+//        defaultColumn.setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().getDefault()));
         actionsColumn.setCellFactory(addActions());
 
-        model.firstNameProperty().bindBidirectional(firstNameField.textProperty());
-        model.lastNameProperty().bindBidirectional(lastNameField.textProperty());
-        model.emailProperty().bindBidirectional(emailField.textProperty());
+        model.firstName.bindBidirectional(firstNameField.textProperty());
+        model.lastName.bindBidirectional(lastNameField.textProperty());
+        model.email.bindBidirectional(emailField.textProperty());
 
-        userTable.setItems(model.getUserList());
+        userTable.setItems(model.userList);
+
         setTranslatedText();
     }
 

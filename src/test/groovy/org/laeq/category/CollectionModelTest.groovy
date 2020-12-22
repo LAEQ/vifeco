@@ -1,12 +1,12 @@
 package org.laeq.category
 
-
+import org.laeq.CollectionModel
 import spock.lang.Specification
 
 class CollectionModelTest extends Specification {
-    org.laeq.collection.ContainerModel model;
+    CollectionModel model;
     void setup() {
-        model = new org.laeq.collection.ContainerModel();
+        model = new CollectionModel();
     }
 
 //    def "test entity generation"() {

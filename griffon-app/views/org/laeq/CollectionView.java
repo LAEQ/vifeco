@@ -1,16 +1,19 @@
-package org.laeq.collection;
+package org.laeq;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
+import org.laeq.CollectionController;
+import org.laeq.CollectionModel;
 import org.laeq.TranslatedView;
 import org.laeq.TranslationService;
 import org.laeq.model.Category;
@@ -26,12 +29,13 @@ import org.laeq.user.PreferencesService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ContainerView extends TranslatedView {
-    @MVCMember @Nonnull private ContainerController controller;
-    @MVCMember @Nonnull private ContainerModel model;
+public class CollectionView extends TranslatedView {
+    @MVCMember @Nonnull private CollectionController controller;
+    @MVCMember @Nonnull private CollectionModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
     @FXML private Label nameLabel;
@@ -67,7 +71,7 @@ public class ContainerView extends TranslatedView {
     private void init(){
         TableColumn<Collection, String> idColumn = new TableColumn<>("#");
         TableColumn<Collection, String> nameColumn = new TableColumn("");
-        TableColumn categoryListColumn = new TableColumn("");
+        TableColumn<Collection, String> categoryListColumn = new TableColumn("");
         TableColumn<Collection, Icon>  isDefaultColumn = new TableColumn("");
         TableColumn<Collection, Void> actionColumn = new TableColumn<>("");
 
@@ -75,40 +79,39 @@ public class ContainerView extends TranslatedView {
         columnsMap.put(isDefaultColumn, "org.laeq.collection.column.is_default");
         columnsMap.put(categoryListColumn, "org.laeq.collection.column.categories");
         columnsMap.put(actionColumn, "org.laeq.collection.column.actions");
-//
-//        idColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> String.valueOf(cellData.getValue().getId())));
-//        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-//        isDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().isIsDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
-//        actionColumn.setCellFactory(addActions());
-//        categoryListColumn.setCellValueFactory(new PropertyValueFactory<Collection, Boolean>("prout"));
-//        categoryListColumn.setCellFactory(iconAction());
+
+        nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        isDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().getDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
+        actionColumn.setCellFactory(addActions());
 
         collectionTable.getColumns().addAll(idColumn, nameColumn, categoryListColumn, isDefaultColumn, actionColumn);
-        collectionTable.setItems(this.model.getCollections());
+        collectionTable.setItems(this.model.collections);
+
+        model.name.bindBidirectional(nameField.textProperty());
+
     }
 
     public void initForm(){
-        model.nameProperty().bindBidirectional(nameField.textProperty());
-        model.isDefaultProperty().setValue(false);
+        runInsideUISync(() -> {
+            double x = 0;
+            double y = 0;
+            double index = 0;
+            for (Category category : model.getCategories()) {
+                CategoryCheckedBox checkedBox = new CategoryCheckedBox(category);
+                checkedBox.setLayoutX(x);
+                checkedBox.setLayoutY(y);
+                x += checkedBox.getWidth() + 20;
+                index++;
 
-        double x = 0;
-        double y = 0;
-        double index = 0;
-        for (Category category: model.getCategories()) {
-            CategoryCheckedBox checkedBox = new CategoryCheckedBox(category);
-            checkedBox.setLayoutX(x);
-            checkedBox.setLayoutY(y);
-            x += checkedBox.getWidth() + 20;
-            index++;
+                if (index != 0 && index % 3 == 0) {
+                    x = 0;
+                    y += 45;
+                }
 
-            if(index != 0 && index % 3 == 0) {
-                x = 0;
-                y += 45;
+                categoryContainer.getChildren().add(checkedBox);
+                checkedBox.getBox().selectedProperty().bindBidirectional(model.categorySBP.get(category));
             }
-
-            categoryContainer.getChildren().add(checkedBox);
-            checkedBox.getBox().selectedProperty().bindBidirectional(model.getSBP(category));
-        }
+        });
     }
 
     public void changeLocale() {
@@ -153,7 +156,6 @@ public class ContainerView extends TranslatedView {
                     edit.setGraphic(icon);
                     edit.setOnMouseClicked(event -> {
                         model.setSelectedCollection(collectionTable.getItems().get(getIndex()));
-                        translate(titleLabel, translationService.getMessage("org.laeq.collection.title_edit"));
                     });
 
                     delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));
@@ -176,41 +178,41 @@ public class ContainerView extends TranslatedView {
             return cell;
         };
     }
-    private Callback<TableColumn<Collection, Boolean>, TableCell<Collection, Boolean>> iconAction() {
-        return  param -> {
-            TableCell<Collection, Boolean> cell = new TableCell<Collection, Boolean>() {
-
-                @Override
-                protected void updateItem(Boolean item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    Group group = new Group();
-
-                    try {
-                        Set<Category> categorySet = collectionTable.getItems().get(getIndex()).getCategorySet();
-
-                        if(categorySet != null){
-                            IconDescriptorMatrice matrix = new IconDescriptorMatrice(categorySet);
-                            group.getChildren().addAll(matrix.getIconMap().values());
-                        }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        getLog().error(e.getMessage());
-                    } catch (Exception e) {
-                        getLog().error(e.getMessage());
-                    }
-
-                    if (empty) {
-                        setGraphic(null);
-                        setText(null);
-                    } else {
-                        setGraphic(group);
-                    }
-                }
-            };
-
-            return cell;
-        };
-    }
+//    private Callback<TableColumn<Collection, Boolean>, TableCell<Collection, Boolean>> iconAction() {
+//        return  param -> {
+//            TableCell<Collection, Boolean> cell = new TableCell<Collection, Boolean>() {
+//
+//                @Override
+//                protected void updateItem(Boolean item, boolean empty) {
+//                    super.updateItem(item, empty);
+//
+//                    Group group = new Group();
+//
+//                    try {
+//                        Set<Category> categorySet = collectionTable.getItems().get(getIndex()).getCategorySet();
+//
+//                        if(categorySet != null){
+//                            IconDescriptorMatrice matrix = new IconDescriptorMatrice(categorySet);
+//                            group.getChildren().addAll(matrix.getIconMap().values());
+//                        }
+//                    } catch (ArrayIndexOutOfBoundsException e) {
+//                        getLog().error(e.getMessage());
+//                    } catch (Exception e) {
+//                        getLog().error(e.getMessage());
+//                    }
+//
+//                    if (empty) {
+//                        setGraphic(null);
+//                        setText(null);
+//                    } else {
+//                        setGraphic(group);
+//                    }
+//                }
+//            };
+//
+//            return cell;
+//        };
+//    }
     public void clear() {
         translate(titleLabel, "org.laeq.collection.title_create");
     }
