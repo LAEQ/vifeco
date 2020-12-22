@@ -19,10 +19,8 @@ public class Collection {
     @ColumnDefault("False")
     private Boolean isDefault;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
-    @JoinTable(name="collection_category",
-            joinColumns = @JoinColumn(name="collection_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "collection_id", referencedColumnName = "id")
     private Set<Category> categorySet;
 
     public Collection() {

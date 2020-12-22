@@ -28,9 +28,6 @@ public class Category extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String shortcut;
 
-    @ManyToMany(mappedBy = "collections")
-    private List<Collection> collectionList;
-
     public Category() {
     }
 
