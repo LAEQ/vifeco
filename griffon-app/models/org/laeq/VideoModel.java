@@ -1,4 +1,4 @@
-package org.laeq.video;
+package org.laeq;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
@@ -7,31 +7,21 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.*;
+import org.laeq.model.Collection;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class ContainerModel extends AbstractGriffonModel {
-    private ObservableList<Video> videoList = FXCollections.observableArrayList();
+public class VideoModel extends AbstractGriffonModel {
+    public ObservableList<Video> videoList = FXCollections.observableArrayList();
 
-    private Set<User> userSet = new HashSet<>();
-    private Set<Collection> collectionSet = new HashSet<>();
-    private Video selectedVideo;
-    private String errors = "";
+    public Set<User> userSet = new HashSet<>();
+    public Set<Collection> collectionSet = new HashSet<>();
+    public Video selectedVideo;
     private Preferences prefs;
 
-    private Set<Category> categorySet = new HashSet<>();
+    public List<Category> categorySet = new ArrayList<>();
 
-    public Video getSelectedVideo() {
-        return selectedVideo;
-    }
-
-    public ObservableList<Video> getVideoList() {
-        return videoList;
-    }
     public Set<Collection> getCollectionSet() {
         return collectionSet;
     }
@@ -46,20 +36,11 @@ public class ContainerModel extends AbstractGriffonModel {
 
     public void clear() {
         this.selectedVideo = null;
-        this.errors = "";
     }
 
     public void update(Video video) {
 //        this.selectedVideo.setUser(video.getUser());
 //        this.selectedVideo.setCollection(video.getCollection());
-    }
-
-    public void addCategories(Set<Category> categories) {
-        this.categorySet.addAll(categories);
-    }
-
-    public Set<Category> getCategorySet() {
-        return categorySet;
     }
 
     public Map<Category, Long> getTotalByCategory(){
@@ -68,11 +49,6 @@ public class ContainerModel extends AbstractGriffonModel {
 //        } else {
             return new HashMap<>();
 //        }
-    }
-
-    public void deleteVideo() {
-        videoList.remove(this.selectedVideo);
-        this.selectedVideo = null;
     }
 
     public void setPrefs(Preferences preferences) {

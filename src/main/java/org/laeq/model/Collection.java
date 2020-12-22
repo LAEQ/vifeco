@@ -19,8 +19,10 @@ public class Collection {
     @ColumnDefault("False")
     private Boolean isDefault;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    @JoinTable(name="collection_category", joinColumns = {@JoinColumn(name="collection_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(name="collection_category",
+            joinColumns = @JoinColumn(name="collection_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categorySet;
 
     public Collection() {
@@ -55,7 +57,6 @@ public class Collection {
     public void setDefault(Boolean aDefault) {
         isDefault = aDefault;
     }
-
 
     public Set<Category> getCategorySet() {
         return categorySet;

@@ -1,10 +1,8 @@
-package org.laeq.video;
+package org.laeq;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -17,11 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import org.laeq.TranslatedView;
-import org.laeq.TranslationService;
 import org.laeq.model.*;
 import org.laeq.model.icon.IconCounter;
-import org.laeq.model.icon.IconCounterMatrice;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
 import org.laeq.user.PreferencesService;
@@ -34,9 +29,9 @@ import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ContainerView extends TranslatedView {
-    @MVCMember @Nonnull private ContainerController controller;
-    @MVCMember @Nonnull private ContainerModel model;
+public class VideoView extends TranslatedView {
+    @MVCMember @Nonnull private VideoController controller;
+    @MVCMember @Nonnull private VideoModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
     @FXML private TableView<Video> videoTable;
@@ -132,7 +127,7 @@ public class ContainerView extends TranslatedView {
 //        editColumn.setCellValueFactory(cellData -> cellData.getValue().isEditable() ? null : new SimpleObjectProperty<>(new Icon(IconSVG.error, Color.DARKORANGE.toString())));
 
 
-        videoTable.setItems(this.model.getVideoList());
+        videoTable.setItems(this.model.videoList);
 //        videoTable.getSelectionModel().selectedItemProperty().addListener(observable -> {
 //            if(videoTable.getSelectionModel().getSelectedItem() != null){
 //                model.setSelectedVideo(videoTable.getSelectionModel().getSelectedItem());

@@ -1,4 +1,4 @@
-package org.laeq.video;
+package org.laeq;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
@@ -7,15 +7,13 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.scene.control.TableColumn;
-import org.laeq.CRUDController;
-import org.laeq.DatabaseService;
-import org.laeq.TranslationService;
 import org.laeq.icon.IconService;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.model.dao.VideoDAO;
 import org.laeq.user.PreferencesService;
+import org.laeq.video.ExportService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -23,9 +21,9 @@ import java.io.IOException;
 import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
-public class ContainerController extends CRUDController<Video> {
-    @MVCMember @Nonnull private ContainerModel model;
-    @MVCMember @Nonnull private ContainerView view;
+public class VideoController extends CRUDController<Video> {
+    @MVCMember @Nonnull private VideoModel model;
+    @MVCMember @Nonnull private VideoView view;
 
     @Inject private DatabaseService dbService;
     @Inject private ExportService exportService;
@@ -33,22 +31,21 @@ public class ContainerController extends CRUDController<Video> {
     @Inject private PreferencesService prefService;
 
     private TranslationService translationService;
-    private VideoDAO videoDAO;
+
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
 //        model.setPrefs(prefService.getPreferences());
 //        setTranslationService();
-//
 
-        model.getVideoList().addAll(dbService.videoDAO.findAll());
+        model.videoList.addAll(dbService.videoDAO.findAll());
         model.getUserSet().addAll(dbService.userDAO.findAll());
         model.getCollectionSet().addAll(dbService.collectionDAO.findAll());
-//        model.addCategories(categorySet);
-//
+        model.categorySet.addAll(dbService.categoryDAO.findAll());
+
         view.initForm();
-//
-//        getApplication().getEventRouter().addEventListener(listeners());
+
+        getApplication().getEventRouter().addEventListener(listeners());
     }
 
     @ControllerAction
@@ -84,9 +81,7 @@ public class ContainerController extends CRUDController<Video> {
     }
 
     public void delete(){
-
-        if(model.getSelectedVideo() == null){
-            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
+        if(model.selectedVideo == null){
             return;
         }
 
@@ -105,12 +100,11 @@ public class ContainerController extends CRUDController<Video> {
     }
 
     public void edit(){
-        if(model.getSelectedVideo() == null){
-            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
+        if(model.selectedVideo == null){
             return;
         }
 
-        publishEvent("video.edit", this.model.getSelectedVideo());
+        publishEvent("video.edit", this.model.selectedVideo);
     }
 
     public void export(){
@@ -130,8 +124,7 @@ public class ContainerController extends CRUDController<Video> {
     }
 
     public void editVideo(Video video) {
-        if(model.getSelectedVideo() == null){
-            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
+        if(model.selectedVideo == null){
             return;
         }
 
@@ -175,11 +168,11 @@ public class ContainerController extends CRUDController<Video> {
     }
 
     public void showDetail() {
-        if(model.getSelectedVideo() != null){
-            setPoints(model.getSelectedVideo());
-            setCategories(model.getSelectedVideo());
-            view.showDetails();
-        }
+//        if(model.getSelectedVideo() != null){
+//            setPoints(model.getSelectedVideo());
+//            setCategories(model.getSelectedVideo());
+//            view.showDetails();
+//        }
     }
 
     private void setPoints(Video video){

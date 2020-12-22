@@ -35,7 +35,8 @@ public class DatabaseService extends AbstractGriffonService {
             try {
                 setUpDefaults();
             }catch (Exception e){
-                System.out.println("Affichier message set up fail");
+                e.printStackTrace();
+//                System.out.println("Affichier message set up fail");
             }
         }
     }
