@@ -13,12 +13,11 @@ class CollectionDAOTest extends Specification {
         catDao = new CategoryDAO(new HibernateUtil('hibernate.cfg.xml'))
         dao = new CollectionDAO(new HibernateUtil('hibernate.cfg.xml'))
 
-        category_1 = new Category("mock name", "mock icon", "#FFFFFF", "A")
-        category_2 = new Category("mock name", "mock icon", "#FFFFFF", "B")
+        category_1 = EntityGenerator.createCategory("A")
+        category_2 = EntityGenerator.createCategory("B")
 
         catDao.create(category_1)
         catDao.create(category_2)
-
     }
 
     void cleanup() {
@@ -26,19 +25,19 @@ class CollectionDAOTest extends Specification {
 
     def "test one insertion"(){
         setup:
-        Collection col_1 = new Collection("mock col 1")
-        col_1.addCategory(category_1)
-
+        Collection collection = new Collection("mock col 1")
+        collection.addCategory(category_1)
+        collection.addCategory(category_2)
 
         when:
-        dao.create(col_1)
+        dao.create(collection)
 
         then:
-        col_1.getId() != null
-        col_1.getCategorySet().size() == 1
+        collection.getId() != null
+        collection.getCategories().size() == 2
     }
 
-    def "test multiple insertion"(){
+    def "test insertion with transient category"(){
         setup:
         Collection col_1 = new Collection("mock col 1")
         col_1.addCategory(category_1)
@@ -48,10 +47,88 @@ class CollectionDAOTest extends Specification {
         when:
         dao.create(col_1)
 
-
         then:
         col_1.getId() != null
-        col_1.getCategorySet().size() == 3
+        col_1.getCategories().size() == 3
         catDao.findAll().size() == 3
+    }
+
+    def "test multiple collection "(){
+        setup:
+        Collection col_1 = new Collection("mock col 1")
+        col_1.addCategory(category_1)
+        Collection col_2 = new Collection("mock col 1")
+        col_2.addCategory(category_1)
+
+        when:
+        dao.create(col_1)
+        dao.create(col_2)
+
+        then:
+        dao.findAll().size() == 2
+    }
+
+    def "test delete collection "(){
+        setup:
+        Collection col_1 = new Collection("mock col 1")
+        col_1.addCategory(category_1)
+        dao.create(col_1)
+
+        when:
+        dao.delete(col_1)
+
+        then:
+        notThrown Exception
+    }
+
+    def "fetch eager category"(){
+        setup:
+        Collection col_1 = new Collection("mock col 1")
+        col_1.addCategory(category_1)
+        dao.create(col_1)
+        def id = col_1.getId()
+
+        when:
+        def col = dao.findOneById(id)
+
+        then:
+        col.getId() == id
+        col.getCategories().size() == 1
+    }
+
+    def "delete one collection to test CascadeType.PERSIST, CascadeType.MERGE"(){
+        setup:
+        Collection col_1 = new Collection("mock col 1")
+        col_1.addCategory(category_1)
+        Collection col_2 = new Collection("mock col 2")
+        col_2.addCategory(category_1)
+        col_2.addCategory(category_2)
+        dao.create(col_1)
+        dao.create(col_2)
+
+        when:
+        dao.delete(col_1)
+        def col = dao.findOneById(col_2.getId())
+
+        then:
+        col != null
+        col.getCategories().size() == 2
+    }
+
+    def "cannot delete a category coz CascadeType"(){
+        setup:
+        Collection col_1 = new Collection("mock col 1")
+        col_1.addCategory(category_1)
+        Collection col_2 = new Collection("mock col 2")
+        col_2.addCategory(category_1)
+        col_2.addCategory(category_2)
+        dao.create(col_1)
+        dao.create(col_2)
+
+        when:
+        catDao.delete(category_1)
+
+        then:
+        thrown Exception
     }
 }

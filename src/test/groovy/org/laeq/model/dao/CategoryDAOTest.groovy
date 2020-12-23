@@ -16,18 +16,18 @@ class CategoryDAOTest extends Specification {
 
     def "test insertion"() {
         setup:
-        Category category = new Category("mock name", "mock icon", "#FFFFFF", "A")
+        Category category = EntityGenerator.createCategory("A")
 
         when:
         dao.create(category)
 
         then:
-        category == new Category(1, "mock name", "mock icon", "#FFFFFF", "A")
+        category.getId() != null
     }
 
     def "test delete"() {
         setup:
-        Category category = new Category("mock name", "mock icon", "#FFFFFF", "A")
+        Category category = EntityGenerator.createCategory("A")
         dao.create(category)
 
         when:
@@ -39,8 +39,8 @@ class CategoryDAOTest extends Specification {
 
     def "test findAll"(){
         setup:
-        Category category = new Category("mock name", "mock icon", "#FFFFFF", "A")
-        Category category2 = new Category("mock name", "mock icon", "#FFFFFF", "B")
+        Category category = EntityGenerator.createCategory("A")
+        Category category2 = EntityGenerator.createCategory("B")
         dao.create(category)
         dao.create(category2)
 

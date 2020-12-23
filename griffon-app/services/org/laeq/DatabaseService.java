@@ -2,6 +2,7 @@ package org.laeq;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.db.HibernateUtil;
 import org.laeq.model.Category;
@@ -31,14 +32,17 @@ public class DatabaseService extends AbstractGriffonService {
         this.collectionDAO = new CollectionDAO(this.hbu);
         this.pointDAO = new PointDAO(this.hbu);
 
-        if(this.userDAO.findAll().size() == 0){
-            try {
+        try {
+            int total = this.userDAO.findAll().size();
+
+            if(total == 0){
                 setUpDefaults();
-            }catch (Exception e){
-                e.printStackTrace();
-//                System.out.println("Affichier message set up fail");
             }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     private void setUpDefaults() throws Exception {
@@ -57,8 +61,13 @@ public class DatabaseService extends AbstractGriffonService {
         collection.setName("Transport");
         collection.setDefault(Boolean.TRUE);
 
+        List<Category> categories = getCategoryFixtures();
 
-        getCategoryFixtures().stream().forEach(category -> {
+        for(Category category: categories){
+            categoryDAO.create(category);
+        }
+
+        categories.forEach(category -> {
             collection.addCategory(category);
         });
 
@@ -68,7 +77,7 @@ public class DatabaseService extends AbstractGriffonService {
         collection2.setName("Transport 2");
         collection2.setDefault(Boolean.FALSE);
 
-        collection2.addCategory(getCategoryFixtures().get(0));
+        collection2.addCategory(categories.get(0));
 
         this.collectionDAO.create(collection2);
 
@@ -76,7 +85,7 @@ public class DatabaseService extends AbstractGriffonService {
         video.setPath("/home/david/Videos/sample.mp4");
         video.setCollection(collection);
         video.setUser(defaultUser);
-        video.setDuration(0.0);
+        video.setDuration(Duration.millis(1000));
 
         videoDAO.create(video);
     }

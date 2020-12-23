@@ -22,7 +22,12 @@ public class VideoDAO extends AbstractDAO<Video> {
     }
 
     @Override
-    public List<Video> findAll(){
+    public List<Video> findAll() throws Exception {
         return super.findAll(Video.class);
+    }
+
+    @Override
+    public Video findOneById(int id) throws Exception {
+        return super.findById(id, Video.class);
     }
 }

@@ -24,7 +24,14 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     @Override
-    public List<User> findAll(){
+    public List<User> findAll() throws Exception {
         return super.findAll(User.class);
     }
+
+    @Override
+    public User findOneById(int id) throws Exception {
+        return super.findById(id, User.class);
+    }
+
+
 }

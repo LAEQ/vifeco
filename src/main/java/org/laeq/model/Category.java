@@ -5,8 +5,10 @@ import com.sun.istack.NotNull;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Entity()
@@ -27,6 +29,12 @@ public class Category extends BaseEntity {
 
     @Column(nullable = false, unique = true)
     private String shortcut;
+
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.LAZY, mappedBy = "categories")
+    private Set<Collection> collections = new HashSet<>();
+
 
     public Category() {
     }
@@ -89,6 +97,18 @@ public class Category extends BaseEntity {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Set<Collection> getCollections() {
+        return collections;
+    }
+
+    public void setCollections(Set<Collection> collections) {
+        this.collections = collections;
     }
 
     @Override

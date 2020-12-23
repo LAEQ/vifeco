@@ -83,7 +83,7 @@ class CollectionDAOTest extends AbstractDAOTest {
         entity.removeCategory(2)
         entity.removeCategory(3)
 
-        println entity.categorySet.size()
+        println entity.categories.size()
 
         entity.addCategory(new Category(1, "Moving", "Moving","F000000" , "A"))
         entity.addCategory(new Category(4, "Moving", "Moving", "F000000","A"))
@@ -161,7 +161,7 @@ class CollectionDAOTest extends AbstractDAOTest {
 
         then:
         result == new Collection(1, "Default", true)
-        result.categorySet.size() == 4
+        result.categories.size() == 4
     }
 
     def "test findAll but empty"() {

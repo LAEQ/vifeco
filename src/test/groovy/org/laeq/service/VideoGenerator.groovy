@@ -9,7 +9,7 @@ class VideoGenerator {
 
         1.upto(totalCategory, {
             def category = generateCategory(it)
-            collection.categorySet.add(category)
+            collection.categories.add(category)
         })
 
         User user = new User(1, "test", "test", "test@test.com")
@@ -34,7 +34,7 @@ class VideoGenerator {
     }
 
     static void generatePoints(Point video, int categoryId, int seconds, int total, int pointId){
-        Category category = video.collection.categorySet.find { it.id == categoryId}
+        Category category = video.collection.setCategories.find { it.id == categoryId}
         1.upto(total, {
             Duration start = Duration.seconds(seconds + it)
             Point point = new Point(pointId++,10, 10, start, video, category)

@@ -18,8 +18,8 @@ class CollectionTest extends Specification {
         entity.addCategory(new Category(1, "category 1",  "icon", "F000000","A"))
 
         then:
-        entity.getCategorySet().size() == 2
-        entity.categorySet.collect { it.id } == [1, 2]
+        entity.getCategories().size() == 2
+        entity.categories.collect { it.id } == [1, 2]
 
     }
 
@@ -35,8 +35,8 @@ class CollectionTest extends Specification {
         entity.removeCategory(category)
 
         then:
-        entity.getCategorySet().size() == 1
-        entity.categorySet.collect{ it.id} == [1]
+        entity.getCategories().size() == 1
+        entity.categories.collect{ it.id} == [1]
     }
 
     def "RemoveCategory not exist"() {
@@ -51,7 +51,7 @@ class CollectionTest extends Specification {
         entity.removeCategory(new Category(5, "test", "test", "F000000" , "test"))
 
         then:
-        entity.getCategorySet().size() == 3
+        entity.getCategories().size() == 3
     }
 
     def "Get category ids"(){
@@ -149,6 +149,6 @@ class CollectionTest extends Specification {
         result.id == 1
         result.name == "Default"
         result.isDefault == false
-        result.categorySet.contains(new Category(1, 'Moving car', 'mock1', '#000000', 'A')) == true
+        result.categories.contains(new Category(1, 'Moving car', 'mock1', '#000000', 'A')) == true
     }
 }

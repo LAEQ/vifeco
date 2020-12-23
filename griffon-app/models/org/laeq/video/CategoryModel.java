@@ -43,7 +43,7 @@ public class CategoryModel extends AbstractGriffonModel {
     }
 
     public Set<Category> getCategorySet() {
-        return this.editor.getVideo().getCollection().getCategorySet();
+        return this.editor.getVideo().getCollection().getCategories();
     }
 
     public void addPoint(Point point) {

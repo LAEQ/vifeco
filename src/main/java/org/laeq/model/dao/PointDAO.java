@@ -21,7 +21,12 @@ public class PointDAO extends AbstractDAO<Point> {
     }
 
     @Override
-    public List<Point> findAll(){
+    public List<Point> findAll() throws Exception {
         return super.findAll(Point.class);
+    }
+
+    @Override
+    public Point findOneById(int id) throws Exception {
+        return super.findById(id, Point.class);
     }
 }

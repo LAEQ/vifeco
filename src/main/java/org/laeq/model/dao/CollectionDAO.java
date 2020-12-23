@@ -25,7 +25,12 @@ public class CollectionDAO extends AbstractDAO<Collection> {
     }
 
     @Override
-    public List<Collection> findAll(){
+    public List<Collection> findAll() throws Exception {
         return super.findAll(Collection.class);
+    }
+
+    @Override
+    public Collection findOneById(int id) throws Exception{
+        return super.findById(id, Collection.class);
     }
 }

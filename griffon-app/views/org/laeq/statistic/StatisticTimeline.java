@@ -44,7 +44,7 @@ public class StatisticTimeline extends Group {
     public void init(Video videoA, Video videoB) {
         this.videoA = videoA;
         this.videoB = videoB;
-        this.duration = Duration.millis(videoA.getDuration());
+        this.duration = videoA.getDuration();
         for (int i = 0; i < this.duration.toSeconds(); i++) {
             lines.add(drawLine(i));
             if (i % 5 == 0) {

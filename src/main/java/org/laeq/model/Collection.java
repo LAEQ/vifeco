@@ -19,12 +19,16 @@ public class Collection {
     @ColumnDefault("False")
     private Boolean isDefault;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "collection_id", referencedColumnName = "id")
-    private Set<Category> categorySet;
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER, targetEntity = Category.class)
+    @JoinTable(
+            name = "collection_category",
+            joinColumns = { @JoinColumn(name = "collection_id") },
+            inverseJoinColumns = { @JoinColumn(name = "category_id") }
+    )
+    private Set<Category> categories;
 
     public Collection() {
-        categorySet = new HashSet<>();
+        categories = new HashSet<>();
     }
 
     public Collection(String name) {
@@ -56,22 +60,22 @@ public class Collection {
         isDefault = aDefault;
     }
 
-    public Set<Category> getCategorySet() {
-        return categorySet;
+    public Set<Category> getCategories() {
+        return categories;
     }
 
-    public void setCategorySet(Set<Category> categorySet) {
-        this.categorySet = categorySet;
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 
     public void addCategory(Category category) {
-        categorySet.add(category);
+        categories.add(category);
     }
     public void removeCategory(Category category){
         removeCategory(category.getId());
     }
     public void removeCategory(int id){
-        categorySet.removeIf( category -> category.getId() == id);
+        categories.removeIf(category -> category.getId() == id);
     }
 
     @Override

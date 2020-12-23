@@ -2,6 +2,7 @@ package org.laeq.model.dao;
 
 import org.laeq.db.HibernateUtil;
 import org.laeq.model.Category;
+import org.laeq.model.Collection;
 
 import java.util.List;
 
@@ -21,7 +22,12 @@ public class CategoryDAO extends AbstractDAO<Category> {
     }
 
     @Override
-    public List<Category> findAll(){
+    public List<Category> findAll() throws Exception {
         return super.findAll(Category.class);
+    }
+
+    @Override
+    public Category findOneById(int id) throws Exception {
+        return super.findById(id, Category.class);
     }
 }

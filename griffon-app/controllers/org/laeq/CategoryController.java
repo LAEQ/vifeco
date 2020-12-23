@@ -30,7 +30,12 @@ public class CategoryController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        model.categoryList.addAll(dbService.categoryDAO.findAll());
+        try{
+            model.categoryList.addAll(dbService.categoryDAO.findAll());
+        } catch (Exception e){
+            System.out.println("Cannot fetch category");
+        }
+
 
         model.setPrefs(preferencesService.getPreferences());
         setTranslationService();

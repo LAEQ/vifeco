@@ -1,15 +1,12 @@
 package org.laeq;
 
 import griffon.core.artifact.GriffonModel;
-import griffon.core.i18n.MessageSource;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-import org.laeq.CRUDModelInterface;
-import org.laeq.TranslationService;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
 import org.laeq.model.Preferences;
@@ -18,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class CollectionModel extends AbstractGriffonModel implements CRUDModelInterface {
@@ -44,7 +40,7 @@ public class CollectionModel extends AbstractGriffonModel implements CRUDModelIn
         this.selectedCollection = collection;
 
         name.set(collection.getName());
-        collection.getCategorySet().forEach(category -> categorySBP.get(category).setValue(true));
+        collection.getCategories().forEach(category -> categorySBP.get(category).setValue(true));
     }
 
     public void clear(){
@@ -77,11 +73,11 @@ public class CollectionModel extends AbstractGriffonModel implements CRUDModelIn
         }
 
         this.selectedCollection.setName(name.get());
-        this.selectedCollection.getCategorySet().clear();
+        this.selectedCollection.getCategories().clear();
 
         for (Map.Entry<Category, SimpleBooleanProperty> me : categorySBP.entrySet()) {
             if(me.getValue().getValue()){
-                this.selectedCollection.getCategorySet().add(me.getKey());
+                this.selectedCollection.getCategories().add(me.getKey());
             }
         }
 

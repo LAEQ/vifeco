@@ -22,7 +22,7 @@ class CategoryModelTest extends Specification {
             set.add(new Category(i + 1, c[i].toString(), c[i].toString(), "F000000", c[i]))
         }
 
-        collection.categorySet.addAll(set)
+        collection.categories.addAll(set)
 
         Point point1 = new Point(1, 1, 1,Duration.millis(1000), video, set.find{it.id == 1})
         Point point2 = new Point(2, 1, 1,Duration.millis(1000), video, set.find{it.id == 1})

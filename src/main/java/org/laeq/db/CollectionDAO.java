@@ -6,8 +6,6 @@ import org.laeq.model.Collection;
 import javax.annotation.Nonnull;
 import java.sql.*;
 import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Set;
 
 public class CollectionDAO extends AbstractDAO implements DAOInterface<Collection> {
@@ -34,12 +32,12 @@ public class CollectionDAO extends AbstractDAO implements DAOInterface<Collectio
                 collection.setId(keys.getInt(1));
             }
 
-            if(! collection.getCategorySet().isEmpty()){
+            if(! collection.getCategories().isEmpty()){
                 String query2 = "INSERT INTO CATEGORY_COLLECTION (COLLECTION_ID, CATEGORY_ID) VALUES(?, ?)";
 
                 PreparedStatement statement1 = connection.prepareStatement(query2);
 
-                for (Category category: collection.getCategorySet()) {
+                for (Category category: collection.getCategories()) {
                     statement1.setInt(1, collection.getId());
                     statement1.setInt(2, category.getId());
 

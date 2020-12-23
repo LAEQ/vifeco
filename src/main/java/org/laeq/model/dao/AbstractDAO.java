@@ -4,6 +4,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.laeq.db.HibernateUtil;
+import org.laeq.model.Collection;
+
 import java.util.List;
 
 
@@ -26,8 +28,6 @@ public abstract class AbstractDAO<T> {
         }
     }
 
-    public abstract void create(T category) throws Exception;
-
     protected void delete(T obj) throws Exception {
         try {
             startOperation();
@@ -38,19 +38,29 @@ public abstract class AbstractDAO<T> {
         }
     }
 
-    protected List findAll(Class clazz) {
+    protected List findAll(Class clazz) throws Exception {
         List objects = null;
         try {
             startOperation();
             Query query = session.createQuery("from " + clazz.getName());
             objects = query.list();
             transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             session.close();
         }
         return objects;
+    }
+
+    protected T findById(int id, Class clazz) throws Exception{
+        Object result = null;
+        try{
+            startOperation();
+            result = session.get(clazz, id);
+        } finally {
+            session.close();
+        }
+
+        return (T)result;
     }
 
     protected void startOperation() throws Exception {
@@ -58,5 +68,7 @@ public abstract class AbstractDAO<T> {
         transaction = session.beginTransaction();
     }
 
-    public abstract List<T> findAll();
+    public abstract void create(T object) throws Exception;
+    public abstract List<T> findAll() throws Exception;
+    public abstract T findOneById(int id) throws Exception;
 }

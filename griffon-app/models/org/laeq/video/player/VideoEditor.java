@@ -56,7 +56,7 @@ public class VideoEditor {
     public VideoEditor(Video video, PointDAO pointDAO) throws IOException {
         this.video = video;
         this.pointDAO = pointDAO;
-        this.shortcuts = video.getCollection().getCategorySet().parallelStream().map(category -> category.getShortcut()).collect(Collectors.toSet());
+        this.shortcuts = video.getCollection().getCategories().parallelStream().map(category -> category.getShortcut()).collect(Collectors.toSet());
 
         videoIconMap = new DualHashBidiMap<>();
         timelineIconMap = new DualHashBidiMap<>();
@@ -130,7 +130,7 @@ public class VideoEditor {
         return new IconPointColorized(new IconSize(category, size));
     }
     public Duration getDuration() {
-        return Duration.millis(video.getDuration());
+        return video.getDuration();
     }
 
     public Set<IconPointPNG> getTimelineIconMap() {

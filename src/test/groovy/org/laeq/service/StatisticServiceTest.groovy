@@ -67,9 +67,9 @@ class StatisticServiceTest extends Specification {
         service.init()
 
         then:
-        service.video1CategoryMap.get(video1.collection.categorySet.find {it.id == 1}).size() == 10
-        service.video2CategoryMap.get(video2.collection.categorySet.find {it.id == 2}).size() == 10
-        service.video2CategoryMap.get(video2.collection.categorySet.find {it.id == 3}).size() == 0
+        service.video1CategoryMap.get(video1.collection.categories.find {it.id == 1}).size() == 10
+        service.video2CategoryMap.get(video2.collection.categories.find {it.id == 2}).size() == 10
+        service.video2CategoryMap.get(video2.collection.categories.find {it.id == 3}).size() == 0
     }
 
     def "test graph generation (vertices and edges) for one category"() {
@@ -89,7 +89,7 @@ class StatisticServiceTest extends Specification {
         service.init()
         service.generateGraphs()
 
-        Category category = video1.collection.categorySet.find{it.id == 1}
+        Category category = video1.collection.setCategories.find{it.id == 1}
         Graph graph = service.getGraphByCategory(category)
 
         def points = new ArrayList()
@@ -179,7 +179,7 @@ class StatisticServiceTest extends Specification {
         Point video1 = VideoGenerator.generateVideo(1,1)
         Point video2 = VideoGenerator.generateVideo(2, 1)
 
-        Category category = video1.collection.categorySet.find { it.id == 1}
+        Category category = video1.collection.setCategories.find { it.id == 1}
 
         when:
         Point point1 = new Point(1, 10,10,Duration.millis(1000),video1, category)
@@ -206,7 +206,7 @@ class StatisticServiceTest extends Specification {
         Point video1 = VideoGenerator.generateVideo(1,1)
         Point video2 = VideoGenerator.generateVideo(2,1)
 
-        Category category = video1.collection.categorySet.find { it.id == 1}
+        Category category = video1.collection.setCategories.find { it.id == 1}
 
         when:
         VideoGenerator.generatePoints(video1, 1, 0, 4, pointId)
@@ -231,7 +231,7 @@ class StatisticServiceTest extends Specification {
         Point video1 = VideoGenerator.generateVideo(1,1)
         Point video2 = VideoGenerator.generateVideo(2,1)
 
-        Category category = video1.collection.categorySet.find { it.id == 1}
+        Category category = video1.collection.setCategories.find { it.id == 1}
 
         when:
         VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
@@ -254,9 +254,9 @@ class StatisticServiceTest extends Specification {
         Point video1 = VideoGenerator.generateVideo(1,3)
         Point video2 = VideoGenerator.generateVideo(2,3)
 
-        Category category1 = video1.collection.categorySet.find { it.id == 1}
-        Category category2 = video1.collection.categorySet.find { it.id == 2}
-        Category category3 = video1.collection.categorySet.find { it.id == 3}
+        Category category1 = video1.collection.setCategories.find { it.id == 1}
+        Category category2 = video1.collection.setCategories.find { it.id == 2}
+        Category category3 = video1.collection.setCategories.find { it.id == 3}
 
         when:
         VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds
@@ -293,9 +293,9 @@ class StatisticServiceTest extends Specification {
         Point video1 = VideoGenerator.generateVideo(1,3)
         Point video2 = VideoGenerator.generateVideo(2,3)
 
-        Category category1 = video1.collection.categorySet.find { it.id == 1}
-        Category category2 = video1.collection.categorySet.find { it.id == 2}
-        Category category3 = video1.collection.categorySet.find { it.id == 3}
+        Category category1 = video1.collection.setCategories.find { it.id == 1}
+        Category category2 = video1.collection.setCategories.find { it.id == 2}
+        Category category3 = video1.collection.setCategories.find { it.id == 3}
 
         when:
         VideoGenerator.generatePoints(video1, 1, 0, 4, pointId) // 4 points starting at 0 every seconds

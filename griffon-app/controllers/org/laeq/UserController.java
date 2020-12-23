@@ -31,7 +31,12 @@ public class UserController extends AbstractGriffonController{
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        model.userList.addAll(dbService.userDAO.findAll());
+        try{
+            model.userList.addAll(dbService.userDAO.findAll());
+        } catch (Exception e){
+            System.out.println("Cannot fetch users");
+        }
+
         model.setPrefs(preferencesService.getPreferences());
         getApplication().getEventRouter().addEventListener(listeners());
         setTranslationService();

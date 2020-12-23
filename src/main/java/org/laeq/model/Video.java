@@ -3,6 +3,7 @@ package org.laeq.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import javafx.util.Duration;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SortNatural;
 
@@ -16,50 +17,64 @@ import java.util.*;
 @Entity
 @Table(name = "video")
 public class Video {
-    @Id
+    @Id @GeneratedValue(generator = "increment")
+    private Integer id;
+
+    @Transient
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+    @Column(name = "uuid", updatable = false, nullable = false)
+    private UUID uuid;
 
     @Column(nullable = false)
     private String path;
 
     @Column(nullable = false)
-    private Double duration;
+    private Duration duration;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "collection_id", nullable = false)
     private Collection collection;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @SortNatural()
+    @OneToMany(cascade = CascadeType.DETACH, mappedBy = "video", orphanRemoval = true, fetch = FetchType.EAGER)
+    @SortNatural
     private SortedSet<Point> points = new TreeSet<>();
 
-    public Video() {
+    @Transient
+    private Map<Category, SortedSet<Point>> mapPoints = new HashMap<>();
 
+
+    public Video() {
     }
 
-    public Video(String path, Double duration, Collection collection, User user) {
-        this();
+    public Video(String path, Duration duration, Collection collection, User user) {
         this.path = path;
         this.duration = duration;
-        this.collection = collection;
+        this.setCollection(collection);
         this.user = user;
     }
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(UUID id) {
+
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public String getPath() {
@@ -69,10 +84,10 @@ public class Video {
         this.path = path;
     }
 
-    public Double getDuration() {
+    public Duration getDuration() {
         return duration;
     }
-    public void setDuration(Double duration) {
+    public void setDuration(Duration duration) {
         this.duration = duration;
     }
 
@@ -81,6 +96,10 @@ public class Video {
     }
     public void setCollection(Collection collection) {
         this.collection = collection;
+
+        this.collection.getCategories().stream().forEach(c -> {
+            mapPoints.put(c, new TreeSet<>());
+        });
     }
 
     public User getUser() {
@@ -98,8 +117,31 @@ public class Video {
         this.points = points;
     }
 
-    public void addPoint(Point point){
-        this.points.add(point);
+    public Map<Category, SortedSet<Point>> getMapPoints() {
+        points.stream().forEach(p -> {
+            mapPoints.get(p.getCategory()).add(p);
+        });
+
+        return mapPoints;
+    }
+
+    public void addPoint(Point p){
+        p.setVideo(this);
+        this.points.add(p);
+        mapPoints.get(p.getCategory()).add(p);
+    }
+
+    public void removePoint(Point p){
+        this.points.remove(p);
+        mapPoints.get(p.getCategory()).remove(p);
+    }
+
+    public Map<Category, Integer> getTotalGrouped(){
+        Map<Category, Integer> result = new HashMap<>();
+
+        mapPoints.forEach((a, b)-> result.put(a, b.size()));
+
+        return result;
     }
 
     @JsonIgnore

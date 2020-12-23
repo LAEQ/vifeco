@@ -43,8 +43,8 @@ class VideoTest extends Specification {
         result.path == '/path/export/exported_video.wav'
         result.duration == 258573.333334
         result.collection == new Collection(1, 'Default', false)
-        result.collection.categorySet.size() == 4
-        result.collection.categorySet.contains(new Category(1, 'Moving car', 'mock', '#000000', 'A'))
+        result.collection.setCategories.size() == 4
+        result.collection.setCategories.contains(new Category(1, 'Moving car', 'mock', '#000000', 'A'))
         result.pointSet.size() == 3
         result.pointSet.collect { it.category.id }.sort() == [1,2,3]
     }

@@ -37,11 +37,15 @@ public class VideoController extends CRUDController<Video> {
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
 //        model.setPrefs(prefService.getPreferences());
 //        setTranslationService();
+        try{
+            model.videoList.addAll(dbService.videoDAO.findAll());
+            model.getUserSet().addAll(dbService.userDAO.findAll());
+            model.getCollectionSet().addAll(dbService.collectionDAO.findAll());
+            model.categorySet.addAll(dbService.categoryDAO.findAll());
+        } catch (Exception e){
+            System.out.println("Cannot fetch videos");
+        }
 
-        model.videoList.addAll(dbService.videoDAO.findAll());
-        model.getUserSet().addAll(dbService.userDAO.findAll());
-        model.getCollectionSet().addAll(dbService.collectionDAO.findAll());
-        model.categorySet.addAll(dbService.categoryDAO.findAll());
 
         view.initForm();
 

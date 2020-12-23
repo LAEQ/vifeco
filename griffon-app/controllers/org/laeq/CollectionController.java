@@ -24,8 +24,13 @@ public class CollectionController extends CRUDController<Collection> {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        model.collections.addAll(dbService.collectionDAO.findAll());
-        model.addCategories(dbService.categoryDAO.findAll());
+        try {
+            model.collections.addAll(dbService.collectionDAO.findAll());
+            model.addCategories(dbService.categoryDAO.findAll());
+        } catch (Exception e){
+            System.out.println("Cannot fetch collection");
+        }
+
 
         model.setPreferences(prefService.getPreferences());
         setTranslationService();

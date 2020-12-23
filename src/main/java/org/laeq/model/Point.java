@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import org.laeq.model.serializer.PointDeserializer;
 import javax.persistence.*;
-import java.time.Duration;
+import javafx.util.Duration;
 
 
 @JsonIgnoreProperties({"video", "icon", "duration", "createdAt", "updatedAt", "category", "uuid"})
@@ -24,9 +24,12 @@ public class Point implements Comparable<Point> {
     @Column(nullable = false)
     private Duration start;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.DETACH})
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
+
+    @ManyToOne()
+    private Video video;
 
     public Point() {}
 
@@ -75,6 +78,14 @@ public class Point implements Comparable<Point> {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Video getVideo() {
+        return video;
+    }
+
+    public void setVideo(Video video) {
+        this.video = video;
     }
 
     @Override
