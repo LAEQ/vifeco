@@ -28,11 +28,27 @@ public class Point implements Comparable<Point> {
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "video_id", nullable = false)
     private Video video;
 
     public Point() {}
 
+    public Point(double x, double y, Duration start, Category category, Video video) {
+        this.x = x;
+        this.y = y;
+        this.start = start;
+        this.category = category;
+        this.video = video;
+    }
+
+    /**
+     * Constructor for testing (video entity is added in addPoint method
+     * @param x
+     * @param y
+     * @param start
+     * @param category
+     */
     public Point(double x, double y, Duration start, Category category) {
         this.x = x;
         this.y = y;

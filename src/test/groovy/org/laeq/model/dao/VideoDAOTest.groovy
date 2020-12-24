@@ -99,7 +99,7 @@ class VideoDAOTest extends Specification {
         dao.findAll().size() == 1
     }
 
-    def "remove a point "(){
+    def "remove a point"(){
         setup:
         Video video1 = new Video('mock/path', Duration.millis(1000), collection, user)
         dao.create(video1)
@@ -121,5 +121,43 @@ class VideoDAOTest extends Specification {
 
         then:
         video.getPoints().size() == 100
+    }
+
+    def "multiple video remove few  points"(){
+        setup:
+        Video video1 = new Video('mock/path2', Duration.millis(1000), collection, user)
+        dao.create(video1)
+        def id = video1.getId()
+
+        Video video2 = new Video('mock/path2', Duration.millis(1000), collection, user)
+        dao.create(video2)
+        def id2 = video2.getId()
+
+
+        1.upto(20, {
+            Point point1 = new Point(it, it, Duration.millis(Math.random() * 10000), category_1)
+            Point point2 = new Point(it, it, Duration.millis(Math.random() * 10000), category_2)
+
+            video1.addPoint(point1)
+            video1.addPoint(point2)
+            pointDAO.create(point1)
+            pointDAO.create(point2)
+        })
+
+        1.upto(10, {
+            Point point1 = new Point(it, it, Duration.millis(Math.random() * 10000), category_1)
+            Point point2 = new Point(it, it, Duration.millis(Math.random() * 10000), category_2)
+
+            video2.addPoint(point1)
+            video2.addPoint(point2)
+            pointDAO.create(point1)
+            pointDAO.create(point2)
+        })
+
+        when:
+        Video video = dao.findOneById(id)
+
+        then:
+        video.getPoints().size() == 40
     }
 }

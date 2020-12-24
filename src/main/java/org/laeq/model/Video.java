@@ -43,12 +43,10 @@ public class Video {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(cascade = CascadeType.DETACH, mappedBy = "video", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "video", orphanRemoval = true, fetch = FetchType.EAGER)
     @SortNatural
     private SortedSet<Point> points = new TreeSet<>();
 
-    @Transient
-    private Map<Category, SortedSet<Point>> mapPoints = new HashMap<>();
 
 
     public Video() {
@@ -96,10 +94,6 @@ public class Video {
     }
     public void setCollection(Collection collection) {
         this.collection = collection;
-
-        this.collection.getCategories().stream().forEach(c -> {
-            mapPoints.put(c, new TreeSet<>());
-        });
     }
 
     public User getUser() {
@@ -117,29 +111,18 @@ public class Video {
         this.points = points;
     }
 
-    public Map<Category, SortedSet<Point>> getMapPoints() {
-        points.stream().forEach(p -> {
-            mapPoints.get(p.getCategory()).add(p);
-        });
-
-        return mapPoints;
-    }
 
     public void addPoint(Point p){
         p.setVideo(this);
         this.points.add(p);
-        mapPoints.get(p.getCategory()).add(p);
     }
 
     public void removePoint(Point p){
         this.points.remove(p);
-        mapPoints.get(p.getCategory()).remove(p);
     }
 
     public Map<Category, Integer> getTotalGrouped(){
         Map<Category, Integer> result = new HashMap<>();
-
-        mapPoints.forEach((a, b)-> result.put(a, b.size()));
 
         return result;
     }
