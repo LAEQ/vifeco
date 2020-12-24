@@ -133,9 +133,4 @@ public class MenuView extends TranslatedView {
 
         return toolTips.get(btn);
     }
-
-    public void updateTranslation() {
-//        toolTips.clear();
-        
-    }
 }

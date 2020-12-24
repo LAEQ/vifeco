@@ -37,20 +37,15 @@ class CollectionDAOTest extends Specification {
         collection.getCategories().size() == 2
     }
 
-    def "test insertion with transient category"(){
+    def "test invalid name"(){
         setup:
-        Collection col_1 = new Collection("mock col 1")
-        col_1.addCategory(category_1)
-        col_1.addCategory(category_2)
-        col_1.addCategory(new Category("mock name", "mock icon", "#FFFFFF", "C"))
+        Collection collection = new Collection("")
 
         when:
-        dao.create(col_1)
+        dao.create(collection)
 
         then:
-        col_1.getId() != null
-        col_1.getCategories().size() == 3
-        catDao.findAll().size() == 3
+        thrown Exception
     }
 
     def "test multiple collection "(){

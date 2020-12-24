@@ -24,7 +24,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
 
     private VBox top;
     private SplitPane middlePane;
-    private HBox bottom;
+    private VBox bottom;
     private Scene scene;
 
     @Nonnull
@@ -38,7 +38,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     }
 
     @Nonnull
-    public HBox getBottom() {
+    public VBox getBottom() {
         return bottom;
     }
 
@@ -46,7 +46,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
         createMVCGroup("menu");
         createMVCGroup("middle");
-//        createMVCGroup("database");
+        createMVCGroup("bottom");
     }
 
     @Override
@@ -83,12 +83,13 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         root.setVgrow(middlePane, Priority.ALWAYS);
 
 
-        bottom = new HBox();
-        bottom.setAlignment(Pos.CENTER_LEFT);
-        bottom.setSpacing(5);
+        bottom = new VBox();
+        bottom.setPrefHeight(30);
+        bottom.setPrefWidth(900);
+
         root.setVgrow(bottom, Priority.NEVER);
 
-        root.getChildren().addAll(top, middlePane);
+        root.getChildren().addAll(top, middlePane, bottom);
 
         return root;
     }

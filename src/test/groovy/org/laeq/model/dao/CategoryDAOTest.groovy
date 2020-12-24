@@ -25,6 +25,19 @@ class CategoryDAOTest extends Specification {
         category.getId() != null
     }
 
+
+    def "test invalid name"() {
+        setup:
+        Category category = EntityGenerator.createCategory("A")
+        category.setName("")
+
+        when:
+        dao.create(category)
+
+        then:
+        thrown Exception
+    }
+
     def "test delete"() {
         setup:
         Category category = EntityGenerator.createCategory("A")

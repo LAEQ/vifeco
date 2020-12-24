@@ -2,6 +2,7 @@ package org.laeq.model;
 
 import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 
@@ -13,6 +14,7 @@ public class Collection {
     private Integer id;
 
     @Column(nullable = false)
+    @Size(min = 1, max = 255)
     private String name;
 
     @Column()

@@ -7,6 +7,7 @@ import org.hibernate.annotations.Type;
 
 import javax.annotation.Nonnull;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "user")
@@ -19,12 +20,15 @@ public class User
     private Integer id;
 
     @Column(nullable = false)
+    @Size(min = 1)
     private String firstName;
 
     @Column(nullable = false)
+    @Size(min = 1)
     private String lastName;
 
     @Column(nullable = false)
+    @Size(min = 1)
     private String email;
 
     @Type(type = "boolean")

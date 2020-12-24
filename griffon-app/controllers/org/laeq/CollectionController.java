@@ -11,6 +11,7 @@ import org.laeq.user.PreferencesService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -27,8 +28,9 @@ public class CollectionController extends CRUDController<Collection> {
         try {
             model.collections.addAll(dbService.collectionDAO.findAll());
             model.addCategories(dbService.categoryDAO.findAll());
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.fetch"));
         } catch (Exception e){
-            System.out.println("Cannot fetch collection");
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
         }
 
 
@@ -48,8 +50,11 @@ public class CollectionController extends CRUDController<Collection> {
             model.clear();
             model.collections.clear();
             model.collections.addAll(dbService.collectionDAO.findAll());
+
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.success.save"));
         }catch (Exception e){
             System.out.println("Afficher message erreur collection");
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.save"));
         }
     }
 

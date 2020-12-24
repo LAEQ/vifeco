@@ -4,6 +4,9 @@ import org.laeq.db.HibernateUtil;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.List;
 
 public class CategoryDAO extends AbstractDAO<Category> {

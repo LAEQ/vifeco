@@ -6,7 +6,12 @@ import org.hibernate.query.Query;
 import org.laeq.db.HibernateUtil;
 import org.laeq.model.Collection;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.List;
+import java.util.Set;
 
 
 public abstract class AbstractDAO<T> {
@@ -20,6 +25,15 @@ public abstract class AbstractDAO<T> {
 
     protected void saveOrUpdate(T obj) throws Exception{
         try {
+
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<T>> violations = validator.validate(obj);
+
+            if(violations.size() > 2){
+                throw new Exception("Invalid");
+            }
+
             startOperation();
             session.saveOrUpdate(obj);
             transaction.commit();

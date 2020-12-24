@@ -14,7 +14,7 @@ class EntityGenerator {
     }
 
     static def createCategory(String shortcut){
-        return new Category("mock name", "mock path", "mock color", shortcut)
+        return new Category("mock name", "mock path", "#FF1234", shortcut)
     }
 
     static def createCollection(){

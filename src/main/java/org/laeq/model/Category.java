@@ -2,9 +2,12 @@ package org.laeq.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -19,15 +22,19 @@ public class Category extends BaseEntity {
     private int id;
 
     @Column(nullable = false)
+    @Size(min = 1, max = 255)
     private String name;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String icon;
 
     @Column(nullable = false)
+    @Length(min = 7, max = 7)
+    @Pattern(regexp="^#[0-9A-F]{6}$")
     private String color;
 
     @Column(nullable = false, unique = true)
+    @Length(min = 1, max = 1)
     private String shortcut;
 
     @ManyToMany(
