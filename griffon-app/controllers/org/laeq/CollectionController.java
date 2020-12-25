@@ -28,7 +28,7 @@ public class CollectionController extends CRUDController<Collection> {
         try {
             model.collections.addAll(dbService.collectionDAO.findAll());
             model.addCategories(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.fetch"));
+            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
         } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
         }
@@ -51,9 +51,8 @@ public class CollectionController extends CRUDController<Collection> {
             model.collections.clear();
             model.collections.addAll(dbService.collectionDAO.findAll());
 
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.success.save"));
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.save"));
         }catch (Exception e){
-            System.out.println("Afficher message erreur collection");
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.save"));
         }
     }
@@ -70,8 +69,9 @@ public class CollectionController extends CRUDController<Collection> {
             dbService.collectionDAO.delete(collection);
             model.collections.clear();
             model.collections.addAll(dbService.collectionDAO.findAll());
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.delete"));
         } catch (Exception e) {
-            System.out.println("Afficher error collection delete");
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.delete"));
         }
     }
 

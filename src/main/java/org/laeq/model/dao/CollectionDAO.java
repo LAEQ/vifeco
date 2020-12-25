@@ -3,7 +3,9 @@ package org.laeq.model.dao;
 import org.laeq.db.HibernateUtil;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
+import org.laeq.model.User;
 
+import javax.persistence.Query;
 import java.util.List;
 
 public class CollectionDAO extends AbstractDAO<Collection> {
@@ -32,5 +34,19 @@ public class CollectionDAO extends AbstractDAO<Collection> {
     @Override
     public Collection findOneById(int id) throws Exception{
         return super.findById(id, Collection.class);
+    }
+
+
+    public Collection findDefault() throws Exception {
+        Collection result = null;
+        try{
+            startOperation();
+            Query query= session.createQuery("from Collection where isDefault = true");
+            result = (Collection) query.getSingleResult();
+        } finally {
+            session.close();
+        }
+
+        return result;
     }
 }

@@ -2,11 +2,9 @@ package org.laeq;
 
 import griffon.core.artifact.GriffonView;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -62,7 +60,8 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
         scene.setRoot(generateView());
-//        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
+//        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
         return scene;
     }
 
@@ -82,9 +81,8 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         middlePane.prefWidth(-1);
         root.setVgrow(middlePane, Priority.ALWAYS);
 
-
         bottom = new VBox();
-        bottom.setPrefHeight(30);
+        bottom.setPrefHeight(60);
         bottom.setPrefWidth(900);
 
         root.setVgrow(bottom, Priority.NEVER);

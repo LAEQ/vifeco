@@ -49,4 +49,22 @@ class UserDAOTest extends Specification {
         then:
         thrown Exception
     }
+
+    def "FindDefault"() {
+        setup:
+        User user = EntityGenerator.createUser()
+        user.setFirstName("I am default")
+        user.setDefault(Boolean.TRUE)
+        dao.create(user)
+
+        for (i in 5) {
+            dao.create(EntityGenerator.createUser())
+        }
+
+        when:
+        User result = dao.findDefault()
+
+        then:
+        result.getFirstName() == "I am default"
+    }
 }

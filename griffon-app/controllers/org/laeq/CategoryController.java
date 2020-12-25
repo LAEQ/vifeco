@@ -14,6 +14,7 @@ import org.laeq.user.PreferencesService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -32,10 +33,10 @@ public class CategoryController extends AbstractGriffonController {
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         try{
             model.categoryList.addAll(dbService.categoryDAO.findAll());
+            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
         } catch (Exception e){
-            System.out.println("Cannot fetch category");
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
         }
-
 
         model.setPrefs(preferencesService.getPreferences());
         setTranslationService();
@@ -51,8 +52,10 @@ public class CategoryController extends AbstractGriffonController {
             model.categoryList.clear();
             model.clear();
             model.categoryList.addAll(dbService.categoryDAO.findAll());
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.save"));
+
         } catch (Exception e){
-            System.out.println("AFFICHER UN MESSAGE category");
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.save"));
         }
     }
 
@@ -66,12 +69,15 @@ public class CategoryController extends AbstractGriffonController {
         model.clear();
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void delete(Category category) {
         try{
             dbService.categoryDAO.delete(category);
             model.categoryList.remove(category);
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.delete"));
         }  catch (Exception e){
-            System.out.println("AFFICHER UN MESSAGE category");
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.delete"));
         }
     }
 

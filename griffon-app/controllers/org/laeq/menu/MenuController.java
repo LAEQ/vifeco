@@ -6,14 +6,17 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.DatabaseService;
 import org.laeq.TranslationService;
 import org.laeq.db.*;
-import org.laeq.model.Point;
+import org.laeq.model.Collection;
+import org.laeq.model.User;
 import org.laeq.model.Video;
-import org.laeq.service.MariaService;
 import org.laeq.settings.Settings;
 import org.laeq.ui.DialogService;
 import org.laeq.video.ExportService;
@@ -22,12 +25,8 @@ import org.laeq.video.ImportService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @ArtifactProviderFor(GriffonController.class)
 public class MenuController extends AbstractGriffonController {
@@ -40,7 +39,7 @@ public class MenuController extends AbstractGriffonController {
 
     @Inject private DialogService dialogService;
     @Inject private ImportService importService;
-    @Inject private MariaService dbService;
+    @Inject private DatabaseService dbService;
     @Inject private ExportService exportService;
 
     @Override
@@ -64,10 +63,53 @@ public class MenuController extends AbstractGriffonController {
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            getApplication().getEventRouter().publishEvent("video.create", Arrays.asList(selectedFile));
+            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("video.create.start"));
+
+            this.createVideo(selectedFile);
+
         } else {
-            System.out.println("Error loading the file");
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
         }
+    }
+
+    private void createVideo(File selectedFile) {
+        try {
+            Video video = new Video();
+            String path = selectedFile.getCanonicalFile().toURI().toString();
+            Media media = new Media(selectedFile.getCanonicalFile().toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            User defaultUser = dbService.userDAO.findDefault();
+            Collection defaultCollection = dbService.collectionDAO.findDefault();
+            video.setPath(path);
+            video.setCollection(defaultCollection);
+            video.setUser(defaultUser);
+
+            System.out.println("Video before addition");
+
+            mediaPlayer.setOnError(() -> {
+                System.out.println(mediaPlayer.getError());
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
+            });
+
+            mediaPlayer.setOnReady(()-> {
+                video.setDuration(mediaPlayer.getTotalDuration());
+                try {
+                    dbService.videoDAO.create(video);
+                    getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.create.success"));
+                    getApplication().getEventRouter().publishEvent("video.created", Arrays.asList(video));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
+                }
+            });
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
+        }
+
     }
 
     @ControllerAction
@@ -127,63 +169,53 @@ public class MenuController extends AbstractGriffonController {
 
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
-    public void archive() throws IOException {
-        VideoDAO videoDAO = dbService.getVideoDAO();
-        CategoryDAO categoryDAO = dbService.getCategoryDAO();
-        UserDAO userDAO = dbService.getUserDAO();
-        PointDAO pointDAO = dbService.getPointDAO();
-
-        List<Video> videoList = videoDAO.findAll();
-
-        List<String> srcFiles = new ArrayList<>();
-
-        for(Video video : videoList){
-//            Set<Category> categories = categoryDAO.findByCollection(video.getCollection());
-//            video.getCollection().getCategorySet().addAll(categories);
+    public String archive() throws IOException {
+//        VideoDAO videoDAO = dbService.getVideoDAO();
+//        CategoryDAO categoryDAO = dbService.getCategoryDAO();
+//        UserDAO userDAO = dbService.getUserDAO();
+//        PointDAO pointDAO = dbService.getPointDAO();
 //
-//            video.getPointSet().addAll(pointDAO.findByVideo(video));
-
-            String fileName = exportService.export(video);
-            srcFiles.add(fileName);
-        }
-
-        String userDefault = "";
-        try {
-            userDefault = userDAO.findDefault().toString();
-        } catch (Exception e) {
-            userDefault = UUID.randomUUID().toString().substring(0, 8);
-        }
-
-        String zipFileName = String.format("%s-%s.zip", userDefault, System.currentTimeMillis());
-
-        try {
-            FileOutputStream fos = new FileOutputStream(getPathExport(zipFileName));
-            ZipOutputStream zipOut = new ZipOutputStream(fos);
-            for (String srcFile : srcFiles) {
-                File fileToZip = new File(srcFile);
-                FileInputStream fis = new FileInputStream(fileToZip);
-                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-                zipOut.putNextEntry(zipEntry);
-
-                byte[] bytes = new byte[1024];
-                int length;
-                while ((length = fis.read(bytes)) >= 0) {
-                    zipOut.write(bytes, 0, length);
-                }
-                fis.close();
-            }
-
-            zipOut.close();
-            fos.close();
-
-        } catch (IOException e ){
-            getLog().error(e.getMessage());
-        } finally {
-            for(String srcFile : srcFiles){
-                File file = new File(srcFile);
-                file.delete();
-            }
-        }
+//        List<Video> videoList = videoDAO.findAll();
+//
+//        List<String> srcFiles = new ArrayList<>();
+//
+//        for(Video video : videoList){
+//            String fileName = exportService.export(video);
+//            srcFiles.add(fileName);
+//        }
+//
+        String zipFileName = String.format("%s.zip", System.currentTimeMillis());
+//
+//        try {
+//            FileOutputStream fos = new FileOutputStream(getPathExport(zipFileName));
+//            ZipOutputStream zipOut = new ZipOutputStream(fos);
+//            for (String srcFile : srcFiles) {
+//                File fileToZip = new File(srcFile);
+//                FileInputStream fis = new FileInputStream(fileToZip);
+//                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+//                zipOut.putNextEntry(zipEntry);
+//
+//                byte[] bytes = new byte[1024];
+//                int length;
+//                while ((length = fis.read(bytes)) >= 0) {
+//                    zipOut.write(bytes, 0, length);
+//                }
+//                fis.close();
+//            }
+//
+//            zipOut.close();
+//            fos.close();
+//
+//        } catch (IOException e ){
+//            getLog().error(e.getMessage());
+//        } finally {
+//            for(String srcFile : srcFiles){
+//                File file = new File(srcFile);
+//                file.delete();
+//            }
+//
+            return zipFileName;
+//        }
     }
 
     private Map<String, RunnableWithArgs> listeners(){
@@ -198,15 +230,11 @@ public class MenuController extends AbstractGriffonController {
         });
 
         list.put("database.backup", objects -> {
-            String title = this.translationService.getMessage("org.laeq.title.success");
-            String message = this.translationService.getMessage("org.laeq.video.export.success");
-
             try {
-                this.archive();
+                String path = this.getPathExport(this.archive());
+                getApplication().getEventRouter().publishEvent("status.info.parametized", Arrays.asList("db.export.success", path));
             } catch (IOException e) {
-                message = this.translationService.getMessage("org.laeq.video.export.error");
-            } finally {
-                alert(title, message);
+                getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.export.error"));
             }
         });
 

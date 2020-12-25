@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javafx.util.Duration;
+import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SortNatural;
+import org.laeq.model.converter.DurationConverter;
 
 import javax.persistence.*;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -33,6 +37,7 @@ public class Video {
     private String path;
 
     @Column(nullable = false)
+    @Convert(converter = DurationConverter.class)
     private Duration duration;
 
     @ManyToOne(cascade = CascadeType.DETACH)
@@ -47,7 +52,8 @@ public class Video {
     @SortNatural
     private SortedSet<Point> points = new TreeSet<>();
 
-
+    @CreationTimestamp
+    private Date createdAt;
 
     public Video() {
     }
@@ -106,11 +112,17 @@ public class Video {
     public SortedSet<Point> getPoints() {
         return points;
     }
-
     public void setPoints(SortedSet<Point> points) {
         this.points = points;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public void addPoint(Point p){
         p.setVideo(this);
@@ -129,8 +141,7 @@ public class Video {
 
     @JsonIgnore
     public String getDurationFormatted(){
-        return "to do";
-//        return DurationFormatUtils.formatDuration(duration.getValue().longValue(), "H:mm:ss", true);
+        return DurationFormatUtils.formatDuration((long) duration.toMillis(), "H:mm:ss", true);
     }
 
     @JsonIgnore
@@ -151,5 +162,11 @@ public class Video {
 
     public String getName() {
         return "to do";
+    }
+
+    public String getCreatedAtFormatted() {
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(createdAt);
     }
 }

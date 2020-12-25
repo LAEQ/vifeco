@@ -106,7 +106,7 @@ public class VideoView extends TranslatedView {
         TableColumn<Video, String> dateColumn = new TableColumn<>("");
         TableColumn<Video, String> pathColumn = new TableColumn("");
         userColumn = new TableColumn<>("");
-        TableColumn<Video, Double> durationColumn = new TableColumn("");
+        TableColumn<Video, String> durationColumn = new TableColumn("");
         collectionColumn = new TableColumn("");
         TableColumn<Video, Number> totalColumn = new TableColumn<>("");
 
@@ -120,9 +120,9 @@ public class VideoView extends TranslatedView {
 
         videoTable.getColumns().addAll(dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn);
 
-//        dateColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getCreatedFormatted()));
+        dateColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getCreatedAtFormatted()));
         pathColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPath()));
-//        durationColumn.setCellValueFactory(cellData -> new ReadOnlyDoubleWrapper(cellData.getValue().getDuration()));
+        durationColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDurationFormatted()));
 //        totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
 //        editColumn.setCellValueFactory(cellData -> cellData.getValue().isEditable() ? null : new SimpleObjectProperty<>(new Icon(IconSVG.error, Color.DARKORANGE.toString())));
 

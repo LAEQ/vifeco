@@ -5,7 +5,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.*;
 
-
 @Entity
 @Table(name = "collection")
 public class Collection {

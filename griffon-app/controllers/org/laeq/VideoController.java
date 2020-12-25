@@ -11,7 +11,6 @@ import org.laeq.icon.IconService;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
-import org.laeq.model.dao.VideoDAO;
 import org.laeq.user.PreferencesService;
 import org.laeq.video.ExportService;
 
@@ -42,65 +41,33 @@ public class VideoController extends CRUDController<Video> {
             model.getUserSet().addAll(dbService.userDAO.findAll());
             model.getCollectionSet().addAll(dbService.collectionDAO.findAll());
             model.categorySet.addAll(dbService.categoryDAO.findAll());
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.fetch"));
         } catch (Exception e){
-            System.out.println("Cannot fetch videos");
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
         }
 
-
         view.initForm();
-
         getApplication().getEventRouter().addEventListener(listeners());
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void getVideoDuration(Video video) {
-//        getLog().info("Calculating the video duration: should be known already. Fix this issue");
-//        File file = new File(video.getPath());
-//
-//        if (file.exists()) {
-//            try {
-//                Media media = new Media(file.getCanonicalFile().toURI().toString());
-//                MediaPlayer mediaPlayer = new MediaPlayer(media);
-//
-//                mediaPlayer.setOnReady(()-> {
-//                    video.setDuration(mediaPlayer.getMedia().getDuration().toMillis());
-//                    try {
-//                        videoDAO.updateDuration(video);
-//
-//                    } catch (SQLException | DAOException e) {
-//                        getLog().error(e.getMessage());
-//                    }
-//                });
-//            } catch (IOException e) {
-//                getLog().error(e.getMessage());
-//            } finally {
-//                view.refresh();
-//            }
-//        }
     }
 
     public void clear(){
         runInsideUISync(() -> view.reset());
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void delete(){
         if(model.selectedVideo == null){
             return;
         }
 
-//        runInsideUISync(() -> {
-//            Boolean confirmation = confirm(translationService.getMessage("org.laeq.video.delete.confirm"));
-//            if(confirmation){
-//                try {
-//                    videoDAO.delete(model.getSelectedVideo());
-//                    model.deleteVideo();
-//                    view.reset();
-//                } catch (DAOException e) {
-//                    getLog().error(e.getMessage());
-//                }
-//            }
-//        });
+        try{
+            dbService.videoDAO.delete(model.selectedVideo);
+            model.removeVideo();
+            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.delete"));
+        }  catch (Exception e){
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.delete"));
+        }
     }
 
     public void edit(){
@@ -201,14 +168,13 @@ public class VideoController extends CRUDController<Video> {
 //            view.refresh();
 //        });
 //
-//        list.put("video.created", objects -> {
-//            Video video = (Video) objects[0];
-//            runInsideUISync(() -> {
-//                model.getVideoList().add(video);
-//                getVideoDuration(video);
-//            });
-//        });
-//
+        list.put("video.created", objects -> {
+            Video video = (Video) objects[0];
+            runInsideUISync(() -> {
+                model.videoList.add(video);
+            });
+        });
+
 //        list.put("change.language", objects -> {
 //            Locale locale = (Locale) objects[0];
 //            model.getPrefs().locale = locale;

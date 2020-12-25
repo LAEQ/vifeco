@@ -3,6 +3,7 @@ package org.laeq.model.dao;
 import org.laeq.db.HibernateUtil;
 import org.laeq.model.User;
 
+import javax.persistence.Query;
 import java.util.List;
 
 public class UserDAO extends AbstractDAO<User> {
@@ -33,5 +34,16 @@ public class UserDAO extends AbstractDAO<User> {
         return super.findById(id, User.class);
     }
 
+    public User findDefault() throws Exception {
+        User result = null;
+        try{
+            startOperation();
+            Query query= session.createQuery("from User where isDefault = true");
+            result = (User) query.getSingleResult();
+        } finally {
+            session.close();
+        }
 
+        return result;
+    }
 }

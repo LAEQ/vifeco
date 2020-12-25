@@ -4,6 +4,7 @@ import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
@@ -21,12 +22,51 @@ public class BottomController extends AbstractGriffonController {
         getApplication().getEventRouter().addEventListener(listeners());
     }
 
+
+    public void setSuccess(String message){
+        runInsideUIAsync(() -> {
+            view.setSuccessMessage(message);
+        });
+
+    }
+
+    public void setError(String message){
+        runInsideUIAsync(() -> {
+            view.setErrorMessage(message);
+        });
+
+    }
+
+    public void setInfo(String message){
+       runInsideUIAsync(() -> {
+           view.setInfo(message);
+       });
+    }
+
     private Map<String, RunnableWithArgs> listeners() {
         Map<String, RunnableWithArgs> list = new HashMap<>();
         list.put("status.success", objects -> {
-            String message = (String) objects[0];
-            view.setSuccessMessage(message);
+            setSuccess((String) objects[0]);
         });
+
+        list.put("status.info.parametized", objects -> {
+            setInfoParametized(objects);
+        });
+
+        list.put("status.error", objects -> {
+            String message = (String) objects[0];
+            setError(message);
+        });
+
+        list.put("status.info", objects -> {
+            String message = (String) objects[0];
+            setInfo(message);
+        });
+
         return list;
+    }
+
+    private void setInfoParametized(Object[] objects) {
+        view.setInfoParametized(objects);
     }
 }

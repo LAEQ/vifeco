@@ -14,6 +14,7 @@ import org.laeq.user.PreferencesService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -33,8 +34,9 @@ public class UserController extends AbstractGriffonController{
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         try{
             model.userList.addAll(dbService.userDAO.findAll());
+            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
         } catch (Exception e){
-            System.out.println("Cannot fetch users");
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
         }
 
         model.setPrefs(preferencesService.getPreferences());
@@ -64,8 +66,9 @@ public class UserController extends AbstractGriffonController{
             model.userList.clear();
             model.userList.addAll(dbService.userDAO.findAll());
             model.clear();
-        }catch (Exception e){
-
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.save"));
+        } catch (Exception e){
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.save"));
         }
     }
 
@@ -75,10 +78,9 @@ public class UserController extends AbstractGriffonController{
         try {
             dbService.userDAO.delete(user);
             model.userList.remove(user);
-        } catch (RuntimeException e){
-            System.out.println("AFFICHER UN MESSAGE user");
-        } catch (Exception e){
-            System.out.println("AFFICHER UN MESSAGE user");
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.delete"));
+        }  catch (Exception e){
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.delete"));
         }
     }
 

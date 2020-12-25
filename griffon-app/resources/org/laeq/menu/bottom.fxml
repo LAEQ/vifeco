@@ -9,10 +9,11 @@
 <?import javafx.scene.paint.Color?>
 <HBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" spacing="5.0" fx:controller="org.laeq.menu.BottomController">
     <children>
-        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS">
+        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" fx:id="panel">
             <children>
                 <Label fx:id="label" prefHeight="16.0" prefWidth="894.0" text="Label" />
-            </children></Pane>
+            </children>
+        </Pane>
     </children>
     <padding>
         <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />

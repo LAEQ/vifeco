@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import org.laeq.model.converter.DurationConverter;
 import org.laeq.model.serializer.PointDeserializer;
 import javax.persistence.*;
 import javafx.util.Duration;
@@ -21,7 +22,9 @@ public class Point implements Comparable<Point> {
     private double x;
     @Column(nullable = false)
     private double y;
+
     @Column(nullable = false)
+    @Convert(converter = DurationConverter.class)
     private Duration start;
 
     @ManyToOne(cascade = {CascadeType.DETACH})

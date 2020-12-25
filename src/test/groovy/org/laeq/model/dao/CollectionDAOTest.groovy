@@ -3,6 +3,7 @@ package org.laeq.model.dao
 import org.laeq.db.HibernateUtil
 import org.laeq.model.Category
 import org.laeq.model.Collection
+import org.laeq.model.User
 import spock.lang.Specification
 
 class CollectionDAOTest extends Specification {
@@ -125,5 +126,22 @@ class CollectionDAOTest extends Specification {
 
         then:
         thrown Exception
+    }
+
+    def "FindDefault"() {
+        setup:
+        Collection collection = new Collection("I am default")
+        collection.setDefault(Boolean.TRUE)
+        dao.create(collection)
+
+        for (i in 5) {
+            dao.create(new Collection('not default'))
+        }
+
+        when:
+        Collection result = dao.findDefault()
+
+        then:
+        result.getName() == "I am default"
     }
 }

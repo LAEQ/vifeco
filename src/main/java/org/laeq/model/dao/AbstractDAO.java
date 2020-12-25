@@ -4,7 +4,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.laeq.db.HibernateUtil;
-import org.laeq.model.Collection;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -16,8 +15,8 @@ import java.util.Set;
 
 public abstract class AbstractDAO<T> {
     private HibernateUtil hib;
-    private Session session;
-    private Transaction transaction;
+    protected Session session;
+    protected Transaction transaction;
 
     public AbstractDAO(HibernateUtil hib){
         this.hib = hib;

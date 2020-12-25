@@ -58,4 +58,9 @@ public class VideoModel extends AbstractGriffonModel {
     public Preferences getPrefs() {
         return prefs;
     }
+
+    public void removeVideo() {
+        videoList.remove(selectedVideo);
+        selectedVideo = null;
+    }
 }
