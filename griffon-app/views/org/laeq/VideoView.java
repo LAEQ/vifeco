@@ -10,23 +10,17 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.util.Callback;
 import org.laeq.model.*;
+import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconCounter;
+import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
-import org.laeq.ui.DialogService;
 import org.laeq.user.PreferencesService;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
 public class VideoView extends TranslatedView {
@@ -35,120 +29,117 @@ public class VideoView extends TranslatedView {
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
     @FXML private TableView<Video> videoTable;
+    @FXML private TableView<CategoryCount> categoryTable;
 
-    @FXML private Label titleTxt;
-    @FXML private Label videoTitleTxt;
-    @FXML private Label durationTxt;
-    @FXML private Label totalTxt;
     @FXML private Label titleValue;
     @FXML private Label durationValue;
     @FXML private Label totalValue;
     @FXML private Group categoryGroup;
 
-    @FXML private Button exportActionTarget;
     @FXML private Button clearActionTarget;
-    @FXML private Button deleteActionTarget;
     @FXML private Button editActionTarget;
 
-    private final Map<Category, IconCounter> categoryGroupMap = new HashMap<>();
+    @FXML private TableColumn<Video, String> createdAt;
+    @FXML private TableColumn<Video, String> name;
+    @FXML private TableColumn<Video, String> path;
+    @FXML private TableColumn<Video, String> duration;
+    @FXML private TableColumn<Video, User>  user;
+    @FXML private TableColumn<Video, Collection> collection;
+    @FXML private TableColumn<Video, String> total;
+    @FXML private TableColumn<Video, Void> actions;
 
-    private TableColumn<Video, User> userColumn;
-    private TableColumn<Video, Collection> collectionColumn;
 
-    @Inject private DialogService dialogService;
+    @FXML private TableColumn<CategoryCount, String> category;
+    @FXML private TableColumn<CategoryCount, String> count;
+
+
     @Inject private PreferencesService prefService;
-
-    private TranslationService translationService;
 
     @Override
     public void initUI() {
         model.setPrefs(prefService.getPreferences());
-
         Node node = loadFromFXML();
+
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
         connectActions(node, controller);
+        connectMessageSource(node);
         init();
 
-        textFields.put(titleTxt, "org.laeq.video.title_text");
-        textFields.put(videoTitleTxt, "org.laeq.video.video_title_text");
-        textFields.put(durationTxt, "org.laeq.video.duration_text");
-        textFields.put(totalTxt, "org.laeq.video.total_text");
-        textFields.put(exportActionTarget, "org.laeq.video.export_btn");
-        textFields.put(clearActionTarget, "org.laeq.video.clear_btn");
-        textFields.put(deleteActionTarget, "org.laeq.video.delete_btn");
-        textFields.put(editActionTarget, "org.laeq.video.edit_btn");
-
-        changeLocale(model.getPrefs().locale);
-    }
-
-    public void changeLocale(Locale locale) {
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
-        }
-
-        setTranslatedText();
-    }
-
-    private void setTranslatedText(){
-        try{
-            textFields.entrySet().forEach(t -> t.getKey().setText(translationService.getMessage(t.getValue())));
-            columnsMap.entrySet().forEach( t -> t.getKey().setText(translationService.getMessage(t.getValue())));
-        } catch (Exception e){
-            getLog().error(e.getMessage());
-        }
+        model.name.bindBidirectional(titleValue.textProperty());
+        model.duration.bindBidirectional(durationValue.textProperty());
+        model.total.bindBidirectional(totalValue.textProperty());
     }
 
     private void init(){
         videoTable.setEditable(true);
 
-        TableColumn<Video, String> dateColumn = new TableColumn<>("");
-        TableColumn<Video, String> pathColumn = new TableColumn("");
-        userColumn = new TableColumn<>("");
-        TableColumn<Video, String> durationColumn = new TableColumn("");
-        collectionColumn = new TableColumn("");
-        TableColumn<Video, Number> totalColumn = new TableColumn<>("");
+        createdAt.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getCreatedAtFormatted()));
+        name.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().pathToName()));
+        path.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPath()));
+        duration.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDurationFormatted()));
+        total.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(String.format("%d", cellData.getValue().getPoints().size())));
+        actions.setCellFactory(addActions());
 
-        columnsMap.put(dateColumn, "org.laeq.video.column.created_at");
-        columnsMap.put(pathColumn, "org.laeq.video.column.name");
-        columnsMap.put(userColumn, "org.laeq.video.column.user");
-        columnsMap.put(durationColumn, "org.laeq.video.column.duration");
-        columnsMap.put(collectionColumn, "org.laeq.video.column.collection");
-        columnsMap.put(totalColumn, "org.laeq.video.column.total");
+        ObservableList<User> users = FXCollections.observableArrayList(model.getUserSet());
+        user.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getUser()));
+        user.setMinWidth(140);
+        user.setCellFactory(ComboBoxTableCell.forTableColumn(users));
+        user.setOnEditCommit(event -> controller.updateUser(event));
 
-
-        videoTable.getColumns().addAll(dateColumn, pathColumn, userColumn, durationColumn, collectionColumn, totalColumn);
-
-        dateColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getCreatedAtFormatted()));
-        pathColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPath()));
-        durationColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDurationFormatted()));
-//        totalColumn.setCellValueFactory(cellData -> cellData.getValue().totalProperty());
-//        editColumn.setCellValueFactory(cellData -> cellData.getValue().isEditable() ? null : new SimpleObjectProperty<>(new Icon(IconSVG.error, Color.DARKORANGE.toString())));
-
+        ObservableList<Collection> collections = FXCollections.observableArrayList(model.getCollectionSet());
+        collection.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getCollection()));
+        collection.setMinWidth(140);
+        collection.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
+        collection.setOnEditCommit(event -> controller.updateCollection(event));
 
         videoTable.setItems(this.model.videoList);
-//        videoTable.getSelectionModel().selectedItemProperty().addListener(observable -> {
-//            if(videoTable.getSelectionModel().getSelectedItem() != null){
-//                model.setSelectedVideo(videoTable.getSelectionModel().getSelectedItem());
-//                controller.showDetail();
-//            }
-//        });
+        categoryTable.setItems(this.model.categoryCounts);
 
-        videoTable.setOnMouseClicked(event -> {
-//            if(event.getClickCount() == 2){
-//                Point video = videoTable.getSelectionModel().getSelectedItem();
-//                if(video.getDuration() != 0){
-//                    controller.editVideo(video);
-//                }else{
-//                    runOutsideUIAsync(() -> {
-//                       controller.getVideoDuration(video);
-//                    });
-//
-//                    alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.duration.error"));
-//                }
-//            }
-        });
+        category.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getName()));
+        count.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().count.toString()));
+    }
+
+    private Callback<TableColumn<Video, Void>, TableCell<Video, Void>> addActions() {
+        return param -> {
+            final  TableCell<Video, Void> cell = new TableCell<Video, Void>(){
+                Button edit = new Button(translate("btn.edit"));
+                Button delete = new Button(translate("btn.delete"));
+
+                Group btnGroup = new Group();
+                {
+                    edit.setLayoutX(5);
+                    delete.setLayoutX(105);
+
+                    edit.getStyleClass().addAll("btn", "btn-info");
+                    delete.getStyleClass().addAll("btn", "btn-danger");
+
+                    btnGroup.getChildren().addAll(edit, delete);
+//                    Icon icon = new Icon(IconSVG.edit, Color.white);
+//                    edit.setGraphic(icon);
+                    edit.setOnAction(event -> {
+                        model.setSelectedVideo(videoTable.getItems().get(getIndex()));
+                    });
+
+
+//                    delete.setGraphic(new Icon(IconSVG.bin, Color.white));
+                    delete.setOnAction(event -> {
+                        controller.delete(videoTable.getItems().get(getIndex()));
+                    });
+                }
+
+                @Override
+                public void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(btnGroup);
+                    }
+                }
+            };
+
+            return cell;
+        };
     }
 
     public void showDetails() {
@@ -180,37 +171,4 @@ public class VideoView extends TranslatedView {
 //        });
     }
 
-    public void initForm(){
-        ObservableList<User> users = FXCollections.observableArrayList(model.getUserSet());
-
-        userColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getUser()));
-        userColumn.setMinWidth(140);
-        userColumn.setCellFactory(ComboBoxTableCell.forTableColumn(users));
-        userColumn.setOnEditCommit(event -> controller.updateUser(event));
-
-        ObservableList<Collection> collections = FXCollections.observableArrayList(model.getCollectionSet());
-        collectionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getCollection()));
-        collectionColumn.setMinWidth(140);
-        collectionColumn.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
-        collectionColumn.setOnEditCommit(event -> controller.updateCollection(event));
-    }
-
-    public void reset() {
-        titleValue.setText("");
-        durationValue.setText("");
-        totalValue.setText("");
-        categoryGroupMap.clear();
-
-        videoTable.refresh();
-        videoTable.getSelectionModel().clearSelection();
-        categoryGroup.getChildren().clear();
-        categoryGroupMap.clear();
-        model.setSelectedVideo(null);
-    }
-
-    public void refresh() {
-        runInsideUISync(() -> {
-            videoTable.refresh();
-        });
-    }
 }

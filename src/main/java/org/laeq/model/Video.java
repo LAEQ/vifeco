@@ -14,6 +14,7 @@ import javax.persistence.*;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @JsonIgnoreProperties({ "id", "name", "total", "createdAt", "updatedAt"})
@@ -133,10 +134,18 @@ public class Video {
         this.points.remove(p);
     }
 
-    public Map<Category, Integer> getTotalGrouped(){
-        Map<Category, Integer> result = new HashMap<>();
+    public List<CategoryCount> getCategoryCount(){
+        Map<Category, CategoryCount> tmp = new HashMap<>();
 
-        return result;
+        for (Category category : collection.getCategories()){
+            tmp.put(category, new CategoryCount(category, 0));
+        }
+
+        for(Point point : points){
+            tmp.get(point.getCategory()).increment();
+        }
+
+        return tmp.values().stream().collect(Collectors.toList());
     }
 
     @JsonIgnore
@@ -145,23 +154,8 @@ public class Video {
     }
 
     @JsonIgnore
-    public String getAbsolutePath(){
-        return "to do";
-//        return String.format("%s%s%s", Settings.videoPath, File.separator, this.path.getValue());
-    }
-
-    private String pathToName(String path){
+    public String pathToName(){
         return Paths.get(path).getFileName().toString();
-    }
-
-
-//    @JsonIgnore
-//    public Map<Category, Long> getTotalByCategory() {
-//        return pointSet.stream().collect(Collectors.groupingBy(Point::getCategory, Collectors.counting()));
-//    }
-
-    public String getName() {
-        return "to do";
     }
 
     public String getCreatedAtFormatted() {

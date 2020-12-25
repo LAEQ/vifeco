@@ -37,7 +37,7 @@ public class ExportService extends AbstractGriffonService {
     public String export(Video video) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         
-        String fileName = String.format("%s-%s.json", video.getName(), System.currentTimeMillis());
+        String fileName = String.format("%s-%s.json", video.pathToName(), System.currentTimeMillis());
         fileName = getPathExport(fileName);
         objectMapper.writeValue(new File(fileName), video);
 

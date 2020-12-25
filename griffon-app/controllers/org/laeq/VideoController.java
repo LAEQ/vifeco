@@ -34,36 +34,31 @@ public class VideoController extends CRUDController<Video> {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-//        model.setPrefs(prefService.getPreferences());
-//        setTranslationService();
         try{
             model.videoList.addAll(dbService.videoDAO.findAll());
             model.getUserSet().addAll(dbService.userDAO.findAll());
             model.getCollectionSet().addAll(dbService.collectionDAO.findAll());
             model.categorySet.addAll(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.fetch"));
+            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
         } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
         }
 
-        view.initForm();
         getApplication().getEventRouter().addEventListener(listeners());
     }
 
     public void clear(){
-        runInsideUISync(() -> view.reset());
+        runInsideUISync(() -> {
+            model.clear();
+        });
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void delete(){
-        if(model.selectedVideo == null){
-            return;
-        }
-
+    public void delete(Video video){
         try{
-            dbService.videoDAO.delete(model.selectedVideo);
-            model.removeVideo();
+            dbService.videoDAO.delete(video);
+            model.videoList.remove(video);
             getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.delete"));
         }  catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.delete"));
@@ -96,6 +91,7 @@ public class VideoController extends CRUDController<Video> {
 
     public void editVideo(Video video) {
         if(model.selectedVideo == null){
+
             return;
         }
 
