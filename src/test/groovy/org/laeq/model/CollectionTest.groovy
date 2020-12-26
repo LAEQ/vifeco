@@ -8,7 +8,9 @@ class CollectionTest extends Specification {
     Collection entity
 
     def setup(){
-        entity = new Collection(1, "mock", false)
+        entity = new Collection("mock")
+        entity.setId(1)
+        entity.setDefault(Boolean.TRUE)
     }
 
     def "AddCategory"() {
@@ -54,32 +56,20 @@ class CollectionTest extends Specification {
         entity.getCategories().size() == 3
     }
 
-    def "Get category ids"(){
-        when:
-        Category category = new Category(2, "category 2",  "icon", "F000000","A")
-        entity.addCategory(new Category(1, "category 1", "icon", "F00000","A"))
-        entity.addCategory(category)
-        entity.addCategory(new Category(3, "category 3",  "icon", "FFFFFF","A"))
-
-
-        then:
-        entity.getCategoryIds().size() == 3
-        entity.getCategoryIds() == [1, 2, 3]
-    }
-    
-    def "Get getNewCategories"(){
+    def "has category"(){
         setup:
-        1.upto(11, {
-            entity.addCategory(new Category(it, "category 1", "icon", "F000000","A"))
-        })
+        entity.addCategory(new Category(1, "category 1", "icon", "F00000","A"))
 
-        List<Integer> ids = [1,2,4,5,6,7,8,9]
+        expect:
+        entity.hasCategory(new Category(1, "category 1", "icon", "F00000","A")) == true
+    }
 
-        when:
-        def result = entity.getNewCategories(ids)
+    def "has not category"(){
+        setup:
+        entity.addCategory(new Category(1, "category 1", "icon", "F00000","A"))
 
-        then:
-        result.size() == 3
+        expect:
+        entity.hasCategory(new Category(2, "category 1", "icon", "F00000","A")) == false
     }
 
     def "serialization"(){
@@ -96,19 +86,19 @@ class CollectionTest extends Specification {
         when:
         String result = new ObjectMapper().writeValueAsString(categoryCollection)
 
-        String expected = '{"id":1,"name":"collection","isDefault":false,"categorySet":[{"id":1,"name":"category 1","icon":"icon 1","color":"color 1","shortcut":"A"},{"id":2,"name":"category 2","icon":"icon 2","color":"color 2","shortcut":"B"},{"id":3,"name":"category 3","icon":"icon 3","color":"color 3","shortcut":"C"}]}'
+        String expected = '{"name":"collection","categories":[{"id":1,"name":"category 1"},{"id":2,"name":"category 2"},{"id":3,"name":"category 3"}]}'
 
         then:
         result == expected
     }
 
-    def "deserialization" (){
+    def "deserialization" () {
         setup:
         String json = '{\n' +
                 '    "id": 1,\n' +
                 '    "name": "Default",\n' +
                 '    "isDefault": false,\n' +
-                '    "categorySet": [\n' +
+                '    "categories": [\n' +
                 '      {\n' +
                 '        "id": 1,\n' +
                 '        "name": "Moving car",\n' +
@@ -145,10 +135,7 @@ class CollectionTest extends Specification {
         Collection result = mapper.readValue(json, Collection.class)
 
         then:
-        result == new Collection(1, "Default", false)
-        result.id == 1
         result.name == "Default"
-        result.isDefault == false
-        result.categories.contains(new Category(1, 'Moving car', 'mock1', '#000000', 'A')) == true
+        result.categories.size() == 4
     }
 }

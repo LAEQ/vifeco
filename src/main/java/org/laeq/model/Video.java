@@ -3,12 +3,19 @@ package org.laeq.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javafx.util.Duration;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SortNatural;
-import org.laeq.model.converter.DurationConverter;
+import org.laeq.model.converter.hibernate.DurationConverter;
+import org.laeq.model.converter.jackson.DurationToMilliConverter;
+import org.laeq.model.converter.jackson.MilliToDuration;
+import org.laeq.model.converter.jackson.PathConverterSerialize;
 
 import javax.persistence.*;
 import java.nio.file.Paths;
@@ -17,28 +24,28 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-@JsonIgnoreProperties({ "id", "name", "total", "createdAt", "updatedAt"})
-@JsonPropertyOrder({"uuid", "path", "user", "duration", "collection", "pointSet"})
+@JsonIgnoreProperties({"createdAt"})
+@JsonPropertyOrder({"id", "path", "duration", "user", "collection", "points"})
 @Entity
 @Table(name = "video")
 public class Video {
-    @Id @GeneratedValue(generator = "increment")
-    private Integer id;
-
-    @Transient
+    @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "uuid", updatable = false, nullable = false)
-    private UUID uuid;
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
     @Column(nullable = false)
+    @JsonSerialize(converter = PathConverterSerialize.class)
     private String path;
 
     @Column(nullable = false)
     @Convert(converter = DurationConverter.class)
+    @JsonSerialize(converter = DurationToMilliConverter.class)
+    @JsonDeserialize(converter = MilliToDuration.class)
     private Duration duration;
 
     @ManyToOne(cascade = CascadeType.DETACH)
@@ -66,20 +73,12 @@ public class Video {
         this.user = user;
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
     }
 
     public String getPath() {
@@ -134,6 +133,7 @@ public class Video {
         this.points.remove(p);
     }
 
+    @JsonIgnore
     public List<CategoryCount> getCategoryCount(){
         Map<Category, CategoryCount> tmp = new HashMap<>();
 
@@ -158,9 +158,34 @@ public class Video {
         return Paths.get(path).getFileName().toString();
     }
 
+    @JsonIgnore
     public String getCreatedAtFormatted() {
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         return simpleDateFormat.format(createdAt);
+    }
+
+    @JsonIgnore
+    public void updateCollection(Collection newValue) {
+        this.setCollection(newValue);
+        List<Point> filtered = points.stream().filter(p -> newValue.getCategories().contains(p.getCategory())).collect(Collectors.toList());
+        points.clear();
+        points.addAll(filtered);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Video video = (Video) o;
+
+        return new EqualsBuilder().append(id, video.id).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(id).toHashCode();
     }
 }

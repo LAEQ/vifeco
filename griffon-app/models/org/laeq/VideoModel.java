@@ -69,10 +69,6 @@ public class VideoModel extends AbstractGriffonModel {
 //        }
     }
 
-    public void setPrefs(Preferences preferences) {
-        this.prefs = preferences;
-    }
-
     public Preferences getPrefs() {
         return prefs;
     }

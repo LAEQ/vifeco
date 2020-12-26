@@ -6,7 +6,7 @@ import org.laeq.model.User
 import org.laeq.model.Collection
 import org.laeq.model.Video
 
-import java.time.Duration
+import javafx.util.Duration
 
 class EntityGenerator {
     static def createUser(){
@@ -26,7 +26,7 @@ class EntityGenerator {
     }
 
     static def createVideo(){
-        def video = new Video("mock/path", Duration.ofMillis(1000), createCollection(), createUser())
+        def video = new Video("mock/path", Duration.millis(1000), createCollection(), createUser())
 
         return video
     }
@@ -34,7 +34,7 @@ class EntityGenerator {
     static def createPoint(Video video){
         Point point = new Point(Math.round(Math.random() * 100),
                 Math.round(Math.random() * 100),
-                Duration.ofMillis(Math.random() * 10000),
+                Duration.millis(Math.random() * 10000),
                 video.collection.getCategories().getAt(0), video)
 
         return point

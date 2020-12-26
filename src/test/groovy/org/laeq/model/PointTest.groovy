@@ -3,53 +3,100 @@ package org.laeq.model
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import javafx.util.Duration
-import org.laeq.model.serializer.PointDeserializer
+import org.laeq.model.dao.EntityGenerator
+
 import spock.lang.Specification
 
 class PointTest extends Specification {
     def "serialization "(){
         setup:
-        User user = new User(1, "test", "test", "test")
-        Collection categoryCollection = new Collection()
-        Point video = new Point(1, "test", Duration.millis(1000), user, categoryCollection)
+        User user = new User(1, 'firstName', 'lastName', 'email', false)
+        Collection collection = new Collection(1, 'collection', false)
         Category category = new Category(1, "test", "test", "test" ,"A")
-        Point point = new Point(1, 10,10, Duration.millis(10000), video, category)
+        collection.addCategory(category)
+        Video video = new Video('path', Duration.ONE, collection, user)
+        UUID id = UUID.randomUUID();
+        Point point = new Point(id, 10,10, Duration.ONE, category, video)
 
         when:
         String result = new ObjectMapper().writeValueAsString(point)
-
-        String expected = "{'id':1,'x':10.0,'y':10.0,'categoryId':1,'startDouble':10000.0,'videoId':'$video.uuid'}"
+        String expected = '{"id":"' + id + '","x":10.0,"y":10.0,"start":1.0,"category":1}'
 
         then:
-        result == expected.replace("'", "\"")
+        result == expected
     }
 
     def "deserialize" () {
         setup:
-        String json = ' {\n' +
-                '      "id": 1,\n' +
-                '      "x": 0.4155672823218997,\n' +
-                '      "y": 0.3915441176470588,\n' +
-                '      "categoryId": 1,\n' +
-                '      "startDouble": 10.0\n' +
-                '    }'
+        UUID id = UUID.randomUUID();
+        String json = '{"id":"' + id + '","x":10.0,"y":10.0,"start":1.0,"category":1}'
 
-        PointDeserializer deserializer = new PointDeserializer()
         ObjectMapper mapper = new ObjectMapper()
-        SimpleModule module = new SimpleModule()
-        module.addDeserializer(Point.class, deserializer)
-        mapper.registerModule(module)
 
         when:
-        Point result = mapper.readValue(json, Point.class)
+        Point point = mapper.readValue(json, Point.class)
         Category category = new Category()
         category.setId(1)
 
         then:
-        result.id == 1
-        result.getCategory() == category
-        result.getStartDouble() == 10d
-        result.getX() == 0.4155672823218997
-        result.getY() == 0.3915441176470588
+        point.getId().equals(id)
+        point.getStart().equals(Duration.millis(1.0))
+        point.getCategory().equals(new Category(1))
+    }
+
+    def "compare same point"() {
+        setup:
+        Category category = EntityGenerator.createCategory('A')
+        Video video = EntityGenerator.createVideo()
+        Point pt1 = new Point(1,0,Duration.ONE, category, video)
+
+        expect:
+        pt1.compareTo(pt1) == 0
+    }
+
+
+    def "compare two points"() {
+        setup:
+        Category category = EntityGenerator.createCategory('A')
+        Video video = EntityGenerator.createVideo()
+        Point pt1 = new Point(1,0,Duration.ONE, category, video)
+        Point pt2 = new Point(0,0,Duration.ONE, category, video)
+
+        expect:
+        pt1.compareTo(pt2) == 0
+    }
+
+    def "TestEquals"() {
+        setup:
+        Category category = EntityGenerator.createCategory('A')
+        Video video = EntityGenerator.createVideo()
+        UUID id = UUID.randomUUID()
+        Point pt1 = new Point(id,0,0,Duration.ONE, category, video)
+
+        expect:
+        pt1.equals(pt1) == true
+    }
+
+    def "2 points same uuid are equals"() {
+        setup:
+        Category category = EntityGenerator.createCategory('A')
+        Video video = EntityGenerator.createVideo()
+        UUID id = UUID.randomUUID()
+        Point pt1 = new Point(id,0,0,Duration.ONE, category, video)
+        Point pt2 = new Point(id,0,0,Duration.ONE, category, video)
+
+        expect:
+        pt1.equals(pt2) == true
+    }
+
+    def "2 points with diferent uuid are not equals"() {
+        setup:
+        Category category = EntityGenerator.createCategory('A')
+        Video video = EntityGenerator.createVideo()
+        Point pt1 = new Point(UUID.randomUUID(), 1,0,Duration.ONE, category, video)
+        Point pt2 = new Point(UUID.randomUUID(), 0,0,Duration.ZERO, category, video)
+
+        expect:
+        pt1.equals(pt2) == false
     }
 }

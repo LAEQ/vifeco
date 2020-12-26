@@ -11,7 +11,6 @@ import org.laeq.icon.IconService;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
-import org.laeq.user.PreferencesService;
 import org.laeq.video.ExportService;
 
 import javax.annotation.Nonnull;
@@ -27,10 +26,6 @@ public class VideoController extends CRUDController<Video> {
     @Inject private DatabaseService dbService;
     @Inject private ExportService exportService;
     @Inject private IconService iconService;
-    @Inject private PreferencesService prefService;
-
-    private TranslationService translationService;
-
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -59,9 +54,9 @@ public class VideoController extends CRUDController<Video> {
         try{
             dbService.videoDAO.delete(video);
             model.videoList.remove(video);
-            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.delete"));
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("video.delete.success", video.pathToName()));
         }  catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.delete"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.delete.error"));
         }
     }
 
@@ -69,37 +64,22 @@ public class VideoController extends CRUDController<Video> {
         if(model.selectedVideo == null){
             return;
         }
-
-        publishEvent("video.edit", this.model.selectedVideo);
     }
 
-    public void export(){
-//        if(model.getSelectedVideo() == null){
-//            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.video.no_selection"));
-//            return;
-//        }
-//
-//        try {
-//            String filename = exportService.export(model.getSelectedVideo());
-//            alert(translationService.getMessage("org.laeq.title.success"),
-//                    String.format(translationService.getMessage("org.laeq.export.success"), filename)
-//            );
-//        } catch (IOException e) {
-//            alert(translationService.getMessage("org.laeq.title.error"), translationService.getMessage("org.laeq.title.error"));
-//        }
+    public void export(Video video){
+        try {
+            String filename = exportService.export(video);
+
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("video.export.success", filename));
+        } catch (IOException e) {
+            e.printStackTrace();
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.export.error"));
+        }
     }
 
     public void editVideo(Video video) {
-        if(model.selectedVideo == null){
 
-            return;
-        }
 
-        publishEvent("video.edit", video);
-    }
-
-    private void publishEvent(String eventName, Video video){
-        getApplication().getEventRouter().publishEventOutsideUI(eventName, Arrays.asList(video));
     }
 
     public void updateUser(TableColumn.CellEditEvent<Video, User> event) {
@@ -114,25 +94,19 @@ public class VideoController extends CRUDController<Video> {
 //            alert(translationService.getMessage("org.laeq.title.error"), e.getMessage());
 //        }
     }
-
-    public void updateCollection(TableColumn.CellEditEvent<Video, Collection> event) {
-//        try {
-//            Boolean confirm = confirm(translationService.getMessage("org.laeq.video.collection.confirm"));
 //
-//            if(confirm){
-//                videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
-//                event.getRowValue().setCollection(event.getNewValue());
-//                setCategories(event.getRowValue());
-//                pointDAO.updateOnCollectionChange(event.getRowValue());
-//                event.getRowValue().getPointSet().clear();
-//                event.getRowValue().setTotal(pointDAO.findByVideo(event.getRowValue()).size());
-//                runInsideUISync(() -> view.reset());
-//            }
+//    public void updateCollection() {
 //
-//        } catch (SQLException | DAOException e) {
-//            alert(translationService.getMessage("org.laeq.title.error"), e.getMessage());
-//        }
-    }
+//        videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
+//        event.getRowValue().setCollection(event.getNewValue());
+//        setCategories(event.getRowValue());
+//        pointDAO.updateOnCollectionChange(event.getRowValue());
+//        event.getRowValue().getPointSet().clear();
+//        event.getRowValue().setTotal(pointDAO.findByVideo(event.getRowValue()).size());
+//        runInsideUISync(() -> view.reset());
+//
+//
+//    }
 
     public void showDetail() {
 //        if(model.getSelectedVideo() != null){
@@ -157,13 +131,7 @@ public class VideoController extends CRUDController<Video> {
 
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
-//
-//        list.put("video.import.success", objects -> {
-//            model.getVideoList().clear();
-//            model.getVideoList().addAll(videoDAO.findAll());
-//            view.refresh();
-//        });
-//
+
         list.put("video.created", objects -> {
             Video video = (Video) objects[0];
             runInsideUISync(() -> {
@@ -171,21 +139,15 @@ public class VideoController extends CRUDController<Video> {
             });
         });
 
-//        list.put("change.language", objects -> {
-//            Locale locale = (Locale) objects[0];
-//            model.getPrefs().locale = locale;
-//            view.changeLocale(locale);
-//            setTranslationService();
-//        });
-//
         return list;
     }
 
-    private void setTranslationService(){
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
+    public void updateCollection(Video video, Collection newValue) {
+        try{
+            video.updateCollection(newValue);
+            dbService.videoDAO.create(video);
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

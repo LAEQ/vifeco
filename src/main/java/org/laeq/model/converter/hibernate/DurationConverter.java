@@ -1,4 +1,4 @@
-package org.laeq.model.converter;
+package org.laeq.model.converter.hibernate;
 
 import javafx.util.Duration;
 import javax.persistence.AttributeConverter;

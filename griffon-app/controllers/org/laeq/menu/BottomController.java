@@ -8,9 +8,7 @@ import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
 public class BottomController extends AbstractGriffonController {
@@ -23,50 +21,53 @@ public class BottomController extends AbstractGriffonController {
     }
 
 
-    public void setSuccess(String message){
+    public void setMessage(String message, List<String> styles){
         runInsideUIAsync(() -> {
-            view.setSuccessMessage(message);
+            view.setMessage(message, styles);
         });
-
     }
 
-    public void setError(String message){
+    private void setMessageParametized(Object[] objects, List<String> styles) {
         runInsideUIAsync(() -> {
-            view.setErrorMessage(message);
+            view.setMessageParametized(objects, styles);
         });
-
-    }
-
-    public void setInfo(String message){
-       runInsideUIAsync(() -> {
-           view.setInfo(message);
-       });
     }
 
     private Map<String, RunnableWithArgs> listeners() {
         Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        // Success
         list.put("status.success", objects -> {
-            setSuccess((String) objects[0]);
+            setMessage((String) objects[0], Arrays.asList("alert", "alert-success"));
+        });
+        list.put("status.success.parametrized", objects -> {
+            setMessageParametized(objects, Arrays.asList("alert", "alert-success"));
         });
 
-        list.put("status.info.parametized", objects -> {
-            setInfoParametized(objects);
-        });
-
+        //Error
         list.put("status.error", objects -> {
-            String message = (String) objects[0];
-            setError(message);
+            setMessage((String) objects[0], Arrays.asList("alert", "alert-danger"));
+        });
+        list.put("status.error.parametrized", objects -> {
+            setMessageParametized(objects, Arrays.asList("alert", "alert-danger"));
         });
 
+        //Info
+        list.put("status.info.parametrized", objects -> {
+            setMessageParametized(objects, Arrays.asList("alert", "alert-info"));
+        });
         list.put("status.info", objects -> {
-            String message = (String) objects[0];
-            setInfo(message);
+            setMessage((String) objects[0], Arrays.asList("alert", "alert-info"));
+        });
+
+        //Info
+        list.put("status.warning.parametrized", objects -> {
+            setMessageParametized(objects, Arrays.asList("alert", "alert-warning"));
+        });
+        list.put("status.warning", objects -> {
+            setMessage((String) objects[0], Arrays.asList("alert", "alert-warning"));
         });
 
         return list;
-    }
-
-    private void setInfoParametized(Object[] objects) {
-        view.setInfoParametized(objects);
     }
 }

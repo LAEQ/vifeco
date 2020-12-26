@@ -14,6 +14,8 @@ import org.laeq.VifecoView;
 
 import javax.annotation.Nonnull;
 
+import java.util.List;
+
 import static java.util.Arrays.asList;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -41,29 +43,18 @@ public class BottomView extends AbstractJavaFXGriffonView {
         label.setText("");
     }
 
-    public void setSuccessMessage(String message) {
+    public void setMessage(String message, List<String> styles) {
         String text = messageSource.getMessage(message);
-        panel.getStyleClass().setAll("alert", "alert-success");
+        panel.getStyleClass().setAll(styles);
         label.setText(text);
     }
 
-    public void setErrorMessage(String message) {
-        String text = messageSource.getMessage(message);
-        panel.getStyleClass().setAll("alert", "alert-danger");
-        label.setText(text);
-    }
 
-    public void setInfo(String message) {
-        String text = messageSource.getMessage(message);
-        panel.getStyleClass().setAll("alert", "alert-info");
-        label.setText(text);
-    }
-
-    public void setInfoParametized(Object[] objects) {
+    public void setMessageParametized(Object[] objects, List<String> styles) {
         String key = (String) objects[0];
         String param = (String) objects[1];
         String text = messageSource.getMessage(key, asList(param));
-        panel.getStyleClass().setAll("alert", "alert-info");
+        panel.getStyleClass().setAll(styles);
         label.setText(text);
     }
 }

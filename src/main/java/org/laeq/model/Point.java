@@ -3,32 +3,48 @@ package org.laeq.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import org.laeq.model.converter.DurationConverter;
-import org.laeq.model.serializer.PointDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.GenericGenerator;
+import org.laeq.model.converter.hibernate.DurationConverter;
+import org.laeq.model.converter.jackson.CategoryConverterDeserialize;
+import org.laeq.model.converter.jackson.CategoryConverterSerialize;
+import org.laeq.model.converter.jackson.DurationToMilliConverter;
+import org.laeq.model.converter.jackson.MilliToDuration;
 import javax.persistence.*;
 import javafx.util.Duration;
+import java.util.UUID;
 
-
-@JsonIgnoreProperties({"video", "icon", "duration", "createdAt", "updatedAt", "category", "uuid"})
-@JsonPropertyOrder({"id", "x", "y", "categoryId", "startDouble", "videoId"})
-@JsonDeserialize(using = PointDeserializer.class)
 @Entity
 @Table(name = "point")
+@JsonIgnoreProperties({"video"})
+@JsonPropertyOrder({"id", "x", "y", "start", "category"})
 public class Point implements Comparable<Point> {
-    @Id @GeneratedValue(generator = "increment")
-    private Integer id;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
+
     @Column(nullable = false)
-    private double x;
+    private Double x;
     @Column(nullable = false)
-    private double y;
+    private Double y;
 
     @Column(nullable = false)
     @Convert(converter = DurationConverter.class)
+    @JsonSerialize(converter = DurationToMilliConverter.class)
+    @JsonDeserialize(converter = MilliToDuration.class)
     private Duration start;
 
     @ManyToOne(cascade = {CascadeType.DETACH})
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
+    @JsonSerialize(converter = CategoryConverterSerialize.class)
+    @JsonDeserialize(converter = CategoryConverterDeserialize.class)
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,7 +53,16 @@ public class Point implements Comparable<Point> {
 
     public Point() {}
 
-    public Point(double x, double y, Duration start, Category category, Video video) {
+    public Point(UUID id, Double x, Double y, Duration start, Category category, Video video) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.start = start;
+        this.category = category;
+        this.video = video;
+    }
+
+    public Point(Double x, Double y, Duration start, Category category, Video video) {
         this.x = x;
         this.y = y;
         this.start = start;
@@ -52,34 +77,34 @@ public class Point implements Comparable<Point> {
      * @param start
      * @param category
      */
-    public Point(double x, double y, Duration start, Category category) {
+    public Point(Double x, Double y, Duration start, Category category) {
         this.x = x;
         this.y = y;
         this.start = start;
         this.category = category;
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public double getX() {
+    public Double getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(Double x) {
         this.x = x;
     }
 
-    public double getY() {
+    public Double getY() {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(Double y) {
         this.y = y;
     }
 
@@ -109,9 +134,27 @@ public class Point implements Comparable<Point> {
 
     @Override
     public int compareTo(Point o) {
-        int compare = this.start.compareTo(o.start);
+        if(this.equals(o)){
+            return 0;
+        }
 
-        return compare;
+        return this.start.compareTo(o.start);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Point point = (Point) o;
+
+        return new EqualsBuilder().append(id, point.id).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(id).toHashCode();
     }
 }
 

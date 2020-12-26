@@ -2,6 +2,7 @@ package org.laeq;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
+import griffon.javafx.support.JavaFXUtils;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -21,6 +22,7 @@ import org.laeq.template.MiddlePaneView;
 import org.laeq.user.PreferencesService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
 
 @ArtifactProviderFor(GriffonView.class)
 public class VideoView extends TranslatedView {
@@ -48,16 +50,13 @@ public class VideoView extends TranslatedView {
     @FXML private TableColumn<Video, String> total;
     @FXML private TableColumn<Video, Void> actions;
 
-
     @FXML private TableColumn<CategoryCount, String> category;
     @FXML private TableColumn<CategoryCount, String> count;
-
 
     @Inject private PreferencesService prefService;
 
     @Override
     public void initUI() {
-        model.setPrefs(prefService.getPreferences());
         Node node = loadFromFXML();
 
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
@@ -90,7 +89,7 @@ public class VideoView extends TranslatedView {
         collection.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getCollection()));
         collection.setMinWidth(140);
         collection.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
-        collection.setOnEditCommit(event -> controller.updateCollection(event));
+        collection.setOnEditCommit(event -> controller.updateCollection(event.getRowValue(), event.getNewValue()));
 
         videoTable.setItems(this.model.videoList);
         categoryTable.setItems(this.model.categoryCounts);
@@ -102,24 +101,31 @@ public class VideoView extends TranslatedView {
     private Callback<TableColumn<Video, Void>, TableCell<Video, Void>> addActions() {
         return param -> {
             final  TableCell<Video, Void> cell = new TableCell<Video, Void>(){
-                Button edit = new Button(translate("btn.edit"));
+                Button export = new Button(translate("btn.export"));
+                Button edit = new Button(translate("btn.details"));
                 Button delete = new Button(translate("btn.delete"));
+
 
                 Group btnGroup = new Group();
                 {
                     edit.setLayoutX(5);
-                    delete.setLayoutX(105);
+                    export.setLayoutX(100);
+                    delete.setLayoutX(200);
 
-                    edit.getStyleClass().addAll("btn", "btn-info");
-                    delete.getStyleClass().addAll("btn", "btn-danger");
+                    edit.getStyleClass().addAll("btn", "btn-info", "btn-sm");
+                    export.getStyleClass().addAll("btn", "btn-warning", "btn-sm");
+                    delete.getStyleClass().addAll("btn", "btn-danger", "btn-sm");
 
-                    btnGroup.getChildren().addAll(edit, delete);
+                    btnGroup.getChildren().addAll(edit, export, delete);
 //                    Icon icon = new Icon(IconSVG.edit, Color.white);
 //                    edit.setGraphic(icon);
                     edit.setOnAction(event -> {
                         model.setSelectedVideo(videoTable.getItems().get(getIndex()));
                     });
 
+                    export.setOnAction(event -> {
+                       controller.export(videoTable.getItems().get(getIndex()));
+                    });
 
 //                    delete.setGraphic(new Icon(IconSVG.bin, Color.white));
                     delete.setOnAction(event -> {
@@ -141,34 +147,4 @@ public class VideoView extends TranslatedView {
             return cell;
         };
     }
-
-    public void showDetails() {
-        // Display video information
-//        titleValue.setText(model.getSelectedVideo().getName());
-//        durationValue.setText(model.getSelectedVideo().getDurationFormatted());
-//        totalValue.setText(String.format("%d", model.getSelectedVideo().totalPoints()));
-
-//        IconCounterMatrice matrix = new IconCounterMatrice(this.model.getSelectedVideo().getCollection().getCategorySet());
-//        categoryGroupMap.clear();
-//        categoryGroupMap.putAll(matrix.getIconMap());
-//
-//        categoryGroup.getChildren().clear();
-//        categoryGroup.getChildren().addAll(matrix.getIconMap().values());
-//
-//        Map<Category, Long> pointsByCategory = this.model.getTotalByCategory();
-//
-//        categoryGroupMap.forEach((category, categoryIcon) -> {
-//            categoryIcon.reset();
-//
-//            if(this.model.getSelectedVideo().getCollection().getCategorySet().contains(category)){
-//                categoryIcon.setText("0");
-//                categoryIcon.setOpacity(1);
-//            }
-//
-//            if(pointsByCategory.containsKey(category)){
-//                categoryIcon.setText(pointsByCategory.get(category).toString());
-//            }
-//        });
-    }
-
 }

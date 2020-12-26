@@ -76,13 +76,15 @@ public class MenuController extends AbstractGriffonController {
         try {
             Video video = new Video();
             String path = selectedFile.getCanonicalFile().toURI().toString();
-            Media media = new Media(selectedFile.getCanonicalFile().toURI().toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
             User defaultUser = dbService.userDAO.findDefault();
             Collection defaultCollection = dbService.collectionDAO.findDefault();
             video.setPath(path);
             video.setCollection(defaultCollection);
             video.setUser(defaultUser);
+
+            Media media = new Media(selectedFile.getCanonicalFile().toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+
 
             System.out.println("Video before addition");
 
@@ -232,7 +234,7 @@ public class MenuController extends AbstractGriffonController {
         list.put("database.backup", objects -> {
             try {
                 String path = this.getPathExport(this.archive());
-                getApplication().getEventRouter().publishEvent("status.info.parametized", Arrays.asList("db.export.success", path));
+                getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("db.export.success", path));
             } catch (IOException e) {
                 getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.export.error"));
             }

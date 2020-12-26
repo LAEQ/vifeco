@@ -1,6 +1,7 @@
 package org.laeq.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.sun.istack.NotNull;
 import org.hibernate.validator.constraints.Length;
 
@@ -16,8 +17,9 @@ import java.util.Set;
 
 @Entity()
 @Table(name="category")
-@JsonIgnoreProperties({"createdAt", "updatedAt" })
-public class Category extends BaseEntity {
+@JsonIgnoreProperties({"icon", "color", "shortcut", "collections"})
+@JsonPropertyOrder({"id", "name"})
+public class Category {
     @Id @GeneratedValue(generator = "increment")
     private int id;
 
@@ -73,13 +75,15 @@ public class Category extends BaseEntity {
     public int getId() {
         return id;
     }
-    public void setId(Integer id) {
+
+    public void setId(int id) {
         this.id = id;
     }
 
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -87,15 +91,9 @@ public class Category extends BaseEntity {
     public String getIcon() {
         return icon;
     }
+
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public String getShortcut() {
-        return shortcut;
-    }
-    public void setShortcut(String shortcut) {
-        this.shortcut = shortcut;
     }
 
     public String getColor() {
@@ -106,8 +104,12 @@ public class Category extends BaseEntity {
         this.color = color;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getShortcut() {
+        return shortcut;
+    }
+
+    public void setShortcut(String shortcut) {
+        this.shortcut = shortcut;
     }
 
     public Set<Collection> getCollections() {
@@ -123,7 +125,7 @@ public class Category extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return id == category.id && name.equals(category.name);
+        return id == category.id;
     }
 
     @Override

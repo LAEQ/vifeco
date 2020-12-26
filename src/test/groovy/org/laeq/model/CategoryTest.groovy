@@ -11,7 +11,7 @@ class CategoryTest extends Specification {
         when:
         String result = new ObjectMapper().writeValueAsString(category)
 
-        String expected = '{"id":1,"name":"test","icon":"test","color":"color","shortcut":"A"}'
+        String expected = '{"id":1,"name":"test"}'
 
         then:
         result == expected
@@ -21,11 +21,8 @@ class CategoryTest extends Specification {
         setup:
         String json = '{\n' +
                 '        "id": 1,\n' +
-                '        "name": "Moving car",\n' +
-                '        "icon": "mock",\n' +
-                '        "color": "#000000",\n' +
-                '        "shortcut": "A"\n' +
-                '      }'
+                '        "name": "Moving car" ' +
+                '    }'
 
         ObjectMapper mapper = new ObjectMapper()
 
@@ -36,8 +33,5 @@ class CategoryTest extends Specification {
         then:
         result == category
         result.name == "Moving car"
-        result.icon == "mock"
-        result.color == "#000000"
-        result.shortcut == "A"
     }
 }

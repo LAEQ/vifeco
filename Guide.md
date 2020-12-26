@@ -28,3 +28,5 @@ statistic: fichier généré pour faire les calculs stats entre
 
 # Tools
 https://github.com/Manevolent/ffmpeg4j
+
+https://javafxpedia.com/en/tutorial/5434/internationalization-in-javafx

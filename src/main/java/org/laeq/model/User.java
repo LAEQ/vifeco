@@ -11,11 +11,10 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "user")
-@JsonIgnoreProperties({"createdAt", "updatedAt"})
-@JsonPropertyOrder({"id", "firstName", "lastName", "email", "isDefault"})
-public class User
+@JsonIgnoreProperties({"default", "email"})
+@JsonPropertyOrder({"id", "firstName", "lastName"})
+final public class User
 {
-
     @Id @GeneratedValue(generator = "increment")
     private Integer id;
 
@@ -41,6 +40,14 @@ public class User
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+    }
+
+    public User(Integer id, @Size(min = 1) String firstName, @Size(min = 1) String lastName, @Size(min = 1) String email, Boolean isDefault) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.isDefault = isDefault;
     }
 
     public Integer getId() {

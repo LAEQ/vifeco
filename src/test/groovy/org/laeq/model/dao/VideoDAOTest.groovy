@@ -19,6 +19,7 @@ class VideoDAOTest extends Specification {
     PointDAO pointDAO
     Category category_1, category_2
     Collection collection
+    Collection collection2
     User user;
 
 
@@ -39,9 +40,13 @@ class VideoDAOTest extends Specification {
         collection.addCategory(category_1)
         collection.addCategory(category_2)
 
+        collection2 = new Collection("mock col 2")
+        collection2.addCategory(category_1)
+
         catDAO.create(category_1)
         catDAO.create(category_2)
         colDAO.create(collection)
+        colDAO.create(collection2)
     }
 
     void cleanup() {
@@ -159,5 +164,26 @@ class VideoDAOTest extends Specification {
 
         then:
         video.getPoints().size() == 40
+    }
+
+    def "update video collection must delete obsolete points"(){
+        setup:
+        Video video1 = new Video('mock/path2', Duration.millis(1000), collection, user)
+        dao.create(video1)
+        Point pt1 = new Point(1,1,Duration.ONE, category_1)
+        Point pt2 = new Point(1,1,Duration.millis(2.0), category_2)
+
+        video1.addPoint(pt1)
+        video1.addPoint(pt2)
+
+        dao.create(video1)
+
+        def id = video1.getId()
+
+        when:
+        video1.updateCollection(collection2)
+
+        then:
+        video1.getPoints().size() == 0
     }
 }

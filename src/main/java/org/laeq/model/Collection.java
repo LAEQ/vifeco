@@ -1,5 +1,8 @@
 package org.laeq.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -7,6 +10,8 @@ import java.util.*;
 
 @Entity
 @Table(name = "collection")
+@JsonIgnoreProperties({ "id", "isDefault", "default"})
+@JsonPropertyOrder({"name", "categories"})
 public class Collection {
     @Id
     @GeneratedValue(generator = "increment")
@@ -26,21 +31,25 @@ public class Collection {
             joinColumns = { @JoinColumn(name = "collection_id") },
             inverseJoinColumns = { @JoinColumn(name = "category_id") }
     )
-    private Set<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 
-    public Collection() {
-        categories = new HashSet<>();
-    }
+    public Collection() {}
 
     public Collection(String name) {
         this();
         this.name = name;
     }
 
+    public Collection(Integer id, @Size(min = 1, max = 255) String name, Boolean isDefault) {
+        this.id = id;
+        this.name = name;
+        this.isDefault = isDefault;
+        this.categories = new HashSet<>();
+    }
+
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
@@ -48,7 +57,6 @@ public class Collection {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -56,7 +64,6 @@ public class Collection {
     public Boolean getDefault() {
         return isDefault;
     }
-
     public void setDefault(Boolean aDefault) {
         isDefault = aDefault;
     }
@@ -64,11 +71,11 @@ public class Collection {
     public Set<Category> getCategories() {
         return categories;
     }
-
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
 
+    @JsonIgnore
     public void addCategory(Category category) {
         categories.add(category);
     }
@@ -77,6 +84,11 @@ public class Collection {
     }
     public void removeCategory(int id){
         categories.removeIf(category -> category.getId() == id);
+    }
+
+    @JsonIgnore
+    public boolean hasCategory(Category category){
+        return categories.contains(category);
     }
 
     @Override
@@ -96,13 +108,4 @@ public class Collection {
     public String toString() {
         return name;
     }
-//    @JsonIgnore
-//    public List<Integer> getCategoryIds() {
-//        return categorySet.stream().map(Category::getId).collect(toList());
-//    }
-//
-//    @JsonIgnore
-//    public List<Category> getNewCategories(java.util.Collection ids){
-//        return categorySet.stream().filter(category -> ! ids.contains(category.getId())).collect(Collectors.toList());
-//    }
 }
