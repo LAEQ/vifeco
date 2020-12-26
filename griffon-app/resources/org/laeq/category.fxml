@@ -2,17 +2,36 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import griffon.javafx.support.JavaFXUtils?>
 <SplitPane dividerPositions="0.6004464285714286" layoutY="7.0" prefHeight="535.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.info.AboutController">
     <items>
         <AnchorPane fx:id="categoryListPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
             <children>
-                <TableView fx:id="categoryTable" layoutX="40.0" layoutY="82.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <TableView fx:id="categoryTable" layoutX="40.0" layoutY="82.0"
+                           prefHeight="200.0" prefWidth="200.0"
+                           AnchorPane.bottomAnchor="0.0"
+                           AnchorPane.leftAnchor="0.0"
+                           AnchorPane.rightAnchor="0.0"
+                           AnchorPane.topAnchor="0.0">
+                    <columns>
+                        <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="category.column.id" />
+                        <TableColumn fx:id="icon" prefWidth="95.0" JavaFXUtils.i18nKey="category.column.icon" />
+                        <TableColumn fx:id="name" prefWidth="95.0" JavaFXUtils.i18nKey="category.column.name" />
+                        <TableColumn fx:id="shortcut" prefWidth="95.0" JavaFXUtils.i18nKey="category.column.shortcut" />
+                        <TableColumn fx:id="actions" prefWidth="95.0" JavaFXUtils.i18nKey="category.column.actions" />
+                    </columns>
+                </TableView>
             </children>
         </AnchorPane>
         <AnchorPane fx:id="categoryFormPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
             <children>
-                <Label fx:id="titleLabel" layoutX="14.0" layoutY="27.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="14.0" />
-                <Separator layoutX="10.0" layoutY="33.0" prefWidth="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="33.0" />
+                <Label fx:id="titleLabel" layoutX="14.0" layoutY="27.0"
+                       AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="14.0"
+                       JavaFXUtils.i18nKey="category.form.title"
+                />
+                <Separator layoutX="10.0" layoutY="33.0" prefWidth="200.0"
+                           AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+                           AnchorPane.topAnchor="33.0" />
                 <GridPane layoutX="10.0" layoutY="47.0" prefHeight="287.0" prefWidth="330.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="50.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="160.0" minWidth="10.0" prefWidth="110.0" />
@@ -27,22 +46,25 @@
                   <RowConstraints />
                     </rowConstraints>
                     <children>
-                        <Label fx:id="nameLabel" />
-                        <Label fx:id="shortCutLabel" GridPane.rowIndex="1" />
-                        <Label fx:id="pathLabel" GridPane.rowIndex="2" />
+                        <Label fx:id="nameLabel" JavaFXUtils.i18nKey="category.column.name" />
+                        <Label fx:id="shortCutLabel" GridPane.rowIndex="1" JavaFXUtils.i18nKey="category.column.shortcut"/>
+                        <Label fx:id="pathLabel" GridPane.rowIndex="2" JavaFXUtils.i18nKey="category.column.icon"/>
+                        <Label fx:id="colorLabel" GridPane.rowIndex="3" JavaFXUtils.i18nKey="category.column.color"/>
+                        <Label fx:id="previewLabel" layoutX="10.0" layoutY="281.0" prefHeight="16.0" prefWidth="104.0"
+                               GridPane.rowIndex="4" JavaFXUtils.i18nKey="category.form.preview"/>
                         <TextField fx:id="nameField" GridPane.columnIndex="1" />
                         <TextField fx:id="shortCutField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="pathField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label fx:id="colorLabel" GridPane.rowIndex="3" />
                         <TextField fx:id="colorPickerField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label fx:id="previewLabel" layoutX="10.0" layoutY="281.0" prefHeight="16.0" prefWidth="104.0" GridPane.rowIndex="4" />
                         <Pane fx:id="svgDisplayPane" layoutX="119.0" layoutY="267.0" prefHeight="123.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                     </children>
                 </GridPane>
-                    <Button fx:id="saveActionTarget" layoutX="292.0" layoutY="495.0" mnemonicParsing="false" styleClass="btn, btn-success" text="Save" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                    <Button fx:id="clearActionTarget" layoutX="14.0" layoutY="495.0" mnemonicParsing="false" styleClass="btn, btn-default" text="Clear" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
-
-
+                    <Button fx:id="saveActionTarget" layoutX="292.0" layoutY="495.0" mnemonicParsing="false" styleClass="btn, btn-success"
+                             AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0"
+                            JavaFXUtils.i18nKey="btn.save" />
+                    <Button fx:id="clearActionTarget" layoutX="14.0" layoutY="495.0" mnemonicParsing="false"
+                            styleClass="btn, btn-default"  JavaFXUtils.i18nKey="btn.clear"
+                            AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
             </children>
         </AnchorPane>
     </items>

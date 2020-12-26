@@ -3,14 +3,12 @@ package org.laeq;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
 import org.laeq.CollectionController;
 import org.laeq.CollectionModel;
@@ -38,61 +36,62 @@ public class CollectionView extends TranslatedView {
     @MVCMember @Nonnull private CollectionModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
 
-    @FXML private Label nameLabel;
     @FXML private TextField nameField;
     @FXML private Group categoryContainer;
-    @FXML private Label titleLabel;
-    @FXML private Label categoryLabel;
-    @FXML private TableView<Collection> collectionTable;
     @FXML private Button saveActionTarget;
     @FXML private Button clearActionTarget;
 
-    @Inject private PreferencesService preferencesService;
-    private TranslationService translationService;
+    @FXML private TableView<Collection> collectionTable;
+    @FXML private TableColumn<Collection, String> id;
+    @FXML private TableColumn<Collection, String> name;
+    @FXML private TableColumn<Collection, String> categories;
+    @FXML private TableColumn<Collection, Icon> isDefault;
+    @FXML private TableColumn<Collection, Void> actions;
+
 
     @Override
     public void initUI() {
-        model.setPreferences(preferencesService.getPreferences());
         Node node = loadFromFXML();
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
+        connectMessageSource(node);
         connectActions(node, controller);
         init();
         initForm();
-
-        textFields.put(nameLabel, "org.laeq.collection.name");
-        textFields.put(titleLabel, "org.laeq.collection.title_create");
-        textFields.put(categoryLabel, "org.laeq.collection.category_title");
-        textFields.put(saveActionTarget, "org.laeq.collection.save_btn");
-        textFields.put(clearActionTarget, "org.laeq.collection.clear_btn");
-
-        setTranslatedText();
     }
 
     private void init(){
-        TableColumn<Collection, String> idColumn = new TableColumn<>("#");
-        TableColumn<Collection, String> nameColumn = new TableColumn("");
-        TableColumn<Collection, String> categoryListColumn = new TableColumn("");
-        TableColumn<Collection, Icon>  isDefaultColumn = new TableColumn("");
-        TableColumn<Collection, Void> actionColumn = new TableColumn<>("");
+        name.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
+        categories.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getCategorieNames()));
+        isDefault.setCellValueFactory(cellData -> cellData.getValue().getDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
+        actions.setCellFactory(addActions());
 
-        columnsMap.put(nameColumn, "org.laeq.collection.column.name");
-        columnsMap.put(isDefaultColumn, "org.laeq.collection.column.is_default");
-        columnsMap.put(categoryListColumn, "org.laeq.collection.column.categories");
-        columnsMap.put(actionColumn, "org.laeq.collection.column.actions");
-
-        nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-        isDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().getDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
-        actionColumn.setCellFactory(addActions());
-
-        collectionTable.getColumns().addAll(idColumn, nameColumn, categoryListColumn, isDefaultColumn, actionColumn);
         collectionTable.setItems(this.model.collections);
 
         model.name.bindBidirectional(nameField.textProperty());
 
+//        categories.setCellFactory(new Callback<TableColumn<Collection, String>, TableCell<Collection,String>>() {
+//            @Override
+//            public TableCell<Collection, String> call( TableColumn<Collection, String> param) {
+//                final TableCell<Collection, String> cell = new TableCell<Collection, String>() {
+//                    private Text text;
+//                    @Override
+//                    public void updateItem(String item, boolean empty) {
+//                        super.updateItem(item, empty);
+//                        if (!isEmpty()) {
+//                            text = new Text(item);
+//                            text.setLineSpacing(5.0);
+//                            text.setWrappingWidth(400); // Setting the wrapping width to the Text
+//                            setGraphic(text);
+//                        }
+//                    }
+//                };
+//                return cell;
+//            }
+//        });
     }
 
     public void initForm(){
-        runInsideUISync(() -> {
+        runInsideUIAsync(() -> {
             double x = 0;
             double y = 0;
             double index = 0;
@@ -114,51 +113,27 @@ public class CollectionView extends TranslatedView {
         });
     }
 
-    public void changeLocale() {
-        runInsideUISync(() -> {
-            setTranslatedText();
-        });
-    }
-
-    private void setTranslatedText(){
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPreferences().locale);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
-        }
-
-        try{
-            textFields.entrySet().forEach(t -> {
-                t.getKey().setText(translationService.getMessage(t.getValue()));
-            });
-
-            columnsMap.entrySet().forEach( t -> {
-                t.getKey().setText(translationService.getMessage(t.getValue()));
-            });
-        } catch (Exception e){
-            getLog().error(e.getMessage());
-        }
-    }
-
     private Callback<TableColumn<Collection, Void>, TableCell<Collection, Void>> addActions() {
         return param -> {
             final  TableCell<Collection, Void> cell = new TableCell<Collection, Void>(){
-                Button edit = new Button("");
-                Button delete = new Button("");
+                Button edit = new Button("edit");
+                Button delete = new Button("delete");
 
                 Group btnGroup = new Group();
                 {
                     edit.setLayoutX(5);
-                    delete.setLayoutX(55);
+                    delete.setLayoutX(105);
 
                     btnGroup.getChildren().addAll(edit, delete);
                     Icon icon = new Icon(IconSVG.edit, Color.gray_dark);
-                    edit.setGraphic(icon);
+//                    edit.setGraphic(icon);
+                    edit.getStyleClass().addAll("btn", "btn-sm", "btn-info");
                     edit.setOnMouseClicked(event -> {
                         model.setSelectedCollection(collectionTable.getItems().get(getIndex()));
                     });
 
-                    delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));
+//                    delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));
+                    delete.getStyleClass().addAll("btn", "btn-sm", "btn-danger");
                     delete.setOnMouseClicked(event -> {
                         controller.delete(collectionTable.getItems().get(getIndex()));
                     });
@@ -213,7 +188,5 @@ public class CollectionView extends TranslatedView {
 //            return cell;
 //        };
 //    }
-    public void clear() {
-        translate(titleLabel, "org.laeq.collection.title_create");
-    }
+
 }

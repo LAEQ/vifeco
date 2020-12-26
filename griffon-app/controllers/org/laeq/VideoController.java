@@ -61,7 +61,9 @@ public class VideoController extends CRUDController<Video> {
     }
 
     public void edit(){
+        System.out.println("EDIT");
         if(model.selectedVideo == null){
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.error"));
             return;
         }
     }
@@ -108,26 +110,6 @@ public class VideoController extends CRUDController<Video> {
 //
 //    }
 
-    public void showDetail() {
-//        if(model.getSelectedVideo() != null){
-//            setPoints(model.getSelectedVideo());
-//            setCategories(model.getSelectedVideo());
-//            view.showDetails();
-//        }
-    }
-
-    private void setPoints(Video video){
-//        if(video.getPointSet().size() == 0){
-//            model.getSelectedVideo().getPointSet().addAll(pointDAO.findByVideo(model.getSelectedVideo()));
-//        }
-    }
-
-    private void setCategories(Video video){
-//        if(video.getCollection().getCategorySet().size() == 0){
-//            Set<Category> categories = categoryDAO.findByCollection(video.getCollection());
-//            video.getCollection().getCategorySet().addAll(categories);
-//        }
-    }
 
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
@@ -149,5 +131,12 @@ public class VideoController extends CRUDController<Video> {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void select(Video video) {
+        runInsideUISync(() -> {
+            model.clear();
+            model.setSelectedVideo(video);
+        });
     }
 }

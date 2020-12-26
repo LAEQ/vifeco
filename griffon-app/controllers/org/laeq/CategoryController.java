@@ -92,11 +92,7 @@ public class CategoryController extends AbstractGriffonController {
 
     private Map<String, RunnableWithArgs> listeners() {
         Map<String, RunnableWithArgs> list = new HashMap<>();
-        list.put("change.language", objects -> {
-            Locale locale = (Locale) objects[0];
-            model.prefs.locale = locale;
-            view.changeLocale(locale);
-        });
+
         return list;
     }
 }

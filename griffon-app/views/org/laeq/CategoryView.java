@@ -4,6 +4,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -15,6 +16,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
+import org.laeq.model.User;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.user.PreferencesService;
@@ -22,6 +24,7 @@ import org.laeq.user.PreferencesService;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -36,30 +39,21 @@ public class CategoryView extends TranslatedView {
     @FXML private TextField colorPickerField;
     @FXML private Pane svgDisplayPane;
 
-    @FXML private Label titleLabel;
-    @FXML private Label nameLabel;
-    @FXML private Label shortCutLabel;
-    @FXML private Label pathLabel;
-    @FXML private Label colorLabel;
-    @FXML private Label previewLabel;
-    @FXML private Button clearActionTarget;
-    @FXML private Button saveActionTarget;
-
 
     @FXML private TableView<Category> categoryTable;
-
-    private TranslationService translationService;
-    @Inject
-    private PreferencesService prefService;
+    @FXML private TableColumn<Category, String> id;
+    @FXML private TableColumn<Category, Void> icon;
+    @FXML private TableColumn<Category, String> name;
+    @FXML private TableColumn<Category, String> shortcut;
+    @FXML private TableColumn<Category, Void> actions;
 
     private SVGPath svgPath;
 
     @Override
     public void initUI() {
-        model.setPrefs(prefService.getPreferences());
-
         Node node = loadFromFXML();
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
+        connectMessageSource(node);
         connectActions(node, controller);
 
         svgPath = new SVGPath();
@@ -73,41 +67,11 @@ public class CategoryView extends TranslatedView {
         svgDisplayPane.getChildren().add(svgPath);
 
         init();
-        initForm();
+//        initForm();
 
-        textFields.put(titleLabel, "org.laeq.category.title_create");
-        textFields.put(nameLabel, "org.laeq.category.name");
-        textFields.put(shortCutLabel, "org.laeq.category.short_cut");
-        textFields.put(pathLabel, "org.laeq.category.path");
-        textFields.put(colorLabel, "org.laeq.category.color");
-        textFields.put(previewLabel, "org.laeq.category.preview");
-        textFields.put(clearActionTarget, "org.laeq.category.clear_btn");
-        textFields.put(saveActionTarget, "org.laeq.category.save_btn");
-
-        setTranslatedText();
     }
 
-    private void setTranslatedText(){
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
-        }
-
-        try{
-            textFields.entrySet().forEach(t -> {
-                t.getKey().setText(translationService.getMessage(t.getValue()));
-            });
-
-            columnsMap.entrySet().forEach( t -> {
-                t.getKey().setText(translationService.getMessage(t.getValue()));
-            });
-        } catch (Exception e){
-            getLog().error("icit: " + e.getMessage());
-        }
-    }
-
-    public void initForm(){
+   public void initForm(){
         final String[] colorStr = new String[1];
 
 //        colorPickerField.getText()
@@ -120,42 +84,38 @@ public class CategoryView extends TranslatedView {
 //        });
     }
 
-    private String toRGBCode(Color color){
-        return String.format( "#%02X%02X%02X",
-                (int)( color.getRed() * 255 ),
-                (int)( color.getGreen() * 255 ),
-                (int)( color.getBlue() * 255 ) );
-    }
 
     private void init(){
-        TableColumn<Category, String> idColumn = new TableColumn<>("#");
-        TableColumn<Category, Void> iconColumn = new TableColumn<>("");
-        TableColumn<Category, String> nameColumn = new TableColumn("");
-        TableColumn<Category, String> shortCutColumn = new TableColumn<>("");
-        TableColumn<Category, Void> actionColumn = new TableColumn<>("");
+        //Table
+        id.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
+        name.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
+        shortcut.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getShortcut()));
+        icon.setCellFactory(iconAction());
+        actions.setCellFactory(addActions());
 
-        categoryTable.getColumns().addAll(idColumn, iconColumn, nameColumn, shortCutColumn, actionColumn);
-
-        columnsMap.put(iconColumn, "org.laeq.category.column.icon");
-        columnsMap.put(nameColumn, "org.laeq.category.column.name");
-        columnsMap.put(shortCutColumn, "org.laeq.category.column.short_cut");
-        columnsMap.put(actionColumn, "org.laeq.category.column.actions");
-
-        idColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> String.valueOf(cellData.getValue().getId())));
-        nameColumn.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getName()));
-        shortCutColumn.setCellValueFactory(param -> Bindings.createStringBinding(() -> param.getValue().getShortcut()));
-
+        //Form
         model.name.bindBidirectional(nameField.textProperty());
         model.shortCut.bindBidirectional(shortCutField.textProperty());
         model.icon.bindBidirectional(pathField.textProperty());
         model.color.bindBidirectional(colorPickerField.textProperty());
 
         pathField.textProperty().addListener((observable, oldValue, newValue) -> {
-           svgPath.setContent(newValue);
+               svgPath.setFill(Paint.valueOf(colorPickerField.textProperty().get()));
+               svgPath.setContent(newValue);
         });
 
-        iconColumn.setCellFactory(iconAction());
-        actionColumn.setCellFactory(addActions());
+        colorPickerField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 0){
+                Paint paint;
+                try{
+                    paint = Paint.valueOf(newValue);
+                    svgPath.setFill(Paint.valueOf(newValue));
+                }catch (Exception e){
+                    getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("category.color.invalid"));
+                }
+            }
+        });
+
         categoryTable.setItems(this.model.categoryList);
     }
 
@@ -229,9 +189,5 @@ public class CategoryView extends TranslatedView {
 
             return cell;
         };
-    }
-
-    public void changeLocale(Locale locale) {
-        setTranslatedText();
     }
 }

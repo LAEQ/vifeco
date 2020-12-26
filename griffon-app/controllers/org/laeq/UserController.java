@@ -47,12 +47,7 @@ public class UserController extends AbstractGriffonController{
     private Map<String, RunnableWithArgs> listeners() {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("change.language", objects -> {
-            Locale locale = (Locale) objects[0];
-            model.getPrefs().locale = locale;
-            setTranslationService();
-            view.changeLocale();
-        });
+
 
         return list;
     }

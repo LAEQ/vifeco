@@ -39,11 +39,11 @@ public class VideoModel extends AbstractGriffonModel {
         return userSet;
     }
 
-    public void setSelectedVideo(Video selectedItem) {
-        this.selectedVideo = selectedItem;
-        name.set(selectedItem.pathToName());
-        duration.set(selectedItem.getDurationFormatted());
-        total.set(String.format("%d", selectedItem.getPoints().size()));
+    public void setSelectedVideo(Video video) {
+        this.selectedVideo = video;
+        name.set(video.pathToName());
+        duration.set(video.getDurationFormatted());
+        total.set(String.format("%d", video.getPoints().size()));
 
         categoryCounts.addAll(this.selectedVideo.getCategoryCount());
     }

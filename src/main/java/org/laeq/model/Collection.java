@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "collection")
@@ -107,5 +108,10 @@ public class Collection {
     @Override
     public String toString() {
         return name;
+    }
+
+    @JsonIgnore
+    public String getCategorieNames() {
+        return categories.stream().map(e -> e.getName()).collect(Collectors.joining("\n"));
     }
 }

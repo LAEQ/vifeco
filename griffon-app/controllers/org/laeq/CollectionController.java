@@ -60,7 +60,6 @@ public class CollectionController extends CRUDController<Collection> {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void clear(){
         model.clear();
-        view.clear();
     }
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
@@ -77,13 +76,6 @@ public class CollectionController extends CRUDController<Collection> {
 
     private Map<String, RunnableWithArgs> listeners() {
         Map<String, RunnableWithArgs> list = new HashMap<>();
-
-        list.put("change.language", objects -> {
-            Locale locale = (Locale) objects[0];
-            model.getPreferences().locale = locale;
-            setTranslationService();
-            view.changeLocale();
-        });
 
         return list;
     }

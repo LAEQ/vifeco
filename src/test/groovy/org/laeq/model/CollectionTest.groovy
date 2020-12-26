@@ -72,6 +72,18 @@ class CollectionTest extends Specification {
         entity.hasCategory(new Category(2, "category 1", "icon", "F00000","A")) == false
     }
 
+    def "get category stringify"(){
+        setup:
+        entity.addCategory(new Category(1, "category 1", "icon", "F00000","A"))
+        entity.addCategory(new Category(2, "category 2", "icon", "F00000","A"))
+
+        when:
+        String result = entity.getCategorieNames()
+
+        then:
+        result.equals("category 1, category 2")
+    }
+
     def "serialization"(){
         setup:
         Category category1 = new Category(1, "category 1", "icon 1", "color 1", "A")

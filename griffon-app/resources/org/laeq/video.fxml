@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
-<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
@@ -60,10 +59,11 @@
                         styleClass="btn, btn-default"
                         AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" JavaFXUtils.i18nKey="org.laeq.video.clear_btn"/>
                 <Button fx:id="editActionTarget" layoutX="320.0" layoutY="462.0" minWidth="80.0" mnemonicParsing="false"
-                        AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" JavaFXUtils.i18nKey="org.laeq.video.edit_btn">
+                        AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" JavaFXUtils.i18nKey="org.laeq.video.start_btn" styleClass="">
                     <styleClass>
                         <String fx:value="btn" />
                         <String fx:value="btn-success" />
+                        <String fx:value="btn-large" />
                     </styleClass>
                 </Button>
 

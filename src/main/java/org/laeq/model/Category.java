@@ -21,7 +21,7 @@ import java.util.Set;
 @JsonPropertyOrder({"id", "name"})
 public class Category {
     @Id @GeneratedValue(generator = "increment")
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     @Size(min = 1, max = 255)
@@ -48,11 +48,11 @@ public class Category {
     public Category() {
     }
 
-    public Category(int id){
+    public Category(Integer id){
         this.id = id;
     }
 
-    public Category(int id, String name, String icon, String color, String shortcut) {
+    public Category(Integer id, String name, String icon, String color, String shortcut) {
         this(name, icon, color, shortcut);
         this.id = id;
     }
@@ -72,11 +72,11 @@ public class Category {
         this.setShortcut(values[3]);
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

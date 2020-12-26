@@ -120,7 +120,7 @@ public class VideoView extends TranslatedView {
 //                    Icon icon = new Icon(IconSVG.edit, Color.white);
 //                    edit.setGraphic(icon);
                     edit.setOnAction(event -> {
-                        model.setSelectedVideo(videoTable.getItems().get(getIndex()));
+                        controller.select(videoTable.getItems().get(getIndex()));
                     });
 
                     export.setOnAction(event -> {
