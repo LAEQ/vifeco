@@ -5,13 +5,9 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-
 import griffon.transform.Threading;
 import org.laeq.model.Video;
-import org.laeq.video.player.VideoEditor;
-
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)

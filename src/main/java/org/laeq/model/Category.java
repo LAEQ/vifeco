@@ -1,9 +1,13 @@
 package org.laeq.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.sun.istack.NotNull;
+import javafx.beans.property.SimpleObjectProperty;
 import org.hibernate.validator.constraints.Length;
+import org.laeq.model.icon.Color;
+import org.laeq.model.icon.IconSVG;
 
 
 import javax.persistence.*;
@@ -90,6 +94,11 @@ public class Category {
 
     public String getIcon() {
         return icon;
+    }
+
+    @JsonIgnore
+    public Icon getIcon2(){
+        return new Icon(this.icon, this.color);
     }
 
     public void setIcon(String icon) {

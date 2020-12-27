@@ -60,24 +60,27 @@
         </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="100.0">
         <children>
-            <Accordion fx:id="side" layoutX="-36.0" layoutY="105.0" prefHeight="448.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Accordion fx:id="side" layoutX="-36.0" layoutY="105.0" prefHeight="448.0" prefWidth="225.0"
+                       AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <panes>
-                    <TitledPane fx:id="summary" animated="false" text="untitled 1">
+                    <TitledPane fx:id="summary" animated="false" JavaFXUtils.i18nKey="editor.summary.title">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="595.0" prefWidth="221.0">
                                 <children>
-                                    <TableView fx:id="summaryTable" layoutX="-8.0" layoutY="42.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TableView fx:id="summaryTable" layoutX="-8.0" layoutY="42.0" prefHeight="200.0"
+                                               prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                         <columns>
-                                            <TableColumn fx:id="iconTS" prefWidth="75.0" text="C1" />
-                                            <TableColumn fx:id="nameTS" prefWidth="75.0" text="C2" />
-                                            <TableColumn fx:id="totalTS" prefWidth="75.0" text="C2" />
+                                            <TableColumn fx:id="iconTS" prefWidth="75.0"  />
+                                            <TableColumn fx:id="nameTS" prefWidth="205.0" JavaFXUtils.i18nKey="editor.summary.col.name" />
+                                            <TableColumn fx:id="totalTS" prefWidth="75.0" JavaFXUtils.i18nKey="editor.summary.col.total" />
                                         </columns>
                                     </TableView>
                                 </children>
                             </AnchorPane>
                         </content>
                     </TitledPane>
-                    <TitledPane fx:id="detail" animated="false" prefWidth="344.0" text="untitled 2">
+                    <TitledPane fx:id="detail" animated="false" prefWidth="344.0" JavaFXUtils.i18nKey="editor.timeline.title">
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
@@ -85,10 +88,10 @@
                                                prefHeight="394.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0"
                                                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                         <columns>
-                                            <TableColumn fx:id="iconTD" prefWidth="75.0" text="C1" />
-                                            <TableColumn fx:id="startTD" prefWidth="75.0" text="C2" />
-                                            <TableColumn prefWidth="75.0" text="C2" fx:id="xTD" />
-                                            <TableColumn fx:id="yTD" prefWidth="75.0" text="C2" />
+                                            <TableColumn fx:id="iconTD" prefWidth="105.0" JavaFXUtils.i18nKey="editor.timeline.col.type"/>
+                                            <TableColumn fx:id="startTD" prefWidth="105.0" JavaFXUtils.i18nKey="editor.timeline.col.time"/>
+                                            <TableColumn prefWidth="75.0"  fx:id="xTD" text="x" />
+                                            <TableColumn fx:id="yTD" prefWidth="75.0" text="y" />
                                         </columns>
                                     </TableView>
                                 </children>
