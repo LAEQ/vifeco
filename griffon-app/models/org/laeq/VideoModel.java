@@ -27,8 +27,6 @@ public class VideoModel extends AbstractGriffonModel {
     public Set<User> userSet = new HashSet<>();
     public Set<Collection> collectionSet = new HashSet<>();
 
-    private Preferences prefs;
-
     public List<Category> categorySet = new ArrayList<>();
 
     public Set<Collection> getCollectionSet() {
@@ -67,10 +65,6 @@ public class VideoModel extends AbstractGriffonModel {
 //        } else {
             return new HashMap<>();
 //        }
-    }
-
-    public Preferences getPrefs() {
-        return prefs;
     }
 
     public void removeVideo() {

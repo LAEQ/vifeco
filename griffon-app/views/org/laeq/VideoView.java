@@ -2,7 +2,6 @@ package org.laeq;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
-import griffon.javafx.support.JavaFXUtils;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,14 +14,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Callback;
 import org.laeq.model.*;
-import org.laeq.model.icon.Color;
-import org.laeq.model.icon.IconCounter;
-import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
-import org.laeq.user.PreferencesService;
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
+import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
 public class VideoView extends TranslatedView {
@@ -38,9 +32,6 @@ public class VideoView extends TranslatedView {
     @FXML private Label totalValue;
     @FXML private Group categoryGroup;
 
-    @FXML private Button clearActionTarget;
-    @FXML private Button editActionTarget;
-
     @FXML private TableColumn<Video, String> createdAt;
     @FXML private TableColumn<Video, String> name;
     @FXML private TableColumn<Video, String> path;
@@ -49,11 +40,8 @@ public class VideoView extends TranslatedView {
     @FXML private TableColumn<Video, Collection> collection;
     @FXML private TableColumn<Video, String> total;
     @FXML private TableColumn<Video, Void> actions;
-
     @FXML private TableColumn<CategoryCount, String> category;
     @FXML private TableColumn<CategoryCount, String> count;
-
-    @Inject private PreferencesService prefService;
 
     @Override
     public void initUI() {
@@ -79,6 +67,14 @@ public class VideoView extends TranslatedView {
         total.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(String.format("%d", cellData.getValue().getPoints().size())));
         actions.setCellFactory(addActions());
 
+        videoTable.setItems(this.model.videoList);
+        categoryTable.setItems(this.model.categoryCounts);
+
+        category.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getName()));
+        count.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().count.toString()));
+    }
+
+    public void initForm(){
         ObservableList<User> users = FXCollections.observableArrayList(model.getUserSet());
         user.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getUser()));
         user.setMinWidth(140);
@@ -86,16 +82,11 @@ public class VideoView extends TranslatedView {
         user.setOnEditCommit(event -> controller.updateUser(event));
 
         ObservableList<Collection> collections = FXCollections.observableArrayList(model.getCollectionSet());
+        System.out.println(collections);
         collection.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getCollection()));
         collection.setMinWidth(140);
         collection.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
         collection.setOnEditCommit(event -> controller.updateCollection(event.getRowValue(), event.getNewValue()));
-
-        videoTable.setItems(this.model.videoList);
-        categoryTable.setItems(this.model.categoryCounts);
-
-        category.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getName()));
-        count.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().count.toString()));
     }
 
     private Callback<TableColumn<Video, Void>, TableCell<Video, Void>> addActions() {

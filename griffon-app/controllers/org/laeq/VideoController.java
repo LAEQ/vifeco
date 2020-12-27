@@ -35,6 +35,9 @@ public class VideoController extends CRUDController<Video> {
             model.getCollectionSet().addAll(dbService.collectionDAO.findAll());
             model.categorySet.addAll(dbService.categoryDAO.findAll());
             getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
+
+            //@todo add BiDirectionalBinding to remove this hack
+            view.initForm();
         } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
         }
@@ -61,11 +64,13 @@ public class VideoController extends CRUDController<Video> {
     }
 
     public void edit(){
-        System.out.println("EDIT");
         if(model.selectedVideo == null){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.error"));
             return;
         }
+
+        createMVC("main_player");
+        getApplication().getWindowManager().show("main_player");
     }
 
     public void export(Video video){
@@ -81,20 +86,17 @@ public class VideoController extends CRUDController<Video> {
 
     public void editVideo(Video video) {
 
-
     }
 
     public void updateUser(TableColumn.CellEditEvent<Video, User> event) {
-//        try {
-//            Boolean confirm = confirm(translationService.getMessage("org.laeq.video.user.confirm"));
-//
-//            if(confirm){
-//                videoDAO.updateUser(event.getRowValue(), event.getNewValue());
-//                event.getRowValue().setUser(event.getNewValue());
-//            }
-//        } catch (SQLException | DAOException e) {
-//            alert(translationService.getMessage("org.laeq.title.error"), e.getMessage());
-//        }
+        try {
+            Video video = event.getRowValue();
+            video.setUser(event.getNewValue());
+            dbService.videoDAO.create(video);
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.user.updated.success"));
+        } catch (Exception e) {
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.user.updated.error"));
+        }
     }
 //
 //    public void updateCollection() {
