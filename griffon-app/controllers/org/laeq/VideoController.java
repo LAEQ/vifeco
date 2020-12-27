@@ -66,11 +66,14 @@ public class VideoController extends CRUDController<Video> {
     public void edit(){
         if(model.selectedVideo == null){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.error"));
-            return;
+//            return;
         }
 
-        createMVC("main_player");
-        getApplication().getWindowManager().show("main_player");
+        Map<String, Object> args = new HashMap<>();
+        args.put("video", model.videoList.get(0));
+
+        destroyMVCGroup("test");
+        createMVCGroup("test", args);
     }
 
     public void export(Video video){
@@ -82,10 +85,6 @@ public class VideoController extends CRUDController<Video> {
             e.printStackTrace();
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.export.error"));
         }
-    }
-
-    public void editVideo(Video video) {
-
     }
 
     public void updateUser(TableColumn.CellEditEvent<Video, User> event) {
