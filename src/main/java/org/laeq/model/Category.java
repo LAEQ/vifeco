@@ -7,7 +7,9 @@ import com.sun.istack.NotNull;
 import javafx.beans.property.SimpleObjectProperty;
 import org.hibernate.validator.constraints.Length;
 import org.laeq.model.icon.Color;
+import org.laeq.model.icon.IconPoint;
 import org.laeq.model.icon.IconSVG;
+import org.laeq.model.icon.IconSize;
 
 
 import javax.persistence.*;
@@ -24,7 +26,8 @@ import java.util.Set;
 @JsonIgnoreProperties({"icon", "color", "shortcut", "collections"})
 @JsonPropertyOrder({"id", "name"})
 public class Category {
-    @Id @GeneratedValue(generator = "increment")
+    @Id
+    @GeneratedValue(generator = "increment")
     private Integer id;
 
     @Column(nullable = false)
@@ -36,7 +39,7 @@ public class Category {
 
     @Column(nullable = false)
     @Length(min = 7, max = 7)
-    @Pattern(regexp="^#[0-9A-F]{6}$")
+    @Pattern(regexp = "^#[0-9A-F]{6}$")
     private String color;
 
     @Column(nullable = false, unique = true)
@@ -52,7 +55,7 @@ public class Category {
     public Category() {
     }
 
-    public Category(Integer id){
+    public Category(Integer id) {
         this.id = id;
     }
 
@@ -97,8 +100,13 @@ public class Category {
     }
 
     @JsonIgnore
-    public Icon getIcon2(){
+    public Icon getIcon2() {
         return new Icon(this.icon, this.color);
+    }
+
+    @JsonIgnore
+    public IconPoint getIconPoint() {
+        return new IconPoint(new IconSize(this, 20));
     }
 
     public void setIcon(String icon) {

@@ -102,6 +102,11 @@ public class Config extends AbstractMapResourceBundle {
                         .e("view", "org.laeq.editor.PlayerView")
                         .e("controller", "org.laeq.editor.PlayerController")
                 )
+                .e("display", map()
+                        .e("model", "org.laeq.editor.DisplayModel")
+                        .e("view", "org.laeq.editor.DisplayView")
+                        .e("controller", "org.laeq.editor.DisplayController")
+                )
             );
     }
 }

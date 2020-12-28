@@ -28,12 +28,16 @@ import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.*;
+import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconSVG;
+import org.laeq.model.icon.IconSize;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -67,6 +71,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private TextField elapsed;
     @FXML private Label duration;
 
+    @FXML private Button addActionTarget;
+    @FXML private Button playActionTarget;
+    @FXML private Button stopActionTarget;
+    @FXML private Button controlsActionTarget;
+
     @Override
     public void initUI() {
         Stage stage = (Stage) getApplication()
@@ -79,6 +88,18 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         getApplication().getWindowManager().attach("player", stage);
         getApplication().getWindowManager().show("player");
+
+        Icon icon = new Icon(IconSVG.video_plus, org.laeq.model.icon.Color.white);
+        addActionTarget.setGraphic(icon);
+
+        icon = new Icon(IconSVG.btnPlay, org.laeq.model.icon.Color.white);
+        playActionTarget.setGraphic(icon);
+
+        icon = new Icon(IconSVG.btnPause, org.laeq.model.icon.Color.white);
+        stopActionTarget.setGraphic(icon);
+
+        icon = new Icon(IconSVG.controls, org.laeq.model.icon.Color.gray_dark);
+        controlsActionTarget.setGraphic(icon);
 
         initPlayer();
     }
@@ -187,6 +208,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     private void displayPoints() {
+        iconPane.getChildren().clear();
+
         Duration currentTime = mediaPlayer.getCurrentTime();
         Duration startDuration = currentTime.subtract(model.controls.display());
 
@@ -194,15 +217,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 point.getStart().greaterThanOrEqualTo(startDuration) && point.getStart().lessThanOrEqualTo(currentTime)
         );
 
-        iconPane.getChildren().clear();
-
         points.forEach(p -> {
-            Icon icon = p.getCategory().getIcon2();
+            IconPointColorized icon = new IconPointColorized(new IconSize(p.getCategory(), 40));
+            icon.decorate();
             icon.setLayoutX(p.getX() * model.width.doubleValue());
             icon.setLayoutY(p.getY() * model.height.doubleValue());
             iconPane.getChildren().add(icon);
         });
-
     }
 
     private Callback<TableColumn<Point, Void>, TableCell<Point, Void>> deleteActions() {
@@ -234,8 +255,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     //Listeners
-
-    //Slider
     private InvalidationListener sliderListener(){
         return  observable -> {
             if(slider.isPressed()){

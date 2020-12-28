@@ -134,7 +134,7 @@ public class Point implements Comparable<Point> {
     }
 
     public String getStartFormatted(){
-        return DurationFormatUtils.formatDurationHMS((long)start.toSeconds());
+        return DurationFormatUtils.formatDuration((long)start.toMillis(), "H:m:s");
     }
 
     @Override

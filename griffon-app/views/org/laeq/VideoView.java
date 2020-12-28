@@ -41,6 +41,8 @@ public class VideoView extends TranslatedView {
     @FXML private TableColumn<Video, Collection> collection;
     @FXML private TableColumn<Video, Number> total;
     @FXML private TableColumn<Video, Void> actions;
+
+    @FXML private TableColumn<CategoryCount, Icon> icon;
     @FXML private TableColumn<CategoryCount, String> category;
     @FXML private TableColumn<CategoryCount, String> count;
 
@@ -71,6 +73,7 @@ public class VideoView extends TranslatedView {
         videoTable.setItems(this.model.videoList);
         categoryTable.setItems(this.model.categoryCounts);
 
+        icon.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().category.getIcon2()));
         category.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getName()));
         count.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().count.toString()));
     }

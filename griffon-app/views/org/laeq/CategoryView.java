@@ -105,14 +105,10 @@ public class CategoryView extends TranslatedView {
         });
 
         colorPickerField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 0){
-                Paint paint;
-                try{
-                    paint = Paint.valueOf(newValue);
-                    svgPath.setFill(Paint.valueOf(newValue));
-                }catch (Exception e){
-                    getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("category.color.invalid"));
-                }
+            try{
+                svgPath.setFill(Paint.valueOf(newValue));
+            } catch (Exception e){
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("category.color.invalid"));
             }
         });
 
