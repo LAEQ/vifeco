@@ -15,9 +15,11 @@ final public class CategoryCount {
 
     public void increment(){
         this.count++;
+        total.set(count);
     }
 
     public void decrement(){
         this.count--;
+        total.set(count);
     }
 }

@@ -27,6 +27,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import griffon.javafx.support.JavaFXUtils?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.media.MediaView?>
 <SplitPane dividerPositions="0.7190184049079754" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
            minWidth="-Infinity" prefHeight="650.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="org.laeq.editor.PlayerController"
@@ -35,7 +37,14 @@
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="680.0">
         <children>
             <AnchorPane layoutX="34.0" layoutY="24.0" prefHeight="337.0" prefWidth="562.0" style="-fx-background-color: #dddddd;"
-                        AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
+                        AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
+                <Pane fx:id="playerPane" layoutX="14.0" layoutY="23.0"
+                      AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="10.0"
+                      AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="25.0">
+                    <MediaView fx:id="mediaView" fitHeight="${playerPane.height}" fitWidth="${playerPane.width}" layoutX="1.0" />
+                    <Pane fx:id="iconPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: red;" />
+                </Pane>
+            </AnchorPane>
             <!-- Player Buttons -->
             <Button fx:id="playActionTarget" layoutX="14.0" layoutY="408.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="62.0"
                     AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
@@ -47,7 +56,7 @@
                     AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="190.0"
                     JavaFXUtils.i18nKey="btn.controls" styleClass="btn, btn-default"/>
 
-            <Slider layoutX="10.0" layoutY="390.0" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+            <Slider fx:id="slider" layoutX="10.0" layoutY="390.0" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
             <Label fx:id="title" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="622.0"
                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="5.0" />
             <Label fx:id="duration" layoutX="615.0" layoutY="617.0" prefHeight="16.0" prefWidth="80.0" text="00:00:00"

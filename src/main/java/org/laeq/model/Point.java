@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.laeq.model.converter.hibernate.DurationConverter;
 import org.laeq.model.converter.jackson.CategoryConverterDeserialize;
@@ -132,6 +133,10 @@ public class Point implements Comparable<Point> {
         this.video = video;
     }
 
+    public String getStartFormatted(){
+        return DurationFormatUtils.formatDurationHMS((long)start.toSeconds());
+    }
+
     @Override
     public int compareTo(Point o) {
         if(this.equals(o)){
@@ -149,12 +154,17 @@ public class Point implements Comparable<Point> {
 
         Point point = (Point) o;
 
-        return new EqualsBuilder().append(id, point.id).isEquals();
+        return new EqualsBuilder().append(x, point.x).append(y, point.y).append(start, point.start).append(category, point.category).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).toHashCode();
+        return new HashCodeBuilder(17, 37).append(x).append(y).append(start).append(category).toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s @ %s", category.getName(), getStartFormatted());
     }
 }
 

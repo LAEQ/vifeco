@@ -4,10 +4,16 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.scene.input.KeyCode;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import griffon.transform.Threading;
+import org.laeq.DatabaseService;
+import org.laeq.model.Point;
 import org.laeq.model.Video;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -16,21 +22,24 @@ public class PlayerController extends AbstractGriffonController {
     @MVCMember @Nonnull private PlayerView view;
     @MVCMember @Nonnull private Video video;
 
+    @Inject DatabaseService dbService;
+
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
 
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void stop() {
-        System.out.println("Stop player");
+        view.pause();
+
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
-        System.out.println("play player");
+        view.play();
     }
 
     @ControllerAction
@@ -41,6 +50,25 @@ public class PlayerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        System.out.println("HERE destroying player");
+        System.out.println("destroying player");
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void addPoint(KeyCode code, Duration currentTime) {
+        if(model.enabled){
+            Point point = model.generatePoint(code.getName(), currentTime);
+
+            if(point != null){
+                try {
+                    dbService.pointDAO.create(point);
+                    model.addPoint(point);
+                    getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
+                    getApplication().getEventRouter().publishEventOutsideUI("point.created");
+                } catch (Exception e) {
+                    getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
+                }
+            }
+        }
     }
 }

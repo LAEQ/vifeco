@@ -122,6 +122,12 @@ public class VideoController extends CRUDController<Video> {
             });
         });
 
+        list.put("point.created", objects -> {
+            runInsideUISync(() -> {
+                view.refresh();
+            });
+        });
+
         return list;
     }
 

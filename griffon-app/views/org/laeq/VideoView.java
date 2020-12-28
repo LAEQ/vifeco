@@ -3,6 +3,7 @@ package org.laeq;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -38,7 +39,7 @@ public class VideoView extends TranslatedView {
     @FXML private TableColumn<Video, String> duration;
     @FXML private TableColumn<Video, User>  user;
     @FXML private TableColumn<Video, Collection> collection;
-    @FXML private TableColumn<Video, String> total;
+    @FXML private TableColumn<Video, Number> total;
     @FXML private TableColumn<Video, Void> actions;
     @FXML private TableColumn<CategoryCount, String> category;
     @FXML private TableColumn<CategoryCount, String> count;
@@ -64,7 +65,7 @@ public class VideoView extends TranslatedView {
         name.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().pathToName()));
         path.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPath()));
         duration.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDurationFormatted()));
-        total.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(String.format("%d", cellData.getValue().getPoints().size())));
+        total.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getPoints().size()));
         actions.setCellFactory(addActions());
 
         videoTable.setItems(this.model.videoList);
@@ -137,5 +138,9 @@ public class VideoView extends TranslatedView {
 
             return cell;
         };
+    }
+
+    public void refresh() {
+        videoTable.refresh();
     }
 }
