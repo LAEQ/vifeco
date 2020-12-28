@@ -51,7 +51,7 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void controls() {
-        System.out.println("controls player");
+        createMVCGroup("test2");
     }
 
     @Override

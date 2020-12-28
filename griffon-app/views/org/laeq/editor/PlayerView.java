@@ -91,15 +91,19 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         Icon icon = new Icon(IconSVG.video_plus, org.laeq.model.icon.Color.white);
         addActionTarget.setGraphic(icon);
+        addActionTarget.setText("");
 
         icon = new Icon(IconSVG.btnPlay, org.laeq.model.icon.Color.white);
         playActionTarget.setGraphic(icon);
+        playActionTarget.setText("");
 
         icon = new Icon(IconSVG.btnPause, org.laeq.model.icon.Color.white);
         stopActionTarget.setGraphic(icon);
+        stopActionTarget.setText("");
 
         icon = new Icon(IconSVG.controls, org.laeq.model.icon.Color.gray_dark);
         controlsActionTarget.setGraphic(icon);
+        controlsActionTarget.setText("");
 
         initPlayer();
     }

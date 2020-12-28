@@ -15,8 +15,7 @@
 <?import javafx.scene.media.MediaView?>
 <SplitPane dividerPositions="0.7190184049079754" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
            minWidth="-Infinity" prefHeight="650.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="org.laeq.editor.PlayerController"
->
+           fx:controller="org.laeq.editor.PlayerController">
 <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="680.0">
         <children>
@@ -32,16 +31,16 @@
             <!-- Player Buttons -->
             <Button fx:id="playActionTarget" layoutX="14.0" layoutY="408.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="62.0"
                     AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
-                    styleClass="btn, btn-success" text=""/>
+                    styleClass="btn, btn-success" text=" "/>
             <Button fx:id="stopActionTarget" layoutX="112.0" layoutY="412.0" mnemonicParsing="false"
                     AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0"
-                    styleClass="btn, btn-danger" text=""/>
+                    styleClass="btn, btn-danger" text=" "/>
             <Button layoutX="237.0" layoutY="612.0" mnemonicParsing="false" fx:id="controlsActionTarget"
                     AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="190.0"
-                    styleClass="btn, btn-default" text=""/>
+                    styleClass="btn, btn-default" text=" "/>
             <Button layoutX="656.0" layoutY="5.0" mnemonicParsing="false" fx:id="addActionTarget"
                     AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="290.0"
-                    styleClass="btn, btn-info"  text=""/>
+                    styleClass="btn, btn-info"  text=" "/>
 
             <Slider fx:id="slider" layoutX="10.0" layoutY="390.0" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
             <Label fx:id="title" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="622.0"

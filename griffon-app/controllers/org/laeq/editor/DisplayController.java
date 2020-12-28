@@ -31,7 +31,6 @@ public class DisplayController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         list.put("player.pause", objects -> {
-
             runInsideUISync(() -> {
                 view.pause();
             });

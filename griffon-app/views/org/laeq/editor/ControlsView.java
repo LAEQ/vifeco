@@ -9,53 +9,41 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
-public class DisplayView extends AbstractJavaFXGriffonView {
-    @MVCMember @Nonnull private DisplayController controller;
-    @MVCMember @Nonnull private DisplayModel model;
-    @MVCMember @Nonnull File file;
+public class ControlsView extends AbstractJavaFXGriffonView {
+    private ControlsController controller;
+    private ControlsModel model;
 
-    private MediaPlayer mediaPlayer;
-    @FXML private Pane playerPane;
-    @FXML private MediaView mediaView;
+    @FXML
+    private Label clickLabel;
+
+    @MVCMember
+    public void setController(@Nonnull ControlsController controller) {
+        this.controller = controller;
+    }
+
+    @MVCMember
+    public void setModel(@Nonnull ControlsModel model) {
+        this.model = model;
+    }
 
     @Override
     public void initUI() {
         Stage stage = (Stage) getApplication()
             .createApplicationContainer(Collections.<String,Object>emptyMap());
-        stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
+        stage.setTitle("Controls");
         stage.setScene(init());
         stage.sizeToScene();
         stage.setAlwaysOnTop(true);
-        getApplication().getWindowManager().attach("display", stage);
-        getApplication().getWindowManager().show("display");
-
-        initPlayer();
-    }
-
-    private void initPlayer(){
-        try {
-            Media media = new Media(file.getCanonicalFile().toURI().toString());
-            mediaPlayer = new MediaPlayer(media);
-            mediaView.setMediaPlayer(mediaPlayer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        getApplication().getWindowManager().attach("test2", stage);
+        getApplication().getWindowManager().show("test2");
     }
 
     // build the UI
@@ -64,7 +52,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         scene.setFill(Color.WHITE);
 
         Node node = loadFromFXML();
-
+        model.clickCountProperty().bindBidirectional(clickLabel.textProperty());
         if (node instanceof Parent) {
             scene.setRoot((Parent) node);
         } else {
@@ -74,13 +62,5 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         connectMessageSource(node);
 
         return scene;
-    }
-
-    public void pause() {
-        mediaPlayer.pause();
-    }
-
-    public void play() {
-        mediaPlayer.play();
     }
 }
