@@ -66,11 +66,11 @@ public class VideoController extends CRUDController<Video> {
     public void edit(){
         if(model.selectedVideo == null){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.error"));
-//            return;
+            return;
         }
 
         Map<String, Object> args = new HashMap<>();
-        args.put("video", model.videoList.get(0));
+        args.put("video", model.selectedVideo);
 
         destroyMVCGroup("test");
         createMVCGroup("test", args);

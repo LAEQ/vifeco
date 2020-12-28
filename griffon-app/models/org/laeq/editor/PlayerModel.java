@@ -6,7 +6,6 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
@@ -23,15 +22,18 @@ import java.util.Map;
 @ArtifactProviderFor(GriffonModel.class)
 public class PlayerModel extends AbstractGriffonModel {
     @MVCMember @Nonnull private Video video;
-    public ObservableSet<Point> points = FXCollections.observableSet();
+
+
+    public Controls controls = new Controls();
+    public ObservableList<Point> points = FXCollections.observableArrayList();
     public ObservableList<CategoryCount> summary = FXCollections.observableArrayList();
 
-    public SimpleDoubleProperty width = new SimpleDoubleProperty(0);
-    public SimpleDoubleProperty height = new SimpleDoubleProperty(0);
+    public SimpleDoubleProperty width = new SimpleDoubleProperty(1);
+    public SimpleDoubleProperty height = new SimpleDoubleProperty(1);
     public Boolean enabled = Boolean.FALSE;
     private Map<String, Category> shortcutMap= new HashMap();
 
-    public double[] mousePositon = new double[2];
+    public double[] mousePosition = new double[]{0,0};
 
     public void setVideo(@Nonnull Video video){
         this.video = video;
@@ -41,7 +43,7 @@ public class PlayerModel extends AbstractGriffonModel {
     }
 
     public Point2D normalPosition() {
-        return new Point2D(mousePositon[0] / width.doubleValue(), mousePositon[1] / height.doubleValue());
+        return new Point2D(mousePosition[0] / width.doubleValue(), mousePosition[1] / height.doubleValue());
     }
 
     private Category getCategoryByShortcut(String shortcut){
@@ -61,8 +63,8 @@ public class PlayerModel extends AbstractGriffonModel {
             point.setVideo(video);
             point.setCategory(getCategoryByShortcut(code));
             point.setStart(currentTime);
-            point.setX(mousePositon[0]);
-            point.setY(mousePositon[1]);
+            point.setX(mousePosition[0] / Math.max(width.doubleValue(), 1));
+            point.setY(mousePosition[1] / Math.max(height.doubleValue(), 1));
 
             return point;
         }
@@ -72,7 +74,14 @@ public class PlayerModel extends AbstractGriffonModel {
 
     public void addPoint(Point point) {
         points.add(point);
+        FXCollections.sort(points);
         video.addPoint(point);
         summary.stream().filter(c -> c.category.equals(point.getCategory())).findFirst().get().increment();
+    }
+
+    public void removePoint(Point point) {
+        points.remove(point);
+        video.removePoint(point);
+        summary.stream().filter(c -> c.category.equals(point.getCategory())).findFirst().get().decrement();
     }
 }

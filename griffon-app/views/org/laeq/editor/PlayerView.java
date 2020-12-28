@@ -6,18 +6,15 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -26,20 +23,17 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Category;
-import org.laeq.model.CategoryCount;
-import org.laeq.model.Icon;
-import org.laeq.model.Video;
+import org.laeq.model.*;
+import org.laeq.model.icon.IconSVG;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Map;
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -54,7 +48,15 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML public TableView<CategoryCount> summaryTable;
     @FXML public TableColumn<CategoryCount, Icon> iconTS;
     @FXML public TableColumn<CategoryCount, String> nameTS;
+    @FXML public TableColumn<CategoryCount, String> shortcutTS;
     @FXML public TableColumn<CategoryCount, Number> totalTS;
+
+    @FXML public TableView<Point> timelineTable;
+    @FXML public TableColumn<Point, Icon> iconTD;
+    @FXML public TableColumn<Point, String> startTD;
+    @FXML public TableColumn<Point, Number> xTD;
+    @FXML public TableColumn<Point, Number> yTD;
+    @FXML public TableColumn<Point, Void>  delete;
 
     //Video player
     private MediaPlayer mediaPlayer;
@@ -124,7 +126,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         return (EventHandler<KeyEvent>) event -> { controller.addPoint(event.getCode(), mediaPlayer.getCurrentTime());};
     }
 
-
     private EventHandler<? super MouseEvent> mouseexit() {
         return (EventHandler<MouseEvent>) event -> { model.enabled = Boolean.FALSE; };
     }
@@ -152,9 +153,18 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         iconTS.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().category.getIcon2()));
         nameTS.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getName()));
+        shortcutTS.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getShortcut()));
         totalTS.setCellValueFactory(cellData -> cellData.getValue().total);
-
         summaryTable.setItems(model.summary);
+
+        iconTD.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCategory().getIcon2()));
+        startTD.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStartFormatted()));
+        xTD.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getX()));
+        yTD.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getY()));
+        delete.setCellFactory(deleteActions());
+
+        FXCollections.sort(model.points);
+        timelineTable.setItems(model.points);
 
         return scene;
     }
@@ -162,16 +172,65 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     //Rendering method
     private void updateValues() {
         Platform.runLater(() -> {
-//            displayPoints();
-
+            displayPoints();
 //            slider.setDisable(editor.getDuration().isUnknown());
-
             if (!slider.isDisabled() && video.getDuration().greaterThanOrEqualTo(Duration.ZERO) && !slider.isValueChanging()) {
                 slider.setValue(mediaPlayer.getCurrentTime().divide(video.getDuration()).toMillis() * 100.0);
             }
 
             elapsed.setText(DurationFormatUtils.formatDuration((long) mediaPlayer.getCurrentTime().toMillis(), "HH:mm:ss"));
         });
+    }
+
+    public void refresh() {
+        displayPoints();
+    }
+
+    private void displayPoints() {
+        Duration currentTime = mediaPlayer.getCurrentTime();
+        Duration startDuration = currentTime.subtract(model.controls.display());
+
+        FilteredList<Point> points = model.points.filtered(point ->
+                point.getStart().greaterThanOrEqualTo(startDuration) && point.getStart().lessThanOrEqualTo(currentTime)
+        );
+
+        iconPane.getChildren().clear();
+
+        points.forEach(p -> {
+            Icon icon = p.getCategory().getIcon2();
+            icon.setLayoutX(p.getX() * model.width.doubleValue());
+            icon.setLayoutY(p.getY() * model.height.doubleValue());
+            iconPane.getChildren().add(icon);
+        });
+
+    }
+
+    private Callback<TableColumn<Point, Void>, TableCell<Point, Void>> deleteActions() {
+        return param -> {
+            final  TableCell<Point, Void> cell = new TableCell<Point, Void>(){
+                Button delete = new Button("");
+                {
+                    delete.setLayoutX(5);
+
+                    delete.setGraphic(new Icon(IconSVG.bin, org.laeq.model.icon.Color.gray_dark));
+                    delete.setOnAction(event -> {
+                        controller.deletePoint(timelineTable.getItems().get(getIndex()));
+                    });
+                }
+
+                @Override
+                public void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(delete);
+                    }
+                }
+            };
+
+            return cell;
+        };
     }
 
     //Listeners
@@ -193,17 +252,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private EventHandler<MouseEvent> mousemove(){
         return event -> {
             if(model.enabled){
-                model.mousePositon[0] = event.getX();
-                model.mousePositon[1] = event.getY();
-                getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("debug", model.normalPosition().toString()));
+                model.mousePosition[0] = event.getX();
+                model.mousePosition[1] = event.getY();
+//                getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("debug", model.normalPosition().toString()));
             }
         };
     }
-//
-//    private ChangeListener<Number> resize() {
-//        return (observable, oldValue, newValue) -> {
-//            System.out.println(mediaView.getFitWidth() + " - " + mediaView.getFitHeight());
-//            iconPane.resize(Math.random() * 1000, Math.random() * 1000);
-//        };
-//    }
 }

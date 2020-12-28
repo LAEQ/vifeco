@@ -82,6 +82,7 @@
                                         <columns>
                                             <TableColumn fx:id="iconTS" prefWidth="75.0"  />
                                             <TableColumn fx:id="nameTS" prefWidth="205.0" JavaFXUtils.i18nKey="editor.summary.col.name" />
+                                            <TableColumn fx:id="shortcutTS" prefWidth="75.0" JavaFXUtils.i18nKey="editor.summary.col.shortcut" />
                                             <TableColumn fx:id="totalTS" prefWidth="75.0" JavaFXUtils.i18nKey="editor.summary.col.total" />
                                         </columns>
                                     </TableView>
@@ -93,14 +94,15 @@
                         <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
-                                    <TableView fx:id="detailTable" layoutX="-1.5999999999999996" layoutY="1.4000000000000004"
+                                    <TableView fx:id="timelineTable" layoutX="-1.5999999999999996" layoutY="1.4000000000000004"
                                                prefHeight="394.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0"
                                                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                         <columns>
                                             <TableColumn fx:id="iconTD" prefWidth="105.0" JavaFXUtils.i18nKey="editor.timeline.col.type"/>
                                             <TableColumn fx:id="startTD" prefWidth="105.0" JavaFXUtils.i18nKey="editor.timeline.col.time"/>
-                                            <TableColumn prefWidth="75.0"  fx:id="xTD" text="x" />
+                                            <TableColumn fx:id="xTD" prefWidth="75.0" text="x" />
                                             <TableColumn fx:id="yTD" prefWidth="75.0" text="y" />
+                                            <TableColumn fx:id="delete" prefWidth="20" text="" />
                                         </columns>
                                     </TableView>
                                 </children>

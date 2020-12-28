@@ -57,8 +57,7 @@ public class Video {
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "video", orphanRemoval = true, fetch = FetchType.EAGER)
-    @SortNatural
-    private SortedSet<Point> points = new TreeSet<>();
+    private List<Point> points = new ArrayList<>();
 
     @CreationTimestamp
     private Date createdAt;
@@ -109,10 +108,10 @@ public class Video {
         this.user = user;
     }
 
-    public SortedSet<Point> getPoints() {
+    public List<Point> getPoints() {
         return points;
     }
-    public void setPoints(SortedSet<Point> points) {
+    public void setPoints(List<Point> points) {
         this.points = points;
     }
 

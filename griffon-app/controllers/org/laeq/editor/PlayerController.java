@@ -54,7 +54,7 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void addPoint(KeyCode code, Duration currentTime) {
         if(model.enabled){
             Point point = model.generatePoint(code.getName(), currentTime);
@@ -69,6 +69,19 @@ public class PlayerController extends AbstractGriffonController {
                     getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
                 }
             }
+        }
+    }
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    public void deletePoint(Point point) {
+        try{
+            dbService.pointDAO.delete(point);
+            model.removePoint(point);
+            view.refresh();
+            getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
+            getApplication().getEventRouter().publishEventOutsideUI("point.deleted");
+        }catch (Exception e){
+            getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
         }
     }
 }

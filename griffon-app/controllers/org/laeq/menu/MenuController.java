@@ -75,7 +75,7 @@ public class MenuController extends AbstractGriffonController {
     private void createVideo(File selectedFile) {
         try {
             Video video = new Video();
-            String path = selectedFile.getCanonicalFile().toURI().toString();
+            String path = selectedFile.getAbsolutePath();
             User defaultUser = dbService.userDAO.findDefault();
             Collection defaultCollection = dbService.collectionDAO.findDefault();
             video.setPath(path);
