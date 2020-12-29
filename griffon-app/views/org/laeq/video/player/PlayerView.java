@@ -20,14 +20,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.laeq.TranslatedView;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconPointPNG;
 import org.laeq.model.icon.IconSVG;
-import org.laeq.video.VideoService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
-public class PlayerView extends TranslatedView {
+public class PlayerView extends AbstractJavaFXGriffonView {
     private Point2D mousePosition;
     private Node nodeOver;
 
@@ -54,7 +53,6 @@ public class PlayerView extends TranslatedView {
     @FXML private Slider timeSlider;
     @FXML private Text durationLabel;
     @FXML private Label videoTitle;
-    @Inject private VideoService videoService;
 
     private VifecoView rootView;
 
@@ -338,7 +336,6 @@ public class PlayerView extends TranslatedView {
                 timeSlider.setValue(editor.getMediaPlayer().getCurrentTime().divide(editor.getDuration()).toMillis() * 100.0);
             }
 
-            durationLabel.setText(videoService.getDurationText(editor.getMediaPlayer().getCurrentTime(), editor.getDuration()));
         });
     }
     private Icon generatePlayerIcon(String path, String color){

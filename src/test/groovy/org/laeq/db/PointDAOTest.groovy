@@ -1,7 +1,10 @@
 package org.laeq.db
 
 import javafx.util.Duration
-import org.laeq.model.*
+import org.laeq.model.Category
+import org.laeq.model.Collection
+import org.laeq.model.Point
+import org.laeq.model.User
 import spock.lang.Ignore
 
 class PointDAOTest extends AbstractDAOTest {

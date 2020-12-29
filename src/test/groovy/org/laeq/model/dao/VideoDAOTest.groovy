@@ -2,14 +2,8 @@ package org.laeq.model.dao
 
 import javafx.util.Duration
 import org.laeq.db.HibernateUtil
-import org.laeq.model.Category
-import org.laeq.model.Collection
-import org.laeq.model.Point
-import org.laeq.model.User
-import org.laeq.model.Video
+import org.laeq.model.*
 import spock.lang.Specification
-
-
 
 class VideoDAOTest extends Specification {
     VideoDAO dao;

@@ -1,10 +1,8 @@
 package org.laeq.model
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.module.SimpleModule
 import javafx.util.Duration
 import org.laeq.model.dao.EntityGenerator
-
 import spock.lang.Specification
 
 class PointTest extends Specification {

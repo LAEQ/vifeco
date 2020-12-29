@@ -8,13 +8,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
-import org.laeq.model.Preferences;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class CategoryModel extends AbstractGriffonModel implements CRUDModelInterface {
+public class CategoryModel extends AbstractGriffonModel {
     //Table section
     public ObservableList<Category> categoryList = FXCollections.observableArrayList();
-    private TranslationService translationService;
 
     // Form Section
     public Category selectedCategory;
@@ -23,9 +21,6 @@ public class CategoryModel extends AbstractGriffonModel implements CRUDModelInte
     public SimpleStringProperty shortCut = new SimpleStringProperty(this, "shortCut", "");
     public SimpleStringProperty icon = new SimpleStringProperty(this, "icon", "");
     public SimpleStringProperty color = new SimpleStringProperty(this, "color", "#00000000");
-
-    public Preferences prefs;
-
 
     public void addCategory(Category category) {
         categoryList.add(category);
@@ -59,18 +54,5 @@ public class CategoryModel extends AbstractGriffonModel implements CRUDModelInte
         shortCut.set("");
 
         this.selectedCategory = null;
-    }
-
-    public Preferences getPrefs() {
-        return prefs;
-    }
-
-    public void setPrefs(Preferences prefs) {
-        this.prefs = prefs;
-    }
-
-    @Override
-    public void setTranslationService(TranslationService service) {
-        this.translationService = service;
     }
 }

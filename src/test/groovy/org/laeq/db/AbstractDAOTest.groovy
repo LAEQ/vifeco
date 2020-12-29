@@ -1,7 +1,6 @@
 package org.laeq.db
 
-import org.laeq.settings.Settings
-import spock.lang.Shared
+
 import spock.lang.Specification
 
 import java.nio.file.Files

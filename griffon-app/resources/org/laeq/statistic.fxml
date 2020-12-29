@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import griffon.javafx.support.JavaFXUtils?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import griffon.javafx.support.JavaFXUtils?>
 <SplitPane dividerPositions="0.3" prefHeight="365.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.StatisticController">
    <items>
       <AnchorPane fx:id="userListPane" minHeight="0.0" minWidth="0.0" prefHeight="363.0" prefWidth="316.0">

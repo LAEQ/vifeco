@@ -3,7 +3,8 @@ package org.laeq.db;
 import org.laeq.model.Point;
 
 import javax.annotation.Nonnull;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;

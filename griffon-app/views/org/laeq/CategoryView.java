@@ -3,32 +3,26 @@ package org.laeq;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
-import org.laeq.model.User;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
-import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Locale;
 
 @ArtifactProviderFor(GriffonView.class)
-public class CategoryView extends TranslatedView {
+public class CategoryView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private CategoryController controller;
     @MVCMember @Nonnull private CategoryModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;

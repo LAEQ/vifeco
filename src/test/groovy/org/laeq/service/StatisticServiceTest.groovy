@@ -3,13 +3,12 @@ package org.laeq.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import javafx.util.Duration
+import org.laeq.StatisticService
 import org.laeq.model.Category
 import org.laeq.model.Point
 import org.laeq.model.serializer.VideoSerializer
 import org.laeq.model.statistic.Graph
-import org.laeq.service.statistic.StatisticException
-import org.laeq.service.statistic.StatisticService
-import org.laeq.video.ImportService
+import org.laeq.ImportService
 import spock.lang.Ignore
 import spock.lang.Specification
 

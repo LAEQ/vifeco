@@ -1,5 +1,6 @@
 package org.laeq.icon
 
+import org.laeq.IconService
 import org.laeq.model.Category
 import org.laeq.settings.Settings
 import spock.lang.Specification

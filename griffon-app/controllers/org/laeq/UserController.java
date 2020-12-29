@@ -8,15 +8,11 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.User;
-import org.laeq.ui.DialogService;
-import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -25,10 +21,7 @@ public class UserController extends AbstractGriffonController{
     @MVCMember @Nonnull private UserView view;
 
     @Inject private DatabaseService dbService;
-    @Inject protected DialogService dialogService;
     @Inject private PreferencesService preferencesService;
-
-    private TranslationService translationService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -39,15 +32,11 @@ public class UserController extends AbstractGriffonController{
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
         }
 
-        model.setPrefs(preferencesService.getPreferences());
         getApplication().getEventRouter().addEventListener(listeners());
-        setTranslationService();
     }
 
     private Map<String, RunnableWithArgs> listeners() {
         Map<String, RunnableWithArgs> list = new HashMap<>();
-
-
 
         return list;
     }
@@ -76,21 +65,6 @@ public class UserController extends AbstractGriffonController{
             getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.delete"));
         }  catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.delete"));
-        }
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void clear(){
-        model.clear();
-    }
-
-    private void setTranslationService(){
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
-            model.setTranslationService(translationService);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
         }
     }
 }

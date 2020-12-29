@@ -4,12 +4,11 @@ import org.hibernate.Session
 import org.hibernate.Transaction
 import org.laeq.model.Category
 import org.laeq.model.Collection
-import org.laeq.model.User
 import org.laeq.model.Point
+import org.laeq.model.User
 import spock.lang.Specification
 
 import java.time.Duration
-
 
 class HibernateEntityTest extends Specification {
     HibernateUtil hib

@@ -1,14 +1,14 @@
-package org.laeq.video;
+package org.laeq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
+import org.laeq.StatisticService;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.serializer.VideoSerializer;
-import org.laeq.service.statistic.StatisticService;
 import org.laeq.settings.Settings;
 
 import java.io.File;

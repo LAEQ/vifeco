@@ -1,7 +1,6 @@
-package org.laeq.service.statistic;
+package org.laeq;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import javafx.collections.transformation.FilteredList;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;

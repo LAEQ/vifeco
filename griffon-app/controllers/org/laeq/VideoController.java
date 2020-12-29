@@ -3,32 +3,29 @@ package org.laeq;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
-import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.scene.control.TableColumn;
-import org.laeq.editor.DisplayController;
-import org.laeq.icon.IconService;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
-import org.laeq.video.ExportService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
-public class VideoController extends CRUDController<Video> {
+public class VideoController extends AbstractGriffonController {
     @MVCMember @Nonnull private VideoModel model;
     @MVCMember @Nonnull private VideoView view;
 
     @Inject private DatabaseService dbService;
     @Inject private ExportService exportService;
-    @Inject private IconService iconService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {

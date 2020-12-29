@@ -6,11 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-import org.laeq.model.Preferences;
-import org.laeq.model.Point;
 import org.laeq.model.Video;
-
-import java.util.Collection;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class StatisticModel extends AbstractGriffonModel {

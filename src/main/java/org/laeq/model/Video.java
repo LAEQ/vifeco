@@ -11,7 +11,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.SortNatural;
 import org.laeq.model.converter.hibernate.DurationConverter;
 import org.laeq.model.converter.jackson.DurationToMilliConverter;
 import org.laeq.model.converter.jackson.MilliToDuration;

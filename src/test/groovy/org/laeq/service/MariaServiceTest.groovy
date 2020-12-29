@@ -2,10 +2,6 @@ package org.laeq.service
 
 import spock.lang.Specification
 
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.Statement
-
 class MariaServiceTest extends Specification {
 
 //    def "test embeded db"() {

@@ -5,11 +5,9 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import griffon.transform.Threading;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-
-import griffon.transform.Threading;
-import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
 import java.io.File;

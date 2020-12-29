@@ -6,25 +6,17 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.collections.transformation.FilteredList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.db.CategoryDAO;
-import org.laeq.db.PointDAO;
-import org.laeq.db.VideoDAO;
 import org.laeq.model.Video;
-import org.laeq.service.MariaService;
-import org.laeq.service.statistic.StatisticService;
 import org.laeq.settings.Settings;
-import org.laeq.ui.DialogService;
-import org.laeq.user.PreferencesService;
-import org.laeq.video.ExportService;
-import org.laeq.video.ImportService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -36,10 +28,6 @@ public class StatisticController extends AbstractGriffonController {
     @Inject private StatisticService statService;
     @Inject private ExportService exportService;
 
-    private VideoDAO videoDAO;
-    private PointDAO pointDAO;
-    private CategoryDAO categoryDAO;
-    private TranslationService translationService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -50,15 +38,6 @@ public class StatisticController extends AbstractGriffonController {
         } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
         }
-
-//        List<Point> videos = videoDAO.findAll();
-
-//        videos.forEach(video -> {
-//            video.getPointSet().addAll(pointDAO.findByVideo(video));
-//            Set<Category> categorySet = categoryDAO.findByCollection(video.getCollection());
-//            video.getCollection().getCategorySet().addAll(categorySet);
-//        });
-
 
         getApplication().getEventRouter().addEventListener(listeners());
     }

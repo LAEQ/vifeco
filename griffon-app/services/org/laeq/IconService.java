@@ -1,4 +1,4 @@
-package org.laeq.icon;
+package org.laeq;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;

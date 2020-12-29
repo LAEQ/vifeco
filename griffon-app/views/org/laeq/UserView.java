@@ -3,24 +3,25 @@ package org.laeq;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.Callback;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Icon;
 import org.laeq.model.User;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
-import org.laeq.user.PreferencesService;
+
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.io.IOException;
 
 @ArtifactProviderFor(GriffonView.class)
-public class UserView extends TranslatedView {
+public class UserView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private UserController controller;
     @MVCMember @Nonnull private UserModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;

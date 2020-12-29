@@ -1,6 +1,7 @@
 package org.laeq.model.converter.hibernate;
 
 import javafx.util.Duration;
+
 import javax.persistence.AttributeConverter;
 
 public class DurationConverter implements AttributeConverter<Duration, Double> {

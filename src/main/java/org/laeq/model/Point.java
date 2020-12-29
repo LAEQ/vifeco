@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import javafx.util.Duration;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -13,8 +14,8 @@ import org.laeq.model.converter.jackson.CategoryConverterDeserialize;
 import org.laeq.model.converter.jackson.CategoryConverterSerialize;
 import org.laeq.model.converter.jackson.DurationToMilliConverter;
 import org.laeq.model.converter.jackson.MilliToDuration;
+
 import javax.persistence.*;
-import javafx.util.Duration;
 import java.util.UUID;
 
 @Entity

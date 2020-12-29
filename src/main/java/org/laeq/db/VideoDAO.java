@@ -5,7 +5,8 @@ import org.laeq.model.User;
 import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

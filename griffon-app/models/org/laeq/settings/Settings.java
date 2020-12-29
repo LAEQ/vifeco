@@ -1,7 +1,6 @@
 package org.laeq.settings;
 
 import java.io.File;
-import java.util.ArrayList;
 
 public class Settings {
     public static String defaultPath = String.format("%s%s%s",System.getProperty("user.home"), File.separator,"vifeco");

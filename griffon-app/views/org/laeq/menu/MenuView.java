@@ -3,60 +3,44 @@ package org.laeq.menu;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
-import org.laeq.TranslatedView;
-import org.laeq.TranslationService;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
-import org.laeq.icon.IconService;
 import org.laeq.model.Category;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconButton;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.model.icon.IconSquare;
-import org.laeq.user.PreferencesService;
+import org.laeq.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
-public class MenuView extends TranslatedView {
+public class MenuView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private MenuController controller;
     @MVCMember @Nonnull private MenuModel model;
+
+    @Inject private PreferencesService prefService;
 
     @FXML private AnchorPane subMenuPane;
     @FXML private ChoiceBox<String> languageMenu;
 
     @MVCMember @Nonnull private VifecoView parentView;
 
-    @Inject private IconService iconService;
-
-    @Inject private PreferencesService prefService;
 
     private final Map<IconButton, String> btnTooltipMessages = new HashMap<>();
     private final Map<IconButton, Tooltip> toolTips = new HashMap<>();
 
-    private TranslationService translationService;
 
     @Override
     public void initUI() {
-
-        model.setPrefs(prefService.getPreferences());
-
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
-        }
-
-
         Node node = loadFromFXML();
         connectActions(node, controller);
 
@@ -98,16 +82,13 @@ public class MenuView extends TranslatedView {
         aboutBtn.setLayoutX(475);
         subMenuPane.getChildren().add(aboutBtn);
 
-        languageMenu.setItems(FXCollections.observableArrayList(model.getPrefs().getLocales()));
-
-        languageMenu.getSelectionModel().select(model.getPrefs().getLocalIndex());
-
-        languageMenu.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            model.getPrefs().setLocaleByIndex(newValue.intValue());
-            runOutsideUI(() -> prefService.export(model.getPrefs()));
-
-            controller.changeLanguage();
-        });
+//        languageMenu.setItems(FXCollections.observableArrayList(model.getPrefs().getLocales()));
+//
+//        languageMenu.getSelectionModel().select(prefService.getPreferences().getLocalIndex());
+//
+//        languageMenu.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+//            model.getPrefs().setLocaleByIndex(newValue.intValue());
+//        });
     }
 
     private IconButton generateButton(String path, String name, String help, String eventName){
@@ -124,13 +105,5 @@ public class MenuView extends TranslatedView {
         btn.setLayoutY(10);
 
         return btn;
-    }
-
-    private Tooltip generateToolTip(IconButton btn){
-        if(! toolTips.containsValue(btn)){
-            toolTips.put(btn, new Tooltip(translationService.getMessage(btnTooltipMessages.get(btn))));
-        }
-
-        return toolTips.get(btn);
     }
 }

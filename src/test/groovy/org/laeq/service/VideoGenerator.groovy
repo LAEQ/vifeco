@@ -1,7 +1,10 @@
 package org.laeq.service
 
 import javafx.util.Duration
-import org.laeq.model.*
+import org.laeq.model.Category
+import org.laeq.model.Collection
+import org.laeq.model.Point
+import org.laeq.model.User
 
 class VideoGenerator {
     static Point generateVideo(int videoId, int totalCategory){

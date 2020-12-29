@@ -3,7 +3,6 @@ package org.laeq;
 import griffon.javafx.JavaFXGriffonApplication;
 import org.laeq.settings.Settings;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

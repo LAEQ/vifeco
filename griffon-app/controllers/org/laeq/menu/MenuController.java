@@ -12,39 +12,34 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.DatabaseService;
-import org.laeq.TranslationService;
-import org.laeq.db.*;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.settings.Settings;
-import org.laeq.ui.DialogService;
-import org.laeq.video.ExportService;
-import org.laeq.video.ImportService;
+import org.laeq.ExportService;
+import org.laeq.ImportService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class MenuController extends AbstractGriffonController {
-    private Locale currentLocale;
     @MVCMember @Nonnull private MenuModel model;
     @MVCMember @Nonnull private MenuView view;
 
     private FileChooser fileChooser;
-    private TranslationService translationService;
 
-    @Inject private DialogService dialogService;
     @Inject private ImportService importService;
     @Inject private DatabaseService dbService;
     @Inject private ExportService exportService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        this.setTranslationService();
         getApplication().getEventRouter().addEventListener(listeners());
     }
 
@@ -133,34 +128,14 @@ public class MenuController extends AbstractGriffonController {
             try {
                 importService.execute(selectedFile);
                 getApplication().getEventRouter().publishEvent("video.import.success");
-            } catch (IOException | DAOException e) {
-                dialogService.simpleAlert(
-                        getApplication().getMessageSource().getMessage("org.laeq.title.error"),
-                        getApplication().getMessageSource().getMessage("org.laeq.video.import.error")
-                );
+            } catch (IOException e) {
+
             }
         } else {
             getLog().error("Error loading the file");
         }
     }
 
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void close(){
-        dialogService.dialog();
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void save(){
-        dialogService.dialog();
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void saveAs(){
-        dialogService.dialog();
-    }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
@@ -243,23 +218,7 @@ public class MenuController extends AbstractGriffonController {
         return list;
     }
 
-    public void changeLanguage() {
-        getApplication().getEventRouter().publishEvent("change.language", Arrays.asList(model.getPrefs().locale));
-    }
-
     private String getPathExport(String filename){
         return String.format("%s/%s", Settings.exportPath, filename);
-    }
-
-    private void alert(String key, String alertMsg){
-        runInsideUISync(() -> dialogService.simpleAlert(key, alertMsg));
-    }
-
-    private void setTranslationService(){
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
-        }
     }
 }

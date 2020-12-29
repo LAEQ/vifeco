@@ -3,35 +3,26 @@ package org.laeq;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.text.Text;
 import javafx.util.Callback;
-import org.laeq.CollectionController;
-import org.laeq.CollectionModel;
-import org.laeq.TranslatedView;
-import org.laeq.TranslationService;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Category;
 import org.laeq.model.CategoryCheckedBox;
 import org.laeq.model.Collection;
 import org.laeq.model.Icon;
 import org.laeq.model.icon.Color;
-import org.laeq.model.icon.IconDescriptorMatrice;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.template.MiddlePaneView;
-import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
 
 @ArtifactProviderFor(GriffonView.class)
-public class CollectionView extends TranslatedView {
+public class CollectionView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private CollectionController controller;
     @MVCMember @Nonnull private CollectionModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;

@@ -2,26 +2,23 @@ package org.laeq;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Collection;
-import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
-public class CollectionController extends CRUDController<Collection> {
+public class CollectionController extends AbstractGriffonController {
+    @MVCMember @Nonnull private CollectionModel model;
+    @MVCMember @Nonnull private CollectionView view;
     @Inject private DatabaseService dbService;
-    @Inject private PreferencesService prefService;
-
-    private TranslationService translationService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -32,10 +29,6 @@ public class CollectionController extends CRUDController<Collection> {
         } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
         }
-
-
-        model.setPreferences(prefService.getPreferences());
-        setTranslationService();
 
         view.initForm();
 
@@ -78,14 +71,5 @@ public class CollectionController extends CRUDController<Collection> {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         return list;
-    }
-
-    private void setTranslationService(){
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPreferences().locale);
-            model.setTranslationService(translationService);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
-        }
     }
 }

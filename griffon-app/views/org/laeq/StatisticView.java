@@ -3,46 +3,36 @@ package org.laeq;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-import javafx.util.Callback;
-import org.laeq.StatisticController;
-import org.laeq.StatisticModel;
-import org.laeq.TranslatedView;
-import org.laeq.TranslationService;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Category;
-import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.statistic.Graph;
-import org.laeq.service.statistic.StatisticService;
 import org.laeq.statistic.StatisticTimeline;
 import org.laeq.template.MiddlePaneView;
-import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
-public class StatisticView extends TranslatedView {
+public class StatisticView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private StatisticModel model;
     @MVCMember @Nonnull private StatisticController controller;
     @MVCMember @Nonnull private MiddlePaneView parentView;
     @Inject private StatisticService statService;
-    @Inject private DialogService dialogService;
 
     @FXML private TableView<Video> videoTable;
     @FXML private TableColumn<Video, CheckBox> select;

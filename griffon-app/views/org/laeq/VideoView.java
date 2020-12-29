@@ -14,13 +14,14 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Callback;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.*;
 import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
-public class VideoView extends TranslatedView {
+public class VideoView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private VideoController controller;
     @MVCMember @Nonnull private VideoModel model;
     @MVCMember @Nonnull private MiddlePaneView parentView;
@@ -100,7 +101,6 @@ public class VideoView extends TranslatedView {
                 Button edit = new Button(translate("btn.details"));
                 Button delete = new Button(translate("btn.delete"));
 
-
                 Group btnGroup = new Group();
                 {
                     edit.setLayoutX(5);
@@ -112,8 +112,7 @@ public class VideoView extends TranslatedView {
                     delete.getStyleClass().addAll("btn", "btn-danger", "btn-sm");
 
                     btnGroup.getChildren().addAll(edit, export, delete);
-//                    Icon icon = new Icon(IconSVG.edit, Color.white);
-//                    edit.setGraphic(icon);
+
                     edit.setOnAction(event -> {
                         controller.select(videoTable.getItems().get(getIndex()));
                     });
@@ -122,7 +121,6 @@ public class VideoView extends TranslatedView {
                        controller.export(videoTable.getItems().get(getIndex()));
                     });
 
-//                    delete.setGraphic(new Icon(IconSVG.bin, Color.white));
                     delete.setOnAction(event -> {
                         controller.delete(videoTable.getItems().get(getIndex()));
                     });
@@ -145,5 +143,9 @@ public class VideoView extends TranslatedView {
 
     public void refresh() {
         videoTable.refresh();
+    }
+
+    private String translate(String key){
+        return getApplication().getMessageSource().getMessage(key);
     }
 }

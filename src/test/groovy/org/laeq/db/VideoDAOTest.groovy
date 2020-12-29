@@ -4,7 +4,6 @@ import javafx.util.Duration
 import org.laeq.model.Collection
 import org.laeq.model.Point
 import org.laeq.model.User
-import org.laeq.model.Video
 
 class VideoDAOTest extends AbstractDAOTest {
     VideoDAO repository

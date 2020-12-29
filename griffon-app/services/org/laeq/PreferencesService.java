@@ -1,4 +1,4 @@
-package org.laeq.user;
+package org.laeq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import griffon.core.artifact.GriffonService;
@@ -43,4 +43,5 @@ public class PreferencesService extends AbstractGriffonService {
     public Preferences getPreferences() {
         return preferences;
     }
+
 }

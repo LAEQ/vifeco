@@ -9,7 +9,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.template.MiddlePaneView;
-import org.laeq.user.PreferencesService;
+import org.laeq.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

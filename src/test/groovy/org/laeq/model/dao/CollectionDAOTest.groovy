@@ -3,7 +3,6 @@ package org.laeq.model.dao
 import org.laeq.db.HibernateUtil
 import org.laeq.model.Category
 import org.laeq.model.Collection
-import org.laeq.model.User
 import spock.lang.Specification
 
 class CollectionDAOTest extends Specification {

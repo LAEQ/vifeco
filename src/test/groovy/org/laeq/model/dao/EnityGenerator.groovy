@@ -1,12 +1,7 @@
 package org.laeq.model.dao
 
-import org.laeq.model.Category
-import org.laeq.model.Point
-import org.laeq.model.User
-import org.laeq.model.Collection
-import org.laeq.model.Video
-
 import javafx.util.Duration
+import org.laeq.model.*
 
 class EntityGenerator {
     static def createUser(){
