@@ -6,6 +6,7 @@ import org.laeq.model.Category
 import org.laeq.model.Collection
 import org.laeq.model.Point
 import org.laeq.model.User
+import org.laeq.model.dao.HibernateUtil
 import spock.lang.Specification
 
 import java.time.Duration

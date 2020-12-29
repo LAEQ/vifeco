@@ -1,6 +1,6 @@
 package org.laeq.model.dao
 
-import org.laeq.db.HibernateUtil
+
 import org.laeq.model.Category
 import org.laeq.model.Collection
 import spock.lang.Specification

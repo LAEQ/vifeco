@@ -1,16 +1,15 @@
 package org.laeq.video
 
 import org.laeq.ImportService
-import org.laeq.db.AbstractDAOTest
-import org.laeq.db.DAOException
+
 import org.laeq.model.Point
 import spock.lang.Ignore
+import spock.lang.Specification
 
 @Ignore
-class ImportServiceTest extends AbstractDAOTest {
+class ImportServiceTest extends Specification {
     private ImportService service
     private String json
-
 
     def setup(){
         service = new ImportService()

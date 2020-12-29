@@ -1,7 +1,6 @@
 package org.laeq.model.dao
 
 import javafx.util.Duration
-import org.laeq.db.HibernateUtil
 import org.laeq.model.*
 import spock.lang.Specification
 

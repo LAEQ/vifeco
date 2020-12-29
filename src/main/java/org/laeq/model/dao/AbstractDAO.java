@@ -3,7 +3,6 @@ package org.laeq.model.dao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.laeq.db.HibernateUtil;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

@@ -11,8 +11,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import org.apache.commons.collections4.BidiMap;
-import org.apache.commons.collections4.bidimap.DualHashBidiMap;
-import org.laeq.db.PointDAO;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
@@ -33,9 +31,6 @@ import java.util.stream.Collectors;
 
 public class VideoEditor {
     private final static Logger logger = LoggerFactory.getLogger(VideoEditor.class.getName());
-    private final Video video;
-    private final BidiMap<Point, IconPointPNG> videoIconMap;
-    private final BidiMap<Point, IconPointPNG> timelineIconMap;
     private final ObservableSet<Point> pointsToTimeline = FXCollections.observableSet();
     private final ObservableSet<Point> pointsToVideo = FXCollections.observableSet();
     private final ObservableSet<IconPointPNG> timelinePane = FXCollections.observableSet();
@@ -43,28 +38,23 @@ public class VideoEditor {
 
     private Map<Category, Image[]> imageViewMap;
     private final SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
-    private final Set<String> shortcuts;
     private double paneWidth;
     private double paneHeight;
-    private final PointDAO pointDAO;
+
     private Double duration = ControlsDefault.duration;
     private File file;
     private Media media;
     private MediaPlayer mediaPlayer;
     private Duration timelineIconDuration = Duration.seconds(20);
 
-    public VideoEditor(Video video, PointDAO pointDAO) throws IOException {
-        this.video = video;
-        this.pointDAO = pointDAO;
-        this.shortcuts = video.getCollection().getCategories().parallelStream().map(category -> category.getShortcut()).collect(Collectors.toSet());
-
-        videoIconMap = new DualHashBidiMap<>();
-        timelineIconMap = new DualHashBidiMap<>();
-
-        file = new File(video.getPath());
-        media = new Media(file.getCanonicalFile().toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
-
+    public VideoEditor(Video video) throws IOException {
+//        this.video = video;
+//        this.shortcuts = video.getCollection().getCategories().parallelStream().map(category -> category.getShortcut()).collect(Collectors.toSet());
+//        videoIconMap = new DualHashBidiMap<>();
+//        timelineIconMap = new DualHashBidiMap<>();
+//        file = new File(video.getPath());
+//        media = new Media(file.getCanonicalFile().toURI().toString());
+//        mediaPlayer = new MediaPlayer(media);
 //        pointsToTimeline.addListener((SetChangeListener<Point>) change -> {
 //            if(change.wasAdded()){
 //                Point point = change.getElementAdded();
@@ -129,13 +119,6 @@ public class VideoEditor {
     private IconPointColorized createIcon(Category category, int size){
         return new IconPointColorized(new IconSize(category, size));
     }
-    public Duration getDuration() {
-        return video.getDuration();
-    }
-
-    public Set<IconPointPNG> getTimelineIconMap() {
-        return timelineIconMap.values();
-    }
 
     public void display(){
 //        Duration currentTime = mediaPlayer.getCurrentTime();
@@ -179,8 +162,8 @@ public class VideoEditor {
     }
 
     public Point deleteVideoIcon(IconPointPNG videoIcon) {
-        Point point = videoIconMap.getKey(videoIcon);
-        IconPointPNG timelineIcon = timelineIconMap.get(point);
+//        Point point = videoIconMap.getKey(videoIcon);
+//        IconPointPNG timelineIcon = timelineIconMap.get(point);
 
 //        if(point != null){
 //            try {
@@ -211,8 +194,8 @@ public class VideoEditor {
     }
 
     public Point deleteTimelineIcon(IconPointPNG icon) {
-        Point point = timelineIconMap.getKey(icon);
-        IconPointPNG videoIcon = videoIconMap.get(point);
+//        Point point = timelineIconMap.getKey(icon);
+//        IconPointPNG videoIcon = videoIconMap.get(point);
 
 //        if(point != null){
 //            try {
@@ -237,14 +220,15 @@ public class VideoEditor {
         this.duration = value;
     }
     public void reset(IconPointPNG iconTimeline) {
-        Point point = timelineIconMap.getKey(iconTimeline);
-
-        if(point != null && videoIconMap.containsKey(point)){
-            videoIconMap.get(point).colorize();
-        }
+//        Point point = timelineIconMap.getKey(iconTimeline);
+//
+//        if(point != null && videoIconMap.containsKey(point)){
+//            videoIconMap.get(point).colorize();
+//        }
     }
     public void reset() {
-        videoIconMap.values().stream().forEach(IconPointPNG::reset);
+
+//        videoIconMap.values().stream().forEach(IconPointPNG::reset);
     }
 
     public boolean isValid() {
@@ -255,7 +239,7 @@ public class VideoEditor {
     }
 
     public Video getVideo() {
-        return video;
+        return null;
     }
 
     public void play() {

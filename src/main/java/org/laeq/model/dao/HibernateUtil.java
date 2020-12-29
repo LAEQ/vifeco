@@ -1,4 +1,4 @@
-package org.laeq.db;
+package org.laeq.model.dao;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;

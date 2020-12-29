@@ -287,7 +287,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         return  observable -> {
             if(timeSlider.isPressed()){
                 updateValues();
-                editor.getMediaPlayer().seek(editor.getDuration().multiply(timeSlider.getValue() / 100));
+//                editor.getMediaPlayer().seek(editor.getDuration().multiply(timeSlider.getValue() / 100));
             }
         };
     }
@@ -330,11 +330,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         Platform.runLater(() -> {
             displayPoints();
 
-            timeSlider.setDisable(editor.getDuration().isUnknown());
-
-            if (!timeSlider.isDisabled() && editor.getDuration().greaterThanOrEqualTo(Duration.ZERO) && !timeSlider.isValueChanging()) {
-                timeSlider.setValue(editor.getMediaPlayer().getCurrentTime().divide(editor.getDuration()).toMillis() * 100.0);
-            }
+//            timeSlider.setDisable(editor.getDuration().isUnknown());
+//
+//            if (!timeSlider.isDisabled() && editor.getDuration().greaterThanOrEqualTo(Duration.ZERO) && !timeSlider.isValueChanging()) {
+//                timeSlider.setValue(editor.getMediaPlayer().getCurrentTime().divide(editor.getDuration()).toMillis() * 100.0);
+//            }
 
         });
     }

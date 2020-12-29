@@ -1,6 +1,6 @@
 package org.laeq.model.dao
 
-import org.laeq.db.HibernateUtil
+
 import org.laeq.model.User
 import spock.lang.Specification
 

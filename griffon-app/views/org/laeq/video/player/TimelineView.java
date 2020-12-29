@@ -104,8 +104,8 @@ public class TimelineView extends AbstractJavaFXGriffonView {
     }
 
     public void init() {
-        timeline.init(editor.getDuration());
-        timeline.addIcons(editor.getTimelineIconMap());
+//        timeline.init(editor.getDuration());
+//        timeline.addIcons(editor.getTimelineIconMap());
 
         editor.getTimelinePane().addListener(timelinePaneListener);
     }
