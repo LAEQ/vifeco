@@ -5,6 +5,7 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import griffon.transform.Threading;
@@ -27,6 +28,18 @@ public class DisplayController extends AbstractGriffonController {
         getApplication().getEventRouter().addEventListener(listeners());
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void volume() {
+        if(model.volume.getValue()){
+            model.volume.set(Boolean.FALSE);
+            view.volumeOff();
+        } else {
+            model.volume.set(Boolean.TRUE);
+            view.volumeOn();
+        }
+    }
+
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
@@ -39,6 +52,13 @@ public class DisplayController extends AbstractGriffonController {
         list.put("player.play", objects -> {
             runInsideUISync(() -> {
                 view.play();
+            });
+        });
+
+        list.put("player.currentTime", objects -> {
+            runOutsideUI(() -> {
+                Duration currentTime = (Duration) objects[0];
+                view.seek(currentTime);
             });
         });
 

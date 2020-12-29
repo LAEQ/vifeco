@@ -1,6 +1,7 @@
 package org.laeq.service.statistic;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import javafx.collections.transformation.FilteredList;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;
@@ -52,31 +53,32 @@ public class StatisticService extends AbstractGriffonService {
     public void setDurationStep(Duration step){
         this.step = step;
     }
-    public void setVideos(Video video1, Video video2) {
-        this.video1 = video1;
-        this.video2 = video2;
+
+    public void compare(List<Video> filteredList, Integer step) {
+        this.video1 = filteredList.get(0);
+        this.video2 = filteredList.get(1);
+        this.step = Duration.seconds(step);
+
+        init();
+        generateGraphs();
+        tarjan();
+        tarjanDiff();
+        tarjanEdges();
+        lonelyPoints();
     }
 
-    public void init() throws StatisticException {
-//        if(! this.video1.getCollection().equals(this.video2.getCollection())){
-//            throw new StatisticException("Videos must have the same collection");
-//        }
-//
-//        if(this.step == null){
-//            throw new StatisticException("You must set the duration step tolerance to match 2 points together");
-//        }
-//
-//        video1.getCollection().getCategorySet().forEach(category -> {
-//            video1CategoryMap.put(category, new HashSet<>());
-//            video2CategoryMap.put(category, new HashSet<>());
-//        });
-//
-//        video1.getPointSet().stream().forEach(point -> {
-//            video1CategoryMap.get(point.getCategory()).add(point);
-//        });
-//        video2.getPointSet().stream().forEach(point -> {
-//            video2CategoryMap.get(point.getCategory()).add(point);
-//        });
+    public void init() {
+        video1.getCollection().getCategories().forEach(category -> {
+            video1CategoryMap.put(category, new HashSet<>());
+            video2CategoryMap.put(category, new HashSet<>());
+        });
+
+        video1.getPoints().stream().forEach(point -> {
+            video1CategoryMap.get(point.getCategory()).add(point);
+        });
+        video2.getPoints().stream().forEach(point -> {
+            video2CategoryMap.get(point.getCategory()).add(point);
+        });
     }
 
     public void generateGraphs() {
@@ -90,26 +92,16 @@ public class StatisticService extends AbstractGriffonService {
         this.video1CategoryMap.entrySet().forEach(e -> {
             Set<Point> points = this.video2CategoryMap.get(e.getKey());
 
-//            e.getValue().stream().forEach( p1 -> {
-//                points.stream().forEach(p2 -> {
-//                    double diff = p1.getStart().subtract(p2.getStart()).toSeconds();
-//
-//                    if(Math.abs(diff) <= this.step.toSeconds()){
-//                        graphs.get(e.getKey()).addEdges(p1, p2);
-//                        graphs.get(e.getKey()).addEdges(p2, p1);
-//                    }
-//                });
-//            });
+            e.getValue().stream().forEach( p1 -> {
+                points.stream().forEach(p2 -> {
+                    double diff = p1.getStart().subtract(p2.getStart()).toSeconds();
+                    if(Math.abs(diff) <= this.step.toSeconds()){
+                        graphs.get(e.getKey()).addEdges(p1, p2);
+                        graphs.get(e.getKey()).addEdges(p2, p1);
+                    }
+                });
+            });
         });
-    }
-
-    public void execute() throws StatisticException {
-        init();
-        generateGraphs();
-        tarjan();
-        tarjanDiff();
-        tarjanEdges();
-        lonelyPoints();
     }
 
     private void lonelyPoints() {

@@ -1,4 +1,4 @@
-package org.laeq.statistic;
+package org.laeq;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
@@ -6,16 +6,13 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.util.Duration;
-import org.apache.commons.io.FileUtils;
+import javafx.collections.transformation.FilteredList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.TranslationService;
 import org.laeq.db.CategoryDAO;
 import org.laeq.db.PointDAO;
 import org.laeq.db.VideoDAO;
-import org.laeq.model.Point;
+import org.laeq.model.Video;
 import org.laeq.service.MariaService;
-import org.laeq.service.statistic.StatisticException;
 import org.laeq.service.statistic.StatisticService;
 import org.laeq.settings.Settings;
 import org.laeq.ui.DialogService;
@@ -28,17 +25,16 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonController.class)
-public class ContainerController extends AbstractGriffonController {
-    @MVCMember @Nonnull private ContainerModel model;
-    @MVCMember @Nonnull private ContainerView view;
+public class StatisticController extends AbstractGriffonController {
+    @MVCMember @Nonnull private StatisticModel model;
+    @MVCMember @Nonnull private StatisticView view;
 
-    @Inject private MariaService dbService;
-    @Inject private ImportService importService;
+    @Inject private DatabaseService dbService;
+    @Inject private StatisticService statService;
     @Inject private ExportService exportService;
-    @Inject private PreferencesService preferenceService;
-    @Inject private DialogService dialogService;
 
     private VideoDAO videoDAO;
     private PointDAO pointDAO;
@@ -47,9 +43,13 @@ public class ContainerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        videoDAO = dbService.getVideoDAO();
-        pointDAO = dbService.getPointDAO();
-        categoryDAO = dbService.getCategoryDAO();
+        try{
+            model.videos.addAll(dbService.videoDAO.findAll());
+
+            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
+        } catch (Exception e){
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
+        }
 
 //        List<Point> videos = videoDAO.findAll();
 
@@ -59,18 +59,25 @@ public class ContainerController extends AbstractGriffonController {
 //            video.getCollection().getCategorySet().addAll(categorySet);
 //        });
 
-        model.setPrefs(preferenceService.getPreferences());
-//        model.addVideos(videos);
-        view.init();
 
         getApplication().getEventRouter().addEventListener(listeners());
-        setTranslationService();
     }
 
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void compare(){
-        model.getVideos().parallelStream().forEach(video -> {
+        List<Video> videos = model.videos.stream().filter(v -> v.getSelected()).collect(Collectors.toList());
+
+        if(videos.size() != 2 || videos.get(0).getCollection().equals(videos.get(1).getCollection()) == false){
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("statistic.video.selection.error"));
+            return;
+        }
+
+        statService.compare(videos, model.durationStep.get());
+        String statFileName = String.format("%s%s%s.json", Settings.statisticPath, File.separator, videos.get(0).pathToName());
+        exportService.export(statService);
+
+//        model.getVideos().parallelStream().forEach(video -> {
 //            Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
 //
 //            while (it.hasNext()){
@@ -97,34 +104,13 @@ public class ContainerController extends AbstractGriffonController {
 //                    }
 //                }
 //            }
-        });
-
-        runInsideUISync(() -> {
-            dialogService.dialog(translationService.getMessage("org.laeq.statistic.compare.done"));
-        });
-
+//        });
     }
 
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
-        list.put("change.language", objects -> {
-            Locale locale = (Locale) objects[0];
-            model.getPrefs().locale = locale;
-            view.changeLocale();
-        });
+
 
         return list;
-    }
-
-    public void savePreferences() {
-        preferenceService.export(model.getPrefs());
-    }
-
-    private void setTranslationService(){
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
-        }
     }
 }

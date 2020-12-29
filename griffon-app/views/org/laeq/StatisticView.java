@@ -1,96 +1,116 @@
-package org.laeq.statistic;
+package org.laeq;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import org.apache.commons.io.FileUtils;
+import javafx.util.Callback;
+import org.laeq.StatisticController;
+import org.laeq.StatisticModel;
 import org.laeq.TranslatedView;
 import org.laeq.TranslationService;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
+import org.laeq.model.Video;
 import org.laeq.model.statistic.Graph;
 import org.laeq.service.statistic.StatisticService;
-import org.laeq.settings.Settings;
+import org.laeq.statistic.StatisticTimeline;
 import org.laeq.template.MiddlePaneView;
 import org.laeq.ui.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Stream;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ContainerView extends TranslatedView {
-    @MVCMember @Nonnull private ContainerModel model;
-    @MVCMember @Nonnull private ContainerController controller;
+public class StatisticView extends TranslatedView {
+    @MVCMember @Nonnull private StatisticModel model;
+    @MVCMember @Nonnull private StatisticController controller;
     @MVCMember @Nonnull private MiddlePaneView parentView;
     @Inject private StatisticService statService;
     @Inject private DialogService dialogService;
 
-    @FXML private TableView<Point> videoTable;
+    @FXML private TableView<Video> videoTable;
+    @FXML private TableColumn<Video, CheckBox> select;
+    @FXML private TableColumn<Video, String> name;
+    @FXML private TableColumn<Video, String> user;
+    @FXML private TableColumn<Video, String> collection;
+    @FXML private TableColumn<Video, Number> total;
+
+
     @FXML private Button compareActionTarget;
     @FXML private GridPane gridResult;
     @FXML private AnchorPane visualTab;
     @FXML private Spinner<Integer> durationSpinner;
-    @FXML private WebView statView;
     @FXML private Label durationStepLabel;
 
-    private WebEngine webEngine;
-    private TranslationService translationService;
 
     @Override
     public void initUI() {
         Node node = loadFromFXML();
         parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
         connectActions(node, controller);
+        connectMessageSource(node);
+
+        init();
     }
 
     public void init(){
-        TableColumn<Point, Number> idColumn = new TableColumn<>("id");
-        TableColumn<Point, String> pathColumn = new TableColumn("");
-        TableColumn<Point, String> collectionColumn = new TableColumn("");
-        TableColumn<Point, Number> importColumn = new TableColumn<>("");
+//        select.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Video, Boolean>, ObservableValue<Boolean>>() {
+//            @Override
+//            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Video, Boolean> param) {
+//                Video video = param.getValue();
+//                CheckBox checkBox = new CheckBox();
+//                checkBox.selectedProperty().setValue(video.getSelected());
+//
+//                checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+//                    @Override
+//                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//                        video.setSelected(newValue);
+//                    }
+//                });
+//
+//                return new SimpleObjectProperty<CheckBox>(checkBox);
+//            }
+//        });
 
-        videoTable.getColumns().addAll(idColumn, pathColumn, collectionColumn, importColumn);
+        select.setCellValueFactory(c -> {
+            Video video = c.getValue();
+            CheckBox checkBox = new CheckBox();
+            checkBox.selectedProperty().setValue(video.getSelected());
+            checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                video.setSelected(newValue);
+            });
 
-//        idColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(()-> new Integer(param.getValue().getId())));
-//        pathColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-//        collectionColumn.setCellValueFactory(cellData -> cellData.getValue().getCollection().nameProperty());
-//        importColumn.setCellValueFactory(param -> Bindings.createIntegerBinding(() -> getTotalImports(param.getValue())));
+            return new SimpleObjectProperty<>(checkBox);
+        });
+        name.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().pathToName()));
+        user.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getUser().toString()));
+        collection.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getCollection().getName()));
+        total.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getPoints().size()));
 
-        columnsMap.put(pathColumn, "org.laeq.statistic.column.name");
-        columnsMap.put(collectionColumn, "org.laeq.statistic.column.collection");
-        columnsMap.put(importColumn, "org.laeq.statistic.column.import");
-        columnsMap.put(collectionColumn, "org.laeq.video.column.collection");
-        textFields.put(compareActionTarget, "org.laeq.statistic.btn.compare");
-        textFields.put(durationStepLabel, "org.laeq.statistic.label.duration_step");
 
-        videoTable.setItems(this.model.getVideos());
+        videoTable.setItems(this.model.videos);
+        videoTable.setEditable(true);
 
         durationSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 3600));
-        durationSpinner.getValueFactory().setValue(model.getPrefs().durationStep);
+        durationSpinner.getValueFactory().setValue(model.durationStep.getValue());
+        durationSpinner.getValueFactory().valueProperty().bindBidirectional(model.durationStep.asObject());
 
-        durationSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            model.getPrefs().durationStep = newValue;
-            controller.savePreferences();
-        });
-
-        loadStatisticPage();
 
         videoTable.setOnMouseClicked(event -> {
 //            String setLanguage = String.format("setLanguage('%s')", model.getPrefs().locale.getLanguage());
@@ -121,72 +141,17 @@ public class ContainerView extends TranslatedView {
 //            webEngine.executeScript(jsonFunction);
         });
 
-        setTranslatedText();
-
-        model.durationStepProperty().bind(durationSpinner.valueProperty());
     }
 
-    public void changeLocale() {
-        runInsideUISync(() -> {
-            setTranslatedText();
-
-            webEngine.executeScript("reset()");
-            webEngine.executeScript(String.format("setLanguage('%s')", model.getPrefs().locale.getLanguage().toString()));
-            webEngine.executeScript("render()");
-        });
-    }
 
     public void loadStatisticPage(){
-        webEngine = statView.getEngine();
-        String aboutPath = String.format("html/statistic_en.html", model.getPrefs().locale.getLanguage());
-        webEngine.load(getClass().getClassLoader().getResource(aboutPath).toExternalForm());
+//        webEngine = statView.getEngine();
+//        String aboutPath = String.format("html/statistic_en.html", model.getPrefs().locale.getLanguage());
+//        webEngine.load(getClass().getClassLoader().getResource(aboutPath).toExternalForm());
     }
 
-    public void changeLocale(Locale locale) {
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
-        }
 
-        setTranslatedText();
-    }
 
-    private void setTranslatedText(){
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
-        }
-
-        try{
-            textFields.entrySet().forEach(t -> {
-                t.getKey().setText(translationService.getMessage(t.getValue()));
-            });
-
-            columnsMap.entrySet().forEach( t -> {
-                t.getKey().setText(translationService.getMessage(t.getValue()));
-            });
-
-        } catch (Exception e){
-            getLog().error(e.getMessage());
-        }
-    }
-
-    private int getTotalImports(Point video){
-//        int total = 0;
-//        Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
-//
-//        while (it.hasNext()){
-//            File file = (File) it.next();
-//
-//            if(file.getName().contains(video.getName())){
-//                total++;
-//            }
-//        }
-
-        return new Integer(0);
-    }
     private void compare(int step){
         gridResult.getChildren().clear();
         gridResult.getColumnConstraints().clear();
@@ -201,8 +166,8 @@ public class ContainerView extends TranslatedView {
 
         gridResult.getColumnConstraints().addAll(getColumnConstraints());
 
-        Point video1 = this.model.getVideos().get(0);
-        Point video2 = this.model.getVideos().get(1);
+//        Point video1 = this.model.getVideos().get(0);
+//        Point video2 = this.model.getVideos().get(1);
 
 //        try {
 //            statService.setVideos(video1, video2);

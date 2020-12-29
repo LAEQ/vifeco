@@ -45,22 +45,20 @@ public class ExportService extends AbstractGriffonService {
     }
 
     public void export(StatisticService service){
-        ObjectMapper objectMapper = new ObjectMapper();
+        try{
+            String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, service.getVideo1().pathToName(), System.currentTimeMillis());
 
-//        try{
-//            String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, service.getVideo1().getName(), System.currentTimeMillis());
-//
-//            ObjectMapper mapper = new ObjectMapper();
-//
-//            SimpleModule module = new SimpleModule();
-//            module.addSerializer(Point.class, new VideoSerializer());
-//            mapper.registerModule(module);
-//
-//            mapper.writeValue(new File(statFileName), service);
-//
-//        } catch (Exception exception){
-//            getLog().error(exception.getMessage());
-//        }
+            ObjectMapper mapper = new ObjectMapper();
+
+            SimpleModule module = new SimpleModule();
+            module.addSerializer(Point.class, new VideoSerializer());
+            mapper.registerModule(module);
+
+            mapper.writeValue(new File(statFileName), service);
+
+        } catch (Exception exception){
+            getLog().error(exception.getMessage());
+        }
     }
 
     private String getPathExport(String filename){

@@ -1,12 +1,15 @@
 package org.laeq.editor;
 
+import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
+import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.scene.input.KeyCode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import griffon.transform.Threading;
@@ -16,9 +19,7 @@ import org.laeq.model.Video;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
 public class PlayerController extends AbstractGriffonController {
@@ -30,21 +31,20 @@ public class PlayerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-
+        getApplication().getEventRouter().addEventListener(listeners());
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void stop() {
-        getApplication().getEventRouter().publishEventAsync("player.pause");
+        getApplication().getEventRouter().publishEvent("player.pause");
         view.pause();
-
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
-        getApplication().getEventRouter().publishEventAsync("player.play");
+        getApplication().getEventRouter().publishEvent("player.play");
         view.play();
     }
 
@@ -94,7 +94,8 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void add() {
-        System.out.println("ICFDFSDDSFF");
+        view.reset();
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(
@@ -107,14 +108,24 @@ public class PlayerController extends AbstractGriffonController {
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("video.create.start"));
-
             Map<String, Object> args = new HashMap<>();
             args.put("file", selectedFile);
             createMVCGroup("display", args);
 
+            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("video.create.start"));
         } else {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
         }
+    }
+
+
+    private Map<String, RunnableWithArgs> listeners(){
+        Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        return list;
+    }
+
+    public void updateCurrentTime(Duration start) {
+        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
     }
 }

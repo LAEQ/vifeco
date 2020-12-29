@@ -62,6 +62,9 @@ public class Video {
     @CreationTimestamp
     private Date createdAt;
 
+    @Transient
+    private Boolean selected = Boolean.FALSE;
+
     public Video() {
     }
 
@@ -170,6 +173,14 @@ public class Video {
         List<Point> filtered = points.stream().filter(p -> newValue.getCategories().contains(p.getCategory())).collect(Collectors.toList());
         points.clear();
         points.addAll(filtered);
+    }
+
+    public Boolean getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
     }
 
     @Override

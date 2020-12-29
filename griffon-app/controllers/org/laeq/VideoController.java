@@ -3,10 +3,12 @@ package org.laeq;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
+import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.scene.control.TableColumn;
+import org.laeq.editor.DisplayController;
 import org.laeq.icon.IconService;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
@@ -15,6 +17,7 @@ import org.laeq.video.ExportService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -66,12 +69,17 @@ public class VideoController extends CRUDController<Video> {
     public void edit(){
         if(model.selectedVideo == null){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.error"));
+            model.selectedVideo = model.videoList.get(0);
 //            return;
         }
 
-        Map<String, Object> args = new HashMap<>();
-        args.put("video", model.videoList.get(0));
+        createDisplay();
+    }
 
+    private void  createDisplay(){
+        getApplication().getMvcGroupManager().destroyMVCGroup("test");
+        Map<String, Object> args = new HashMap<>();
+        args.put("video",model.selectedVideo);
         createMVCGroup("test", args);
     }
 
@@ -95,21 +103,35 @@ public class VideoController extends CRUDController<Video> {
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.user.updated.error"));
         }
-    }
-//
-//    public void updateCollection() {
-//
-//        videoDAO.updateCollection(event.getRowValue(), event.getNewValue());
-//        event.getRowValue().setCollection(event.getNewValue());
-//        setCategories(event.getRowValue());
-//        pointDAO.updateOnCollectionChange(event.getRowValue());
-//        event.getRowValue().getPointSet().clear();
-//        event.getRowValue().setTotal(pointDAO.findByVideo(event.getRowValue()).size());
-//        runInsideUISync(() -> view.reset());
-//
-//
-//    }
 
+        runInsideUISync(() -> {
+            view.refresh();
+        });
+    }
+
+    public void updateCollection(Video video, Collection newValue) {
+        try{
+            clear();
+            video.updateCollection(newValue);
+            dbService.videoDAO.create(video);
+
+
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.collection.updated.success"));
+        } catch (Exception e){
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.collection.updated.error"));
+        }
+
+        runInsideUISync(() -> {
+            view.refresh();
+        });
+    }
+
+    public void select(Video video) {
+        runInsideUISync(() -> {
+            model.clear();
+            model.setSelectedVideo(video);
+        });
+    }
 
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
@@ -128,21 +150,5 @@ public class VideoController extends CRUDController<Video> {
         });
 
         return list;
-    }
-
-    public void updateCollection(Video video, Collection newValue) {
-        try{
-            video.updateCollection(newValue);
-            dbService.videoDAO.create(video);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void select(Video video) {
-        runInsideUISync(() -> {
-            model.clear();
-            model.setSelectedVideo(video);
-        });
     }
 }

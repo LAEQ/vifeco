@@ -3,29 +3,22 @@ package org.laeq.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.sun.istack.NotNull;
-import javafx.beans.property.SimpleObjectProperty;
 import org.hibernate.validator.constraints.Length;
-import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconPoint;
-import org.laeq.model.icon.IconSVG;
 import org.laeq.model.icon.IconSize;
 
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
 @Entity()
 @Table(name="category")
 @JsonIgnoreProperties({"icon", "color", "shortcut", "collections"})
 @JsonPropertyOrder({"id", "name"})
-public class Category {
+public class Category implements Comparable<Category> {
     @Id
     @GeneratedValue(generator = "increment")
     private Integer id;
@@ -156,5 +149,10 @@ public class Category {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Category o) {
+        return this.name.toLowerCase().compareTo(o.name.toLowerCase());
     }
 }

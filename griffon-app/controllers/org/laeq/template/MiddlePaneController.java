@@ -47,7 +47,7 @@ public class MiddlePaneController extends AbstractGriffonController {
         setTranslationService();
 
         getApplication().getEventRouter().addEventListener(listenerList());
-        getApplication().getEventRouter().publishEventOutsideUI("video.section");
+        getApplication().getEventRouter().publishEventOutsideUI("statistic.section");
     }
 
     private Map<String, RunnableWithArgs> listenerList(){
