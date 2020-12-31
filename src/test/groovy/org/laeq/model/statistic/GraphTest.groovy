@@ -6,9 +6,9 @@ import spock.lang.Specification
 class GraphTest extends Specification {
     def "GetDistinctEdges"() {
         Graph graph = new Graph()
-        Point point1 = new Point(1)
-        Point point2 = new Point(2)
-        Point point3 = new Point(3)
+        Point point1 = new Point()
+        Point point2 = new Point()
+        Point point3 = new Point()
 
         graph.addVertex(point1)
         graph.addVertex(point2)

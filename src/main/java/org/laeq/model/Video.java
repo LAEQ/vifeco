@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-@JsonIgnoreProperties({"createdAt"})
+@JsonIgnoreProperties({"createdAt", "selected"})
 @JsonPropertyOrder({"id", "path", "duration", "user", "collection", "points"})
 @Entity
 @Table(name = "video")

@@ -5,8 +5,8 @@ import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.model.Point;
 import org.laeq.PreferencesService;
+import org.laeq.model.Point;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

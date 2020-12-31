@@ -115,7 +115,7 @@ class VideoDAOTest extends Specification {
 
         when:
         pointDAO.delete(point)
-        Video video = dao.findOneById(id)
+        Video video = dao.findOneByUUID(id)
 
         then:
         video.getPoints().size() == 100
@@ -153,7 +153,7 @@ class VideoDAOTest extends Specification {
         })
 
         when:
-        Video video = dao.findOneById(id)
+        Video video = dao.findOneByUUID(id)
 
         then:
         video.getPoints().size() == 40

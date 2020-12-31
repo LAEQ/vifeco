@@ -4,7 +4,6 @@ import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
-import org.laeq.model.dao.HibernateUtil;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
 import org.laeq.model.User;

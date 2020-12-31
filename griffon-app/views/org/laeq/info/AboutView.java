@@ -8,8 +8,8 @@ import javafx.scene.Node;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.template.MiddlePaneView;
 import org.laeq.PreferencesService;
+import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

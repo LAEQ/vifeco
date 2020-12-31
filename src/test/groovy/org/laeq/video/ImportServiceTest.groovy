@@ -1,7 +1,6 @@
 package org.laeq.video
 
 import org.laeq.ImportService
-
 import org.laeq.model.Point
 import spock.lang.Ignore
 import spock.lang.Specification

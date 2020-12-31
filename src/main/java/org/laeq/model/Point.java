@@ -1,5 +1,6 @@
 package org.laeq.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -54,6 +55,15 @@ public class Point implements Comparable<Point> {
     private Video video;
 
     public Point() {}
+
+    public Point(UUID id) {
+        this.id = id;
+    }
+
+    public Point(UUID id, Duration start) {
+        this.id = id;
+        this.start = start;
+    }
 
     public Point(UUID id, Double x, Double y, Duration start, Category category, Video video) {
         this.id = id;
@@ -134,6 +144,7 @@ public class Point implements Comparable<Point> {
         this.video = video;
     }
 
+    @JsonIgnore
     public String getStartFormatted(){
         return DurationFormatUtils.formatDuration((long)start.toMillis(), "H:m:s");
     }
@@ -155,12 +166,12 @@ public class Point implements Comparable<Point> {
 
         Point point = (Point) o;
 
-        return new EqualsBuilder().append(x, point.x).append(y, point.y).append(start, point.start).append(category, point.category).isEquals();
+        return new EqualsBuilder().append(id, point.id).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(x).append(y).append(start).append(category).toHashCode();
+        return new HashCodeBuilder(17, 37).append(id).toHashCode();
     }
 
     @Override

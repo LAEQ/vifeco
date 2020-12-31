@@ -10,7 +10,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-import org.apache.commons.collections4.BidiMap;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
@@ -26,8 +25,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class VideoEditor {
     private final static Logger logger = LoggerFactory.getLogger(VideoEditor.class.getName());

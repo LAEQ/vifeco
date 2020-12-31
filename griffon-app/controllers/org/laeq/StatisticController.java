@@ -8,11 +8,8 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Video;
-import org.laeq.settings.Settings;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -20,13 +17,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonController.class)
-public class StatisticController extends AbstractGriffonController {
+public class
+StatisticController extends AbstractGriffonController {
     @MVCMember @Nonnull private StatisticModel model;
     @MVCMember @Nonnull private StatisticView view;
 
     @Inject private DatabaseService dbService;
-    @Inject private StatisticService statService;
-    @Inject private ExportService exportService;
 
 
     @Override
@@ -40,6 +36,17 @@ public class StatisticController extends AbstractGriffonController {
         }
 
         getApplication().getEventRouter().addEventListener(listeners());
+
+        StatisticService statisticService = new StatisticService();
+        try {
+            statisticService.execute(dbService.videoDAO.findAll(), 5);
+            runInsideUISync(() -> {
+                view.display(statisticService);
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @ControllerAction
@@ -52,38 +59,18 @@ public class StatisticController extends AbstractGriffonController {
             return;
         }
 
-        statService.compare(videos, model.durationStep.get());
-        String statFileName = String.format("%s%s%s.json", Settings.statisticPath, File.separator, videos.get(0).pathToName());
-        exportService.export(statService);
+        try {
+            StatisticService statService = new StatisticService();
+            statService.execute(videos, model.durationStep.get());
 
-//        model.getVideos().parallelStream().forEach(video -> {
-//            Iterator it = FileUtils.iterateFiles(new File(Settings.imporPath), null, false);
-//
-//            while (it.hasNext()){
-//                File file = (File) it.next();
-//
-//                if(file.getName().contains(video.getName())){
-//                    try {
-//
-//                        StatisticService statService = new StatisticService();
-//
-//                        String content = FileUtils.readFileToString(file, "UTF-8");
-//                        Point importVideo = importService.execute(content);
-//
-//                        String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, video.getName(), System.currentTimeMillis());
-//
-//                        statService.setVideos(video, importVideo);
-//                        statService.setDurationStep(Duration.seconds(model.getDurationStep()));
-//                        statService.execute();
-//
-//                        exportService.export(statService);
-//
-//                    } catch (IOException | StatisticException e) {
-//                        getLog().error(e.getMessage());
-//                    }
-//                }
-//            }
-//        });
+            runInsideUISync(() -> {
+                view.display(statService);
+            });
+
+        }catch (Exception e){
+            e.printStackTrace();
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("statistic.video.selection.error"));
+        }
     }
 
     private Map<String, RunnableWithArgs> listeners(){

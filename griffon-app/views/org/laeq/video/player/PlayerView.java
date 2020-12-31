@@ -29,7 +29,6 @@ import org.laeq.model.icon.IconPointPNG;
 import org.laeq.model.icon.IconSVG;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 

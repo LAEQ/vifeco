@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
-import org.laeq.StatisticService;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.serializer.VideoSerializer;

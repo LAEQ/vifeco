@@ -81,7 +81,7 @@ class CollectionTest extends Specification {
         String result = entity.getCategorieNames()
 
         then:
-        result.equals("category 1, category 2")
+        result.equals("category 1\ncategory 2")
     }
 
     def "serialization"(){

@@ -14,7 +14,7 @@ class VideoPointMappingTest extends Specification {
     Collection collection
     User user1, user2
     Video video1, video2
-    Integer id1, id2
+    UUID id1, id2
     List<Point> list1, list2
 
 
@@ -81,7 +81,6 @@ class VideoPointMappingTest extends Specification {
             list2.push(point1)
             list2.push(point2)
         })
-
     }
 
     void cleanup() {
@@ -91,8 +90,8 @@ class VideoPointMappingTest extends Specification {
     def "delete a video cascading for points"(){
         when:
         videodao.delete(video1)
-        def fetch2 = videodao.findOneById(id2)
-        def fetch1 = videodao.findOneById(id1)
+        def fetch2 = videodao.findOneByUUID(id2)
+        def fetch1 = videodao.findOneByUUID(id1)
 
         then:
         fetch2.getPoints().size() == 20

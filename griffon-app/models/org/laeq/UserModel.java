@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-import org.laeq.model.Preferences;
 import org.laeq.model.User;
 
 @ArtifactProviderFor(GriffonModel.class)

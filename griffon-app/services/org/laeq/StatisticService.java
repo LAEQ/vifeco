@@ -2,21 +2,20 @@ package org.laeq;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javafx.util.Duration;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.serializer.StatisticSerializer;
 import org.laeq.model.statistic.Edge;
 import org.laeq.model.statistic.Graph;
+import org.laeq.model.statistic.Tarjan;
 import org.laeq.model.statistic.Vertex;
 import org.laeq.statistic.StatisticTimeline;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @JsonSerialize(using = StatisticSerializer.class)
-public class StatisticService extends AbstractGriffonService {
+public class StatisticService {
     private Video video1;
     private Video video2;
     private Duration step;
@@ -26,10 +25,9 @@ public class StatisticService extends AbstractGriffonService {
     public HashMap<Category, Set<Point>> video2CategoryMap = new HashMap<>();
 
     private Map<Category, List<List<Vertex>>> tarjans = new HashMap<>();
-    private Map<Category, Map<Video, Long>> tarjanDiffs = new HashMap<>();
     private Map<Category, List<Edge>> tarjanEdges = new HashMap<>();
     private Map<Category, List<Vertex>> lonelyPoints = new HashMap<>();
-    private Map<Category, List<Vertex>> happyPoints = new HashMap<>();
+    private Map<Category, List<Vertex>> matchedPoints = new HashMap<>();
 
     public Duration getStep() {
         return step;
@@ -38,22 +36,14 @@ public class StatisticService extends AbstractGriffonService {
     public Map<Category, List<List<Vertex>>> getTarjans() {
         return tarjans;
     }
-    public Map<Category, Map<Video, Long>> getTarjanDiffs() {
-        return tarjanDiffs;
-    }
     public Map<Category, List<Edge>> getTarjanEdges() {
         return tarjanEdges;
     }
-
     public Map<Category, List<Vertex>> getLonelyPoints() {
         return lonelyPoints;
     }
 
-    public void setDurationStep(Duration step){
-        this.step = step;
-    }
-
-    public void compare(List<Video> filteredList, Integer step) {
+    public void execute(List<Video> filteredList, Integer step) {
         this.video1 = filteredList.get(0);
         this.video2 = filteredList.get(1);
         this.step = Duration.seconds(step);
@@ -61,9 +51,6 @@ public class StatisticService extends AbstractGriffonService {
         init();
         generateGraphs();
         tarjan();
-        tarjanDiff();
-        tarjanEdges();
-        lonelyPoints();
     }
 
     public void init() {
@@ -103,98 +90,21 @@ public class StatisticService extends AbstractGriffonService {
         });
     }
 
-    private void lonelyPoints() {
-        graphs.keySet().forEach(category -> {
-            List<Vertex> vertices = graphs.get(category).vertices.values().stream().filter(vertex -> ! happyPoints.get(category).contains(vertex)).collect(Collectors.toList());
-            lonelyPoints.putIfAbsent(category, vertices);
-        });
-    }
 
     private void tarjan(){
-        graphs.entrySet().forEach(entry -> tarjans.put(entry.getKey(), entry.getValue().tarjan()));
+        graphs.entrySet().forEach(entry -> {
+            tarjans.put(entry.getKey(), entry.getValue().tarjan());
+        });
     }
-    private void tarjanEdges(){
-        tarjans.keySet().forEach(category -> tarjanEdges.put(category, tarjanEdgeRecu_1(category)));
 
-    }
-    private List<Edge> tarjanEdgeRecu_1(Category category){
-        List<List<Vertex>> tmp = tarjans.get(category);
 
-        List<Edge> result = new ArrayList<>();
-
-        tmp.forEach( vertices -> {
-            result.addAll(sortedSetEdges_algo(vertices));
+    public List<Tarjan> getTarjanDiff() {
+        List<Tarjan> result = new ArrayList<>();
+        tarjans.entrySet().forEach(e -> {
+            result.add(new Tarjan(video1, video2, step, e.getKey(), e.getValue()));
         });
 
-        happyPoints.put(category, result.stream().map(edge -> edge.start).collect(Collectors.toList()));
-        happyPoints.get(category).addAll(result.stream().map(edge -> edge.end).collect(Collectors.toList()));
-
         return result;
-    }
-
-    private List<Edge> sortedSetEdges_algo(List<Vertex> vertices){
-        List<Edge> result = new ArrayList<>();
-
-//        if(vertices.size() == 1){
-//            return result;
-//        }
-//
-////        List<Vertex> vAs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video1)).collect(Collectors.toList());
-////        List<Vertex> vBs = vertices.stream().filter(v -> v.getPoint().getVideo().equals(video2)).collect(Collectors.toList());
-//
-//        List<Vertex> selected = (vAs.size() <= vBs.size())? vAs : vBs;
-//
-//        SortedSet<Edge> sortedSet = new TreeSet<>();
-//
-//        selected.forEach(vertex -> {
-//            getEdges(vertex).forEach(edge -> sortedSet.add(edge));
-//        });
-//
-//        List<Vertex> starts = new ArrayList<>();
-//        List<Vertex> ends = new ArrayList<>();
-//
-//        while(result.size() != selected.size() && sortedSet.size() > 0){
-//            Edge edge = sortedSet.first();
-//
-//            if(! starts.contains(edge.start) && ! ends.contains(edge.end)){
-//                starts.add(edge.start);
-//                ends.add(edge.end);
-//                result.add(edge);
-//                sortedSet.remove(edge);
-//            } else {
-//                sortedSet.remove(edge);
-//            }
-//        }
-
-        return result;
-    }
-
-//    private List<Edge> getEdges(Vertex v) {
-//        Graph graph = graphs.get(v.point.getCategory());
-//
-//        return graph.edges.get(v).stream().sorted().collect(Collectors.toList());
-//    }
-    private void tarjanDiff() {
-//        tarjans.entrySet().forEach(entry -> {
-//            List<List<Vertex>> list = entry.getValue();
-//
-//            Map<Video, Long> datas = new HashMap<>();
-//            datas.put(video1, 0L);
-//            datas.put(video2, 0L);
-//
-//            tarjanDiffs.put(entry.getKey(), datas);
-//
-//            list.forEach( l -> {
-//                long totalA = l.stream().filter(vertex -> vertex.point.getVideo() == video1).count();
-//                long totalB = l.stream().filter(vertex -> vertex.point.getVideo() == video2).count();
-//
-//                Long newValueA = datas.get(video1) + Math.max(totalA - totalB, 0);
-//                Long newValueB = datas.get(video2) + Math.max(totalB - totalA, 0);
-//
-//                datas.put(video1, newValueA);
-//                datas.put(video2, newValueB);
-//            });
-//        });
     }
 
     public StatisticTimeline getStatisticTimeline(Category category){
@@ -209,12 +119,7 @@ public class StatisticService extends AbstractGriffonService {
 
         return timeline;
     }
-//    public long getTotalVideoAByCategory(Category category){
-//        return video1.getPointSet().stream().filter(point -> point.getCategory().equals(category)).count();
-//    }
-//    public long getTotalVideoBByCategory(Category category){
-//        return video2.getPointSet().stream().filter(point -> point.getCategory().equals(category)).count();
-//    }
+
     public HashMap<Category, Set<Point>> getVideo1CategoryMap() {
         return video1CategoryMap;
     }

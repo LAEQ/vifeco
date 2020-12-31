@@ -7,10 +7,10 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.PreferencesService;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Preferences;
-import org.laeq.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

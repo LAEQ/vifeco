@@ -12,20 +12,24 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.DatabaseService;
+import org.laeq.ExportService;
+import org.laeq.ImportService;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
+import org.laeq.model.dao.PointDAO;
+import org.laeq.model.dao.VideoDAO;
 import org.laeq.settings.Settings;
-import org.laeq.ExportService;
-import org.laeq.ImportService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @ArtifactProviderFor(GriffonController.class)
 public class MenuController extends AbstractGriffonController {
@@ -103,10 +107,8 @@ public class MenuController extends AbstractGriffonController {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
         }
-
     }
 
     @ControllerAction
@@ -128,11 +130,9 @@ public class MenuController extends AbstractGriffonController {
             try {
                 importService.execute(selectedFile);
                 getApplication().getEventRouter().publishEvent("video.import.success");
-            } catch (IOException e) {
-
+            } catch (Exception e) {
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.import.error"));
             }
-        } else {
-            getLog().error("Error loading the file");
         }
     }
 
@@ -146,53 +146,49 @@ public class MenuController extends AbstractGriffonController {
 
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
-    public String archive() throws IOException {
-//        VideoDAO videoDAO = dbService.getVideoDAO();
-//        CategoryDAO categoryDAO = dbService.getCategoryDAO();
-//        UserDAO userDAO = dbService.getUserDAO();
-//        PointDAO pointDAO = dbService.getPointDAO();
-//
-//        List<Video> videoList = videoDAO.findAll();
-//
-//        List<String> srcFiles = new ArrayList<>();
-//
-//        for(Video video : videoList){
-//            String fileName = exportService.export(video);
-//            srcFiles.add(fileName);
-//        }
-//
+    public String archive() throws Exception {
+        VideoDAO videoDAO = dbService.videoDAO;
+        List<Video> videoList = videoDAO.findAll();
+        List<String> srcFiles = new ArrayList<>();
+
+        for(Video video : videoList){
+            String fileName = exportService.export(video);
+            srcFiles.add(fileName);
+        }
+
         String zipFileName = String.format("%s.zip", System.currentTimeMillis());
-//
-//        try {
-//            FileOutputStream fos = new FileOutputStream(getPathExport(zipFileName));
-//            ZipOutputStream zipOut = new ZipOutputStream(fos);
-//            for (String srcFile : srcFiles) {
-//                File fileToZip = new File(srcFile);
-//                FileInputStream fis = new FileInputStream(fileToZip);
-//                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-//                zipOut.putNextEntry(zipEntry);
-//
-//                byte[] bytes = new byte[1024];
-//                int length;
-//                while ((length = fis.read(bytes)) >= 0) {
-//                    zipOut.write(bytes, 0, length);
-//                }
-//                fis.close();
-//            }
-//
-//            zipOut.close();
-//            fos.close();
-//
-//        } catch (IOException e ){
-//            getLog().error(e.getMessage());
-//        } finally {
-//            for(String srcFile : srcFiles){
-//                File file = new File(srcFile);
-//                file.delete();
-//            }
-//
-            return zipFileName;
-//        }
+        String filePath = this.getPathExport(zipFileName);
+
+        try {
+            FileOutputStream fos = new FileOutputStream(filePath);
+            ZipOutputStream zipOut = new ZipOutputStream(fos);
+            for (String srcFile : srcFiles) {
+                File fileToZip = new File(srcFile);
+                FileInputStream fis = new FileInputStream(fileToZip);
+                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+                zipOut.putNextEntry(zipEntry);
+
+                byte[] bytes = new byte[1024];
+                int length;
+                while ((length = fis.read(bytes)) >= 0) {
+                    zipOut.write(bytes, 0, length);
+                }
+                fis.close();
+            }
+
+            zipOut.close();
+            fos.close();
+
+        } catch (IOException e ){
+            getLog().error(e.getMessage());
+        } finally {
+            for(String srcFile : srcFiles){
+                File file = new File(srcFile);
+                file.delete();
+            }
+
+            return filePath;
+        }
     }
 
     private Map<String, RunnableWithArgs> listeners(){
@@ -208,9 +204,9 @@ public class MenuController extends AbstractGriffonController {
 
         list.put("database.backup", objects -> {
             try {
-                String path = this.getPathExport(this.archive());
-                getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("db.export.success", path));
-            } catch (IOException e) {
+                String filename = this.archive();
+                getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("db.export.success", filename));
+            } catch (Exception e) {
                 getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.export.error"));
             }
         });

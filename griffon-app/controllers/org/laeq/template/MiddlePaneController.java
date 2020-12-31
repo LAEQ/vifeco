@@ -9,7 +9,6 @@ import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
