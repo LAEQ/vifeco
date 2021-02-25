@@ -17,6 +17,10 @@ public class Launcher {
         }
     }
 
+    /**
+     * Create the application vifeco structure in $HOME.
+     * @throws Exception
+     */
     private static void setUp() throws Exception{
         String[] paths = Settings.paths;
         for(int i = 0; i < paths.length; i++) {
@@ -27,5 +31,4 @@ public class Launcher {
             }
         }
     }
-
 }

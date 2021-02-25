@@ -10,6 +10,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.DatabaseService;
 import org.laeq.ExportService;
@@ -80,33 +81,44 @@ public class MenuController extends AbstractGriffonController {
             video.setPath(path);
             video.setCollection(defaultCollection);
             video.setUser(defaultUser);
+            video.setDuration(Duration.UNKNOWN);
 
-            Media media = new Media(selectedFile.getCanonicalFile().toURI().toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            dbService.videoDAO.create(video);
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.create.success"));
+            getApplication().getEventRouter().publishEvent("video.created", Arrays.asList(video));
 
-
-            System.out.println("Video before addition");
-
-            mediaPlayer.setOnError(() -> {
-                System.out.println(mediaPlayer.getError());
-                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
-            });
-
-            mediaPlayer.setOnReady(()-> {
-                video.setDuration(mediaPlayer.getTotalDuration());
+            runOutsideUIAsync(() -> {
+                System.out.println("Duration calculation");
                 try {
-                    dbService.videoDAO.create(video);
-                    getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.create.success"));
-                    getApplication().getEventRouter().publishEvent("video.created", Arrays.asList(video));
+                    File file = new File(video.getPath());
+                    Media media = new Media(file.getCanonicalFile().toURI().toString());
+                    MediaPlayer mediaPlayer = new MediaPlayer(media);
 
-                } catch (Exception e) {
+                    mediaPlayer.setOnError(() -> {
+                        System.out.println(mediaPlayer.getError());
+                        getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
+                    });
+
+                    mediaPlayer.setOnReady(()-> {
+                        video.setDuration(mediaPlayer.getTotalDuration());
+                        try {
+                            dbService.videoDAO.create(video);
+                            System.out.println("Duration success");
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("Duration error");
+                        }
+                    });
+
+                } catch (IOException e) {
                     e.printStackTrace();
-                    getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
                 }
             });
 
-
         } catch (Exception e) {
+            e.printStackTrace();
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
         }
     }

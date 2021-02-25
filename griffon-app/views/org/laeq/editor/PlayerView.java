@@ -150,8 +150,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             scene.setOnKeyReleased(keyReleased());
 
             updateValues();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 

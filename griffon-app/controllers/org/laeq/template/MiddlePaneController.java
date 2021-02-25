@@ -20,7 +20,7 @@ public class MiddlePaneController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listenerList());
-        getApplication().getEventRouter().publishEventOutsideUI("statistic.section");
+        getApplication().getEventRouter().publishEventOutsideUI("user.section");
     }
 
     private Map<String, RunnableWithArgs> listenerList(){

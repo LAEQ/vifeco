@@ -79,14 +79,14 @@ public class DatabaseService extends AbstractGriffonService {
         collection2.addCategory(categories.get(0));
 
         this.collectionDAO.create(collection2);
-
-        Video video = new Video();
-        video.setPath("/home/david/Videos/sample.mp4");
-        video.setCollection(collection);
-        video.setUser(defaultUser);
-        video.setDuration(Duration.millis(1000));
-
-        videoDAO.create(video);
+//
+//        Video video = new Video();
+//        video.setPath("/home/david/Videos/sample.mp4");
+//        video.setCollection(collection);
+//        video.setUser(defaultUser);
+//        video.setDuration(Duration.millis(1000));
+//
+//        videoDAO.create(video);
     }
     
     private List<Category> getCategoryFixtures(){
