@@ -21,6 +21,8 @@ public class TestView extends AbstractJavaFXGriffonView {
     private TestController controller;
     private TestModel model;
 
+    @MVCMember @Nonnull private MainView parentView;
+
     @FXML
     private Label clickLabel;
 
@@ -36,29 +38,20 @@ public class TestView extends AbstractJavaFXGriffonView {
 
     @Override
     public void initUI() {
-        Stage stage = (Stage) getApplication()
-            .createApplicationContainer(Collections.<String,Object>emptyMap());
-        stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
-        stage.setScene(init());
-        stage.sizeToScene();
-        getApplication().getWindowManager().attach("test", stage);
-    }
-
-    // build the UI
-    private Scene init() {
-        Scene scene = new Scene(new Group());
-        scene.setFill(Color.WHITE);
-
         Node node = loadFromFXML();
-        model.clickCountProperty().bindBidirectional(clickLabel.textProperty());
-        if (node instanceof Parent) {
-            scene.setRoot((Parent) node);
-        } else {
-            ((Group) scene.getRoot()).getChildren().addAll(node);
-        }
         connectActions(node, controller);
+        model.clickCountProperty().bindBidirectional(clickLabel.textProperty());
         connectMessageSource(node);
+//        init();
+        System.out.println("InitUI test view");
 
-        return scene;
+        parentView.getTop().getChildren().add(node);
+
+//        Stage stage = (Stage) getApplication()
+//            .createApplicationContainer(Collections.<String,Object>emptyMap());
+//        stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
+//        stage.setScene(init());
+//        stage.sizeToScene();
+//        getApplication().getWindowManager().attach("test", stage);
     }
 }

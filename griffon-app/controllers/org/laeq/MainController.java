@@ -26,10 +26,10 @@ public class MainController extends AbstractGriffonController {
         this.view = view;
     }
 
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void click() {
-        int count = Integer.parseInt(model.getClickCount());
-        model.setClickCount(String.valueOf(count + 1));
-    }
+//    @ControllerAction
+//    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+//    public void click() {
+//        int count = Integer.parseInt(model.getClickCount());
+//        model.setClickCount(String.valueOf(count + 1));
+//    }
 }

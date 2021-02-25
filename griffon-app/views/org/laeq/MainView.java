@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
@@ -23,8 +24,7 @@ public class MainView extends AbstractJavaFXGriffonView {
     private MainController controller;
     private MainModel model;
 
-    @FXML
-    private Label clickLabel;
+    @FXML private VBox top;
 
     @MVCMember
     public void setController(@Nonnull MainController controller) {
@@ -38,7 +38,10 @@ public class MainView extends AbstractJavaFXGriffonView {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
-        MVCGroup menu = createMVCGroup("menu");
+        createMVCGroup("test");
+//        TestView view = (TestView) menu.getView();
+
+//        System.out.println(menu);
 //        System.out.println(main.getMvcId());
 //        createMVCGroup("middle");
 //        createMVCGroup("bottom");
@@ -52,8 +55,10 @@ public class MainView extends AbstractJavaFXGriffonView {
         stage.setScene(init());
         stage.sizeToScene();
         getApplication().getWindowManager().attach("main", stage);
+    }
 
-
+    public VBox getTop(){
+        return this.top;
     }
 
     // build the UI
@@ -62,7 +67,7 @@ public class MainView extends AbstractJavaFXGriffonView {
         scene.setFill(Color.WHITE);
 
         Node node = loadFromFXML();
-        model.clickCountProperty().bindBidirectional(clickLabel.textProperty());
+
         if (node instanceof Parent) {
             scene.setRoot((Parent) node);
         } else {
