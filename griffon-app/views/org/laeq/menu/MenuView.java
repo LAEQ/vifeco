@@ -10,7 +10,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.PreferencesService;
-import org.laeq.VifecoView;
+//import org.laeq.VifecoView;
 import org.laeq.model.Category;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconButton;
@@ -27,13 +27,10 @@ public class MenuView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private MenuController controller;
     @MVCMember @Nonnull private MenuModel model;
 
-    @Inject private PreferencesService prefService;
-
     @FXML private AnchorPane subMenuPane;
     @FXML private ChoiceBox<String> languageMenu;
 
-    @MVCMember @Nonnull private VifecoView parentView;
-
+    @Inject private PreferencesService prefService;
 
     private final Map<IconButton, String> btnTooltipMessages = new HashMap<>();
     private final Map<IconButton, Tooltip> toolTips = new HashMap<>();
@@ -44,7 +41,7 @@ public class MenuView extends AbstractJavaFXGriffonView {
         Node node = loadFromFXML();
         connectActions(node, controller);
 
-        parentView.getTop().getChildren().add(node);
+//        parentView.getTop().getChildren().add(node);
 
         IconButton videoListBtn = generateButton(IconSVG.video, "video list", "org.laeq.menu.tooltip.video_list", "video.section");
         videoListBtn.setLayoutX(10);
