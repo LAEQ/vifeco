@@ -7,13 +7,5 @@ import org.laeq.model.Preferences;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class MenuModel extends AbstractGriffonModel {
-    private Preferences prefs;
 
-    public Preferences getPrefs() {
-        return prefs;
-    }
-
-    public void setPrefs(Preferences prefs) {
-        this.prefs = prefs;
-    }
 }

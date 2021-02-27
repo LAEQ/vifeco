@@ -33,3 +33,4 @@ Montreal, Laboratoire d’équité environnementale (LAEQ), INRS Urbanisation Cu
 
 
 
+https://www.programcreek.com/java-api-examples/?api=org.hibernate.boot.registry.StandardServiceRegistryBuilder

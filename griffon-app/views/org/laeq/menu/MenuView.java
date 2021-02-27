@@ -24,16 +24,25 @@ import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
 public class MenuView extends AbstractJavaFXGriffonView {
-    @MVCMember @Nonnull private MenuController controller;
-    @MVCMember @Nonnull private MenuModel model;
+    private MenuController controller;
+    private MenuModel model;
 
-    @Inject private PreferencesService prefService;
+//    @Inject private PreferencesService prefService;
 
     @FXML private AnchorPane subMenuPane;
     @FXML private ChoiceBox<String> languageMenu;
 
     @MVCMember @Nonnull private VifecoView parentView;
 
+    @MVCMember
+    public void setModel(@Nonnull MenuModel model){
+        this.model = model;
+    }
+
+    @MVCMember
+    public void setController(@Nonnull MenuController controller){
+        this.controller = controller;
+    }
 
     private final Map<IconButton, String> btnTooltipMessages = new HashMap<>();
     private final Map<IconButton, Tooltip> toolTips = new HashMap<>();

@@ -6,8 +6,8 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+//import javafx.scene.media.Media;
+//import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,14 +34,11 @@ import java.util.zip.ZipOutputStream;
 
 @ArtifactProviderFor(GriffonController.class)
 public class MenuController extends AbstractGriffonController {
-    @MVCMember @Nonnull private MenuModel model;
-    @MVCMember @Nonnull private MenuView view;
-
     private FileChooser fileChooser;
-
-    @Inject private ImportService importService;
-    @Inject private DatabaseService dbService;
-    @Inject private ExportService exportService;
+//
+//    @Inject private ImportService importService;
+//    @Inject private DatabaseService dbService;
+//    @Inject private ExportService exportService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -73,54 +70,54 @@ public class MenuController extends AbstractGriffonController {
     }
 
     private void createVideo(File selectedFile) {
-        try {
-            Video video = new Video();
-            String path = selectedFile.getAbsolutePath();
-            User defaultUser = dbService.userDAO.findDefault();
-            Collection defaultCollection = dbService.collectionDAO.findDefault();
-            video.setPath(path);
-            video.setCollection(defaultCollection);
-            video.setUser(defaultUser);
-            video.setDuration(Duration.UNKNOWN);
-
-            dbService.videoDAO.create(video);
-            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.create.success"));
-            getApplication().getEventRouter().publishEvent("video.created", Arrays.asList(video));
-
-            runOutsideUIAsync(() -> {
-                System.out.println("Duration calculation");
-                try {
-                    File file = new File(video.getPath());
-                    Media media = new Media(file.getCanonicalFile().toURI().toString());
-                    MediaPlayer mediaPlayer = new MediaPlayer(media);
-
-                    mediaPlayer.setOnError(() -> {
-                        System.out.println(mediaPlayer.getError());
-                        getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
-                    });
-
-                    mediaPlayer.setOnReady(()-> {
-                        video.setDuration(mediaPlayer.getTotalDuration());
-                        try {
-                            dbService.videoDAO.create(video);
-                            System.out.println("Duration success");
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            System.out.println("Duration error");
-                        }
-                    });
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
-        }
+//        try {
+//            Video video = new Video();
+//            String path = selectedFile.getAbsolutePath();
+//            User defaultUser = dbService.userDAO.findDefault();
+//            Collection defaultCollection = dbService.collectionDAO.findDefault();
+//            video.setPath(path);
+//            video.setCollection(defaultCollection);
+//            video.setUser(defaultUser);
+//            video.setDuration(Duration.UNKNOWN);
+//
+//            dbService.videoDAO.create(video);
+//            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.create.success"));
+//            getApplication().getEventRouter().publishEvent("video.created", Arrays.asList(video));
+//
+////            runOutsideUIAsync(() -> {
+////                System.out.println("Duration calculation");
+////                try {
+////                    File file = new File(video.getPath());
+////                    Media media = new Media(file.getCanonicalFile().toURI().toString());
+////                    MediaPlayer mediaPlayer = new MediaPlayer(media);
+////
+////                    mediaPlayer.setOnError(() -> {
+////                        System.out.println(mediaPlayer.getError());
+////                        getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
+////                    });
+////
+////                    mediaPlayer.setOnReady(()-> {
+////                        video.setDuration(mediaPlayer.getTotalDuration());
+////                        try {
+////                            dbService.videoDAO.create(video);
+////                            System.out.println("Duration success");
+////
+////
+////                        } catch (Exception e) {
+////                            e.printStackTrace();
+////                            System.out.println("Duration error");
+////                        }
+////                    });
+////
+////                } catch (IOException e) {
+////                    e.printStackTrace();
+////                }
+////            });
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
+//        }
     }
 
     @ControllerAction
@@ -137,15 +134,15 @@ public class MenuController extends AbstractGriffonController {
         Stage stage = (Stage) getApplication().getWindowManager().findWindow("mainWindow");
 
         File selectedFile = fileChooser.showOpenDialog(stage);
-        if (selectedFile != null) {
-
-            try {
-                importService.execute(selectedFile);
-                getApplication().getEventRouter().publishEvent("video.import.success");
-            } catch (Exception e) {
-                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.import.error"));
-            }
-        }
+//        if (selectedFile != null) {
+//
+//            try {
+//                importService.execute(selectedFile);
+//                getApplication().getEventRouter().publishEvent("video.import.success");
+//            } catch (Exception e) {
+//                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.import.error"));
+//            }
+//        }
     }
 
 
@@ -159,48 +156,49 @@ public class MenuController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public String archive() throws Exception {
-        VideoDAO videoDAO = dbService.videoDAO;
-        List<Video> videoList = videoDAO.findAll();
-        List<String> srcFiles = new ArrayList<>();
-
-        for(Video video : videoList){
-            String fileName = exportService.export(video);
-            srcFiles.add(fileName);
-        }
-
-        String zipFileName = String.format("%s.zip", System.currentTimeMillis());
-        String filePath = this.getPathExport(zipFileName);
-
-        try {
-            FileOutputStream fos = new FileOutputStream(filePath);
-            ZipOutputStream zipOut = new ZipOutputStream(fos);
-            for (String srcFile : srcFiles) {
-                File fileToZip = new File(srcFile);
-                FileInputStream fis = new FileInputStream(fileToZip);
-                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-                zipOut.putNextEntry(zipEntry);
-
-                byte[] bytes = new byte[1024];
-                int length;
-                while ((length = fis.read(bytes)) >= 0) {
-                    zipOut.write(bytes, 0, length);
-                }
-                fis.close();
-            }
-
-            zipOut.close();
-            fos.close();
-
-        } catch (IOException e ){
-            getLog().error(e.getMessage());
-        } finally {
-            for(String srcFile : srcFiles){
-                File file = new File(srcFile);
-                file.delete();
-            }
-
-            return filePath;
-        }
+//        VideoDAO videoDAO = dbService.videoDAO;
+//        List<Video> videoList = videoDAO.findAll();
+//        List<String> srcFiles = new ArrayList<>();
+//
+//        for(Video video : videoList){
+//            String fileName = exportService.export(video);
+//            srcFiles.add(fileName);
+//        }
+//
+//        String zipFileName = String.format("%s.zip", System.currentTimeMillis());
+//        String filePath = this.getPathExport(zipFileName);
+//
+//        try {
+//            FileOutputStream fos = new FileOutputStream(filePath);
+//            ZipOutputStream zipOut = new ZipOutputStream(fos);
+//            for (String srcFile : srcFiles) {
+//                File fileToZip = new File(srcFile);
+//                FileInputStream fis = new FileInputStream(fileToZip);
+//                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+//                zipOut.putNextEntry(zipEntry);
+//
+//                byte[] bytes = new byte[1024];
+//                int length;
+//                while ((length = fis.read(bytes)) >= 0) {
+//                    zipOut.write(bytes, 0, length);
+//                }
+//                fis.close();
+//            }
+//
+//            zipOut.close();
+//            fos.close();
+//
+//        } catch (IOException e ){
+//            getLog().error(e.getMessage());
+//        } finally {
+//            for(String srcFile : srcFiles){
+//                File file = new File(srcFile);
+//                file.delete();
+//            }
+//
+//            return filePath;
+//        }
+        return "";
     }
 
     private Map<String, RunnableWithArgs> listeners(){

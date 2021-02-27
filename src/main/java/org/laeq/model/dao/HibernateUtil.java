@@ -56,22 +56,22 @@ public class HibernateUtil {
         }
     }
 
-    public HibernateUtil(String config){
-        if (sessionFactory == null){
-            try{
-                registry = new StandardServiceRegistryBuilder().configure(config).build();
-
-                MetadataSources sources = new MetadataSources(registry);
-                Metadata metadata = sources.getMetadataBuilder().build();
-                sessionFactory = metadata.getSessionFactoryBuilder().build();
-            } catch (Exception e){
-                e.printStackTrace();
-                if (registry != null){
-                    StandardServiceRegistryBuilder.destroy(registry);
-                }
-            }
-        }
-    }
+//    public HibernateUtil(String config){
+//        if (sessionFactory == null){
+//            try{
+//                registry = new StandardServiceRegistryBuilder().configure(config).build();
+//
+//                MetadataSources sources = new MetadataSources(registry);
+//                Metadata metadata = sources.getMetadataBuilder().build();
+//                sessionFactory = metadata.getSessionFactoryBuilder().build();
+//            } catch (Exception e){
+//                e.printStackTrace();
+//                if (registry != null){
+//                    StandardServiceRegistryBuilder.destroy(registry);
+//                }
+//            }
+//        }
+//    }
 
 
     public void shutdown(){

@@ -2,12 +2,10 @@ package org.laeq;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
-import org.laeq.model.Video;
 import org.laeq.model.dao.*;
 
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ public class DatabaseService extends AbstractGriffonService {
     public PointDAO pointDAO;
 
     public DatabaseService(){
-        this.hbu = new HibernateUtil("hibernate.cfg.xml");
+        this.hbu = new HibernateUtil();
         this.userDAO = new UserDAO(this.hbu);
         this.categoryDAO = new CategoryDAO(this.hbu);
         this.videoDAO = new VideoDAO(this.hbu);

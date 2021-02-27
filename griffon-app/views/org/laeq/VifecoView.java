@@ -18,7 +18,7 @@ import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
 public class VifecoView extends AbstractJavaFXGriffonView {
-    @Inject private DatabaseService dbService;
+    private DatabaseService dbService;
 
     private VBox top;
     private SplitPane middlePane;
@@ -43,7 +43,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
         createMVCGroup("menu");
-        createMVCGroup("middle");
+//        createMVCGroup("middle");
         createMVCGroup("bottom");
     }
 
