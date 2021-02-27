@@ -15,6 +15,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.DatabaseService;
 import org.laeq.ExportService;
 import org.laeq.ImportService;
+import org.laeq.PreferencesService;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
@@ -35,6 +36,7 @@ import java.util.zip.ZipOutputStream;
 @ArtifactProviderFor(GriffonController.class)
 public class MenuController extends AbstractGriffonController {
     private FileChooser fileChooser;
+    private PreferencesService preferencesService;
 //
 //    @Inject private ImportService importService;
 //    @Inject private DatabaseService dbService;
@@ -43,6 +45,7 @@ public class MenuController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listeners());
+//        preferencesService = new PreferencesService();
     }
 
     @ControllerAction

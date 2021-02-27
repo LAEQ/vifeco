@@ -9,16 +9,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.PreferencesService;
 import org.laeq.VifecoView;
 import org.laeq.model.Category;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconButton;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.model.icon.IconSquare;
-
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +23,6 @@ import java.util.Map;
 public class MenuView extends AbstractJavaFXGriffonView {
     private MenuController controller;
     private MenuModel model;
-
-//    @Inject private PreferencesService prefService;
 
     @FXML private AnchorPane subMenuPane;
     @FXML private ChoiceBox<String> languageMenu;

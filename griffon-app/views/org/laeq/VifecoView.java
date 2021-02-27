@@ -45,6 +45,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         createMVCGroup("menu");
 //        createMVCGroup("middle");
         createMVCGroup("bottom");
+
     }
 
     @Override
@@ -73,7 +74,6 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         top.setPrefWidth(900);
         top.setPrefHeight(60);
         root.setVgrow(top, Priority.NEVER);
-
 
         middlePane = new SplitPane();
         middlePane.prefHeight(-1);

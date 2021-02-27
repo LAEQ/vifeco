@@ -19,4 +19,5 @@ remove_rpm:
 
 
 all_rpm: clean shadowJar jpackage_rpm install_rpm
-all_deb: clean shadowJar jpackage_deb install_rpm
+all_deb: clean shadowJar jpackage_deb install_deb
+all_windows: clean shadowJar jpackage_windows
