@@ -11,9 +11,7 @@ import org.laeq.model.dao.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@javax.inject.Singleton
-@ArtifactProviderFor(GriffonService.class)
-public class DatabaseService extends AbstractGriffonService {
+public class DatabaseService {
     private HibernateUtil hbu;
     public UserDAO userDAO;
     public CategoryDAO categoryDAO;
@@ -23,22 +21,22 @@ public class DatabaseService extends AbstractGriffonService {
 
     public DatabaseService(){
         this.hbu = new HibernateUtil();
-        this.userDAO = new UserDAO(this.hbu);
-        this.categoryDAO = new CategoryDAO(this.hbu);
-        this.videoDAO = new VideoDAO(this.hbu);
-        this.collectionDAO = new CollectionDAO(this.hbu);
-        this.pointDAO = new PointDAO(this.hbu);
+//        this.userDAO = new UserDAO(this.hbu);
+//        this.categoryDAO = new CategoryDAO(this.hbu);
+//        this.videoDAO = new VideoDAO(this.hbu);
+//        this.collectionDAO = new CollectionDAO(this.hbu);
+//        this.pointDAO = new PointDAO(this.hbu);
 
-        try {
-            int total = this.userDAO.findAll().size();
-
-            if(total == 0){
-                setUpDefaults();
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            int total = this.userDAO.findAll().size();
+//
+//            if(total == 0){
+//                setUpDefaults();
+//            }
+//
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
 
     }
 

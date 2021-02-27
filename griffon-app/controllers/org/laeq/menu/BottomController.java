@@ -30,7 +30,6 @@ public class BottomController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listeners());
-
         System.out.println(model);
     }
 
