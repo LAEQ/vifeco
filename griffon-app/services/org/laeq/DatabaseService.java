@@ -20,23 +20,23 @@ public class DatabaseService {
     public PointDAO pointDAO;
 
     public DatabaseService(){
-        this.hbu = new HibernateUtil();
-//        this.userDAO = new UserDAO(this.hbu);
-//        this.categoryDAO = new CategoryDAO(this.hbu);
-//        this.videoDAO = new VideoDAO(this.hbu);
-//        this.collectionDAO = new CollectionDAO(this.hbu);
-//        this.pointDAO = new PointDAO(this.hbu);
+        this.hbu = new HibernateUtil("hibernate.cfg.xml");
+        this.userDAO = new UserDAO(this.hbu);
+        this.categoryDAO = new CategoryDAO(this.hbu);
+        this.videoDAO = new VideoDAO(this.hbu);
+        this.collectionDAO = new CollectionDAO(this.hbu);
+        this.pointDAO = new PointDAO(this.hbu);
 
-//        try {
-//            int total = this.userDAO.findAll().size();
-//
-//            if(total == 0){
-//                setUpDefaults();
-//            }
-//
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
+        try {
+            int total = this.userDAO.findAll().size();
+
+            if(total == 0){
+                setUpDefaults();
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
