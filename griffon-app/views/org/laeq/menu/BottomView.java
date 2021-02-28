@@ -18,8 +18,8 @@ import static java.util.Arrays.asList;
 
 @ArtifactProviderFor(GriffonView.class)
 public class BottomView extends AbstractJavaFXGriffonView {
-    @MVCMember @Nonnull private BottomController controller;
-    @MVCMember @Nonnull private BottomModel model;
+    private BottomController controller;
+    private BottomModel model;
 
     @MVCMember @Nonnull private VifecoView parentView;
 
@@ -28,17 +28,24 @@ public class BottomView extends AbstractJavaFXGriffonView {
 
     private MessageSource messageSource;
 
+    @MVCMember
+    public void setModel(@Nonnull BottomModel model){
+        this.model = model;
+    }
+
+    @MVCMember
+    public void setController(@Nonnull BottomController controller){
+        this.controller = controller;
+    }
+
     @Override
     public void initUI() {
-        messageSource = getApplication().getMessageSource();
-
         Node node = loadFromFXML();
-
         connectActions(node, controller);
-
         parentView.getBottom().getChildren().add(node);
-
         label.setText("");
+
+        messageSource = getApplication().getMessageSource();
     }
 
     public void setMessage(String message, List<String> styles) {

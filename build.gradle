@@ -73,20 +73,14 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
-    compile group: 'org.apache.xmlgraphics', name: 'batik-util', version: '1.11'
-    compile group: 'org.apache.xmlgraphics', name: 'batik-transcoder', version: '1.11'
-    compile group: 'org.apache.xmlgraphics', name: 'batik-codec', version: '1.9'
-    compile group: 'org.hibernate', name: 'hibernate-core', version:'5.4.25.Final'
+    compile group: 'org.hibernate', name: 'hibernate-core', version:'5.4.5.Final'
     compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.1.7.Final'
-    compile group: 'org.glassfish', name: 'javax.el', version: '3.0.0'
     compile group: 'com.h2database', name: 'h2', version: '1.4.200'
 
     compile group: 'com.github.gwenn', name: 'sqlite-dialect', version: '0.1.0'
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.32.3.2'
 
-    implementation 'com.atlassian.commonmark:commonmark:0.12.1'
     implementation 'org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0'
-    compile 'org.projectlombok:lombok:1.18.4'
     runtime "org.slf4j:slf4j-simple:${slf4jVersion}"
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"

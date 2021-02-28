@@ -10,15 +10,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
 public class VifecoView extends AbstractJavaFXGriffonView {
-    @Inject private DatabaseService dbService;
+    private DatabaseService dbService;
 
     private VBox top;
     private SplitPane middlePane;
@@ -42,9 +40,14 @@ public class VifecoView extends AbstractJavaFXGriffonView {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
+
+        dbService = new DatabaseService();
+        System.out.println(dbService);
+
         createMVCGroup("menu");
-        createMVCGroup("middle");
+//        createMVCGroup("middle");
         createMVCGroup("bottom");
+
     }
 
     @Override
@@ -73,7 +76,6 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         top.setPrefWidth(900);
         top.setPrefHeight(60);
         root.setVgrow(top, Priority.NEVER);
-
 
         middlePane = new SplitPane();
         middlePane.prefHeight(-1);

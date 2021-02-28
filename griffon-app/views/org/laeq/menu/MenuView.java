@@ -9,31 +9,35 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.PreferencesService;
 import org.laeq.VifecoView;
 import org.laeq.model.Category;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconButton;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.model.icon.IconSquare;
-
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
 public class MenuView extends AbstractJavaFXGriffonView {
-    @MVCMember @Nonnull private MenuController controller;
-    @MVCMember @Nonnull private MenuModel model;
-
-    @Inject private PreferencesService prefService;
+    private MenuController controller;
+    private MenuModel model;
 
     @FXML private AnchorPane subMenuPane;
     @FXML private ChoiceBox<String> languageMenu;
 
     @MVCMember @Nonnull private VifecoView parentView;
 
+    @MVCMember
+    public void setModel(@Nonnull MenuModel model){
+        this.model = model;
+    }
+
+    @MVCMember
+    public void setController(@Nonnull MenuController controller){
+        this.controller = controller;
+    }
 
     private final Map<IconButton, String> btnTooltipMessages = new HashMap<>();
     private final Map<IconButton, Tooltip> toolTips = new HashMap<>();

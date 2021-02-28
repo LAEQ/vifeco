@@ -14,12 +14,23 @@ import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class BottomController extends AbstractGriffonController {
-    @MVCMember @Nonnull private BottomModel model;
-    @MVCMember @Nonnull private BottomView view;
+    private BottomModel model;
+    private BottomView view;
+
+    @MVCMember
+    public void setModel(@Nonnull BottomModel model){
+        this.model = model;
+    }
+
+    @MVCMember
+    public void setView(@Nonnull BottomView view){
+        this.view = view;
+    }
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listeners());
+        System.out.println(model);
     }
 
 

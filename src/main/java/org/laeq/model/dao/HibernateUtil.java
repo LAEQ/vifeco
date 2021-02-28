@@ -15,27 +15,27 @@ public class HibernateUtil {
     private Configuration configuration(){
         Configuration configuration = new Configuration();
 
-        configuration.setProperty("connection.driver_class", "org.h2.Driver");
-        configuration.setProperty("connection.url", "jdbc:h2:~/vifeco/db/vifeco");
-        configuration.setProperty("connection.username", "");
-        configuration.setProperty("connection.password", "");
-        configuration.setProperty("connection.pool_size", "1");
-        configuration.setProperty("connection.autocommit","true");
-        configuration.setProperty("dialect","org.hibernate.dialect.H2Dialect");
-        configuration.setProperty("show_sql","false");
-        configuration.setProperty("current_session_context_class","thread");
-        configuration.setProperty("hbm2ddl.auto","update");
-        configuration.setProperty("hibernate.dbcp.initialSize","5");
-        configuration.setProperty("hibernate.dbcp.maxTotal","20");
-        configuration.setProperty("hibernate.dbcp.maxIdle","10");
-        configuration.setProperty("hibernate.dbcp.minIdle","5");
-        configuration.setProperty("hibernate.dbcp.maxWaitMillis","-1");
-
-        configuration.addAnnotatedClass(User.class);
-        configuration.addAnnotatedClass(Category.class);
-        configuration.addAnnotatedClass(Collection.class);
-        configuration.addAnnotatedClass(Video.class);
-        configuration.addAnnotatedClass(Point.class);
+//        configuration.setProperty("connection.driver_class", "org.h2.Driver");
+//        configuration.setProperty("connection.url", "jdbc:h2:~/vifeco/db/vifeco");
+//        configuration.setProperty("connection.username", "");
+//        configuration.setProperty("connection.password", "");
+//        configuration.setProperty("connection.pool_size", "1");
+//        configuration.setProperty("connection.autocommit","true");
+//        configuration.setProperty("dialect","org.hibernate.dialect.H2Dialect");
+//        configuration.setProperty("show_sql","false");
+//        configuration.setProperty("current_session_context_class","thread");
+//        configuration.setProperty("hbm2ddl.auto","update");
+//        configuration.setProperty("hibernate.dbcp.initialSize","5");
+//        configuration.setProperty("hibernate.dbcp.maxTotal","20");
+//        configuration.setProperty("hibernate.dbcp.maxIdle","10");
+//        configuration.setProperty("hibernate.dbcp.minIdle","5");
+//        configuration.setProperty("hibernate.dbcp.maxWaitMillis","-1");
+//
+//        configuration.addAnnotatedClass(User.class);
+//        configuration.addAnnotatedClass(Category.class);
+//        configuration.addAnnotatedClass(Collection.class);
+//        configuration.addAnnotatedClass(Video.class);
+//        configuration.addAnnotatedClass(Point.class);
 
         return configuration;
     }

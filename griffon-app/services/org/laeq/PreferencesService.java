@@ -1,26 +1,24 @@
 package org.laeq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import griffon.core.artifact.GriffonService;
-import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Preferences;
 import org.laeq.settings.Settings;
 
 import java.io.File;
 import java.io.IOException;
 
-@javax.inject.Singleton
-@ArtifactProviderFor(GriffonService.class)
-public class PreferencesService extends AbstractGriffonService {
+public class PreferencesService {
     private Preferences preferences;
     private String fileName = "preferences.json";
 
-    public PreferencesService() throws IOException {
+    public PreferencesService() {
         File file = new File(getFileName());
-
         if(file.exists()){
-            preferences = new ObjectMapper().readValue(file, Preferences.class);
+            try {
+                preferences = new ObjectMapper().readValue(file, Preferences.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             preferences = new Preferences();
             export(preferences);
@@ -36,7 +34,7 @@ public class PreferencesService extends AbstractGriffonService {
         try {
             objectMapper.writeValue(new File(getFileName()), preferences);
         } catch (Exception e) {
-            getLog().error(e.getMessage());
+            e.printStackTrace();
         }
     }
 
