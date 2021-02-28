@@ -40,3 +40,9 @@ venv/
 # npm
 node_modules/
 package-lock.json
+
+# jre
+distribution/jre
+distribution/*.jar
+distribution/*.exe
+distribution/inno/*.exe
