@@ -250,7 +250,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         timeSlider.valueProperty().removeListener(sliderListener);
         sliderListener = null;
 
-        rootView.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, keyListener);
+        rootView.scene.removeEventHandler(KeyEvent.KEY_PRESSED, keyListener);
         keyListener = null;
 
         iconPane.getChildren().clear();
@@ -267,7 +267,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private EventHandler<? super MouseEvent> mouseEnterListener() {
         return event -> {
             iconPane.setOnMouseMoved(mouseMoveListener);
-            rootView.getScene().setOnKeyReleased(keyListener);
+            rootView.scene.setOnKeyReleased(keyListener);
         };
     }
     private EventHandler<MouseEvent> mouseExitListener(){
@@ -275,7 +275,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             mousePosition = null;
             nodeOver = null;
             iconPane.removeEventHandler(MouseEvent.MOUSE_MOVED, mouseMoveListener);
-            rootView.getScene().removeEventHandler(KeyEvent.KEY_RELEASED, keyListener);
+            rootView.scene.removeEventHandler(KeyEvent.KEY_RELEASED, keyListener);
         };
     }
     private InvalidationListener currentTimeListener(){

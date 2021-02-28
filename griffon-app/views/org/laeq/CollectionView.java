@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 public class CollectionView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private CollectionController controller;
     @MVCMember @Nonnull private CollectionModel model;
-    @MVCMember @Nonnull private MiddlePaneView parentView;
+    @MVCMember @Nonnull private VifecoView parentView;
 
     @FXML private TextField nameField;
     @FXML private Group categoryContainer;
@@ -43,7 +43,7 @@ public class CollectionView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-        parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
+        parentView.middle.getChildren().add(node);
         connectMessageSource(node);
         connectActions(node, controller);
         init();

@@ -34,7 +34,7 @@ import java.util.Map;
 public class StatisticView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private StatisticModel model;
     @MVCMember @Nonnull private StatisticController controller;
-    @MVCMember @Nonnull private MiddlePaneView parentView;
+    @MVCMember @Nonnull private VifecoView parentView;
     @Inject private StatisticService statService;
 
     @FXML private TableView<Video> videoTable;
@@ -67,10 +67,9 @@ public class StatisticView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-        parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
+        parentView.middle.getChildren().add(node);
         connectActions(node, controller);
         connectMessageSource(node);
-
 
         v1Total.setText(getApplication().getMessageSource().getMessage("statistic.column.total"));
         v2Total.setText(getApplication().getMessageSource().getMessage("statistic.column.total"));

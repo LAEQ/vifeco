@@ -1,53 +1,50 @@
 package org.laeq;
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
 public class VifecoView extends AbstractJavaFXGriffonView {
-    private DatabaseService dbService;
+    @MVCMember
+    private VifecoController controller;
 
-    private VBox top;
-    private SplitPane middlePane;
-    private VBox bottom;
-    private Scene scene;
+    @Inject private DatabaseService dbService;
 
-    @Nonnull
-    public VBox getTop() {
-        return top;
-    }
+    @FXML public Pane menu;
+    @FXML public AnchorPane middle;
+    @FXML public AnchorPane bottom;
 
-    @Nonnull
-    public SplitPane getMiddlePane() {
-        return middlePane;
-    }
+    public Scene scene;
 
-    @Nonnull
-    public VBox getBottom() {
-        return bottom;
+    @MVCMember
+    private void setController(@Nonnull VifecoController controller){
+        this.controller = controller;
     }
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
-
-        dbService = new DatabaseService();
-        System.out.println(dbService);
-
         createMVCGroup("menu");
-//        createMVCGroup("middle");
+        createMVCGroup("about");
         createMVCGroup("bottom");
-
     }
 
     @Override
@@ -62,38 +59,18 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     private Scene init() {
         scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
-        scene.setRoot(generateView());
+
+        Node node = loadFromFXML();
+
+        if (node instanceof Parent) {
+            scene.setRoot((Parent) node);
+        } else {
+            ((Group) scene.getRoot()).getChildren().addAll(node);
+        }
+        connectActions(node, controller);
+        connectMessageSource(node);
+
         scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
-        return scene;
-    }
-
-    private VBox generateView(){
-        VBox root = new VBox();
-        root.setPrefWidth(1500);
-        root.setPrefHeight(900);
-
-        top = new VBox();
-        top.setPrefWidth(900);
-        top.setPrefHeight(60);
-        root.setVgrow(top, Priority.NEVER);
-
-        middlePane = new SplitPane();
-        middlePane.prefHeight(-1);
-        middlePane.prefWidth(-1);
-        root.setVgrow(middlePane, Priority.ALWAYS);
-
-        bottom = new VBox();
-        bottom.setPrefHeight(60);
-        bottom.setPrefWidth(900);
-
-        root.setVgrow(bottom, Priority.NEVER);
-
-        root.getChildren().addAll(top, middlePane, bottom);
-
-        return root;
-    }
-
-    public Scene getScene() {
         return scene;
     }
 }

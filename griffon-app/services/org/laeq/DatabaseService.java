@@ -11,7 +11,9 @@ import org.laeq.model.dao.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseService {
+@javax.inject.Singleton
+@ArtifactProviderFor(GriffonService.class)
+public class DatabaseService extends AbstractGriffonService{
     private HibernateUtil hbu;
     public UserDAO userDAO;
     public CategoryDAO categoryDAO;
@@ -29,6 +31,7 @@ public class DatabaseService {
 
         try {
             int total = this.userDAO.findAll().size();
+
 
             if(total == 0){
                 setUpDefaults();

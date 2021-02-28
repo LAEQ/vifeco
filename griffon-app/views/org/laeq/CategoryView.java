@@ -25,7 +25,7 @@ import java.util.Arrays;
 public class CategoryView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private CategoryController controller;
     @MVCMember @Nonnull private CategoryModel model;
-    @MVCMember @Nonnull private MiddlePaneView parentView;
+    @MVCMember @Nonnull private VifecoView parentView;
 
     @FXML private TextField nameField;
     @FXML private TextField shortCutField;
@@ -46,7 +46,8 @@ public class CategoryView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-        parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
+
+        parentView.middle.getChildren().add(node);
         connectMessageSource(node);
         connectActions(node, controller);
 
@@ -61,7 +62,7 @@ public class CategoryView extends AbstractJavaFXGriffonView {
         svgDisplayPane.getChildren().add(svgPath);
 
         init();
-//        initForm();
+        initForm();
 
     }
 

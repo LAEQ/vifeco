@@ -28,7 +28,7 @@ public class MiddlePaneView extends AbstractJavaFXGriffonView {
         Node node = loadFromFXML();
         mvcGroupId = "";
 
-        parentView.getMiddlePane().getItems().add(node);
+//        parentView.getMiddlePane().getItems().add(node);
     }
 
     @ControllerAction

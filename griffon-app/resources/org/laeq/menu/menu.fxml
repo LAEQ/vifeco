@@ -6,9 +6,7 @@
 <VBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.menu.MenuController">
    <children>
       <AnchorPane fx:id="subMenuPane" maxHeight="70.0" prefHeight="70.0" prefWidth="1366.0">
-         <children>
-            <ChoiceBox fx:id="languageMenu" layoutX="1202.0" layoutY="22.0" prefWidth="150.0" AnchorPane.topAnchor="15.0" AnchorPane.rightAnchor="10.0" />
-         </children>
+         <children />
       </AnchorPane>
    </children>
 </VBox>

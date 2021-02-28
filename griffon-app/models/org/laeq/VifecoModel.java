@@ -10,21 +10,5 @@ import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class VifecoModel extends AbstractGriffonModel {
-    private StringProperty clickCount;
-
-    @Nonnull
-    public final StringProperty clickCountProperty() {
-        if (clickCount == null) {
-            clickCount = new SimpleStringProperty(this, "clickCount", "0");
-        }
-        return clickCount;
-    }
-
-    public void setClickCount(String clickCount) {
-        clickCountProperty().set(clickCount);
-    }
-
-    public String getClickCount() {
-        return clickCountProperty().get();
-    }
+    public String currentGroup = "about";
 }

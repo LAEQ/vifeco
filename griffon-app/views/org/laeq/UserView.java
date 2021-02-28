@@ -1,5 +1,6 @@
 package org.laeq;
 
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
@@ -11,12 +12,10 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.Callback;
-import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Icon;
 import org.laeq.model.User;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconSVG;
-import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +23,7 @@ import javax.annotation.Nonnull;
 public class UserView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private UserController controller;
     @MVCMember @Nonnull private UserModel model;
-    @MVCMember @Nonnull private MiddlePaneView parentView;
+    @MVCMember @Nonnull private VifecoView parentView;
 
     @FXML private TableView<User> userTable;
     @FXML private TableColumn<User, String> id;
@@ -43,7 +42,7 @@ public class UserView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-        parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
+        parentView.middle.getChildren().add(node);
         connectActions(node, controller);
         connectMessageSource(node);
         init();

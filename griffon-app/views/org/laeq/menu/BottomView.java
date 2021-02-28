@@ -4,6 +4,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.i18n.MessageSource;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -18,48 +19,36 @@ import static java.util.Arrays.asList;
 
 @ArtifactProviderFor(GriffonView.class)
 public class BottomView extends AbstractJavaFXGriffonView {
-    private BottomController controller;
-    private BottomModel model;
+    @MVCMember @Nonnull private BottomController controller;
+    @MVCMember @Nonnull private BottomModel model;
 
     @MVCMember @Nonnull private VifecoView parentView;
 
-    @FXML private Label label;
-    @FXML private Pane panel;
-
-    private MessageSource messageSource;
-
-    @MVCMember
-    public void setModel(@Nonnull BottomModel model){
-        this.model = model;
-    }
-
-    @MVCMember
-    public void setController(@Nonnull BottomController controller){
-        this.controller = controller;
-    }
+    @FXML private Label message;
+    @FXML private Pane box;
 
     @Override
     public void initUI() {
+//        messageSource = getApplication().getMessageSource();
         Node node = loadFromFXML();
         connectActions(node, controller);
-        parentView.getBottom().getChildren().add(node);
-        label.setText("");
 
-        messageSource = getApplication().getMessageSource();
-    }
+        parentView.bottom.getChildren().add(node);
 
-    public void setMessage(String message, List<String> styles) {
-        String text = messageSource.getMessage(message);
-        panel.getStyleClass().setAll(styles);
-        label.setText(text);
+        System.out.println(model.message.toString());
+        model.message.bindBidirectional(message.textProperty());
+        model.styles.addListener((ListChangeListener<String>) c -> {
+            box.getStylesheets().clear();
+            box.getStylesheets().setAll("alert", "alert-success");
+        });
     }
 
 
     public void setMessageParametized(Object[] objects, List<String> styles) {
-        String key = (String) objects[0];
-        String param = (String) objects[1];
-        String text = messageSource.getMessage(key, asList(param));
-        panel.getStyleClass().setAll(styles);
-        label.setText(text);
+//        String key = (String) objects[0];
+//        String param = (String) objects[1];
+//        String text = messageSource.getMessage(key, asList(param));
+//        panel.getStyleClass().setAll(styles);
+//        label.setText(text);
     }
 }

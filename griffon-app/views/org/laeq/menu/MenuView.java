@@ -48,7 +48,7 @@ public class MenuView extends AbstractJavaFXGriffonView {
         Node node = loadFromFXML();
         connectActions(node, controller);
 
-        parentView.getTop().getChildren().add(node);
+        parentView.menu.getChildren().add(node);
 
         IconButton videoListBtn = generateButton(IconSVG.video, "video list", "org.laeq.menu.tooltip.video_list", "video.section");
         videoListBtn.setLayoutX(10);
@@ -85,14 +85,6 @@ public class MenuView extends AbstractJavaFXGriffonView {
         IconButton aboutBtn = generateButton(IconSVG.question, "about", "org.laeq.menu.tooltip.about", "about.section");
         aboutBtn.setLayoutX(475);
         subMenuPane.getChildren().add(aboutBtn);
-
-//        languageMenu.setItems(FXCollections.observableArrayList(model.getPrefs().getLocales()));
-//
-//        languageMenu.getSelectionModel().select(prefService.getPreferences().getLocalIndex());
-//
-//        languageMenu.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-//            model.getPrefs().setLocaleByIndex(newValue.intValue());
-//        });
     }
 
     private IconButton generateButton(String path, String name, String help, String eventName){

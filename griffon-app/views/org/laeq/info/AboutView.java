@@ -9,7 +9,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.PreferencesService;
-import org.laeq.template.MiddlePaneView;
+import org.laeq.VifecoView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -18,7 +18,7 @@ import java.util.Locale;
 @ArtifactProviderFor(GriffonView.class)
 public class AboutView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private AboutController controller;
-    @MVCMember @Nonnull private MiddlePaneView parentView;
+    @MVCMember @Nonnull private VifecoView parentView;
     @Inject private PreferencesService preferenceService;
 
     @FXML private WebView citationView;
@@ -28,7 +28,7 @@ public class AboutView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-        parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
+        parentView.middle.getChildren().add(node);
 
         WebEngine webEngine = citationView.getEngine();
         String aboutPath = String.format("html/about_%s.html", preferenceService.getPreferences().locale.getLanguage());

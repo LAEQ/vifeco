@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
-  <headerType>gui</headerType>
+  <headerType>console</headerType>
   <jar>C:\Users\david\Documents\laeq\VifecoProjects\vifeco\distribution\vifeco-2.0.0.jar</jar>
   <outfile>C:\Users\david\Documents\laeq\VifecoProjects\vifeco\distribution\vifeco.exe</outfile>
   <errTitle></errTitle>

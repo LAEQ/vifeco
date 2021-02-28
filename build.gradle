@@ -76,6 +76,7 @@ dependencies {
     compile group: 'org.hibernate', name: 'hibernate-core', version:'5.4.5.Final'
     compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.1.7.Final'
     compile group: 'com.h2database', name: 'h2', version: '1.4.200'
+    compile group: 'org.glassfish', name: 'javax.el', version: '3.0.0'
 
     compile group: 'com.github.gwenn', name: 'sqlite-dialect', version: '0.1.0'
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.32.3.2'

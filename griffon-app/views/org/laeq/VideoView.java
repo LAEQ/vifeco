@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 public class VideoView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private VideoController controller;
     @MVCMember @Nonnull private VideoModel model;
-    @MVCMember @Nonnull private MiddlePaneView parentView;
+    @MVCMember @Nonnull private VifecoView parentView;
 
     @FXML private TableView<Video> videoTable;
     @FXML private TableView<CategoryCount> categoryTable;
@@ -51,7 +51,7 @@ public class VideoView extends AbstractJavaFXGriffonView {
     public void initUI() {
         Node node = loadFromFXML();
 
-        parentView.addMVCGroup(getMvcGroup().getMvcId(), node);
+        parentView.middle.getChildren().add(node);
         connectActions(node, controller);
         connectMessageSource(node);
         init();

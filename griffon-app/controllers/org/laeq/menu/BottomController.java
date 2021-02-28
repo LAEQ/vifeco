@@ -2,48 +2,45 @@ package org.laeq.menu;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
+import griffon.core.i18n.MessageSource;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
 public class BottomController extends AbstractGriffonController {
-    private BottomModel model;
-    private BottomView view;
+    @MVCMember @Nonnull private BottomModel model;
+    @MVCMember @Nonnull private BottomView view;
 
-    @MVCMember
-    public void setModel(@Nonnull BottomModel model){
-        this.model = model;
-    }
-
-    @MVCMember
-    public void setView(@Nonnull BottomView view){
-        this.view = view;
-    }
+    private MessageSource messageSource;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listeners());
-        System.out.println(model);
+
+        messageSource = getApplication().getMessageSource();
+        setMessage("welcome.message", Arrays.asList("alert", "alert-success"));
     }
 
 
     public void setMessage(String message, List<String> styles){
-        runInsideUIAsync(() -> {
-            view.setMessage(message, styles);
-        });
+        String text = messageSource.getMessage(message);
+
+        model.message.setValue(text);
+        model.styles.clear();
+        model.styles.addAll(styles);
     }
 
     private void setMessageParametized(Object[] objects, List<String> styles) {
-        runInsideUIAsync(() -> {
-            view.setMessageParametized(objects, styles);
-        });
+        String key = (String) objects[0];
+        String param = (String) objects[1];
+        String text = messageSource.getMessage(key, Arrays.asList(param));
+        model.message.setValue(text);
+        model.styles.clear();
+        model.styles.addAll(styles);
     }
 
     private Map<String, RunnableWithArgs> listeners() {
