@@ -14,8 +14,4 @@
          <String fx:value="btn-default" />
       </styleClass>
    </Button>
-<!--   <Spinner fx:id="delaySpinner" layoutX="566.0" layoutY="470.0" prefHeight="26.0" prefWidth="100.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" min="0" amountToStepBy="1" />-->
-<!--   <Label layoutX="459.0" layoutY="475.0" prefHeight="16.0" prefWidth="62.0"-->
-<!--          textAlignment="RIGHT" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="131.0"-->
-<!--          JavaFXUtils.i18nKey="display.delay" />-->
  </AnchorPane>

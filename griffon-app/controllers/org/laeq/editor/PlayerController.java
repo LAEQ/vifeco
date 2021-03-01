@@ -52,7 +52,7 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void controls() {
-        createMVCGroup("test2");
+        createMVCGroup("controls");
     }
 
     @Override
