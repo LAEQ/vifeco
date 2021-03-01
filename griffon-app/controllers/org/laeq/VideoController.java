@@ -85,10 +85,10 @@ public class VideoController extends AbstractGriffonController {
 
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void clear(){
-        runInsideUISync(() -> {
-            model.clear();
-        });
+        model.clear();
     }
 
     @ControllerAction
@@ -108,10 +108,10 @@ public class VideoController extends AbstractGriffonController {
     public void edit(){
         if(model.selectedVideo == null){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.error"));
-            model.selectedVideo = model.videoList.get(0);
+        } else {
+            getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("video.edit.success",model.selectedVideo.getPath()));
+            createDisplay();
         }
-
-        createDisplay();
     }
 
     private void  createDisplay(){

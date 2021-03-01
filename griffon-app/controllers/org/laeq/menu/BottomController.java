@@ -86,6 +86,8 @@ public class BottomController extends AbstractGriffonController {
             setMessage((String) objects[0], Arrays.asList("alert", "alert-warning"));
         });
 
+
+
         return list;
     }
 }
