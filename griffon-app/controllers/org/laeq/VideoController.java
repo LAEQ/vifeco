@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -120,10 +121,14 @@ public class VideoController extends AbstractGriffonController {
         }
 
         model.currentVideo = "currentVideo";
+        if(model.selectedVideo.getDuration() != Duration.UNKNOWN){
+            Map<String, Object> args = new HashMap<>();
+            args.put("video",model.selectedVideo);
+            createMVCGroup("currentVideo", args);
+        } else {
+            getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("video.media.unsupported", model.selectedVideo.pathToName()));
+        }
 
-        Map<String, Object> args = new HashMap<>();
-        args.put("video",model.selectedVideo);
-        createMVCGroup("currentVideo", args);
     }
 
     @ControllerAction
@@ -180,8 +185,14 @@ public class VideoController extends AbstractGriffonController {
 
     private void refreshVideoList(){
         try {
-            model.videoList.clear();
-            model.videoList.addAll(dbService.videoDAO.findAll());
+            List<Video> list = dbService.videoDAO.findAll();
+
+            list.forEach(v -> {
+                if(model.videoList.contains(v) == false){
+                    model.videoList.add(v);
+                }
+            });
+
             model.videoList.forEach(v -> setVideoDuration(v));
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
