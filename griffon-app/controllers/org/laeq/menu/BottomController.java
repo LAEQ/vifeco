@@ -5,6 +5,7 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.i18n.MessageSource;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
@@ -12,35 +13,42 @@ import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
 public class BottomController extends AbstractGriffonController {
-    @MVCMember @Nonnull private BottomModel model;
-    @MVCMember @Nonnull private BottomView view;
+    private BottomModel model;
 
     private MessageSource messageSource;
+
+    @MVCMember
+    public void setModel(@Nonnull BottomModel model){
+        this.model = model;
+    }
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listeners());
 
         messageSource = getApplication().getMessageSource();
-        setMessage("welcome.message", Arrays.asList("alert", "alert-success"));
     }
-
 
     public void setMessage(String message, List<String> styles){
         String text = messageSource.getMessage(message);
 
-        model.message.setValue(text);
-        model.styles.clear();
-        model.styles.addAll(styles);
+        runInsideUISync(() -> {
+            model.message.set(text);
+            model.styles.clear();
+            model.styles.addAll(styles);
+        });
     }
 
     private void setMessageParametized(Object[] objects, List<String> styles) {
         String key = (String) objects[0];
         String param = (String) objects[1];
         String text = messageSource.getMessage(key, Arrays.asList(param));
-        model.message.setValue(text);
-        model.styles.clear();
-        model.styles.addAll(styles);
+
+        runInsideUISync(() -> {
+            model.message.set(text);
+            model.styles.clear();
+            model.styles.addAll(styles);
+        });
     }
 
     private Map<String, RunnableWithArgs> listeners() {

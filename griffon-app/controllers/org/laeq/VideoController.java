@@ -34,7 +34,7 @@ public class VideoController extends AbstractGriffonController {
             model.getUserSet().addAll(dbService.userDAO.findAll());
             model.getCollectionSet().addAll(dbService.collectionDAO.findAll());
             model.categorySet.addAll(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
+            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.success.fetch"));
 
             //@todo add BiDirectionalBinding to remove this hack
             view.initForm();
@@ -74,10 +74,15 @@ public class VideoController extends AbstractGriffonController {
     }
 
     private void  createDisplay(){
-        getApplication().getMvcGroupManager().destroyMVCGroup("test");
+        if(model.currentVideo != null){
+            destroyMVCGroup(model.currentVideo);
+        }
+
+        model.currentVideo = "currentVideo";
+
         Map<String, Object> args = new HashMap<>();
         args.put("video",model.selectedVideo);
-        createMVCGroup("test", args);
+        createMVCGroup("currentVideo", args);
     }
 
     public void export(Video video){
@@ -111,7 +116,6 @@ public class VideoController extends AbstractGriffonController {
             clear();
             video.updateCollection(newValue);
             dbService.videoDAO.create(video);
-
 
             getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.collection.updated.success"));
         } catch (Exception e){

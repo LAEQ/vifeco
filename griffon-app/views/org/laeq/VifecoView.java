@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -70,7 +71,9 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         connectActions(node, controller);
         connectMessageSource(node);
 
-        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
+        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+
         return scene;
+
     }
 }

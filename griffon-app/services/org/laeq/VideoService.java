@@ -25,30 +25,36 @@ public class VideoService extends AbstractGriffonService {
 
     @Inject private DatabaseService dbService;
 
-    public void getVideoDuration(Video video){
-        try {
-            File file = new File(video.getPath());
-            Media media = new Media(file.getCanonicalFile().toURI().toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
+    public MediaPlayer getMediaPlayer(Video video) throws IOException {
+        File file = new File(video.getPath());
+        Media media = new Media(file.getCanonicalFile().toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
 
-            mediaPlayer.setOnError(() -> {
-                System.out.println(mediaPlayer.getError());
-            });
-
-            mediaPlayer.setOnReady(()-> {
-                video.setDuration(mediaPlayer.getTotalDuration());
-
-                try {
-                    dbService.videoDAO.create(video);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                System.out.println("Duration success");
-            });
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return mediaPlayer;
     }
+
+//    public void getVideoDuration(Video video){
+//        try {
+//
+//
+//            mediaPlayer.setOnError(() -> {
+//                System.out.println(mediaPlayer.getError());
+//            });
+//
+//            mediaPlayer.setOnReady(()-> {
+//                video.setDuration(mediaPlayer.getTotalDuration());
+//
+//                try {
+//                    dbService.videoDAO.create(video);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                System.out.println("Duration success");
+//            });
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }

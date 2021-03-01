@@ -22,8 +22,6 @@ import java.util.Map;
 @ArtifactProviderFor(GriffonModel.class)
 public class PlayerModel extends AbstractGriffonModel {
     @MVCMember @Nonnull private Video video;
-
-
     public Controls controls = new Controls();
     public ObservableList<Point> points = FXCollections.observableArrayList();
     public ObservableList<CategoryCount> summary = FXCollections.observableArrayList();

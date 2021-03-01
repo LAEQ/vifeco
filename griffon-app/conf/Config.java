@@ -97,7 +97,7 @@ public class Config extends AbstractMapResourceBundle {
                         .e("view", "org.laeq.info.AboutView")
                         .e("controller", "org.laeq.info.AboutController")
                 )
-                .e("test", map()
+                .e("currentVideo", map()
                         .e("model", "org.laeq.editor.PlayerModel")
                         .e("view", "org.laeq.editor.PlayerView")
                         .e("controller", "org.laeq.editor.PlayerController")

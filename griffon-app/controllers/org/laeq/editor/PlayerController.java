@@ -28,7 +28,7 @@ public class PlayerController extends AbstractGriffonController {
     @MVCMember @Nonnull private PlayerView view;
     @MVCMember @Nonnull private Video video;
 
-//    @Inject DatabaseService dbService;
+    @Inject DatabaseService dbService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -63,39 +63,39 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void addPoint(KeyCode code, Duration currentTime) {
-//        if(model.enabled){
-//            Point point = model.generatePoint(code.getName(), currentTime);
-//
-//            if(point != null){
-//                try {
-//                    dbService.pointDAO.create(point);
-//                    model.addPoint(point);
-//                    getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
-//                    getApplication().getEventRouter().publishEventOutsideUI("point.created");
-//                } catch (Exception e) {
-//                    getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
-//                }
-//            }
-//        }
+        if(model.enabled){
+            Point point = model.generatePoint(code.getName(), currentTime);
+
+            if(point != null){
+                try {
+                    dbService.pointDAO.create(point);
+                    model.addPoint(point);
+                    getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
+                    getApplication().getEventRouter().publishEventOutsideUI("point.created");
+                } catch (Exception e) {
+                    getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
+                }
+            }
+        }
     }
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void deletePoint(Point point) {
-//        try{
-//            dbService.pointDAO.delete(point);
-//            model.removePoint(point);
-//            view.refresh();
-//            getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
-//            getApplication().getEventRouter().publishEventOutsideUI("point.deleted");
-//        }catch (Exception e){
-//            getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
-//        }
+        try{
+            dbService.pointDAO.delete(point);
+            model.removePoint(point);
+            view.refresh();
+            getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
+            getApplication().getEventRouter().publishEventOutsideUI("point.deleted");
+        }catch (Exception e){
+            getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
+        }
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void add() {
-        view.reset();
+        view.pause();
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");

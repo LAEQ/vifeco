@@ -4,6 +4,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.i18n.MessageSource;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -24,31 +25,22 @@ public class BottomView extends AbstractJavaFXGriffonView {
 
     @MVCMember @Nonnull private VifecoView parentView;
 
-    @FXML private Label message;
+    @FXML public Label message;
     @FXML private Pane box;
 
     @Override
     public void initUI() {
-//        messageSource = getApplication().getMessageSource();
         Node node = loadFromFXML();
+
         connectActions(node, controller);
 
-        parentView.bottom.getChildren().add(node);
-
-        System.out.println(model.message.toString());
         model.message.bindBidirectional(message.textProperty());
+
         model.styles.addListener((ListChangeListener<String>) c -> {
-            box.getStylesheets().clear();
-            box.getStylesheets().setAll("alert", "alert-success");
+            message.getStyleClass().clear();
+            message.getStyleClass().setAll(c.getList());
         });
-    }
 
-
-    public void setMessageParametized(Object[] objects, List<String> styles) {
-//        String key = (String) objects[0];
-//        String param = (String) objects[1];
-//        String text = messageSource.getMessage(key, asList(param));
-//        panel.getStyleClass().setAll(styles);
-//        label.setText(text);
+        parentView.bottom.getChildren().add(node);
     }
 }

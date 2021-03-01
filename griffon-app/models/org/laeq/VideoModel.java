@@ -13,6 +13,7 @@ import java.util.*;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class VideoModel extends AbstractGriffonModel {
+    public String currentVideo;
     public ObservableList<Video> videoList = FXCollections.observableArrayList();
     public ObservableList<CategoryCount> categoryCounts = FXCollections.observableArrayList();
 

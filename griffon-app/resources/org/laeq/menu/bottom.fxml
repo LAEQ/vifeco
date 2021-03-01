@@ -3,12 +3,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="0.0" minHeight="60.0" minWidth="800.0" prefHeight="60.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.menu.BottomController">
-   <children>
-      <AnchorPane fx:id="box" layoutX="0.0" layoutY="0.0" minWidth="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-         <children>
-                <Label fx:id="message" layoutX="10.0" layoutY="10.0" prefHeight="16.0" prefWidth="860.0" text="Label" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0" />
-         </children>
-      </AnchorPane>
-   </children>
-</AnchorPane>
+<?import javafx.scene.layout.Pane?>
+<Pane fx:id="box" maxHeight="0.0" minHeight="60.0" minWidth="800.0" prefHeight="60.0" prefWidth="900.0"
+      AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+      xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.menu.BottomController">
+
+       <Label fx:id="message" layoutX="10.0" layoutY="10.0" prefHeight="16.0" prefWidth="1500.0" minWidth="1500" text="Label" />
+</Pane>

@@ -8,6 +8,7 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 //import javafx.scene.media.Media;
 //import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -83,7 +84,25 @@ public class MenuController extends AbstractGriffonController {
             video.setDuration(Duration.UNKNOWN);
 
             runOutsideUI(()->{
-                videoService.getVideoDuration(video);
+                getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("video.create.error"));
+
+                try {
+                    MediaPlayer mediaPlayer = videoService.getMediaPlayer(video);
+                    mediaPlayer.setOnReady(() -> {
+                        video.setDuration(mediaPlayer.getTotalDuration());
+                        getApplication().getEventRouter().publishEventOutsideUI("video.refresh.success");
+                        getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.time.success"));
+                    });
+
+                    mediaPlayer.setOnReady(() -> {
+                        getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
+                        getApplication().getEventRouter().publishEventOutsideUI("video.refresh.error", Arrays.asList(video));
+                    });
+
+                } catch (Exception e) {
+                    getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
+                    getApplication().getEventRouter().publishEventOutsideUI("video.refresh.error", Arrays.asList(video));
+                }
             });
 
             dbService.videoDAO.create(video);
