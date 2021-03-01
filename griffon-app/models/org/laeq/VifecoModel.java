@@ -10,5 +10,5 @@ import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class VifecoModel extends AbstractGriffonModel {
-    public String currentGroup = "about";
+    public String currentGroup = "video";
 }

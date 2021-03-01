@@ -6,7 +6,12 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
@@ -14,6 +19,7 @@ import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,6 +42,8 @@ public class VideoController extends AbstractGriffonController {
             model.categorySet.addAll(dbService.categoryDAO.findAll());
             getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.success.fetch"));
 
+            model.videoList.forEach(v -> setVideoDuration(v));
+
             //@todo add BiDirectionalBinding to remove this hack
             view.initForm();
         } catch (Exception e){
@@ -45,6 +53,38 @@ public class VideoController extends AbstractGriffonController {
         getApplication().getEventRouter().addEventListener(listeners());
     }
 
+    private void setVideoDuration(Video video){
+        if(video.getDuration().equals(Duration.UNKNOWN) == false){
+            return;
+        }
+        runOutsideUI(() -> {
+            File file = new File(video.getPath());
+
+            Media media = new Media(file.toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setOnReady(new Runnable() {
+                @Override
+                public void run() {
+                    video.setDuration(media.getDuration());
+                    try {
+                        dbService.videoDAO.create(video);
+                        getApplication().getEventRouter().publishEvent("videolist.refresh");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            mediaPlayer.setOnError(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("ERROR");
+                }
+            });
+        });
+
+    }
+
     public void clear(){
         runInsideUISync(() -> {
             model.clear();
@@ -52,7 +92,7 @@ public class VideoController extends AbstractGriffonController {
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void delete(Video video){
         try{
             dbService.videoDAO.delete(video);
@@ -63,11 +103,12 @@ public class VideoController extends AbstractGriffonController {
         }
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void edit(){
         if(model.selectedVideo == null){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.error"));
             model.selectedVideo = model.videoList.get(0);
-//            return;
         }
 
         createDisplay();
@@ -85,6 +126,8 @@ public class VideoController extends AbstractGriffonController {
         createMVCGroup("currentVideo", args);
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
     public void export(Video video){
         try {
             String filename = exportService.export(video);
@@ -95,6 +138,7 @@ public class VideoController extends AbstractGriffonController {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.export.error"));
         }
     }
+
 
     public void updateUser(TableColumn.CellEditEvent<Video, User> event) {
         try {
@@ -134,15 +178,21 @@ public class VideoController extends AbstractGriffonController {
         });
     }
 
+    private void refreshVideoList(){
+        try {
+            model.videoList.clear();
+            model.videoList.addAll(dbService.videoDAO.findAll());
+            model.videoList.forEach(v -> setVideoDuration(v));
+        } catch (Exception e) {
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
+        }
+    }
+
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("video.created", objects -> {
-            Video video = (Video) objects[0];
-            runInsideUISync(() -> {
-                model.videoList.add(video);
-            });
-        });
+        list.put("video.created", objects -> refreshVideoList());
+        list.put("videolist.refresh", objects -> view.refresh());
 
         list.put("point.created", objects -> {
             runInsideUISync(() -> {

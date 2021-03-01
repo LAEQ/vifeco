@@ -42,6 +42,7 @@ public class VideoView extends AbstractJavaFXGriffonView {
     @FXML private TableColumn<Video, Collection> collection;
     @FXML private TableColumn<Video, Number> total;
     @FXML private TableColumn<Video, Void> actions;
+    @FXML private TableColumn<Video, Void> delete;
 
     @FXML private TableColumn<CategoryCount, Icon> icon;
     @FXML private TableColumn<CategoryCount, String> category;
@@ -70,6 +71,7 @@ public class VideoView extends AbstractJavaFXGriffonView {
         duration.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDurationFormatted()));
         total.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getPoints().size()));
         actions.setCellFactory(addActions());
+        delete.setCellFactory(delete());
 
         videoTable.setItems(this.model.videoList);
         categoryTable.setItems(this.model.categoryCounts);
@@ -98,19 +100,16 @@ public class VideoView extends AbstractJavaFXGriffonView {
             final  TableCell<Video, Void> cell = new TableCell<Video, Void>(){
                 Button export = new Button(translate("btn.export"));
                 Button edit = new Button(translate("btn.details"));
-                Button delete = new Button(translate("btn.delete"));
 
                 Group btnGroup = new Group();
                 {
                     edit.setLayoutX(5);
                     export.setLayoutX(100);
-                    delete.setLayoutX(200);
 
                     edit.getStyleClass().addAll("btn", "btn-info", "btn-sm");
                     export.getStyleClass().addAll("btn", "btn-warning", "btn-sm");
-                    delete.getStyleClass().addAll("btn", "btn-danger", "btn-sm");
 
-                    btnGroup.getChildren().addAll(edit, export, delete);
+                    btnGroup.getChildren().addAll(edit, export);
 
                     edit.setOnAction(event -> {
                         controller.select(videoTable.getItems().get(getIndex()));
@@ -119,6 +118,34 @@ public class VideoView extends AbstractJavaFXGriffonView {
                     export.setOnAction(event -> {
                        controller.export(videoTable.getItems().get(getIndex()));
                     });
+                }
+
+                @Override
+                public void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(btnGroup);
+                    }
+                }
+            };
+
+            return cell;
+        };
+    }
+
+    private Callback<TableColumn<Video, Void>, TableCell<Video, Void>> delete() {
+        return param -> {
+            final  TableCell<Video, Void> cell = new TableCell<Video, Void>(){
+                Button delete = new Button(translate("btn.delete"));
+
+                Group btnGroup = new Group();
+                {
+                    delete.setLayoutX(5);
+                    delete.getStyleClass().addAll("btn", "btn-danger", "btn-sm");
+
+                    btnGroup.getChildren().addAll(delete);
 
                     delete.setOnAction(event -> {
                         controller.delete(videoTable.getItems().get(getIndex()));
@@ -141,7 +168,9 @@ public class VideoView extends AbstractJavaFXGriffonView {
     }
 
     public void refresh() {
-        videoTable.refresh();
+        runInsideUIAsync(() -> {
+            videoTable.refresh();
+        });
     }
 
     private String translate(String key){

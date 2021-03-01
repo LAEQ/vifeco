@@ -19,6 +19,7 @@
                        <TableColumn fx:id="collection" prefWidth="145.0" JavaFXUtils.i18nKey="org.laeq.video.column.collection" />
                        <TableColumn fx:id="total" prefWidth="75.0" JavaFXUtils.i18nKey="org.laeq.video.column.total" />
                        <TableColumn fx:id="actions" prefWidth="175.0" JavaFXUtils.i18nKey="org.laeq.video.column.actions" />
+                       <TableColumn fx:id="delete" prefWidth="175.0" JavaFXUtils.i18nKey="org.laeq.video.column.delete" />
                    </columns>
                 </TableView>
             </children>

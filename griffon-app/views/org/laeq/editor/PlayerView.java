@@ -42,6 +42,7 @@ import org.laeq.model.icon.IconSize;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -151,7 +152,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
             updateValues();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
         }
     }
 
