@@ -1,92 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import griffon.javafx.support.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.media.MediaView?>
-<SplitPane dividerPositions="0.7190184049079754" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-           minWidth="-Infinity" prefHeight="650.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="org.laeq.editor.PlayerController">
+<?import griffon.javafx.support.*?>
+
+<SplitPane dividerPositions="0.7190184049079754" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.editor.PlayerController">
 <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="680.0">
         <children>
-            <AnchorPane layoutX="34.0" layoutY="24.0" prefHeight="337.0" prefWidth="562.0" style="-fx-background-color: #dddddd;"
-                        AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
-                <Pane fx:id="playerPane" layoutX="14.0" layoutY="23.0"
-                      AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="10.0"
-                      AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="25.0">
+            <AnchorPane layoutX="34.0" layoutY="24.0" prefHeight="337.0" prefWidth="562.0" style="-fx-background-color: #dddddd;" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
+                <Pane fx:id="playerPane" layoutX="14.0" layoutY="23.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="25.0">
                     <MediaView fx:id="mediaView" fitHeight="${playerPane.height}" fitWidth="${playerPane.width}" layoutX="1.0" />
                     <Pane fx:id="iconPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: red;" />
                 </Pane>
             </AnchorPane>
             <!-- Player Buttons -->
-            <Button fx:id="playActionTarget" layoutX="14.0" layoutY="408.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="62.0"
-                    AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
-                    styleClass="btn, btn-success" text=" "/>
-            <Button fx:id="stopActionTarget" layoutX="112.0" layoutY="412.0" mnemonicParsing="false"
-                    AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0"
-                    styleClass="btn, btn-danger" text=" "/>
-            <Button layoutX="237.0" layoutY="612.0" mnemonicParsing="false" fx:id="controlsActionTarget"
-                    AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="190.0"
-                    styleClass="btn, btn-default" text=" "/>
-            <Button layoutX="656.0" layoutY="5.0" mnemonicParsing="false" fx:id="addActionTarget"
-                    AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="290.0"
-                    styleClass="btn, btn-info"  text=" "/>
+            <Button fx:id="playActionTarget" layoutX="14.0" layoutY="408.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="62.0" styleClass="btn, btn-success" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+            <Button fx:id="stopActionTarget" layoutX="112.0" layoutY="412.0" mnemonicParsing="false" styleClass="btn, btn-danger" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" />
+            <Button fx:id="controlsActionTarget" layoutX="237.0" layoutY="612.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="190.0" />
+            <Button fx:id="addActionTarget" layoutX="656.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-info" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="290.0" />
 
             <Slider fx:id="slider" layoutX="10.0" layoutY="390.0" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-            <Label fx:id="title" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="622.0"
-                   AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="5.0" />
-            <Label fx:id="duration" layoutX="615.0" layoutY="617.0" prefHeight="16.0" prefWidth="80.0" text="00:00:00"
-                   AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="10.0" />
-            <TextField fx:id="elapsed" alignment="BOTTOM_RIGHT" layoutX="429.0" layoutY="612.0" prefHeight="26.0" prefWidth="102.0"
-                       text="0:00:00" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="100.0" />
+            <Label fx:id="title" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="622.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="5.0" />
+            <Label fx:id="duration" layoutX="615.0" layoutY="617.0" prefHeight="16.0" prefWidth="80.0" text="00:00:00" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="10.0" />
+            <TextField fx:id="elapsed" alignment="BOTTOM_RIGHT" layoutX="429.0" layoutY="612.0" prefHeight="26.0" prefWidth="102.0" text="0:00:00" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="100.0" />
 
         </children>
     </AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="100.0">
         <children>
-            <Accordion fx:id="side" layoutX="-36.0" layoutY="105.0" prefHeight="448.0" prefWidth="225.0"
-                       AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                <panes>
-                    <TitledPane fx:id="summary" animated="false" JavaFXUtils.i18nKey="editor.summary.title">
-                        <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="595.0" prefWidth="221.0">
-                                <children>
-                                    <TableView fx:id="summaryTable" layoutX="-8.0" layoutY="42.0" prefHeight="200.0"
-                                               prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                        <columns>
-                                            <TableColumn fx:id="iconTS" prefWidth="75.0"  />
-                                            <TableColumn fx:id="nameTS" prefWidth="205.0" JavaFXUtils.i18nKey="editor.summary.col.name" />
-                                            <TableColumn fx:id="shortcutTS" prefWidth="75.0" JavaFXUtils.i18nKey="editor.summary.col.shortcut" />
-                                            <TableColumn fx:id="totalTS" prefWidth="75.0" JavaFXUtils.i18nKey="editor.summary.col.total" />
-                                        </columns>
-                                    </TableView>
-                                </children>
-                            </AnchorPane>
-                        </content>
-                    </TitledPane>
-                    <TitledPane fx:id="detail" animated="false" prefWidth="344.0" JavaFXUtils.i18nKey="editor.timeline.title">
-                        <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                <children>
-                                    <TableView fx:id="timelineTable" layoutX="-1.5999999999999996" layoutY="1.4000000000000004"
-                                               prefHeight="394.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0"
-                                               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                        <columns>
-                                            <TableColumn fx:id="iconTD" prefWidth="105.0" JavaFXUtils.i18nKey="editor.timeline.col.type"/>
-                                            <TableColumn fx:id="startTD" prefWidth="105.0" JavaFXUtils.i18nKey="editor.timeline.col.time"/>
-                                            <TableColumn fx:id="xTD" prefWidth="75.0" text="x" />
-                                            <TableColumn fx:id="yTD" prefWidth="75.0" text="y" />
-                                            <TableColumn fx:id="delete" prefWidth="20" text="" />
-                                        </columns>
-                                    </TableView>
-                                </children>
-                            </AnchorPane>
-                        </content>
-                    </TitledPane>
-                </panes>
-            </Accordion>
+            <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                     <children>
+                              <TableView fx:id="summaryTable" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                  <columns>
+                                      <TableColumn fx:id="iconTS" prefWidth="75.0" />
+                                      <TableColumn fx:id="shortcutTS" prefWidth="75.0" JavaFXUtils.i18nKey="editor.summary.col.shortcut" />
+                                      <TableColumn fx:id="totalTS" prefWidth="75.0" JavaFXUtils.i18nKey="editor.summary.col.total" />
+                                      <TableColumn fx:id="nameTS" prefWidth="205.0" JavaFXUtils.i18nKey="editor.summary.col.name" />
+                                  </columns>
+                              </TableView>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                     <children>
+                              <TableView fx:id="timelineTable" prefHeight="394.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                  <columns>
+                                      <TableColumn fx:id="iconTD" prefWidth="105.0" JavaFXUtils.i18nKey="editor.timeline.col.type" />
+                                      <TableColumn fx:id="startTD" prefWidth="105.0" JavaFXUtils.i18nKey="editor.timeline.col.time" />
+                                      <TableColumn prefWidth="75.0" text="x" fx:id="xTD" />
+                                      <TableColumn fx:id="yTD" prefWidth="75.0" text="y" />
+                                      <TableColumn fx:id="delete" prefWidth="20" text="" />
+                                  </columns>
+                              </TableView>
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
         </children>
     </AnchorPane>
 </items>

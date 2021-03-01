@@ -61,10 +61,10 @@ apply plugin: 'com.github.kt3k.coveralls'
 
 dependencies {
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
-    compile "org.openjfx:javafx-base:15:linux"
-    compile "org.openjfx:javafx-graphics:15:linux"
-    compile "org.openjfx:javafx-controls:15:linux"
-    compile "org.openjfx:javafx-fxml:15:linux"
+    compile "org.openjfx:javafx-base:11:win"
+    compile "org.openjfx:javafx-graphics:11:win"
+    compile "org.openjfx:javafx-controls:11:win"
+    compile "org.openjfx:javafx-fxml:11:win"
     compile 'javax.annotation:javax.annotation-api:1.3.2'
 
     compile 'eu.lestard:advanced-bindings:0.4.0'
