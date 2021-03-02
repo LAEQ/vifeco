@@ -16,17 +16,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Category;
-import org.laeq.model.Icon;
 import org.laeq.model.Video;
-import org.laeq.model.icon.IconSVG;
 import org.laeq.model.statistic.MatchedPoint;
 import org.laeq.model.statistic.Tarjan;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @ArtifactProviderFor(GriffonView.class)
@@ -162,7 +158,7 @@ public class StatisticView extends AbstractJavaFXGriffonView {
                     btnGroup.getChildren().addAll(view);
                     view.setOnAction(event -> {
                         MatchedPoint mp = tableAcc.getItems().get(getIndex());
-                        controller.showMatchedPoinst(mp);
+                        controller.displayMatchedPoint(mp);
                     });
                 }
 

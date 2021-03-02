@@ -40,6 +40,9 @@ StatisticController extends AbstractGriffonController {
 
             model.tarjans.addAll(service.getTarjanDiff());
 
+            MatchedPoint matchedPoint = service.getTarjanDiff().get(0).matchedPoints.get(0);
+            displayMatchedPoint(matchedPoint);
+
             getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
         } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
@@ -91,8 +94,12 @@ StatisticController extends AbstractGriffonController {
         return list;
     }
 
-    public void showMatchedPoinst(MatchedPoint mp) {
-
-
+    public void displayMatchedPoint(MatchedPoint mp) {
+        Object statistic_display = getApplication().getWindowManager().findWindow("statistic_display");
+        if(statistic_display == null){
+            Map<String, Object> args = new HashMap<>();
+            args.put("matchedPoint", mp);
+            createMVCGroup("statistic_display", args);
+        }
     }
 }

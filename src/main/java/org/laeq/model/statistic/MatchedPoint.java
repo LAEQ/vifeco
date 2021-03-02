@@ -2,10 +2,12 @@ package org.laeq.model.statistic;
 
 import javafx.util.Duration;
 import org.laeq.model.Point;
+import org.laeq.model.Video;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -77,5 +79,22 @@ public class MatchedPoint {
      */
     public Point getPoint() {
         return pt1 != null ? pt1 : pt2;
+    }
+
+    public Video getVideo() {
+        return pt1 != null ? pt1.getVideo() : pt2.getVideo();
+    }
+
+    public List<Point> getPoints() {
+        List<Point> points = new ArrayList<>();
+
+        if(matched()){
+            points.add(pt1);
+            points.add(pt2);
+        }else{
+            points.add(getPoint());
+        }
+
+        return points;
     }
 }
