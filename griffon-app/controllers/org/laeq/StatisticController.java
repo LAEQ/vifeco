@@ -8,6 +8,8 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Video;
+import org.laeq.model.statistic.MatchedPoint;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -87,5 +89,10 @@ StatisticController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         return list;
+    }
+
+    public void showMatchedPoinst(MatchedPoint mp) {
+
+
     }
 }

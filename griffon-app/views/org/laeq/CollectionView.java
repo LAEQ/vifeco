@@ -59,26 +59,6 @@ public class CollectionView extends AbstractJavaFXGriffonView {
         collectionTable.setItems(this.model.collections);
 
         model.name.bindBidirectional(nameField.textProperty());
-
-//        categories.setCellFactory(new Callback<TableColumn<Collection, String>, TableCell<Collection,String>>() {
-//            @Override
-//            public TableCell<Collection, String> call( TableColumn<Collection, String> param) {
-//                final TableCell<Collection, String> cell = new TableCell<Collection, String>() {
-//                    private Text text;
-//                    @Override
-//                    public void updateItem(String item, boolean empty) {
-//                        super.updateItem(item, empty);
-//                        if (!isEmpty()) {
-//                            text = new Text(item);
-//                            text.setLineSpacing(5.0);
-//                            text.setWrappingWidth(400); // Setting the wrapping width to the Text
-//                            setGraphic(text);
-//                        }
-//                    }
-//                };
-//                return cell;
-//            }
-//        });
     }
 
     public void initForm(){
@@ -117,13 +97,11 @@ public class CollectionView extends AbstractJavaFXGriffonView {
 
                     btnGroup.getChildren().addAll(edit, delete);
                     Icon icon = new Icon(IconSVG.edit, Color.gray_dark);
-//                    edit.setGraphic(icon);
                     edit.getStyleClass().addAll("btn", "btn-sm", "btn-info");
                     edit.setOnMouseClicked(event -> {
                         model.setSelectedCollection(collectionTable.getItems().get(getIndex()));
                     });
 
-//                    delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));
                     delete.getStyleClass().addAll("btn", "btn-sm", "btn-danger");
                     delete.setOnMouseClicked(event -> {
                         controller.delete(collectionTable.getItems().get(getIndex()));

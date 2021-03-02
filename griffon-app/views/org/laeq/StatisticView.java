@@ -8,18 +8,25 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.laeq.model.Category;
+import org.laeq.model.Icon;
 import org.laeq.model.Video;
+import org.laeq.model.icon.IconSVG;
 import org.laeq.model.statistic.MatchedPoint;
 import org.laeq.model.statistic.Tarjan;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @ArtifactProviderFor(GriffonView.class)
@@ -61,6 +68,7 @@ public class StatisticView extends AbstractJavaFXGriffonView {
     @FXML private TableView<MatchedPoint> tableAcc;
     @FXML private TableColumn<MatchedPoint, String> tableAccPt1;
     @FXML private TableColumn<MatchedPoint, String> tableAccPt2;
+    @FXML private TableColumn<MatchedPoint, Void> tableAccAction;
 
     TableColumn<Tarjan, Number> v1Total = new TableColumn<>();
     TableColumn<Tarjan, Number> v1Lonely = new TableColumn<>();
@@ -138,6 +146,39 @@ public class StatisticView extends AbstractJavaFXGriffonView {
         model.duration.bindBidirectional(durationLabel.textProperty());
 
         accordion.setExpandedPane(chartTitled);
+
+        tableAccAction.setCellFactory(addActions());
+    }
+
+    private Callback<TableColumn<MatchedPoint, Void>, TableCell<MatchedPoint, Void>> addActions() {
+        return param -> {
+            final  TableCell<MatchedPoint, Void> cell = new TableCell<MatchedPoint, Void>(){
+                Button view = new Button("view");
+
+                Group btnGroup = new Group();
+                {
+                    view.getStyleClass().addAll("btn", "btn-sm", "btn-info");
+                    view.setLayoutX(5);
+                    btnGroup.getChildren().addAll(view);
+                    view.setOnAction(event -> {
+                        MatchedPoint mp = tableAcc.getItems().get(getIndex());
+                        controller.showMatchedPoinst(mp);
+                    });
+                }
+
+                @Override
+                public void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(btnGroup);
+                    }
+                }
+            };
+
+            return cell;
+        };
     }
 
     private void displayChart(Tarjan tarjan){
@@ -176,6 +217,14 @@ public class StatisticView extends AbstractJavaFXGriffonView {
 
         chartAccordion.setContent(sbc);
         tableAcc.getItems().clear();
-        tableAcc.getItems().addAll(FXCollections.observableArrayList(tarjan.matchedPoints));
+
+        List<MatchedPoint> sorted = tarjan.matchedPoints.stream().sorted(new Comparator<MatchedPoint>() {
+            @Override
+            public int compare(MatchedPoint o1, MatchedPoint o2) {
+                return (int) o1.getStarts().get(0).subtract(o2.getStarts().get(0)).toMillis();
+            }
+        }).collect(Collectors.toList());
+
+        tableAcc.getItems().addAll(FXCollections.observableArrayList(sorted));
     }
 }

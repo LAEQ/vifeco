@@ -34,7 +34,7 @@
       </AnchorPane>
       <AnchorPane fx:id="resultPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="536.0">
          <children>
-            <SplitPane dividerPositions="0.08, 0.4" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <SplitPane dividerPositions="0.17, 0.32" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
               <items>
                   <AnchorPane maxHeight="139.0" prefHeight="139.0" prefWidth="674.0">
                      <children>
@@ -87,6 +87,7 @@
                                       <columns>
                                           <TableColumn fx:id="tableAccPt1" prefWidth="205.0" text="Video 1" />
                                           <TableColumn fx:id="tableAccPt2" prefWidth="205.0" text="Video 2" />
+                                          <TableColumn fx:id="tableAccAction" prefWidth="205.0" JavaFXUtils.i18nKey="statistic.action" />
                                       </columns>
                                   </TableView>
                               </content>
