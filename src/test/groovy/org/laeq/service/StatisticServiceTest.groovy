@@ -194,7 +194,7 @@ class StatisticServiceTest extends Specification {
         service.execute([video1, video2], 1)
         def result = service.getTarjanDiff()
         def matchedPoints = result[0].getMatchedPoints();
-        def summary = result[0].getSummary()
+        def summary = result[0].getSummary();
 
         then:
         result.size() == 1

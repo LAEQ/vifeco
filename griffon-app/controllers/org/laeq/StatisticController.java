@@ -24,11 +24,19 @@ StatisticController extends AbstractGriffonController {
 
     @Inject private DatabaseService dbService;
 
-
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         try{
-            model.videos.addAll(dbService.videoDAO.findAll());
+            List<Video> list = dbService.videoDAO.findAll();
+            model.videos.addAll(list);
+
+            Video video1 = list.get(list.size() - 1);
+            Video video2 = list.get(list.size() - 2);
+
+            StatisticService service = new StatisticService();
+            service.execute(Arrays.asList(video1, video2), 10);
+
+            model.tarjans.addAll(service.getTarjanDiff());
 
             getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
         } catch (Exception e){
@@ -36,22 +44,12 @@ StatisticController extends AbstractGriffonController {
         }
 
         getApplication().getEventRouter().addEventListener(listeners());
-
-        StatisticService statisticService = new StatisticService();
-        try {
-            statisticService.execute(dbService.videoDAO.findAll(), 5);
-            runInsideUISync(() -> {
-                view.display(statisticService);
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void compare(){
+        model.reset();
         List<Video> videos = model.videos.stream().filter(v -> v.getSelected()).collect(Collectors.toList());
 
         if(videos.size() != 2 || videos.get(0).getCollection().equals(videos.get(1).getCollection()) == false){
@@ -60,12 +58,24 @@ StatisticController extends AbstractGriffonController {
         }
 
         try {
-            StatisticService statService = new StatisticService();
-            statService.execute(videos, model.durationStep.get());
+            StatisticService service = new StatisticService();
+
+            service.execute(videos, model.durationStep.get());
 
             runInsideUISync(() -> {
-                view.display(statService);
+                model.tarjans.addAll(service.getTarjanDiff());
+                model.videoName.set(service.getVideo1().pathToName());
+                model.user1.set(service.getVideo1().getUser().toString());
+                model.user2.set(service.getVideo2().getUser().toString());
+                model.collection.set(service.getVideo1().getCollection().toString());
+                model.duration.set(service.getVideo1().getDurationFormatted());
             });
+
+            getApplication().getEventRouter()
+                    .publishEvent("status.info.parameterized",
+                    Arrays.asList("statistic.video.selection.success",
+                            service.getVideo2().pathToName(),
+                            model.durationStep.toString()));
 
         }catch (Exception e){
             e.printStackTrace();
@@ -75,7 +85,6 @@ StatisticController extends AbstractGriffonController {
 
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
-
 
         return list;
     }

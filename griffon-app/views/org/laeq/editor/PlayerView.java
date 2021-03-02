@@ -31,6 +31,7 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.kordamp.bootstrapfx.BootstrapFX;
 import org.laeq.model.CategoryCount;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
@@ -171,7 +172,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private Scene init() {
         Scene scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
-        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
+        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 
         Node node = loadFromFXML();
 
@@ -203,8 +204,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         timelineTable.getSelectionModel().selectedItemProperty().addListener(rowlistener());
 
-//        iconTD.setComparator(Comparator.comparing(Icon::getCategory));
-
         return scene;
     }
 
@@ -212,7 +211,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private void updateValues() {
         Platform.runLater(() -> {
             displayPoints();
-//            slider.setDisable(editor.getDuration().isUnknown());
             if (!slider.isDisabled() && video.getDuration().greaterThanOrEqualTo(Duration.ZERO) && !slider.isValueChanging()) {
                 slider.setValue(mediaPlayer.getCurrentTime().divide(video.getDuration()).toMillis() * 100.0);
             }
@@ -236,7 +234,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         Duration startDuration = currentTime.subtract(model.controls.display());
 
         FilteredList<Point> points = model.points.filtered(point ->
-                point.getStart().greaterThanOrEqualTo(startDuration) && point.getStart().lessThanOrEqualTo(currentTime)
+            point.getStart().greaterThanOrEqualTo(startDuration) && point.getStart().lessThanOrEqualTo(currentTime)
         );
 
         points.forEach(p -> {

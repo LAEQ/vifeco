@@ -116,7 +116,6 @@ public class StatisticService {
 
         timeline.display(category);
 
-
         return timeline;
     }
 
@@ -135,7 +134,7 @@ public class StatisticService {
     public Video getVideo1() {
         return video1;
     }
-    public Object getVideo2() {
+    public Video getVideo2() {
         return video2;
     }
 }

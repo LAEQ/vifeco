@@ -2,7 +2,6 @@ package org.laeq;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
-import griffon.javafx.support.JavaFXUtils;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -10,25 +9,18 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Category;
 import org.laeq.model.Video;
-import org.laeq.model.statistic.Graph;
+import org.laeq.model.statistic.MatchedPoint;
 import org.laeq.model.statistic.Tarjan;
-import org.laeq.statistic.StatisticTimeline;
-import org.laeq.template.MiddlePaneView;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 @ArtifactProviderFor(GriffonView.class)
 public class StatisticView extends AbstractJavaFXGriffonView {
@@ -44,6 +36,11 @@ public class StatisticView extends AbstractJavaFXGriffonView {
     @FXML private TableColumn<Video, String> collection;
     @FXML private TableColumn<Video, Number> total;
 
+    @FXML private Label videoNameLabel;
+    @FXML private Label user1Label;
+    @FXML private Label user2Label;
+    @FXML private Label collectionLabel;
+    @FXML private Label durationLabel;
 
     @FXML private Button compareActionTarget;
     @FXML private AnchorPane visualTab;
@@ -55,6 +52,16 @@ public class StatisticView extends AbstractJavaFXGriffonView {
     @FXML private TableColumn<Tarjan, String> video1Col;
     @FXML private TableColumn<Tarjan, String> video2Col;
 
+    @FXML private Accordion accordion;
+    @FXML private TitledPane chartTitled;
+    @FXML private ScrollPane chartAccordion;
+    @FXML private Pane tableAccordion;
+    @FXML private Pane timelineAccordion;
+
+    @FXML private TableView<MatchedPoint> tableAcc;
+    @FXML private TableColumn<MatchedPoint, String> tableAccPt1;
+    @FXML private TableColumn<MatchedPoint, String> tableAccPt2;
+
     TableColumn<Tarjan, Number> v1Total = new TableColumn<>();
     TableColumn<Tarjan, Number> v1Lonely = new TableColumn<>();
     TableColumn<Tarjan, String> v1Percent = new TableColumn<>();
@@ -63,7 +70,6 @@ public class StatisticView extends AbstractJavaFXGriffonView {
     TableColumn<Tarjan, Number> v2Lonely = new TableColumn<>();
     TableColumn<Tarjan, String> v2Percent = new TableColumn<>();
 
-
     @Override
     public void initUI() {
         Node node = loadFromFXML();
@@ -71,13 +77,12 @@ public class StatisticView extends AbstractJavaFXGriffonView {
         connectActions(node, controller);
         connectMessageSource(node);
 
-        v1Total.setText(getApplication().getMessageSource().getMessage("statistic.column.total"));
-        v2Total.setText(getApplication().getMessageSource().getMessage("statistic.column.total"));
+        v1Total.setText(getApplication().getMessageSource().getMessage("statistic.column.matched"));
+        v2Total.setText(getApplication().getMessageSource().getMessage("statistic.column.matched"));
         v1Lonely.setText(getApplication().getMessageSource().getMessage("statistic.column.unmatched"));
         v2Lonely.setText(getApplication().getMessageSource().getMessage("statistic.column.unmatched"));
         v1Percent.setText(getApplication().getMessageSource().getMessage("statistic.column.percent"));
         v2Percent.setText(getApplication().getMessageSource().getMessage("statistic.column.percent"));
-
 
         category.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getName()));
         video1Col.getColumns().addAll(v1Total, v1Lonely, v1Percent);
@@ -88,12 +93,14 @@ public class StatisticView extends AbstractJavaFXGriffonView {
         v1Percent.setCellValueFactory(cellData-> new ReadOnlyStringWrapper(String.format("%.2f", cellData.getValue().getSummaryVideo1().getPercent())));
 
         v2Total.setCellValueFactory(cellData-> new ReadOnlyIntegerWrapper(cellData.getValue().getSummaryVideo2().getMatched()));
-        v2Lonely.setCellValueFactory(cellData-> new ReadOnlyIntegerWrapper(cellData.getValue().getSummaryVideo2().getMatched()));
+        v2Lonely.setCellValueFactory(cellData-> new ReadOnlyIntegerWrapper(cellData.getValue().getSummaryVideo2().getLonely()));
         v2Percent.setCellValueFactory(cellData-> new ReadOnlyStringWrapper(String.format("%.2f", cellData.getValue().getSummaryVideo2().getPercent())));
+
+        tableAccPt1.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPt1Formatted()));
+        tableAccPt2.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPt2Formatted()));
 
         init();
     }
-
 
     public void init(){
         select.setCellValueFactory(c -> {
@@ -111,7 +118,6 @@ public class StatisticView extends AbstractJavaFXGriffonView {
         collection.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getCollection().getName()));
         total.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getPoints().size()));
 
-
         videoTable.setItems(this.model.videos);
         videoTable.setEditable(true);
 
@@ -119,39 +125,57 @@ public class StatisticView extends AbstractJavaFXGriffonView {
         durationSpinner.getValueFactory().setValue(model.durationStep.getValue());
         durationSpinner.getValueFactory().valueProperty().bindBidirectional(model.durationStep.asObject());
 
+        table.setItems(model.tarjans);
+
+        table.setOnMouseClicked(evt ->{
+            displayChart(table.getSelectionModel().getSelectedItem());
+        });
+
+        model.videoName.bindBidirectional(videoNameLabel.textProperty());
+        model.user1.bindBidirectional(user1Label.textProperty());
+        model.user2.bindBidirectional(user2Label.textProperty());
+        model.collection.bindBidirectional(collectionLabel.textProperty());
+        model.duration.bindBidirectional(durationLabel.textProperty());
+
+        accordion.setExpandedPane(chartTitled);
     }
 
-    public void display(StatisticService statService){
-        table.setItems(FXCollections.observableArrayList(statService.getTarjanDiff()));
-    }
+    private void displayChart(Tarjan tarjan){
+        chartAccordion.setContent(null);
 
-    private String rounder(double value){
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(0, RoundingMode.HALF_EVEN);
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
+        StackedBarChart<String, Number> sbc = new StackedBarChart<String, Number>(xAxis, yAxis);
 
-        return bd.toString();
-    }
-    private List<ColumnConstraints> getColumnConstraints(){
-        List<ColumnConstraints> colConstList = new ArrayList<>();
+        Map<String, Integer> serie_1 = tarjan.getSerieVideo1(60);
+        XYChart.Series<String, Number> chartSerie_1 = new XYChart.Series<String, Number>();
+        chartSerie_1.setName("Video 1");
+        serie_1.forEach((s, total) -> {
+            chartSerie_1.getData().add(new XYChart.Data<>(s, total));
+        });
 
-        ColumnConstraints colConst1 = new ColumnConstraints();
-        colConst1.setMinWidth(200);
-        colConst1.setPrefWidth(250);
-        colConst1.setMaxWidth(300);
-        colConstList.add(colConst1);
+        Map<String, Integer> serie_2 = tarjan.getSerieVideo2(60);
+        XYChart.Series<String, Number> chartSerie_2 = new XYChart.Series<String, Number>();
+        chartSerie_2.setName("Video 2");
+        serie_2.forEach((s, total) -> {
+            chartSerie_2.getData().add(new XYChart.Data<>(s, total));
+        });
 
-        ColumnConstraints colConst2 = new ColumnConstraints();
-        colConst2.setMinWidth(50);
-        colConst2.setPrefWidth(100);
-        colConst2.setMaxWidth(200);
+        Map<String, Integer> serie_3 = tarjan.getSerieMatched(60);
+        XYChart.Series<String, Number> chartSerie_3 = new XYChart.Series<String, Number>();
+        chartSerie_3.setName("Matched");
+        serie_3.forEach((s, total) -> {
+            chartSerie_3.getData().add(new XYChart.Data<>(s, total));
+        });
 
-        colConstList.add(colConst2);
-        colConstList.add(colConst2);
-        colConstList.add(colConst2);
-        colConstList.add(colConst2);
-        colConstList.add(colConst2);
-        colConstList.add(colConst2);
+        xAxis.setLabel("Seconds");
+        xAxis.setCategories(FXCollections.observableArrayList(serie_1.keySet()));
 
-        return colConstList;
+        sbc.setMinWidth(serie_1.keySet().size() * 20);
+        sbc.getData().addAll(chartSerie_1, chartSerie_2, chartSerie_3);
+
+        chartAccordion.setContent(sbc);
+        tableAcc.getItems().clear();
+        tableAcc.getItems().addAll(FXCollections.observableArrayList(tarjan.matchedPoints));
     }
 }

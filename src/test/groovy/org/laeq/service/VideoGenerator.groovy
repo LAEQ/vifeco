@@ -13,7 +13,7 @@ class VideoGenerator {
         })
 
         User user = new User("test", "test", "test@test.com")
-        Video video = new Video("path", Duration.millis(10000), collection, user)
+        Video video = new Video("path", Duration.millis(60000), collection, user)
         video.id = UUID.randomUUID()
 
         return video

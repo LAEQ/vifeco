@@ -45,7 +45,6 @@ public class MenuController extends AbstractGriffonController {
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listeners());
         preferencesService = new PreferencesService();
-        System.out.println(preferencesService);
     }
 
     @ControllerAction
