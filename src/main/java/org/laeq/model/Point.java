@@ -144,10 +144,6 @@ public class Point implements Comparable<Point> {
         this.video = video;
     }
 
-    public String getFloorStart(){
-        return String.format("%d", (int)Math.floor(this.start.toMinutes()));
-    }
-
     @JsonIgnore
     public String getStartFormatted(){
         return DurationFormatUtils.formatDuration((long)start.toMillis(), "H:m:s");
