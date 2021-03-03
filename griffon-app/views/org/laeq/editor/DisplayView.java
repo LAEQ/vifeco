@@ -70,6 +70,10 @@ public class DisplayView extends AbstractJavaFXGriffonView {
             mediaView.setMediaPlayer(mediaPlayer);
             volumeActionTarget.setText("");
 
+            mediaPlayer.setOnReady(() -> {
+                controller.isReady();
+            });
+
             this.volumeOff();
         } catch (Exception e) {
 
