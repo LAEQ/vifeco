@@ -29,28 +29,38 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private DisplayController controller;
     @MVCMember @Nonnull private DisplayModel model;
     @MVCMember @Nonnull File file;
+    @MVCMember @Nonnull Duration currentTime;
 
     private MediaPlayer mediaPlayer;
     @FXML private Pane playerPane;
     @FXML private MediaView mediaView;
     @FXML private Button volumeActionTarget;
 
+    public Stage stage;
+
     private Icon volumeOn = new Icon(IconSVG.volumeOn, org.laeq.model.icon.Color.white);
     private Icon volumeOff = new Icon(IconSVG.volumeOff, org.laeq.model.icon.Color.white);
 
     @Override
     public void initUI() {
-        Stage stage = (Stage) getApplication()
-            .createApplicationContainer(Collections.<String,Object>emptyMap());
+        stage = (Stage) getApplication().createApplicationContainer(Collections.<String,Object>emptyMap());
         stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
         stage.setScene(init());
         stage.sizeToScene();
         stage.setAlwaysOnTop(true);
-        stage.setOnCloseRequest(event -> mediaPlayer.stop());
+        initPlayer();
 
         getApplication().getWindowManager().attach("display", stage);
         getApplication().getWindowManager().show("display");
-        initPlayer();
+
+        stage.setOnCloseRequest(event -> {
+            try {
+                mediaPlayer.stop();
+                getApplication().getMvcGroupManager().findGroup("display").destroy();
+            }catch (Exception e){
+
+            }
+        });
     }
 
     private void initPlayer(){

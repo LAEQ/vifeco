@@ -16,6 +16,7 @@ public class VideoModel extends AbstractGriffonModel {
     public String currentVideo;
     public ObservableList<Video> videoList = FXCollections.observableArrayList();
     public ObservableList<CategoryCount> categoryCounts = FXCollections.observableArrayList();
+    public List<String> mvcIds = new ArrayList<>();
 
     // Form Section
     public Video selectedVideo;

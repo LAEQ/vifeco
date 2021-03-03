@@ -27,6 +27,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -92,12 +93,25 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         stage.sizeToScene();
         stage.setAlwaysOnTop(true);
 
+        getApplication().getWindowManager().attach("editor", stage);
+        getApplication().getWindowManager().show("editor");
+
         stage.setOnCloseRequest(event -> {
-            mediaPlayer.stop();
+            runInsideUISync(() -> {
+                mediaPlayer.stop();
+
+                getApplication().getMvcGroupManager().findGroup("editor").destroy();
+
+                try{
+                    Stage display = (Stage) getApplication().getWindowManager().findWindow("display");
+                    display.close();
+                    getApplication().getMvcGroupManager().findGroup("display").destroy();
+                }catch (Exception e){
+
+                }
+            });
         });
 
-        getApplication().getWindowManager().attach("player", stage);
-        getApplication().getWindowManager().show("player");
 
         Icon icon = new Icon(IconSVG.video_plus, org.laeq.model.icon.Color.white);
         addActionTarget.setGraphic(icon);

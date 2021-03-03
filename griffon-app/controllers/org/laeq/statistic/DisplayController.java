@@ -25,14 +25,17 @@ public class DisplayController extends AbstractGriffonController {
     @Override
     public void mvcGroupDestroy(){
         System.out.println("destroying player");
-//        getApplication().getWindowManager().detach("statistic_display");
-//        getApplication().getMvcGroupManager().getGroups().get("statistic_display").destroy();
     }
 
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-
+        list.put("statistic.mapped_point.display", objects ->{
+            MatchedPoint mp = (MatchedPoint) objects[0];
+            runInsideUISync(() -> {
+                view.displayPoints(mp);
+            });
+        });
 
 
         return list;

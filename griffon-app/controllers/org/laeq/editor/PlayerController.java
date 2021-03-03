@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @ArtifactProviderFor(GriffonController.class)
 public class PlayerController extends AbstractGriffonController {
@@ -57,7 +58,7 @@ public class PlayerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        System.out.println("destroying player");
+        System.out.println("Destroy editor player controller");
     }
 
     @ControllerAction
@@ -97,6 +98,14 @@ public class PlayerController extends AbstractGriffonController {
     public void add() {
         view.pause();
 
+        try {
+            Stage window = (Stage) getApplication().getWindowManager().findWindow(model.display);
+            window.close();
+            getApplication().getMvcGroupManager().findGroup(model.display).destroy();
+        }catch (Exception e){
+
+        }
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(
@@ -111,14 +120,14 @@ public class PlayerController extends AbstractGriffonController {
         if (selectedFile != null) {
             Map<String, Object> args = new HashMap<>();
             args.put("file", selectedFile);
-            createMVCGroup("display", args);
+            args.put("currentTime", view.getCurrentTime());
 
+            createMVCGroup("display", args);
             getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("video.create.start"));
         } else {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
         }
     }
-
 
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();

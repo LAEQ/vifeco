@@ -9,13 +9,16 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.laeq.Launcher;
 import org.laeq.model.Category;
 import org.laeq.model.CategoryCount;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -30,6 +33,8 @@ public class PlayerModel extends AbstractGriffonModel {
     public SimpleDoubleProperty height = new SimpleDoubleProperty(1);
     public Boolean enabled = Boolean.FALSE;
     private Map<String, Category> shortcutMap= new HashMap();
+
+    public String display = null;
 
     public double[] mousePosition = new double[]{0,0};
 

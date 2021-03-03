@@ -12,6 +12,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -20,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
@@ -44,10 +47,11 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     @FXML private Pane playerPane;
     @FXML private MediaView mediaView;
     @FXML private Pane iconPane;
+    @FXML private Label totalDuration;
+    @FXML private TextField currentDuration;
 
     public SimpleDoubleProperty width = new SimpleDoubleProperty(1);
     public SimpleDoubleProperty height = new SimpleDoubleProperty(1);
-
 
     @Override
     public void initUI() {
@@ -62,12 +66,9 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().show("statistic_display");
         initPlayer();
 
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                getApplication().getWindowManager().detach("statistic_display");
-                getApplication().getMvcGroupManager().getGroups().get("statistic_display").destroy();
-            }
+        stage.setOnCloseRequest(event -> {
+            getApplication().getWindowManager().detach("statistic_display");
+            getApplication().getMvcGroupManager().getGroups().get("statistic_display").destroy();
         });
     }
 
@@ -89,7 +90,8 @@ public class DisplayView extends AbstractJavaFXGriffonView {
             });
 
             mediaPlayer.setOnReady(() -> {
-                displayPoints();
+                displayPoints(matchedPoint);
+                totalDuration.setText(formatDuration(video.getDuration()));
             });
 
         } catch (Exception e) {
@@ -97,16 +99,20 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         }
     }
 
-    private void displayPoints() {
+    public void displayPoints(MatchedPoint mp) {
         iconPane.getChildren().clear();
 
-        Duration start = matchedPoint.getStarts().get(0);
-
+        Duration start = mp.getStarts().get(0);
         mediaPlayer.seek(start);
+        currentDuration.setText(formatDuration(start));
 
-        matchedPoint.getPoints().forEach(p -> {
+        mp.getPoints().forEach(p -> {
             iconPane.getChildren().add(getIconPoint(p));
         });
+    }
+
+    public String formatDuration(Duration duration){
+        return DurationFormatUtils.formatDuration((long)duration.toMillis(), "H:m:s");
     }
 
     private IconPointColorized getIconPoint(Point point){
@@ -132,13 +138,14 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         } else {
             ((Group) scene.getRoot()).getChildren().addAll(node);
         }
-//        connectActions(node, controller);
-//        connectMessageSource(node);
+
+        connectActions(node, controller);
+        connectMessageSource(node);
 
         return scene;
     }
 
-//    public void seek(Duration currentTime) {
-//        mediaPlayer.seek(currentTime);
-//    }
+    public void seek(Duration currentTime) {
+        mediaPlayer.seek(currentTime);
+    }
 }

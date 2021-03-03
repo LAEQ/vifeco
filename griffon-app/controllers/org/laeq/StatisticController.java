@@ -6,6 +6,8 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Video;
 import org.laeq.model.statistic.MatchedPoint;
@@ -54,7 +56,9 @@ StatisticController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void compare(){
+        closeStatisticDisplay();
         model.reset();
+
         List<Video> videos = model.videos.stream().filter(v -> v.getSelected()).collect(Collectors.toList());
 
         if(videos.size() != 2 || videos.get(0).getCollection().equals(videos.get(1).getCollection()) == false){
@@ -64,7 +68,7 @@ StatisticController extends AbstractGriffonController {
 
         try {
             StatisticService service = new StatisticService();
-
+            System.out.println(model.durationStep.get());
             service.execute(videos, model.durationStep.get());
 
             runInsideUISync(() -> {
@@ -88,6 +92,17 @@ StatisticController extends AbstractGriffonController {
         }
     }
 
+    private void closeStatisticDisplay(){
+        try{
+            Stage statistic_display = (Stage) getApplication().getWindowManager().findWindow("statistic_display");
+            getApplication().getWindowManager().detach("statistic_display");
+            statistic_display.close();
+            getApplication().getMvcGroupManager().findGroup("statistic_display").destroy();
+        } catch (Exception e){
+
+        }
+    }
+
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
@@ -100,6 +115,8 @@ StatisticController extends AbstractGriffonController {
             Map<String, Object> args = new HashMap<>();
             args.put("matchedPoint", mp);
             createMVCGroup("statistic_display", args);
+        } else {
+            getApplication().getEventRouter().publishEventOutsideUI("statistic.mapped_point.display", Arrays.asList(mp));
         }
     }
 }
