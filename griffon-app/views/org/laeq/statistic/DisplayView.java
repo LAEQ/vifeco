@@ -4,6 +4,8 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,6 +26,7 @@ import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.hibernate.validator.internal.util.logging.formatter.DurationFormatter;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
@@ -34,8 +37,11 @@ import org.laeq.model.statistic.MatchedPoint;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @ArtifactProviderFor(GriffonView.class)
 public class DisplayView extends AbstractJavaFXGriffonView {
@@ -97,6 +103,25 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
         }
+
+        currentDuration.textProperty().addListener((observable, oldValue, newValue) -> {
+            Pattern pattern = Pattern.compile("[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}");
+            Matcher matcher = pattern.matcher(newValue);
+            String[] split = newValue.split(":");
+            System.out.println(split);
+
+            if(matcher.find()){
+                Double hours = Double.parseDouble(split[0]);
+                Double minutes = Double.parseDouble(split[1]);
+                Double seconds = Double.parseDouble(split[2]);
+
+                Duration seekDuration = Duration.hours(hours).add(Duration.minutes(minutes)).add(Duration.seconds(seconds));
+                System.out.println(seekDuration);
+                mediaPlayer.seek(seekDuration);
+            } else {
+                System.out.println("not match");
+            }
+        });
     }
 
     public void displayPoints(MatchedPoint mp) {

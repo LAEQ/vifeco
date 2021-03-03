@@ -63,4 +63,8 @@ public class DisplayController extends AbstractGriffonController {
 
         return list;
     }
+
+    public void isReady() {
+        getApplication().getEventRouter().publishEvent("display.ready");
+    }
 }
