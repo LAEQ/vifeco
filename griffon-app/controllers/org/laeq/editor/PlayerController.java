@@ -46,8 +46,10 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
-        getApplication().getEventRouter().publishEvent("player.play");
-        view.play();
+        if(model.isReady.get()){
+            getApplication().getEventRouter().publishEvent("player.play");
+            view.play();
+        }
     }
 
     @ControllerAction
@@ -97,11 +99,12 @@ public class PlayerController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void add() {
         view.pause();
+        model.isReady.set(Boolean.FALSE);
 
         try {
-            Stage window = (Stage) getApplication().getWindowManager().findWindow(model.display);
+            Stage window = (Stage) getApplication().getWindowManager().findWindow("display");
             window.close();
-            getApplication().getMvcGroupManager().findGroup(model.display).destroy();
+            getApplication().getMvcGroupManager().findGroup("display").destroy();
         }catch (Exception e){
 
         }
@@ -125,12 +128,16 @@ public class PlayerController extends AbstractGriffonController {
             createMVCGroup("display", args);
             getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("video.create.start"));
         } else {
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
+            model.isReady.set(Boolean.TRUE);
         }
     }
 
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
+
+        list.put("display.ready", objects -> {
+           model.isReady.set(Boolean.TRUE);
+        });
 
         return list;
     }

@@ -11,7 +11,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.transformation.FilteredList;
+import javafx.collections.SetChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -27,7 +27,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -39,11 +38,9 @@ import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconSVG;
-import org.laeq.model.icon.IconSize;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -147,6 +144,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             mediaPlayer = new MediaPlayer(media);
             mediaView.setMediaPlayer(mediaPlayer);
 
+            mediaPlayer.setOnReady(() ->{
+                model.isReady.set(Boolean.TRUE);
+                mediaPlayer.play();
+                mediaPlayer.pause();
+            });
+
             duration.setText(video.getDurationFormatted());
 
             mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
@@ -164,6 +167,19 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             iconPane.setOnMouseEntered(mouseenter());
 
             scene.setOnKeyReleased(keyReleased());
+
+            model.displayed.addListener((SetChangeListener<Point>) change -> {
+                IconPointColorized icon = change.wasAdded() ? change.getElementAdded().getIconPoint() : change.getElementRemoved().getIconPoint();
+                if(change.wasAdded()){
+                    Double x = change.getElementAdded().getX() * model.width.doubleValue();
+                    Double y = change.getElementAdded().getY() * model.height.doubleValue();
+                    icon.setLayoutX(x);
+                    icon.setLayoutY(y);
+                    iconPane.getChildren().add(icon);
+                } else if(change.wasRemoved()){
+                    iconPane.getChildren().remove(icon);
+                }
+            });
 
             updateValues();
         } catch (Exception e) {
@@ -242,27 +258,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     private void displayPoints() {
-        iconPane.getChildren().clear();
-
-        Duration currentTime = mediaPlayer.getCurrentTime();
-        Duration startDuration = currentTime.subtract(model.controls.display());
-
-        FilteredList<Point> points = model.points.filtered(point ->
-            point.getStart().greaterThanOrEqualTo(startDuration) && point.getStart().lessThanOrEqualTo(currentTime)
-        );
-
-        points.forEach(p -> {
-            iconPane.getChildren().add(getIconPoint(p));
-        });
-    }
-
-    private IconPointColorized getIconPoint(Point point){
-        IconPointColorized icon = new IconPointColorized(new IconSize(point.getCategory(), 40));
-        icon.decorate();
-        icon.setLayoutX(point.getX() * model.width.doubleValue());
-        icon.setLayoutY(point.getY() * model.height.doubleValue());
-
-        return icon;
+        model.setCurrentTime(mediaPlayer.getCurrentTime());
     }
 
     private Callback<TableColumn<Point, Void>, TableCell<Point, Void>> deleteActions() {
@@ -316,7 +312,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             if(model.enabled){
                 model.mousePosition[0] = event.getX();
                 model.mousePosition[1] = event.getY();
-//                getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("debug", model.normalPosition().toString()));
             }
         };
     }

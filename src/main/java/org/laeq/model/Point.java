@@ -15,6 +15,8 @@ import org.laeq.model.converter.jackson.CategoryConverterDeserialize;
 import org.laeq.model.converter.jackson.CategoryConverterSerialize;
 import org.laeq.model.converter.jackson.DurationToMilliConverter;
 import org.laeq.model.converter.jackson.MilliToDuration;
+import org.laeq.model.icon.IconPointColorized;
+import org.laeq.model.icon.IconSize;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -54,6 +56,10 @@ public class Point implements Comparable<Point> {
     @JoinColumn(name = "video_id", nullable = false)
     private Video video;
 
+    @JsonIgnore
+    @Transient
+    public IconPointColorized icon;
+
     public Point() {}
 
     public Point(UUID id) {
@@ -72,6 +78,8 @@ public class Point implements Comparable<Point> {
         this.start = start;
         this.category = category;
         this.video = video;
+
+
     }
 
     public Point(Double x, Double y, Duration start, Category category, Video video) {
@@ -142,6 +150,17 @@ public class Point implements Comparable<Point> {
 
     public void setVideo(Video video) {
         this.video = video;
+    }
+
+    public IconPointColorized getIconPoint(){
+        if(this.icon == null){
+            this.icon = new IconPointColorized(new IconSize(category, 40));
+            icon.decorate();
+            icon.setLayoutX(x);
+            icon.setLayoutY(y);
+        }
+
+        return this.icon;
     }
 
     @JsonIgnore
