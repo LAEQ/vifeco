@@ -1,6 +1,5 @@
 package org.laeq.service
 
-
 import javafx.util.Duration
 import org.laeq.StatisticService
 import org.laeq.model.Category
@@ -193,15 +192,16 @@ class StatisticServiceTest extends Specification {
 
         service.execute([video1, video2], 1)
         def result = service.getTarjanDiff()
-        def matchedPoints = result[0].getMatchedPoints();
-        def summary = result[0].getSummary();
+        def matchedPoints = result[0].getMatchedPoints()
+        def summary_1 = result[0].getSummaryVideo1()
+        def summary_2 = result[0].getSummaryVideo2()
 
         then:
         result.size() == 1
-        summary.get(video1).matched == 4
-        summary.get(video1).lonely == 5
-        summary.get(video2).matched == 4
-        summary.get(video2).lonely == 2
+        summary_1.matched == 4
+        summary_1.lonely == 5
+        summary_2.matched == 4
+        summary_2.lonely == 2
         matchedPoints.size() == 11
     }
 
@@ -224,18 +224,18 @@ class StatisticServiceTest extends Specification {
 
         service.execute([video1, video2], 1)
         def result = service.getTarjanDiff()
-        def summary1 = result.get(0)
-        def summary2 = result.get(1)
-        def summary3 = result.get(2)
+        def tarjan_1 = result.get(0)
+        def tarjan_2 = result.get(1)
+        def tarjan_3 = result.get(2)
 
 
         then:
         result.size() == 3
-        summary1.summary.get(video1).lonely == 2
-        summary1.summary.get(video2).lonely == 0
-        summary2.summary.get(video1).lonely == 8
-        summary2.summary.get(video2).lonely == 1
-        summary3.summary.get(video1).lonely == 5
-        summary3.summary.get(video2).lonely == 3
+        tarjan_1.getSummaryVideo1().lonely == 2
+        tarjan_1.getSummaryVideo2().lonely == 0
+        tarjan_2.getSummaryVideo1().lonely == 8
+        tarjan_2.getSummaryVideo2().lonely == 1
+        tarjan_3.getSummaryVideo1().lonely == 5
+       tarjan_3.getSummaryVideo2().lonely == 3
     }
 }

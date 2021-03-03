@@ -2,6 +2,7 @@ package org.laeq.model.dao
 
 import javafx.util.Duration
 import org.laeq.model.*
+import spock.lang.Ignore
 import spock.lang.Specification
 
 class PointDAOTest extends Specification {
@@ -15,13 +16,15 @@ class PointDAOTest extends Specification {
     User user
     Video video
 
+    HibernateUtil util
 
     void setup() {
-        videoDAO = new VideoDAO(new HibernateUtil('hibernate.cfg.xml'))
-        catDAO = new CategoryDAO(new HibernateUtil('hibernate.cfg.xml'))
-        colDAO = new CollectionDAO(new HibernateUtil('hibernate.cfg.xml'))
-        userDAO = new UserDAO(new HibernateUtil('hibernate.cfg.xml'))
-        pointDAO = new PointDAO(new HibernateUtil('hibernate.cfg.xml'))
+        util = new HibernateUtil('hibernate.cfg.xml')
+        videoDAO = new VideoDAO(util)
+        catDAO = new CategoryDAO(util)
+        colDAO = new CollectionDAO(util)
+        userDAO = new UserDAO(util)
+        pointDAO = new PointDAO(util)
 
         user = EntityGenerator.createUser()
         userDAO.create(user)
@@ -42,7 +45,7 @@ class PointDAOTest extends Specification {
     }
 
     void cleanup() {
-
+        util.shutdown()
     }
 
     def "test one insertion"(){

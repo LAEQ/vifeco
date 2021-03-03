@@ -1,6 +1,5 @@
 package org.laeq.model.dao
 
-
 import org.laeq.model.Category
 import org.laeq.model.Collection
 import spock.lang.Specification
@@ -9,9 +8,13 @@ class CollectionDAOTest extends Specification {
     CollectionDAO dao;
     CategoryDAO catDao;
     Category category_1, category_2
+    HibernateUtil util
+
     void setup() {
-        catDao = new CategoryDAO(new HibernateUtil('hibernate.cfg.xml'))
-        dao = new CollectionDAO(new HibernateUtil('hibernate.cfg.xml'))
+        util = new HibernateUtil('hibernate.cfg.xml')
+
+        catDao = new CategoryDAO(util)
+        dao = new CollectionDAO(util)
 
         category_1 = EntityGenerator.createCategory("A")
         category_2 = EntityGenerator.createCategory("B")
@@ -21,6 +24,7 @@ class CollectionDAOTest extends Specification {
     }
 
     void cleanup() {
+        util.shutdown()
     }
 
     def "test one insertion"(){

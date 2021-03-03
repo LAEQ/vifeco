@@ -15,13 +15,14 @@ class VideoDAOTest extends Specification {
     Collection collection2
     User user;
 
-
+    HibernateUtil util
     void setup() {
-        dao = new VideoDAO(new HibernateUtil('hibernate.cfg.xml'))
-        catDAO = new CategoryDAO(new HibernateUtil('hibernate.cfg.xml'))
-        colDAO = new CollectionDAO(new HibernateUtil('hibernate.cfg.xml'))
-        userDAO = new UserDAO(new HibernateUtil('hibernate.cfg.xml'))
-        pointDAO = new PointDAO(new HibernateUtil('hibernate.cfg.xml'))
+        util = new HibernateUtil('hibernate.cfg.xml')
+        dao = new VideoDAO(util)
+        catDAO = new CategoryDAO(util)
+        colDAO = new CollectionDAO(util)
+        userDAO = new UserDAO(util)
+        pointDAO = new PointDAO(util)
 
         user = EntityGenerator.createUser()
         userDAO.create(user)
@@ -43,7 +44,7 @@ class VideoDAOTest extends Specification {
     }
 
     void cleanup() {
-
+        util.shutdown()
     }
 
     def "test one insertion"(){

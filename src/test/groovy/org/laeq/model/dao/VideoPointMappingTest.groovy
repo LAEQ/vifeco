@@ -17,13 +17,14 @@ class VideoPointMappingTest extends Specification {
     UUID id1, id2
     List<Point> list1, list2
 
-
+    HibernateUtil util
     void setup() {
-        videodao = new VideoDAO(new HibernateUtil('hibernate.cfg.xml'))
-        catDAO = new CategoryDAO(new HibernateUtil('hibernate.cfg.xml'))
-        colDAO = new CollectionDAO(new HibernateUtil('hibernate.cfg.xml'))
-        userDAO = new UserDAO(new HibernateUtil('hibernate.cfg.xml'))
-        pointDAO = new PointDAO(new HibernateUtil('hibernate.cfg.xml'))
+        util = new HibernateUtil('hibernate.cfg.xml')
+        videodao = new VideoDAO(util)
+        catDAO = new CategoryDAO(util)
+        colDAO = new CollectionDAO(util)
+        userDAO = new UserDAO(util)
+        pointDAO = new PointDAO(util)
 
         user1 = EntityGenerator.createUser()
         user1.setDefault(Boolean.FALSE)
@@ -84,7 +85,7 @@ class VideoPointMappingTest extends Specification {
     }
 
     void cleanup() {
-
+        util.shutdown()
     }
 
     def "delete a video cascading for points"(){

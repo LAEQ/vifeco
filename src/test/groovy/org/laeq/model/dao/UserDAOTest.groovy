@@ -5,13 +5,15 @@ import org.laeq.model.User
 import spock.lang.Specification
 
 class UserDAOTest extends Specification {
-    UserDAO dao;
-
+    UserDAO dao
+    HibernateUtil util
     void setup() {
-        dao = new UserDAO(new HibernateUtil('hibernate.cfg.xml'))
+        util = new HibernateUtil('hibernate.cfg.xml')
+        dao = new UserDAO(util)
     }
 
     void cleanup() {
+        util.shutdown()
     }
 
     def "test one insertion"(){

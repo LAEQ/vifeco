@@ -6,12 +6,14 @@ import spock.lang.Specification
 
 class CategoryDAOTest extends Specification {
     CategoryDAO dao
+    HibernateUtil util
     void setup() {
-        dao = new CategoryDAO(new HibernateUtil('hibernate.cfg.xml'))
+        util = new HibernateUtil('hibernate.cfg.xml')
+        dao = new CategoryDAO(util)
     }
 
     void cleanup() {
-
+        util.shutdown()
     }
 
     def "test insertion"() {
