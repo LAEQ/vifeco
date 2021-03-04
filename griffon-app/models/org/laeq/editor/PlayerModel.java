@@ -18,6 +18,7 @@ import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconSize;
 
 import javax.annotation.Nonnull;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -93,8 +94,10 @@ public class PlayerModel extends AbstractGriffonModel {
     }
 
     public void addPoint(Point point) {
-        points.remove(point);
+        points.add(point);
+        points.sort((o1, o2) -> o1.getStart().lessThan(o2.getStart()) ? -1 : 1);
         video.addPoint(point);
+        displayed.add(point);
         summary.stream().filter(c -> c.category.equals(point.getCategory())).findFirst().get().increment();
     }
 

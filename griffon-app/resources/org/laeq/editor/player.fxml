@@ -57,9 +57,9 @@
                                   <columns>
                                       <TableColumn fx:id="iconTD" prefWidth="105.0" JavaFXUtils.i18nKey="editor.timeline.col.type" />
                                       <TableColumn fx:id="startTD" prefWidth="105.0" JavaFXUtils.i18nKey="editor.timeline.col.time" />
-                                      <TableColumn prefWidth="75.0" text="x" fx:id="xTD" />
+                                      <TableColumn  fx:id="xTD" prefWidth="75.0" text="x" />
                                       <TableColumn fx:id="yTD" prefWidth="75.0" text="y" />
-                                      <TableColumn fx:id="delete" prefWidth="20" text="" />
+                                      <TableColumn fx:id="delete" prefWidth="50" minWidth="50" text="" />
                                   </columns>
                               </TableView>
                      </children>

@@ -75,6 +75,7 @@ public class PlayerController extends AbstractGriffonController {
                     model.addPoint(point);
                     getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
                     getApplication().getEventRouter().publishEventOutsideUI("point.created");
+                    view.refresh();
                 } catch (Exception e) {
                     getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
                 }
