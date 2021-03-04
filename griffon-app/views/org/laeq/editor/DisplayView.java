@@ -1,6 +1,7 @@
 package org.laeq.editor;
 
 import griffon.core.artifact.GriffonView;
+import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Icon;
 import org.laeq.model.icon.IconSVG;
@@ -56,11 +58,36 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         stage.setOnCloseRequest(event -> {
             try {
                 mediaPlayer.stop();
-                getApplication().getMvcGroupManager().findGroup("display").destroy();
+                closeAndDestroy("display");
             }catch (Exception e){
 
             }
         });
+    }
+
+
+    private void closeAndDestroy(String name){
+        destroy(name);
+        closeScene(name);
+    }
+
+    private void destroy(String name) {
+        try{
+            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
+            if(group != null){
+                group.destroy();
+            }
+        }catch (Exception e){
+
+        }
+    }
+    private void closeScene(String name){
+        try{
+            Stage window = (Stage) getApplication().getWindowManager().findWindow(name);
+            window.close();
+        }catch (Exception e){
+
+        }
     }
 
     private void initPlayer(){
@@ -71,10 +98,12 @@ public class DisplayView extends AbstractJavaFXGriffonView {
             volumeActionTarget.setText("");
 
             mediaPlayer.setOnReady(() -> {
-                mediaPlayer.seek(currentTime);
-                controller.isReady();
-                mediaPlayer.play();
-                mediaPlayer.stop();
+                runInsideUISync(() -> {
+                    mediaPlayer.play();
+                    mediaPlayer.seek(currentTime);
+                    mediaPlayer.pause();
+                    controller.isReady();
+                });
             });
 
             mediaPlayer.setOnError(() -> {
@@ -121,14 +150,23 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     }
 
     public void pause() {
-        mediaPlayer.pause();
+        runInsideUISync(() -> {
+            mediaPlayer.pause();
+        });
+
     }
 
     public void play() {
-        mediaPlayer.play();
+        runInsideUISync(() -> {
+            mediaPlayer.play();
+        });
     }
 
     public void seek(Duration currentTime) {
-        mediaPlayer.seek(currentTime);
+        runInsideUISync(() -> {
+            Duration buffer = mediaPlayer.getBufferProgressTime();
+            System.out.println("buffer 2: " + DurationFormatUtils.formatDuration((long) buffer.toMillis(),"HH:mm:ss"));
+            mediaPlayer.seek(currentTime);
+        });
     }
 }

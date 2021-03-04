@@ -147,14 +147,16 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void play(){
-        mediaPlayer.play();
+        runInsideUISync(() -> {
+            mediaPlayer.play();
+        });
     }
 
     public void pause(){
-        mediaPlayer.pause();
+        runInsideUISync(() -> {
+            mediaPlayer.pause();
+        });
     }
-
-
 
     private void initPlayer(){
         try {
@@ -165,8 +167,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
             mediaPlayer.setOnReady(() ->{
                 model.isReady.set(Boolean.TRUE);
-                mediaPlayer.play();
-                mediaPlayer.pause();
+                runInsideUISync(() -> {
+                    mediaPlayer.play();
+                    mediaPlayer.pause();
+                });
             });
 
             duration.setText(video.getDurationFormatted());
@@ -196,18 +200,19 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
             scene.setOnKeyReleased(keyReleased());
 
-            model.displayed.addListener((SetChangeListener<Point>) change -> runInsideUISync(() -> {
-                IconPointColorized icon = change.wasAdded() ? change.getElementAdded().getIconPoint() : change.getElementRemoved().getIconPoint();
-                if(change.wasAdded()){
-                    Double x = change.getElementAdded().getX() * model.width.doubleValue();
-                    Double y = change.getElementAdded().getY() * model.height.doubleValue();
-                    icon.setLayoutX(x);
-                    icon.setLayoutY(y);
-                    iconPane.getChildren().add(icon);
-                } else if(change.wasRemoved()){
-                    iconPane.getChildren().remove(icon);
-                }
-            }));
+            model.displayed.addListener((SetChangeListener<Point>) change ->  {
+                runInsideUIAsync(() -> {
+                    if(change.wasAdded()){
+                        Double x = change.getElementAdded().getX() * model.width.doubleValue();
+                        Double y = change.getElementAdded().getY() * model.height.doubleValue();
+                        change.getElementAdded().getIconPoint().setLayoutX(x);
+                        change.getElementAdded().getIconPoint().setLayoutY(y);
+                        iconPane.getChildren().add(change.getElementAdded().getIconPoint());
+                    } else if(change.wasRemoved()){
+                        iconPane.getChildren().remove(change.getElementRemoved().getIconPoint());
+                    }
+                });
+            });
 
             iconPane.setOnMouseClicked(event -> {
                 System.out.println(event);
@@ -271,15 +276,15 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     //Rendering method
     private void updateValues() {
-//        slider.setValue(mediaPlayer.getCurrentTime().divide(video.getDuration()).toMillis() * 100.0);
-
         Platform.runLater(() -> {
             displayPoints();
-            if (!slider.isDisabled() && video.getDuration().greaterThanOrEqualTo(Duration.ZERO) && !slider.isValueChanging()) {
+            if (! slider.isDisabled()
+                    && ! slider.isPressed()
+                    && video.getDuration().greaterThanOrEqualTo(Duration.ZERO)
+                    && !slider.isValueChanging()) {
                 slider.setValue(mediaPlayer.getCurrentTime().divide(video.getDuration()).toMillis() * 100.0);
             }
         });
-
     }
 
     public void refresh() {
@@ -326,12 +331,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private InvalidationListener sliderListener(){
         return  observable -> {
             if(slider.isPressed()){
+                Duration buffer = mediaPlayer.getBufferProgressTime();
+                System.out.println(DurationFormatUtils.formatDuration((long) buffer.toMillis(),"HH:mm:ss"));
                 updateValues();
                 mediaPlayer.seek(video.getDuration().multiply(slider.getValue() / 100));
 
-                runOutsideUIAsync(()-> {
-                    controller.updateCurrentTime(mediaPlayer.getCurrentTime());
-                });
+
+                controller.updateCurrentTime(mediaPlayer.getCurrentTime());
+
             }
         };
     }

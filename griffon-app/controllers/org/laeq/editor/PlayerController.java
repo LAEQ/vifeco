@@ -48,6 +48,7 @@ public class PlayerController extends AbstractGriffonController {
     public void play() {
         if(model.isReady.get()){
             getApplication().getEventRouter().publishEvent("player.play");
+            getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(view.getCurrentTime()));
             view.play();
         }
     }
@@ -118,7 +119,7 @@ public class PlayerController extends AbstractGriffonController {
                         "*.mp4", "*.wav", "*.mkv", "*.avi", "*.wmv", "*.mov")
         );
 
-        Stage stage = (Stage) getApplication().getWindowManager().findWindow("test");
+        Stage stage = (Stage) getApplication().getWindowManager().findWindow("editor");
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
@@ -144,6 +145,6 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     public void updateCurrentTime(Duration start) {
-        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+        getApplication().getEventRouter().publishEvent("player.currentTime", Arrays.asList(start));
     }
 }
