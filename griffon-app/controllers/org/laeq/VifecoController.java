@@ -3,9 +3,11 @@ package org.laeq;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
+import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
@@ -41,8 +43,15 @@ public class VifecoController extends AbstractGriffonController {
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void createGroup(String groupName, Map<String, Object> args){
+        destroyMVC(model.currentGroup);
+        destroyMVC(groupName);
+
+        System.out.println("D: " + getApplication().getMvcGroupManager().getGroups().keySet());
+        System.out.println("D: " + getApplication().getWindowManager().getWindowNames());
+
         try{
             createMVCGroup(groupName, args);
+            model.currentGroup = groupName;
         } catch (Exception e){
             getLog().info(String.format("CreateMVCGroup: %s - %s", groupName, e.getMessage()));
         }
@@ -51,13 +60,56 @@ public class VifecoController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void createGroup(String groupName){
+        destroyMVC(model.currentGroup);
+        destroyMVC(groupName);
+
+        System.out.println("D: " + getApplication().getMvcGroupManager().getGroups().keySet());
+        System.out.println("D: " + getApplication().getWindowManager().getWindowNames());
 
         try{
-            destroyMVCGroup(model.currentGroup);
-            model.currentGroup = groupName;
             createMVCGroup(groupName);
+            model.currentGroup = groupName;
         } catch (Exception e){
             getLog().info(String.format("CreateMVCGroup: %s - %s", groupName, e.getMessage()));
+        }
+    }
+
+    /**
+     * Destroy obsolted MVC groups the application
+     */
+    private void clean() {
+        getApplication().getMvcGroupManager().getGroups().keySet().forEach(name -> {
+            if(model.mvcKeep.contains(name) == false){
+                destroyMVC(name);
+            }
+        });
+    }
+
+    private void closeObsoleteWindows(){
+        getApplication().getWindowManager().getStartingWindow();
+        getApplication().getWindowManager().getWindows().forEach( window -> {
+            closeWindow((Stage) window);
+        });
+    }
+
+    private void closeWindow(Stage window){
+        try{
+            if(window != getApplication().getWindowManager().getStartingWindow()){
+
+            }
+        } catch (Exception e){
+
+        }
+    }
+
+    private void destroyMVC(String name){
+        try{
+            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
+            if(group != null){
+                group.destroy();
+            }
+        }catch (Exception e){
+
         }
     }
 }

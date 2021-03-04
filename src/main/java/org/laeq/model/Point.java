@@ -78,8 +78,6 @@ public class Point implements Comparable<Point> {
         this.start = start;
         this.category = category;
         this.video = video;
-
-
     }
 
     public Point(Double x, Double y, Duration start, Category category, Video video) {
@@ -152,6 +150,7 @@ public class Point implements Comparable<Point> {
         this.video = video;
     }
 
+    @JsonIgnore
     public IconPointColorized getIconPoint(){
         if(this.icon == null){
             this.icon = new IconPointColorized(new IconSize(category, 40));

@@ -52,6 +52,18 @@ StatisticController extends AbstractGriffonController {
         getApplication().getEventRouter().addEventListener(listeners());
     }
 
+    @Override
+    public void mvcGroupDestroy(){
+        Stage statistic_display = (Stage) getApplication().getWindowManager().findWindow("statistic_display");
+        if(statistic_display != null){
+            getApplication().getWindowManager().detach("statistic_display");
+            statistic_display.close();
+        }
+
+        System.out.println("A: " + getApplication().getMvcGroupManager().getGroups().keySet());
+        System.out.println("A: " + getApplication().getWindowManager().getWindowNames());
+    }
+
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void compare(){

@@ -52,6 +52,11 @@ public class VideoController extends AbstractGriffonController {
         getApplication().getEventRouter().addEventListener(listeners());
     }
 
+    @Override
+    public void mvcGroupDestroy(){
+
+    }
+
     private void setVideoDuration(Video video){
         if(video.getDuration().equals(Duration.UNKNOWN) == false){
             return;

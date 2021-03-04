@@ -60,7 +60,14 @@ public class PlayerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        System.out.println("Destroy editor player controller");
+        Stage display = (Stage) getApplication().getWindowManager().findWindow("display");
+        if(display != null){
+            getApplication().getWindowManager().detach("display");
+            display.close();
+        }
+
+        System.out.println("C: " + getApplication().getMvcGroupManager().getGroups().keySet());
+        System.out.println("C: " + getApplication().getWindowManager().getWindowNames());
     }
 
     @ControllerAction

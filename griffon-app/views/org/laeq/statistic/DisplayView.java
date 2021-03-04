@@ -53,7 +53,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     public void initUI() {
         Stage stage = (Stage) getApplication()
             .createApplicationContainer(Collections.<String,Object>emptyMap());
-        stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
         stage.setScene(init());
         stage.sizeToScene();
         stage.setAlwaysOnTop(true);
@@ -63,8 +62,10 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         initPlayer();
 
         stage.setOnCloseRequest(event -> {
-            getApplication().getWindowManager().detach("statistic_display");
-            getApplication().getMvcGroupManager().getGroups().get("statistic_display").destroy();
+
+
+            System.out.printf("F: %s\n", getApplication().getWindowManager().getWindowNames());
+            System.out.printf("F : %s\n", getApplication().getMvcGroupManager().getGroups().keySet());
         });
     }
 

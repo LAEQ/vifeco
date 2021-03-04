@@ -95,11 +95,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().show("editor");
 
         stage.setOnCloseRequest(event -> {
-            runInsideUISync(() -> {
-                mediaPlayer.stop();
-                closeAndDestroy("editor");
-                closeAndDestroy("display");
-            });
+            mediaPlayer.stop();
+            closeAndDestroy("editor");
+            closeAndDestroy("display");
         });
 
         Icon icon = new Icon(IconSVG.video_plus, org.laeq.model.icon.Color.white);
@@ -140,6 +138,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         try{
             Stage window = (Stage) getApplication().getWindowManager().findWindow(name);
             window.close();
+            getApplication().getWindowManager().detach(name);
         }catch (Exception e){
 
         }

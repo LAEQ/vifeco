@@ -69,6 +69,9 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     private void closeAndDestroy(String name){
         destroy(name);
         closeScene(name);
+        System.out.println("Display view editor closing");
+        System.out.printf("Windows: %s\n", getApplication().getWindowManager().getWindowNames());
+        System.out.printf("MVC : %s\n", getApplication().getMvcGroupManager().getGroups());
     }
 
     private void destroy(String name) {

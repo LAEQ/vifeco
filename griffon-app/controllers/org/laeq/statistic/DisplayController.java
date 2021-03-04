@@ -4,6 +4,7 @@ import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.statistic.MatchedPoint;
 
@@ -24,7 +25,15 @@ public class DisplayController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        System.out.println("destroying player");
+        System.out.println("Display controller statistic destroyed");
+
+        Stage statistic_display = (Stage) getApplication().getWindowManager().findWindow("statistic_display");
+        if(statistic_display != null){
+            statistic_display.close();
+        }
+
+        System.out.println("E: " + getApplication().getMvcGroupManager().getGroups().keySet());
+        System.out.println("E: " + getApplication().getWindowManager().getWindowNames());
     }
 
     private Map<String, RunnableWithArgs> listeners(){

@@ -8,6 +8,7 @@ import griffon.transform.Threading;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.DatabaseService;
 import org.laeq.ExportService;
@@ -25,6 +26,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -133,7 +137,11 @@ public class MenuController extends AbstractGriffonController {
             srcFiles.add(fileName);
         }
 
-        String zipFileName = String.format("%s.zip", System.currentTimeMillis());
+        LocalDate now = LocalDate.now();
+        DateTimeFormatter dateTimeFormatter =  DateTimeFormatter.ofPattern("yyyy_MM_dd");
+        String nowStr = dateTimeFormatter.format(now);
+
+        String zipFileName = String.format("%s_%d.zip", nowStr, System.currentTimeMillis());
         String filePath = this.getPathExport(zipFileName);
 
         try {
