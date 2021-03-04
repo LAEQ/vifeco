@@ -8,7 +8,7 @@ cache:
 install: true
 
 jdk:
-  - oraclejdk11
+  - oraclejdk8
 
 script:
   - ./gradlew clean test
