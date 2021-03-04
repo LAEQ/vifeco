@@ -13,7 +13,7 @@ import org.laeq.model.statistic.Tarjan;
 @ArtifactProviderFor(GriffonModel.class)
 public class StatisticModel extends AbstractGriffonModel {
     public ObservableList<Video> videos = FXCollections.observableArrayList();
-    public SimpleIntegerProperty durationStep = new SimpleIntegerProperty(this, "durationStep", 5);
+    public SimpleIntegerProperty durationStep = new SimpleIntegerProperty(this, "durationStep", 10);
 
     public ObservableList<Tarjan> tarjans = FXCollections.observableArrayList();
 

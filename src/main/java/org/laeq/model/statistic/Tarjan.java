@@ -229,7 +229,7 @@ public class Tarjan {
             pt2 = q2.remove();
             Duration diff = getDiffDuration(pt1.getStart(), pt2.getStart());
 
-            while(diff.greaterThan(step)) {
+            while(diff.greaterThan(step) && q2.isEmpty() == false) {
                 matchedPoints.add(matchPointBuilder(null, pt2));
                 pt2 = q2.remove();
                 diff = getDiffDuration(pt1.getStart(), pt2.getStart());

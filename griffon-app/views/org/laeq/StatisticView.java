@@ -6,11 +6,16 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.chart.*;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.StackedBarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -19,9 +24,12 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Video;
 import org.laeq.model.statistic.MatchedPoint;
 import org.laeq.model.statistic.Tarjan;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -47,7 +55,7 @@ public class StatisticView extends AbstractJavaFXGriffonView {
 
     @FXML private Button compareActionTarget;
     @FXML private AnchorPane visualTab;
-    @FXML private Spinner<Integer> durationSpinner;
+    @FXML private TextField duration;
     @FXML private Label durationStepLabel;
 
     @FXML private TableView<Tarjan> table;
@@ -107,6 +115,7 @@ public class StatisticView extends AbstractJavaFXGriffonView {
     }
 
     public void init(){
+        duration.setText("10");
         select.setCellValueFactory(c -> {
             Video video = c.getValue();
             CheckBox checkBox = new CheckBox();
@@ -125,9 +134,19 @@ public class StatisticView extends AbstractJavaFXGriffonView {
         videoTable.setItems(this.model.videos);
         videoTable.setEditable(true);
 
-        durationSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 3600));
-        durationSpinner.getValueFactory().setValue(model.durationStep.getValue());
-        durationSpinner.getValueFactory().valueProperty().bindBidirectional(model.durationStep.asObject());
+        model.duration.bindBidirectional(durationLabel.textProperty());
+        duration.textProperty().addListener((observable, oldValue, newValue) -> {
+            try{
+                int step = Integer.parseInt(newValue);
+                if(step < 0){
+                    throw new Exception();
+                } else {
+                    model.durationStep.set(step);
+                }
+            }catch (Exception e){
+                getApplication().getEventRouter().publishEvent("duration.step.invalid ");
+            }
+        });
 
         table.setItems(model.tarjans);
 
@@ -214,13 +233,15 @@ public class StatisticView extends AbstractJavaFXGriffonView {
         chartAccordion.setContent(sbc);
         tableAcc.getItems().clear();
 
-        List<MatchedPoint> sorted = tarjan.matchedPoints.stream().sorted(new Comparator<MatchedPoint>() {
-            @Override
-            public int compare(MatchedPoint o1, MatchedPoint o2) {
-                return (int) o1.getStarts().get(0).subtract(o2.getStarts().get(0)).toMillis();
-            }
-        }).collect(Collectors.toList());
+        List<MatchedPoint> sorted = tarjan.matchedPoints.stream()
+                .sorted((o1, o2) -> (int) o1.getStarts().get(0).subtract(o2.getStarts().get(0)).toMillis())
+                .collect(Collectors.toList());
 
         tableAcc.getItems().addAll(FXCollections.observableArrayList(sorted));
+    }
+
+    public void reset() {
+        tableAcc.getItems().clear();
+        chartAccordion.setContent(null);
     }
 }

@@ -17,7 +17,6 @@ import org.laeq.model.Collection;
 import org.laeq.model.Icon;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconSVG;
-import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
 

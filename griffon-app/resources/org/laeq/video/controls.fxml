@@ -5,7 +5,7 @@
 <?import javafx.scene.text.*?>
 <AnchorPane layoutX="14.0" layoutY="97.0" prefHeight="200.0" prefWidth="200.0"
             AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0"
-            xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.video.ControlsController">
+            xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Slider fx:id="rateSlider" layoutX="14.0" layoutY="31.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
         <Text fx:id="rateValue" layoutX="187.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" AnchorPane.rightAnchor="0.0" />

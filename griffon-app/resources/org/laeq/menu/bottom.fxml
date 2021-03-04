@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.*?>
 <Pane fx:id="box" maxHeight="0.0" minHeight="60.0" minWidth="800.0" prefHeight="60.0" prefWidth="900.0"
       AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
       xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.menu.BottomController">

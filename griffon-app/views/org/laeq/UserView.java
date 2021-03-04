@@ -1,6 +1,5 @@
 package org.laeq;
 
-import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
@@ -12,6 +11,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.Callback;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Icon;
 import org.laeq.model.User;
 import org.laeq.model.icon.Color;

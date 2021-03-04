@@ -1,6 +1,6 @@
 package org.laeq.model.statistic
 
-import org.laeq.StatisticService
+
 import org.laeq.model.Point
 import org.laeq.model.Video
 import org.laeq.service.VideoGenerator

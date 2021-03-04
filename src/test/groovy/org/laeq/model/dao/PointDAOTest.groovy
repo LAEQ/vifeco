@@ -2,7 +2,6 @@ package org.laeq.model.dao
 
 import javafx.util.Duration
 import org.laeq.model.*
-import spock.lang.Ignore
 import spock.lang.Specification
 
 class PointDAOTest extends Specification {

@@ -16,7 +16,6 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Category;
 import org.laeq.model.Icon;
 import org.laeq.model.icon.IconSVG;
-import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;

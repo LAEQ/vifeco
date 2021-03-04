@@ -1,3 +1,6 @@
+import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
+
 import java.text.SimpleDateFormat
 
 buildscript {
@@ -110,10 +113,6 @@ tasks.withType(GroovyCompile) {
     sourceCompatibility = project.sourceCompatibility
     targetCompatibility = project.targetCompatibility
 }
-
-import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
-import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
-import java.text.SimpleDateFormat
 
 shadowJar {
     transform(ServiceFileTransformer)

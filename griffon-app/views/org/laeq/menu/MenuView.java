@@ -15,6 +15,7 @@ import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconButton;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.model.icon.IconSquare;
+
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;

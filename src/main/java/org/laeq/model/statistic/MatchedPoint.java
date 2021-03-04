@@ -4,10 +4,8 @@ import javafx.util.Duration;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -66,11 +64,11 @@ public class MatchedPoint {
     }
 
     public String getPt1Formatted(){
-        return pt1 != null ? pt1.getStartFormatted() : "";
+        return pt1 != null ? pt1.getStartFormatted2() : "";
     }
 
     public String getPt2Formatted(){
-        return pt2 != null ? pt2.getStartFormatted() : "";
+        return pt2 != null ? pt2.getStartFormatted2() : "";
     }
 
     /**

@@ -16,7 +16,6 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.*;
-import org.laeq.template.MiddlePaneView;
 
 import javax.annotation.Nonnull;
 

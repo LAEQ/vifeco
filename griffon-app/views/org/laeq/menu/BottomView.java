@@ -1,10 +1,8 @@
 package org.laeq.menu;
 
 import griffon.core.artifact.GriffonView;
-import griffon.core.i18n.MessageSource;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -14,9 +12,6 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-
-import static java.util.Arrays.asList;
 
 @ArtifactProviderFor(GriffonView.class)
 public class BottomView extends AbstractJavaFXGriffonView {

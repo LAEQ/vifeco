@@ -6,7 +6,6 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Video;
@@ -58,6 +57,7 @@ StatisticController extends AbstractGriffonController {
     public void compare(){
         closeStatisticDisplay();
         model.reset();
+        view.reset();
 
         List<Video> videos = model.videos.stream().filter(v -> v.getSelected()).collect(Collectors.toList());
 
@@ -81,10 +81,9 @@ StatisticController extends AbstractGriffonController {
             });
 
             getApplication().getEventRouter()
-                    .publishEvent("status.info.parameterized",
+                    .publishEvent("status.info.parametrized",
                     Arrays.asList("statistic.video.selection.success",
-                            service.getVideo2().pathToName(),
-                            model.durationStep.toString()));
+                            String.format("%s - step: %d", service.getVideo2().pathToName(), model.durationStep.get())));
 
         }catch (Exception e){
             e.printStackTrace();

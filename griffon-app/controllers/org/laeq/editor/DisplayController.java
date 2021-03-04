@@ -8,7 +8,6 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.model.statistic.MatchedPoint;
 
 import javax.annotation.Nonnull;
 import java.io.File;

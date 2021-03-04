@@ -4,16 +4,11 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.transformation.FilteredList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -22,22 +17,17 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.hibernate.validator.internal.util.logging.formatter.DurationFormatter;
-import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
-import org.laeq.model.icon.IconSVG;
 import org.laeq.model.icon.IconSize;
 import org.laeq.model.statistic.MatchedPoint;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.regex.Matcher;
@@ -108,7 +98,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
             Pattern pattern = Pattern.compile("[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}");
             Matcher matcher = pattern.matcher(newValue);
             String[] split = newValue.split(":");
-            System.out.println(split);
 
             if(matcher.find()){
                 Double hours = Double.parseDouble(split[0]);
@@ -116,10 +105,9 @@ public class DisplayView extends AbstractJavaFXGriffonView {
                 Double seconds = Double.parseDouble(split[2]);
 
                 Duration seekDuration = Duration.hours(hours).add(Duration.minutes(minutes)).add(Duration.seconds(seconds));
-                System.out.println(seekDuration);
                 mediaPlayer.seek(seekDuration);
             } else {
-                System.out.println("not match");
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("duration.pattern.invalid"));
             }
         });
     }

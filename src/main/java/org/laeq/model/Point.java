@@ -165,12 +165,12 @@ public class Point implements Comparable<Point> {
 
     @JsonIgnore
     public String getStartFormatted(){
-        return DurationFormatUtils.formatDuration((long)start.toMillis(), "H:m:s");
+        return DurationFormatUtils.formatDuration((long)start.toMillis(), "HH:mm:ss");
     }
 
     @JsonIgnore
     public String getStartFormatted2(){
-        return String.format("%s - %s", video, DurationFormatUtils.formatDuration((long)start.toMillis(), "H:m:s"));
+        return String.format("%.3f ms  (%s)", start.toMillis(), DurationFormatUtils.formatDuration((long)start.toMillis(), "HH:mm:ss"));
     }
 
     @Override
