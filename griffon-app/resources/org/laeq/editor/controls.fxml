@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import griffon.javafx.support.*?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.*?>
-<GridPane prefHeight="60.0" prefWidth="200.0"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="org.laeq.editor.ControlsController">
-    <Label fx:id="clickLabel"
-           text="0"
-           GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-    <Button fx:id="clickActionTarget"
-            GridPane.columnIndex="0" GridPane.rowIndex="1"
-            mnemonicParsing="false"
-            prefWidth="200.0"
-            text="Click"/>
-</GridPane>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="275.0" maxWidth="200.0" minHeight="275.0" minWidth="200.0" prefHeight="275.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.editor.ControlsController">
+   <children>
+      <Label prefHeight="17.0" prefWidth="173.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" JavaFXUtils.i18nKey="controls.speed" />
+      <Slider fx:id="speed" blockIncrement="0.0" cache="true" layoutX="10.0" layoutY="32.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="32.0" />
+      <Label layoutX="10.0" layoutY="74.0" prefHeight="17.0" prefWidth="173.0"
+             AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="74.0"
+             JavaFXUtils.i18nKey="controls.size" />
+      <Slider fx:id="size" layoutX="10.0" layoutY="95.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="95.0" />
+      <Label layoutX="10.0" layoutY="133.0" prefHeight="17.0" prefWidth="173.0"
+             AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="133.0" JavaFXUtils.i18nKey="controls.duration" />
+      <Slider fx:id="duration" layoutX="10.0" layoutY="158.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="158.0" />
+      <Label layoutX="10.0" layoutY="197.0" prefHeight="17.0" prefWidth="173.0"
+             AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="197.0" JavaFXUtils.i18nKey="controls.opacity" />
+      <Slider fx:id="opacity" layoutX="10.0" layoutY="224.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="224.0" />
+      <Label fx:id="speedLabel" layoutX="158.0" layoutY="28.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
+      <Label fx:id="sizeLabel" layoutX="162.0" layoutY="95.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="90.0" />
+      <Label fx:id="durationLabel" layoutX="162.0" layoutY="158.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="155.0" />
+      <Label fx:id="opacityLabel" layoutX="162.0" layoutY="224.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="220.0" />
+   </children>
+</AnchorPane>

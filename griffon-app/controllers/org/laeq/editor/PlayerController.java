@@ -55,7 +55,15 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void controls() {
-        createMVCGroup("controls");
+        Stage display = (Stage) getApplication().getWindowManager().findWindow("controls");
+        if(display != null){
+            getApplication().getWindowManager().detach("controls");
+            display.close();
+        }
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("controls", model.controls);
+        createMVCGroup("controls", args);
     }
 
     @Override
@@ -64,6 +72,12 @@ public class PlayerController extends AbstractGriffonController {
         if(display != null){
             getApplication().getWindowManager().detach("display");
             display.close();
+        }
+
+        Stage controls = (Stage) getApplication().getWindowManager().findWindow("controls");
+        if(controls != null){
+            getApplication().getWindowManager().detach("controls");
+            controls.close();
         }
 
         System.out.println("C: " + getApplication().getMvcGroupManager().getGroups().keySet());
@@ -132,6 +146,7 @@ public class PlayerController extends AbstractGriffonController {
             Map<String, Object> args = new HashMap<>();
             args.put("file", selectedFile);
             args.put("currentTime", view.getCurrentTime());
+            args.put("controls", model.controls);
 
             createMVCGroup("display", args);
             getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("video.create.start"));
@@ -146,6 +161,20 @@ public class PlayerController extends AbstractGriffonController {
         list.put("display.ready", objects -> {
            model.isReady.set(Boolean.TRUE);
         });
+
+        list.put("speed.change", objects -> {
+            model.controls.speed.set((Double) objects[0]);
+        });
+        list.put("opacity.change", objects -> {
+            model.controls.opacity.set((Double) objects[0]);
+        });
+        list.put("duration.change", objects -> {
+            model.controls.duration.set((Double) objects[0]);
+        });
+        list.put("size.change", objects -> {
+            model.controls.size.set((Double) objects[0]);
+        });
+
 
         return list;
     }

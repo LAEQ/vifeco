@@ -206,7 +206,6 @@ public class VideoController extends AbstractGriffonController {
 
         list.put("video.created", objects -> refreshVideoList());
         list.put("videolist.refresh", objects -> view.refresh());
-
         list.put("point.created", objects -> {
             runInsideUISync(() -> {
                 view.refresh();

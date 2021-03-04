@@ -216,6 +216,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 System.out.println(event);
             });
 
+            mediaPlayer.rateProperty().bindBidirectional(model.controls.speed);
+
             updateValues();
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
@@ -281,6 +283,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                     && video.getDuration().greaterThanOrEqualTo(Duration.ZERO)
                     && !slider.isValueChanging()) {
                 slider.setValue(mediaPlayer.getCurrentTime().divide(video.getDuration()).toMillis() * 100.0);
+
+                elapsed.setText(DurationFormatUtils.formatDuration((long) mediaPlayer.getCurrentTime().toMillis(), "HH:mm:ss"));
             }
         });
     }

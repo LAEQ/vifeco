@@ -106,15 +106,15 @@ public class MenuController extends AbstractGriffonController {
         Stage stage = (Stage) getApplication().getWindowManager().findWindow("mainWindow");
 
         File selectedFile = fileChooser.showOpenDialog(stage);
-//        if (selectedFile != null) {
-//
-//            try {
-//                importService.execute(selectedFile);
-//                getApplication().getEventRouter().publishEvent("video.import.success");
-//            } catch (Exception e) {
-//                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.import.error"));
-//            }
-//        }
+        if (selectedFile != null) {
+
+            try {
+                importService.execute(selectedFile);
+                getApplication().getEventRouter().publishEvent("video.import.success");
+            } catch (Exception e) {
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.import.error"));
+            }
+        }
     }
 
 

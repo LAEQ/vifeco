@@ -5,20 +5,24 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Duration;
 
 public class Controls {
-//    public static final Double rate = 1d;
-//    public static final Double volume = 1d;
+//    public static final Double rate = 0.5;
 //    public static final Double size = 60d;
 //    public static final Double duration = 5d;
 //    public static final Double opacity = 0.65;
 
-    public SimpleIntegerProperty displayDuration = new SimpleIntegerProperty(10);
+    public Double[] speedValue = new Double[]{0.25, 2.0};
+    public Double[] opacityValue = new Double[]{.1, 1.0};
+    public Double[] sizeValue = new Double[]{10d, 80d};
+    public Double[] durationValue = new Double[]{1d, 30d};
+
+    public SimpleDoubleProperty duration = new SimpleDoubleProperty(10);
     public SimpleDoubleProperty speed = new SimpleDoubleProperty(1);
-    public SimpleIntegerProperty size = new SimpleIntegerProperty(20);
+    public SimpleDoubleProperty size = new SimpleDoubleProperty(20);
     public SimpleDoubleProperty opacity = new SimpleDoubleProperty(.5);
 
 
     public Duration display(){
-        return Duration.seconds(displayDuration.get());
+        return Duration.seconds(duration.get());
     }
 //
 //    public final SimpleDoubleProperty rateProperty() {return rate;}

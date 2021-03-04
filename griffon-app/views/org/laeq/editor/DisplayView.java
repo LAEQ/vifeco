@@ -32,6 +32,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private DisplayModel model;
     @MVCMember @Nonnull File file;
     @MVCMember @Nonnull Duration currentTime;
+    @MVCMember @Nonnull Controls controls;
 
     private MediaPlayer mediaPlayer;
     @FXML private Pane playerPane;
@@ -106,6 +107,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
                     mediaPlayer.seek(currentTime);
                     mediaPlayer.pause();
                     controller.isReady();
+                    mediaPlayer.rateProperty().bindBidirectional(controls.speed);
                 });
             });
 
