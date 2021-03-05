@@ -11,16 +11,16 @@
                <columns>
                   <TableColumn fx:id="select" prefWidth="50" />
                   <TableColumn fx:id="name" prefWidth="55.0" JavaFXUtils.i18nKey="z.name" />
-                  <TableColumn fx:id="user" prefWidth="105.0" JavaFXUtils.i18nKey="z.user" />
+                  <TableColumn fx:id="user" prefWidth="105.0"  JavaFXUtils.i18nKey="z.user"/>
                   <TableColumn fx:id="collection" prefWidth="105.0" JavaFXUtils.i18nKey="z.collection" />
                   <TableColumn fx:id="total" prefWidth="55.0" JavaFXUtils.i18nKey="z.total" />
                </columns>
             </TableView>
             <Button fx:id="compareActionTarget" layoutX="10.0" layoutY="325.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="104.0"
-                    JavaFXUtils.i18nKey="btn.compare" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="10.0" />
+                    AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="10.0" />
             <TextField fx:id="duration" layoutX="122.0" layoutY="325.0" prefHeight="26.0" prefWidth="80.0" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="13.0" />
-            <Label fx:id="durationStepLabel" layoutX="1538.0" layoutY="330.0"  JavaFXUtils.i18nKey="z.step"
-                   AnchorPane.bottomAnchor="17.0" AnchorPane.rightAnchor="102.0" text="10"/>
+            <Label fx:id="durationStepLabel" layoutX="1538.0" layoutY="330.0"
+                   AnchorPane.bottomAnchor="17.0" AnchorPane.rightAnchor="102.0" JavaFXUtils.i18nKey="z.step"/>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="resultPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="536.0">
@@ -42,12 +42,12 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label prefHeight="17.0" prefWidth="281.0" text="Video 1" />
-                              <Label prefHeight="17.0" prefWidth="296.0" text="Video 2" GridPane.columnIndex="1" />
-                              <Label fx:id="user1Label" prefHeight="17.0" prefWidth="200.0" text="User 1" GridPane.rowIndex="1" />
-                              <Label fx:id="user2Label" prefHeight="17.0" prefWidth="200.0" text="User2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label fx:id="collectionLabel" prefHeight="17.0" prefWidth="200.0" text="Collection" GridPane.rowIndex="2" />
-                              <Label fx:id="durationLabel" prefHeight="17.0" prefWidth="200.0" text="Duration" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label prefHeight="17.0" prefWidth="281.0"  />
+                              <Label prefHeight="17.0" prefWidth="296.0"  GridPane.columnIndex="1" />
+                              <Label fx:id="user1Label" prefHeight="17.0" prefWidth="200.0"  GridPane.rowIndex="1" />
+                              <Label fx:id="user2Label" prefHeight="17.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label fx:id="collectionLabel" prefHeight="17.0" prefWidth="200.0"  GridPane.rowIndex="2" />
+                              <Label fx:id="durationLabel" prefHeight="17.0" prefWidth="200.0"  GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                         <Label fx:id="videoNameLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="643.0"
@@ -59,7 +59,7 @@
                         <TableView fx:id="table" prefHeight="300.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0"
                                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                           <columns>
-                                <TableColumn fx:id="category" prefWidth="205.0" JavaFXUtils.i18nKey="z.category" />
+                                <TableColumn fx:id="category" prefWidth="205.0" JavaFXUtils.i18nKey="z.category"  />
                                 <TableColumn fx:id="video1Col" prefWidth="205.0" JavaFXUtils.i18nKey="z.video_1" />
                                 <TableColumn fx:id="video2Col" prefWidth="205.0" JavaFXUtils.i18nKey="z.video_2" />
                           </columns>
@@ -70,7 +70,7 @@
                      <children>
                         <Accordion fx:id="accordion" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <panes>
-                            <TitledPane fx:id="chartTitled" animated="true" JavaFXUtils.i18nKey="z.chart">
+                            <TitledPane fx:id="chartTitled" animated="true" JavaFXUtils.i18nKey="z.chart" >
                               <content>
                                 <ScrollPane fx:id="chartAccordion" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                               </content>
@@ -81,14 +81,14 @@
                                   <TableView fx:id="tableAcc" prefHeight="300.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0"
                                              AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                                       <columns>
-                                          <TableColumn fx:id="tableAccPt1" prefWidth="205.0" JavaFXUtils.i18nKey="z.video_1" />
-                                          <TableColumn fx:id="tableAccPt2" prefWidth="205.0" JavaFXUtils.i18nKey="z.video_2" />
-                                          <TableColumn fx:id="tableAccAction" prefWidth="205.0" JavaFXUtils.i18nKey="z.action" />
+                                          <TableColumn fx:id="tableAccPt1" prefWidth="205.0" />
+                                          <TableColumn fx:id="tableAccPt2" prefWidth="205.0"  />
+                                          <TableColumn fx:id="tableAccAction" prefWidth="205.0" />
                                       </columns>
                                   </TableView>
                               </content>
                             </TitledPane>
-                            <TitledPane animated="true" JavaFXUtils.i18nKey="z.timeline">
+                            <TitledPane animated="true" JavaFXUtils.i18nKey="z.timeline" >
                               <content>
                                 <AnchorPane fx:id="timelineAccordion" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                               </content>

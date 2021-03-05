@@ -33,17 +33,6 @@ StatisticController extends AbstractGriffonController {
             List<Video> list = dbService.videoDAO.findAll();
             model.videos.addAll(list);
 
-            Video video1 = list.get(list.size() - 1);
-            Video video2 = list.get(list.size() - 2);
-
-            StatisticService service = new StatisticService();
-            service.execute(Arrays.asList(video1, video2), 10);
-
-            model.tarjans.addAll(service.getTarjanDiff());
-
-            MatchedPoint matchedPoint = service.getTarjanDiff().get(0).matchedPoints.get(0);
-            displayMatchedPoint(matchedPoint);
-
             getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
         } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
