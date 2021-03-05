@@ -11,12 +11,12 @@
                        prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                        AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columns>
-                <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="user.column.id" />
-                <TableColumn fx:id="firstName" prefWidth="125.0" JavaFXUtils.i18nKey="user.column.firstname" />
-                <TableColumn fx:id="lastName" prefWidth="125.0" JavaFXUtils.i18nKey="user.column.lastname" />
-                <TableColumn fx:id="email" prefWidth="125.0" JavaFXUtils.i18nKey="user.column.email" />
-                <TableColumn fx:id="isDefault" prefWidth="95.0" JavaFXUtils.i18nKey="user.column.default" />
-                <TableColumn fx:id="actions" prefWidth="200.0" JavaFXUtils.i18nKey="user.column.actions" />
+                <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="z.id" />
+                <TableColumn fx:id="firstName" prefWidth="125.0" JavaFXUtils.i18nKey="z.firstname" />
+                <TableColumn fx:id="lastName" prefWidth="125.0" JavaFXUtils.i18nKey="z.lastname" />
+                <TableColumn fx:id="email" prefWidth="125.0" JavaFXUtils.i18nKey="z.email" />
+                <TableColumn fx:id="isDefault" prefWidth="95.0" JavaFXUtils.i18nKey="z.default" />
+                <TableColumn fx:id="actions" prefWidth="200.0" JavaFXUtils.i18nKey="z.actions" />
             </columns>
             </TableView>
         </children>
