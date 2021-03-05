@@ -4,7 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.*?>
-<SplitPane dividerPositions="0.5" layoutY="7.0" prefHeight="500.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.CollectionController">
+<SplitPane dividerPositions="0.5" layoutY="7.0" prefHeight="500.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0"
+           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/10.0.1"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.CollectionController">
     <items>
         <AnchorPane fx:id="collectionListPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="400.0">
             <children>
@@ -12,11 +14,11 @@
                            prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <columns>
-                            <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="collection.column.id" />
-                            <TableColumn fx:id="name" prefWidth="125.0" JavaFXUtils.i18nKey="collection.column.name" />
-                            <TableColumn fx:id="categories" prefWidth="405.0" JavaFXUtils.i18nKey="collection.column.categories" />
-                            <TableColumn fx:id="isDefault" prefWidth="95.0" JavaFXUtils.i18nKey="collection.column.default" />
-                            <TableColumn fx:id="actions" prefWidth="200.0" JavaFXUtils.i18nKey="collection.column.actions" />
+                            <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="z.id" />
+                            <TableColumn fx:id="name" prefWidth="125.0" JavaFXUtils.i18nKey="z.name" />
+                            <TableColumn fx:id="categories" prefWidth="405.0" JavaFXUtils.i18nKey="z.categories" />
+                            <TableColumn fx:id="isDefault" prefWidth="95.0" JavaFXUtils.i18nKey="z.default" />
+                            <TableColumn fx:id="actions" prefWidth="200.0" JavaFXUtils.i18nKey="z.actions" />
                         </columns>
                 </TableView>
             </children>
@@ -28,12 +30,12 @@
             /><Separator layoutX="10.0" layoutY="33.0" prefWidth="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="33.0" />
          <Label fx:id="nameLabel" layoutX="10.0" layoutY="65.06689453125" AnchorPane.leftAnchor="10.0"
                 AnchorPane.topAnchor="53.0"
-                JavaFXUtils.i18nKey="collection.column.name"
+                JavaFXUtils.i18nKey="z.name"
          />
          <TextField fx:id="nameField" layoutX="136.0" layoutY="48.0" prefHeight="26.0" prefWidth="210.0" AnchorPane.leftAnchor="136.0" AnchorPane.topAnchor="48.0" />
          <Label fx:id="categoryLabel" layoutX="13.0" layoutY="107.0"
                 AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="93.0"
-                JavaFXUtils.i18nKey="collection.column.categories"
+                JavaFXUtils.i18nKey="z.categories"
          />
             <Separator layoutX="9.0" layoutY="113.0" prefWidth="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="115.0" />
          <Group fx:id="categoryContainer" layoutX="14.0" layoutY="140.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="140.0" />
