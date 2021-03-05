@@ -32,7 +32,6 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.kordamp.bootstrapfx.BootstrapFX;
 import org.laeq.model.CategoryCount;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
@@ -239,7 +238,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private Scene init() {
         Scene scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
 
         Node node = loadFromFXML();
 
