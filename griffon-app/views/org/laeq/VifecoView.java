@@ -26,6 +26,11 @@ public class VifecoView extends AbstractJavaFXGriffonView {
     @MVCMember
     private VifecoController controller;
 
+    @MVCMember
+    private void setController(@Nonnull VifecoController controller){
+        this.controller = controller;
+    }
+
     @Inject private DatabaseService dbService;
 
     @FXML public Pane menu;
@@ -34,20 +39,11 @@ public class VifecoView extends AbstractJavaFXGriffonView {
 
     public Scene scene;
 
-    @MVCMember
-    private void setController(@Nonnull VifecoController controller){
-        this.controller = controller;
-    }
-
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
         createMVCGroup("menu");
         createMVCGroup("video");
         createMVCGroup("bottom");
-
-        Map<String, Object> tmp = new HashMap<>();
-        tmp.put("controls", new Controls());
-        createMVCGroup("controls", tmp);
     }
 
     @Override

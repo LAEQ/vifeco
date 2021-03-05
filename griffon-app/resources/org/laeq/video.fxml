@@ -12,15 +12,15 @@
             <children>
                 <TableView fx:id="videoTable" layoutX="40.0" layoutY="82.0" prefHeight="460.0" prefWidth="6505.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                    <columns>
-                       <TableColumn fx:id="createdAt" prefWidth="95.0" JavaFXUtils.i18nKey="org.laeq.video.column.created_at" />
-                       <TableColumn fx:id="name" prefWidth="155.0" JavaFXUtils.i18nKey="org.laeq.video.column.name"  />
-                       <TableColumn fx:id="path" prefWidth="75.0" JavaFXUtils.i18nKey="org.laeq.video.column.path" />
-                       <TableColumn fx:id="duration" prefWidth="80.0" JavaFXUtils.i18nKey="org.laeq.video.column.duration" />
-                       <TableColumn fx:id="user" prefWidth="145.0" JavaFXUtils.i18nKey="org.laeq.video.column.user" />
-                       <TableColumn fx:id="collection" prefWidth="145.0" JavaFXUtils.i18nKey="org.laeq.video.column.collection" />
-                       <TableColumn fx:id="total" prefWidth="75.0" JavaFXUtils.i18nKey="org.laeq.video.column.total" />
-                       <TableColumn fx:id="actions" prefWidth="175.0" JavaFXUtils.i18nKey="org.laeq.video.column.actions" />
-                       <TableColumn fx:id="delete" prefWidth="175.0" JavaFXUtils.i18nKey="org.laeq.video.column.delete" />
+                       <TableColumn fx:id="createdAt" prefWidth="95.0" JavaFXUtils.i18nKey="video.column.created_at" />
+                       <TableColumn fx:id="name" prefWidth="155.0" JavaFXUtils.i18nKey="video.column.name"  />
+                       <TableColumn fx:id="path" prefWidth="75.0" JavaFXUtils.i18nKey="video.column.path" />
+                       <TableColumn fx:id="duration" prefWidth="80.0" JavaFXUtils.i18nKey="video.column.duration" />
+                       <TableColumn fx:id="user" prefWidth="145.0" JavaFXUtils.i18nKey="video.column.user" />
+                       <TableColumn fx:id="collection" prefWidth="145.0" JavaFXUtils.i18nKey="video.column.collection" />
+                       <TableColumn fx:id="total" prefWidth="75.0" JavaFXUtils.i18nKey="video.column.total" />
+                       <TableColumn fx:id="actions" prefWidth="175.0" JavaFXUtils.i18nKey="video.column.actions" />
+                       <TableColumn fx:id="delete" prefWidth="175.0" JavaFXUtils.i18nKey="video.column.delete" />
                    </columns>
                 </TableView>
             </children>
