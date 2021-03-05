@@ -12,22 +12,22 @@
             <children>
                 <TableView fx:id="videoTable" layoutX="40.0" layoutY="82.0" prefHeight="460.0" prefWidth="6505.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                    <columns>
-                       <TableColumn fx:id="createdAt" prefWidth="95.0" JavaFXUtils.i18nKey="video.column.created_at" />
-                       <TableColumn fx:id="name" prefWidth="155.0" JavaFXUtils.i18nKey="video.column.name"  />
-                       <TableColumn fx:id="path" prefWidth="75.0" JavaFXUtils.i18nKey="video.column.path" />
-                       <TableColumn fx:id="duration" prefWidth="80.0" JavaFXUtils.i18nKey="video.column.duration" />
-                       <TableColumn fx:id="user" prefWidth="145.0" JavaFXUtils.i18nKey="video.column.user" />
-                       <TableColumn fx:id="collection" prefWidth="145.0" JavaFXUtils.i18nKey="video.column.collection" />
-                       <TableColumn fx:id="total" prefWidth="75.0" JavaFXUtils.i18nKey="video.column.total" />
-                       <TableColumn fx:id="actions" prefWidth="175.0" JavaFXUtils.i18nKey="video.column.actions" />
-                       <TableColumn fx:id="delete" prefWidth="175.0" JavaFXUtils.i18nKey="video.column.delete" />
+                       <TableColumn fx:id="createdAt" prefWidth="95.0" JavaFXUtils.i18nKey="z.createdAt" />
+                       <TableColumn fx:id="name" prefWidth="155.0" JavaFXUtils.i18nKey="z.name"  />
+                       <TableColumn fx:id="path" prefWidth="75.0" JavaFXUtils.i18nKey="z.path" />
+                       <TableColumn fx:id="duration" prefWidth="80.0" JavaFXUtils.i18nKey="z.duration" />
+                       <TableColumn fx:id="user" prefWidth="145.0" JavaFXUtils.i18nKey="z.user" />
+                       <TableColumn fx:id="collection" prefWidth="145.0" JavaFXUtils.i18nKey="z.collection" />
+                       <TableColumn fx:id="total" prefWidth="75.0" JavaFXUtils.i18nKey="z.total" />
+                       <TableColumn fx:id="actions" prefWidth="175.0" JavaFXUtils.i18nKey="z.actions" />
+                       <TableColumn fx:id="delete" prefWidth="175.0" JavaFXUtils.i18nKey="z.delete" />
                    </columns>
                 </TableView>
             </children>
         </AnchorPane>
         <AnchorPane fx:id="videoDetailsPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
             <children>
-                <Label fx:id="titleTxt"  AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" JavaFXUtils.i18nKey="org.laeq.video.title_text" />
+                <Label fx:id="titleTxt"  AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" JavaFXUtils.i18nKey="z.video.title" />
                 <Separator prefWidth="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="29.0" />
                 <GridPane layoutX="10.0" layoutY="42.0" prefHeight="129.0" prefWidth="375.0">
                     <columnConstraints>
@@ -40,9 +40,9 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label fx:id="videoTitleTxt" prefHeight="16.0" prefWidth="167.0" JavaFXUtils.i18nKey="org.laeq.video.video_title_text"/>
-                        <Label fx:id="durationTxt" prefHeight="16.0" prefWidth="162.0" GridPane.rowIndex="1" JavaFXUtils.i18nKey="org.laeq.video.duration_text" />
-                        <Label fx:id="totalTxt" prefHeight="16.0" prefWidth="163.0" text="Total" GridPane.rowIndex="2" JavaFXUtils.i18nKey="org.laeq.video.total_text"/>
+                        <Label fx:id="videoTitleTxt" prefHeight="16.0" prefWidth="167.0" JavaFXUtils.i18nKey="z.name"/>
+                        <Label fx:id="durationTxt" prefHeight="16.0" prefWidth="162.0" GridPane.rowIndex="1" JavaFXUtils.i18nKey="z.duration" />
+                        <Label fx:id="totalTxt" prefHeight="16.0" prefWidth="163.0" text="Total" GridPane.rowIndex="2" JavaFXUtils.i18nKey="z.total"/>
                         <Label fx:id="titleValue" prefHeight="16.0" prefWidth="240.0" GridPane.columnIndex="1" />
                         <Label fx:id="durationValue" prefHeight="16.0" prefWidth="240.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="totalValue" prefHeight="16.0" prefWidth="241.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -51,9 +51,9 @@
 
                 <Button fx:id="clearActionTarget" layoutX="10.0" layoutY="462.0" minWidth="60.0" mnemonicParsing="false"
                         styleClass="btn, btn-default"
-                        AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" JavaFXUtils.i18nKey="org.laeq.video.clear_btn"/>
+                        AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" JavaFXUtils.i18nKey="z.btn.clear"/>
                 <Button fx:id="editActionTarget" layoutX="320.0" layoutY="462.0" minWidth="80.0" mnemonicParsing="false"
-                        AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" JavaFXUtils.i18nKey="org.laeq.video.start_btn" styleClass="">
+                        AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" JavaFXUtils.i18nKey="z.btn.start" styleClass="">
                     <styleClass>
                         <String fx:value="btn" />
                         <String fx:value="btn-success" />
@@ -65,8 +65,8 @@
                           AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="225.0">
                     <columns>
                         <TableColumn fx:id="icon" prefWidth="75.0"  />
-                        <TableColumn fx:id="category" prefWidth="275.0" JavaFXUtils.i18nKey="org.laeq.video.category.column.category" />
-                        <TableColumn fx:id="count" prefWidth="75.0" JavaFXUtils.i18nKey="org.laeq.video.category.column.total" />
+                        <TableColumn fx:id="category" prefWidth="275.0" JavaFXUtils.i18nKey="z.category" />
+                        <TableColumn fx:id="count" prefWidth="75.0" JavaFXUtils.i18nKey="z.total" />
                     </columns>
                 </TableView>
             </children>
