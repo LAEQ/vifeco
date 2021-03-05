@@ -21,7 +21,6 @@ public class BottomView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private VifecoView parentView;
 
     @FXML public Label message;
-    @FXML private Pane box;
 
     @Override
     public void initUI() {
