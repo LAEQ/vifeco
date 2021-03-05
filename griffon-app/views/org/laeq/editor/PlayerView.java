@@ -95,8 +95,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         stage.setOnCloseRequest(event -> {
             mediaPlayer.stop();
-            closeAndDestroy("editor");
-            closeAndDestroy("display");
+            getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
+            getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
         });
 
         Icon icon = new Icon(IconSVG.video_plus, org.laeq.model.icon.Color.white);

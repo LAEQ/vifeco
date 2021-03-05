@@ -19,7 +19,6 @@ public class DisplayController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        MatchedPoint mp = (MatchedPoint) args.get("matchedPoint");
         getApplication().getEventRouter().addEventListener(listeners());
     }
 

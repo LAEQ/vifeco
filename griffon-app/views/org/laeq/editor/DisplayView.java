@@ -24,6 +24,7 @@ import org.laeq.model.icon.IconSVG;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -59,7 +60,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         stage.setOnCloseRequest(event -> {
             try {
                 mediaPlayer.stop();
-                closeAndDestroy("display");
+                getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
             }catch (Exception e){
 
             }

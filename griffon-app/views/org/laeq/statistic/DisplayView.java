@@ -1,6 +1,7 @@
 package org.laeq.statistic;
 
 import griffon.core.artifact.GriffonView;
+import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -62,11 +63,33 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         initPlayer();
 
         stage.setOnCloseRequest(event -> {
-
-
-            System.out.printf("F: %s\n", getApplication().getWindowManager().getWindowNames());
-            System.out.printf("F : %s\n", getApplication().getMvcGroupManager().getGroups().keySet());
+            getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("statistic_display"));
         });
+    }
+
+    private void closeAndDestroy(String name){
+        destroy(name);
+        closeScene(name);
+    }
+
+    private void destroy(String name) {
+        try{
+            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
+            if(group != null){
+                group.destroy();
+            }
+        }catch (Exception e){
+
+        }
+    }
+    private void closeScene(String name){
+        try{
+            Stage window = (Stage) getApplication().getWindowManager().findWindow(name);
+            window.close();
+            getApplication().getWindowManager().detach(name);
+        }catch (Exception e){
+
+        }
     }
 
 

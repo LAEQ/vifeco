@@ -37,6 +37,7 @@ public class VifecoController extends AbstractGriffonController {
         list.put("video.section", objects -> createGroup("video"));
         list.put("statistic.section", objects -> createGroup("statistic"));
         list.put("about.section", objects -> createGroup("about"));
+        list.put("mvc.clean", objects -> cleanAndDestroy((String) objects[0]));
 
         return list;
     }
@@ -75,28 +76,20 @@ public class VifecoController extends AbstractGriffonController {
     }
 
     /**
-     * Destroy obsolted MVC groups the application
+     * Clean and destroy
+     * @param name
      */
-    private void clean() {
-        getApplication().getMvcGroupManager().getGroups().keySet().forEach(name -> {
-            if(model.mvcKeep.contains(name) == false){
-                destroyMVC(name);
-            }
-        });
+    private void cleanAndDestroy(String name){
+        System.out.println("Clean and destroy");
+        destroyMVC(name);
+        closeWindow(name);
     }
 
-    private void closeObsoleteWindows(){
-        getApplication().getWindowManager().getStartingWindow();
-        getApplication().getWindowManager().getWindows().forEach( window -> {
-            closeWindow((Stage) window);
-        });
-    }
-
-    private void closeWindow(Stage window){
+    private void closeWindow(String name){
         try{
-            if(window != getApplication().getWindowManager().getStartingWindow()){
-
-            }
+            Stage window = (Stage) getApplication().getWindowManager().findWindow(name);
+            getApplication().getWindowManager().detach(name);
+            window.close();
         } catch (Exception e){
 
         }

@@ -110,6 +110,8 @@ StatisticController extends AbstractGriffonController {
     }
 
     public void displayMatchedPoint(MatchedPoint mp) {
+        System.out.printf("F: %s\n", getApplication().getWindowManager().getWindowNames());
+        System.out.printf("F : %s\n", getApplication().getMvcGroupManager().getGroups().keySet());
         Object statistic_display = getApplication().getWindowManager().findWindow("statistic_display");
         if(statistic_display == null){
             Map<String, Object> args = new HashMap<>();
