@@ -42,9 +42,9 @@
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
-                    <Label fx:id="firstNameLabel" JavaFXUtils.i18nKey="user.form.firstname"/>
-                    <Label fx:id="lastNameLabel" GridPane.rowIndex="1" JavaFXUtils.i18nKey="user.form.lastname"/>
-                    <Label fx:id="emailLabel" GridPane.rowIndex="2" JavaFXUtils.i18nKey="user.form.email"/>
+                    <Label fx:id="firstNameLabel" JavaFXUtils.i18nKey="z.firstname"/>
+                    <Label fx:id="lastNameLabel" GridPane.rowIndex="1" JavaFXUtils.i18nKey="z.lastname"/>
+                    <Label fx:id="emailLabel" GridPane.rowIndex="2" JavaFXUtils.i18nKey="z.email"/>
                     <TextField fx:id="firstNameField" GridPane.columnIndex="1" />
                     <TextField fx:id="lastNameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="2" />

@@ -51,9 +51,9 @@
 
                 <Button fx:id="clearActionTarget" layoutX="10.0" layoutY="462.0" minWidth="60.0" mnemonicParsing="false"
                         styleClass="btn, btn-default"
-                        AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" JavaFXUtils.i18nKey="z.btn.clear"/>
+                        AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" JavaFXUtils.i18nKey="btn.clear"/>
                 <Button fx:id="editActionTarget" layoutX="320.0" layoutY="462.0" minWidth="80.0" mnemonicParsing="false"
-                        AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" JavaFXUtils.i18nKey="z.btn.start" styleClass="">
+                        AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" JavaFXUtils.i18nKey="btn.start" >
                     <styleClass>
                         <String fx:value="btn" />
                         <String fx:value="btn-success" />
