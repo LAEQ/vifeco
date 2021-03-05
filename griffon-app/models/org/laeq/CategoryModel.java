@@ -20,7 +20,7 @@ public class CategoryModel extends AbstractGriffonModel {
     public SimpleStringProperty name = new SimpleStringProperty(this, "name", "");
     public SimpleStringProperty shortCut = new SimpleStringProperty(this, "shortCut", "");
     public SimpleStringProperty icon = new SimpleStringProperty(this, "icon", "");
-    public SimpleStringProperty color = new SimpleStringProperty(this, "color", "#00000000");
+    public SimpleStringProperty color = new SimpleStringProperty(this, "color", "");
 
     public void addCategory(Category category) {
         categoryList.add(category);

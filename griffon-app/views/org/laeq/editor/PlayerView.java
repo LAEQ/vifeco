@@ -303,14 +303,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private Callback<TableColumn<Point, Void>, TableCell<Point, Void>> deleteActions() {
         return param -> {
             final  TableCell<Point, Void> cell = new TableCell<Point, Void>(){
-                Button delete = new Button("");
+                Button delete = new Button("X");
                 {
                     delete.setLayoutX(5);
+                    delete.getStyleClass().addAll("btn", "btn-sm", "btn-alert");
 
-                    delete.setGraphic(new Icon(IconSVG.bin, org.laeq.model.icon.Color.gray_dark));
-                    delete.setOnAction(event -> {
-                        controller.deletePoint(timelineTable.getItems().get(getIndex()));
-                    });
+                    delete.setOnAction(event -> controller.deletePoint(timelineTable.getItems().get(getIndex())));
                 }
 
                 @Override

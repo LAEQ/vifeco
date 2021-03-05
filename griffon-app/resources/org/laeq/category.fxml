@@ -43,6 +43,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints />
                     </rowConstraints>
                     <children>
@@ -50,12 +51,15 @@
                         <Label fx:id="shortCutLabel" GridPane.rowIndex="1" JavaFXUtils.i18nKey="z.shortcut" />
                         <Label fx:id="pathLabel" GridPane.rowIndex="2" JavaFXUtils.i18nKey="z.icon" />
                         <Label fx:id="colorLabel" GridPane.rowIndex="3" JavaFXUtils.i18nKey="z.color" />
-                        <Label fx:id="previewLabel" layoutX="10.0" layoutY="281.0" prefHeight="16.0" prefWidth="104.0" GridPane.rowIndex="4" JavaFXUtils.i18nKey="z.preview" />
+                        <Label fx:id="previewLabel" layoutX="10.0" layoutY="281.0" prefHeight="16.0" prefWidth="104.0" GridPane.rowIndex="5" JavaFXUtils.i18nKey="z.preview" />
                         <TextField fx:id="nameField" GridPane.columnIndex="1" />
                         <TextField fx:id="shortCutField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField fx:id="pathField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField fx:id="colorPickerField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Pane fx:id="svgDisplayPane" layoutX="119.0" layoutY="267.0" prefHeight="123.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Pane fx:id="svgDisplayPane" layoutX="119.0" layoutY="267.0" prefHeight="123.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="pathField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label prefHeight="17.0" prefWidth="224.0" GridPane.columnIndex="1" GridPane.rowIndex="4" JavaFXUtils.i18nKey="z.color.help" />
+                  <Label layoutX="118.0" layoutY="117.0" prefHeight="17.0" prefWidth="224.0" />
+                  <Label layoutX="10.0" layoutY="18.0" prefHeight="17.0" prefWidth="224.0" />
                     </children>
                 </GridPane>
                     <Button fx:id="saveActionTarget" layoutX="292.0" layoutY="495.0" mnemonicParsing="false" styleClass="btn, btn-success" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" JavaFXUtils.i18nKey="btn.save" />

@@ -53,6 +53,7 @@ public class CategoryController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void clear(){
         model.clear();
+        getApplication().getEventRouter().publishEvent("status.reset");
     }
 
     @ControllerAction

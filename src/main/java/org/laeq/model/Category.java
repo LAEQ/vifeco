@@ -29,6 +29,7 @@ public class Category implements Comparable<Category> {
     private String name;
 
     @Column(nullable = false, columnDefinition = "TEXT")
+    @Size(min = 1)
     private String icon;
 
     @Column(nullable = false)

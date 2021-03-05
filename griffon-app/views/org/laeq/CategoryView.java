@@ -63,7 +63,6 @@ public class CategoryView extends AbstractJavaFXGriffonView {
         init();
     }
 
-
     private void init(){
         //Table
         id.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
@@ -86,6 +85,7 @@ public class CategoryView extends AbstractJavaFXGriffonView {
         colorPickerField.textProperty().addListener((observable, oldValue, newValue) -> {
             try{
                 svgPath.setFill(Paint.valueOf(newValue));
+                getApplication().getEventRouter().publishEvent("status.reset");
             } catch (Exception e){
                 getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("category.color.invalid"));
             }
@@ -148,8 +148,8 @@ public class CategoryView extends AbstractJavaFXGriffonView {
                         icon.setFill(Paint.valueOf(category.getColor()));
 
                         colorPickerField.setText(category.getColor());
-                    } catch (Exception e){
-                        e.printStackTrace();
+                    } catch (IndexOutOfBoundsException e){
+                        // noop
                     }
 
                     if (empty) {
