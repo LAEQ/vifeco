@@ -16,11 +16,11 @@
                            AnchorPane.rightAnchor="0.0"
                            AnchorPane.topAnchor="0.0">
                     <columns>
-                        <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="category.column.id" />
-                        <TableColumn fx:id="icon" prefWidth="95.0" JavaFXUtils.i18nKey="category.column.icon" />
-                        <TableColumn fx:id="name" prefWidth="95.0" JavaFXUtils.i18nKey="category.column.name" />
-                        <TableColumn fx:id="shortcut" prefWidth="95.0" JavaFXUtils.i18nKey="category.column.shortcut" />
-                        <TableColumn fx:id="actions" prefWidth="95.0" JavaFXUtils.i18nKey="category.column.actions" />
+                        <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="z.id" />
+                        <TableColumn fx:id="icon" prefWidth="95.0" JavaFXUtils.i18nKey="z.icon" />
+                        <TableColumn fx:id="name" prefWidth="95.0" JavaFXUtils.i18nKey="z.name" />
+                        <TableColumn fx:id="shortcut" prefWidth="95.0" JavaFXUtils.i18nKey="z.shortcut" />
+                        <TableColumn fx:id="actions" prefWidth="95.0" JavaFXUtils.i18nKey="z.actions" />
                     </columns>
                 </TableView>
             </children>
@@ -48,12 +48,12 @@
                   <RowConstraints />
                     </rowConstraints>
                     <children>
-                        <Label fx:id="nameLabel" JavaFXUtils.i18nKey="category.column.name" />
-                        <Label fx:id="shortCutLabel" GridPane.rowIndex="1" JavaFXUtils.i18nKey="category.column.shortcut"/>
-                        <Label fx:id="pathLabel" GridPane.rowIndex="2" JavaFXUtils.i18nKey="category.column.icon"/>
-                        <Label fx:id="colorLabel" GridPane.rowIndex="3" JavaFXUtils.i18nKey="category.column.color"/>
+                        <Label fx:id="nameLabel" JavaFXUtils.i18nKey="z.name" />
+                        <Label fx:id="shortCutLabel" GridPane.rowIndex="1" JavaFXUtils.i18nKey="z.shortcut"/>
+                        <Label fx:id="pathLabel" GridPane.rowIndex="2" JavaFXUtils.i18nKey="z.icon"/>
+                        <Label fx:id="colorLabel" GridPane.rowIndex="3" JavaFXUtils.i18nKey="z.color"/>
                         <Label fx:id="previewLabel" layoutX="10.0" layoutY="281.0" prefHeight="16.0" prefWidth="104.0"
-                               GridPane.rowIndex="4" JavaFXUtils.i18nKey="category.form.preview"/>
+                               GridPane.rowIndex="4" JavaFXUtils.i18nKey="z.preview"/>
                         <TextField fx:id="nameField" GridPane.columnIndex="1" />
                         <TextField fx:id="shortCutField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="pathField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
