@@ -4,22 +4,23 @@ import javafx.util.Duration
 import org.laeq.model.*
 
 class VideoGenerator {
-    static Video generateVideo( int videoId, int totalCategory){
+    static Video generateVideo(int totalCategory){
         Collection collection = generateCollection(1)
 
         1.upto(totalCategory, {
             def category = generateCategory(it)
-            collection.categorySet.add(category)
+            collection.categories.add(category)
         })
 
-        User user = new User(1, "test", "test", "test@test.com")
-        Video video = new Video(videoId,"path", Duration.millis(10000), user, collection)
+        User user = new User("test", "test", "test@test.com")
+        Video video = new Video("path", Duration.millis(60000), collection, user)
+        video.id = UUID.randomUUID()
 
         return video
     }
 
     static Collection generateCollection(int id){
-        Collection collection = new Collection(id, "test", false)
+        Collection collection = new Collection("test")
 
         return collection
     }
@@ -33,12 +34,13 @@ class VideoGenerator {
         return category
     }
 
-    static void generatePoints(Video video, int categoryId, int seconds, int total,int pointId){
-        Category category = video.collection.categorySet.find { it.id == categoryId}
+    static void generatePoints(Video video, int categoryId, double seconds, int total){
+        Category category = video.collection.categories.find { it.id == categoryId}
         1.upto(total, {
-            Duration start = Duration.seconds(seconds + it)
-            Point point = new Point(pointId++,10, 10, start, video, category)
-            video.pointSet.add(point)
+            Duration start = Duration.seconds(seconds * it)
+            Point point = new Point(10.0, 10.0, start, category, video)
+            point.id = UUID.randomUUID()
+            video.points.add(point)
         })
     }
 

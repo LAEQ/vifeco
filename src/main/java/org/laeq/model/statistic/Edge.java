@@ -13,9 +13,9 @@ public class Edge implements Comparable<Edge>{
         this.end = end;
     }
 
-    public double getDeltaStart(){
-        return Math.abs(this.start.point.getStartDouble() - this.end.point.getStartDouble());
-    }
+//    public double getDeltaStart(){
+//        return Math.abs(this.start.point.getStartDouble() - this.end.point.getStartDouble());
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -43,9 +43,9 @@ public class Edge implements Comparable<Edge>{
             return diffTotalEdge;
         }
 
-        if(getDeltaStart() <= o.getDeltaStart()){
-            return -1;
-        }
+//        if(getDeltaStart() <= o.getDeltaStart()){
+//            return -1;
+//        }
 
         return 1;
     }

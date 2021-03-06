@@ -4,36 +4,74 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javafx.util.Duration;
-import org.laeq.model.serializer.PointDeserializer;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.hibernate.annotations.GenericGenerator;
+import org.laeq.model.converter.hibernate.DurationConverter;
+import org.laeq.model.converter.jackson.CategoryConverterDeserialize;
+import org.laeq.model.converter.jackson.CategoryConverterSerialize;
+import org.laeq.model.converter.jackson.DurationToMilliConverter;
+import org.laeq.model.converter.jackson.MilliToDuration;
+import org.laeq.model.icon.IconPointColorized;
+import org.laeq.model.icon.IconSize;
 
-import java.util.Objects;
+import javax.persistence.*;
 import java.util.UUID;
 
-@JsonIgnoreProperties({"video", "icon", "duration", "createdAt", "updatedAt", "category", "uuid"})
-@JsonPropertyOrder({"id", "x", "y", "categoryId", "startDouble", "videoId"})
-@JsonDeserialize(using = PointDeserializer.class)
-public class Point extends BaseEntity implements Comparable<Point> {
-    private int id;
-    private double x;
-    private double y;
+@Entity
+@Table(name = "point")
+@JsonIgnoreProperties({"video"})
+@JsonPropertyOrder({"id", "x", "y", "start", "category"})
+public class Point implements Comparable<Point> {
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
+
+    @Column(nullable = false)
+    private Double x;
+    @Column(nullable = false)
+    private Double y;
+
+    @Column(nullable = false)
+    @Convert(converter = DurationConverter.class)
+    @JsonSerialize(converter = DurationToMilliConverter.class)
+    @JsonDeserialize(converter = MilliToDuration.class)
     private Duration start;
+
+    @ManyToOne()
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
+    @JsonSerialize(converter = CategoryConverterSerialize.class)
+    @JsonDeserialize(converter = CategoryConverterDeserialize.class)
     private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "video_id", nullable = false)
     private Video video;
-    private UUID uuid = UUID.randomUUID();
+
+    @JsonIgnore
+    @Transient
+    public IconPointColorized icon;
 
     public Point() {}
 
-    public Point(int id) {
+    public Point(UUID id) {
         this.id = id;
     }
 
-    public Point(int id, Duration start){
+    public Point(UUID id, Duration start) {
         this.id = id;
         this.start = start;
     }
 
-    public Point(int id, double x, double y, Duration start, Video video, Category category) {
+    public Point(UUID id, Double x, Double y, Duration start, Category category, Video video) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -41,95 +79,127 @@ public class Point extends BaseEntity implements Comparable<Point> {
         this.category = category;
         this.video = video;
     }
-    public Point(double x, double y, Duration start, Video video,Category category) {
+
+    public Point(Double x, Double y, Duration start, Category category, Video video) {
         this.x = x;
         this.y = y;
         this.start = start;
         this.category = category;
         this.video = video;
+    }
+
+    /**
+     * Constructor for testing (video entity is added in addPoint method
+     * @param x
+     * @param y
+     * @param start
+     * @param category
+     */
+    public Point(Double x, Double y, Duration start, Category category) {
+        this.x = x;
+        this.y = y;
+        this.start = start;
+        this.category = category;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public Double getX() {
+        return x;
+    }
+
+    public void setX(Double x) {
+        this.x = x;
+    }
+
+    public Double getY() {
+        return y;
+    }
+
+    public void setY(Double y) {
+        this.y = y;
+    }
+
+    public Duration getStart() {
+        return start;
+    }
+
+    public void setStart(Duration start) {
+        this.start = start;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Video getVideo() {
         return video;
     }
+
     public void setVideo(Video video) {
         this.video = video;
     }
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public double getX() {
-        return x;
-    }
-    public void setX(double x) {
-        this.x = x;
-    }
-    public double getY() {
-        return y;
-    }
-    public void setY(double y) {
-        this.y = y;
-    }
 
-    public double getStartDouble(){
-        return start.toMillis();
-    }
+    @JsonIgnore
+    public IconPointColorized getIconPoint(){
+        if(this.icon == null){
+            this.icon = new IconPointColorized(new IconSize(category, 100));
+            icon.decorate();
+            icon.setLayoutX(x);
+            icon.setLayoutY(y);
+        }
 
-    public String getVideoId(){
-        return video.getUuid().toString();
+        return this.icon;
     }
 
     @JsonIgnore
-    public Duration getStart() {
-        return start;
+    public String getStartFormatted(){
+        return DurationFormatUtils.formatDuration((long)start.toMillis(), "HH:mm:ss");
     }
-    public void setStart(Duration start) {
-        this.start = start;
-    }
-    public Category getCategory() {
-        return category;
-    }
-    public void setCategory(Category category) {
-        this.category = category;
+
+    @JsonIgnore
+    public String getStartFormatted2(){
+        return String.format("%.3f ms  (%s)", start.toMillis(), DurationFormatUtils.formatDuration((long)start.toMillis(), "HH:mm:ss"));
     }
 
     @Override
     public int compareTo(Point o) {
-        if(uuid.compareTo(o.uuid) == 0){
+        if(this.equals(o)){
             return 0;
         }
 
-        int compare = this.start.compareTo(o.start);
-        if(compare == 0){
-            return uuid.compareTo(o.uuid);
-        }
-
-        return compare;
+        return this.start.compareTo(o.start);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
+
         Point point = (Point) o;
-        return uuid.compareTo(point.uuid) == 0;
+
+        return new EqualsBuilder().append(id, point.id).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return new HashCodeBuilder(17, 37).append(id).toHashCode();
     }
 
     @Override
     public String toString() {
-        return "Point("+ id +":" + start +')';
-    }
-
-    public int getCategoryId(){
-        return category.getId();
+        return String.format("%s @ %s", category.getName(), getStartFormatted());
     }
 }
 

@@ -3,64 +3,53 @@ package org.laeq.menu;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
-import org.laeq.TranslatedView;
-import org.laeq.TranslationService;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.VifecoView;
-import org.laeq.icon.IconService;
 import org.laeq.model.Category;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconButton;
 import org.laeq.model.icon.IconSVG;
 import org.laeq.model.icon.IconSquare;
-import org.laeq.user.PreferencesService;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
-public class MenuView extends TranslatedView {
-    @MVCMember @Nonnull private MenuController controller;
-    @MVCMember @Nonnull private MenuModel model;
+public class MenuView extends AbstractJavaFXGriffonView {
+    private MenuController controller;
+    private MenuModel model;
 
     @FXML private AnchorPane subMenuPane;
     @FXML private ChoiceBox<String> languageMenu;
 
     @MVCMember @Nonnull private VifecoView parentView;
 
-    @Inject private IconService iconService;
+    @MVCMember
+    public void setModel(@Nonnull MenuModel model){
+        this.model = model;
+    }
 
-    @Inject private PreferencesService prefService;
+    @MVCMember
+    public void setController(@Nonnull MenuController controller){
+        this.controller = controller;
+    }
 
     private final Map<IconButton, String> btnTooltipMessages = new HashMap<>();
     private final Map<IconButton, Tooltip> toolTips = new HashMap<>();
 
-    private TranslationService translationService;
 
     @Override
     public void initUI() {
-
-        model.setPrefs(prefService.getPreferences());
-
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
-        }
-
-
         Node node = loadFromFXML();
         connectActions(node, controller);
 
-        parentView.getTop().getChildren().add(node);
+        parentView.menu.getChildren().add(node);
 
         IconButton videoListBtn = generateButton(IconSVG.video, "video list", "org.laeq.menu.tooltip.video_list", "video.section");
         videoListBtn.setLayoutX(10);
@@ -97,17 +86,6 @@ public class MenuView extends TranslatedView {
         IconButton aboutBtn = generateButton(IconSVG.question, "about", "org.laeq.menu.tooltip.about", "about.section");
         aboutBtn.setLayoutX(475);
         subMenuPane.getChildren().add(aboutBtn);
-
-        languageMenu.setItems(FXCollections.observableArrayList(model.getPrefs().getLocales()));
-
-        languageMenu.getSelectionModel().select(model.getPrefs().getLocalIndex());
-
-        languageMenu.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            model.getPrefs().setLocaleByIndex(newValue.intValue());
-            runOutsideUI(() -> prefService.export(model.getPrefs()));
-
-            controller.changeLanguage();
-        });
     }
 
     private IconButton generateButton(String path, String name, String help, String eventName){
@@ -124,18 +102,5 @@ public class MenuView extends TranslatedView {
         btn.setLayoutY(10);
 
         return btn;
-    }
-
-    private Tooltip generateToolTip(IconButton btn){
-        if(! toolTips.containsValue(btn)){
-            toolTips.put(btn, new Tooltip(translationService.getMessage(btnTooltipMessages.get(btn))));
-        }
-
-        return toolTips.get(btn);
-    }
-
-    public void updateTranslation() {
-//        toolTips.clear();
-        
     }
 }

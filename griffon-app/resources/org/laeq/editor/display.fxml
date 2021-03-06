@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.media.MediaView?>
+<?import java.lang.String?>
+<AnchorPane prefHeight="506.0" prefWidth="680.0" style="-fx-background-color: #dddddd;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.editor.DisplayController">
+     <Pane fx:id="playerPane" layoutX="14.0" layoutY="23.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <MediaView fx:id="mediaView" fitHeight="${playerPane.height}" fitWidth="${playerPane.width}" layoutX="1.0" />
+     </Pane>
+   <Button fx:id="volumeActionTarget" layoutX="14.0" layoutY="469.0" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
+      <styleClass>
+         <String fx:value="btn" />
+         <String fx:value="btn-default" />
+      </styleClass>
+   </Button>
+ </AnchorPane>

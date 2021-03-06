@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane prefHeight="60.0" prefWidth="200.0"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.laeq.menu.BottomController">
-
-</AnchorPane>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<Label fx:id="message" layoutX="10.0" layoutY="10.0" prefHeight="16.0" prefWidth="1500.0" minWidth="900"
+              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+              xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.menu.BottomController"/>

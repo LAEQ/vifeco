@@ -5,7 +5,7 @@ import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.user.PreferencesService;
+import org.laeq.PreferencesService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -26,10 +26,6 @@ public class AboutController extends AbstractGriffonController {
 
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
-        list.put("change.language", objects -> {
-            Locale locale = (Locale) objects[0];
-            view.changeLocale(locale);
-        });
 
         return list;
     }

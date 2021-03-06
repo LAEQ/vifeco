@@ -3,21 +3,22 @@ package org.laeq.menu;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
-import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.TranslationService;
-import org.laeq.db.*;
-import org.laeq.model.Category;
+import org.laeq.DatabaseService;
+import org.laeq.ExportService;
+import org.laeq.ImportService;
+import org.laeq.PreferencesService;
+import org.laeq.model.Collection;
+import org.laeq.model.User;
 import org.laeq.model.Video;
-import org.laeq.service.MariaService;
+import org.laeq.model.dao.VideoDAO;
 import org.laeq.settings.Settings;
-import org.laeq.ui.DialogService;
-import org.laeq.video.ExportService;
-import org.laeq.video.ImportService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -25,28 +26,26 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @ArtifactProviderFor(GriffonController.class)
 public class MenuController extends AbstractGriffonController {
-    private Locale currentLocale;
-    @MVCMember @Nonnull private MenuModel model;
-    @MVCMember @Nonnull private MenuView view;
-
     private FileChooser fileChooser;
-    private TranslationService translationService;
+    private PreferencesService preferencesService;
 
-    @Inject private DialogService dialogService;
     @Inject private ImportService importService;
-    @Inject private MariaService dbService;
+    @Inject private DatabaseService dbService;
     @Inject private ExportService exportService;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        this.setTranslationService();
         getApplication().getEventRouter().addEventListener(listeners());
+        preferencesService = new PreferencesService();
     }
 
     @ControllerAction
@@ -64,9 +63,32 @@ public class MenuController extends AbstractGriffonController {
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            getApplication().getEventRouter().publishEvent("video.create", Arrays.asList(selectedFile));
+            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("video.create.start"));
+
+            runOutsideUIAsync(() -> {
+                this.createVideo(selectedFile);
+            });
+
         } else {
-            System.out.println("Error loading the file");
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
+        }
+    }
+
+    private void createVideo(File selectedFile) {
+        try{
+            Video video = new Video();
+            String path = selectedFile.getAbsolutePath();
+            User defaultUser = dbService.userDAO.findDefault();
+            Collection defaultCollection = dbService.collectionDAO.findDefault();
+            video.setPath(path);
+            video.setCollection(defaultCollection);
+            video.setUser(defaultUser);
+            video.setDuration(Duration.UNKNOWN);
+            dbService.videoDAO.create(video);
+            getApplication().getEventRouter().publishEvent("video.created");
+            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.create.success"));
+        }catch (Exception e){
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
         }
     }
 
@@ -89,34 +111,12 @@ public class MenuController extends AbstractGriffonController {
             try {
                 importService.execute(selectedFile);
                 getApplication().getEventRouter().publishEvent("video.import.success");
-            } catch (IOException | DAOException e) {
-                dialogService.simpleAlert(
-                        getApplication().getMessageSource().getMessage("org.laeq.title.error"),
-                        getApplication().getMessageSource().getMessage("org.laeq.video.import.error")
-                );
+            } catch (Exception e) {
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.import.error"));
             }
-        } else {
-            getLog().error("Error loading the file");
         }
     }
 
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void close(){
-        dialogService.dialog();
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void save(){
-        dialogService.dialog();
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void saveAs(){
-        dialogService.dialog();
-    }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
@@ -127,37 +127,25 @@ public class MenuController extends AbstractGriffonController {
 
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
-    public void archive() throws IOException {
-        VideoDAO videoDAO = dbService.getVideoDAO();
-        CategoryDAO categoryDAO = dbService.getCategoryDAO();
-        UserDAO userDAO = dbService.getUserDAO();
-        PointDAO pointDAO = dbService.getPointDAO();
-
+    public String archive() throws Exception {
+        VideoDAO videoDAO = dbService.videoDAO;
         List<Video> videoList = videoDAO.findAll();
-
         List<String> srcFiles = new ArrayList<>();
 
         for(Video video : videoList){
-            Set<Category> categories = categoryDAO.findByCollection(video.getCollection());
-            video.getCollection().getCategorySet().addAll(categories);
-
-            video.getPointSet().addAll(pointDAO.findByVideo(video));
-
             String fileName = exportService.export(video);
             srcFiles.add(fileName);
         }
 
-        String userDefault = "";
-        try {
-            userDefault = userDAO.findDefault().toString();
-        } catch (Exception e) {
-            userDefault = UUID.randomUUID().toString().substring(0, 8);
-        }
+        LocalDate now = LocalDate.now();
+        DateTimeFormatter dateTimeFormatter =  DateTimeFormatter.ofPattern("yyyy_MM_dd");
+        String nowStr = dateTimeFormatter.format(now);
 
-        String zipFileName = String.format("%s-%s.zip", userDefault, System.currentTimeMillis());
+        String zipFileName = String.format("%s_%d.zip", nowStr, System.currentTimeMillis());
+        String filePath = this.getPathExport(zipFileName);
 
         try {
-            FileOutputStream fos = new FileOutputStream(getPathExport(zipFileName));
+            FileOutputStream fos = new FileOutputStream(filePath);
             ZipOutputStream zipOut = new ZipOutputStream(fos);
             for (String srcFile : srcFiles) {
                 File fileToZip = new File(srcFile);
@@ -183,6 +171,8 @@ public class MenuController extends AbstractGriffonController {
                 File file = new File(srcFile);
                 file.delete();
             }
+
+            return filePath;
         }
     }
 
@@ -198,38 +188,18 @@ public class MenuController extends AbstractGriffonController {
         });
 
         list.put("database.backup", objects -> {
-            String title = this.translationService.getMessage("org.laeq.title.success");
-            String message = this.translationService.getMessage("org.laeq.video.export.success");
-
             try {
-                this.archive();
-            } catch (IOException e) {
-                message = this.translationService.getMessage("org.laeq.video.export.error");
-            } finally {
-                alert(title, message);
+                String filename = this.archive();
+                getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("db.export.success", filename));
+            } catch (Exception e) {
+                getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.export.error"));
             }
         });
 
         return list;
     }
 
-    public void changeLanguage() {
-        getApplication().getEventRouter().publishEvent("change.language", Arrays.asList(model.getPrefs().locale));
-    }
-
     private String getPathExport(String filename){
         return String.format("%s/%s", Settings.exportPath, filename);
-    }
-
-    private void alert(String key, String alertMsg){
-        runInsideUISync(() -> dialogService.simpleAlert(key, alertMsg));
-    }
-
-    private void setTranslationService(){
-        try {
-            translationService = new TranslationService(getClass().getClassLoader().getResourceAsStream("messages/messages.json"), model.getPrefs().locale);
-        } catch (IOException e) {
-            getLog().error("Cannot load file messages.json");
-        }
     }
 }

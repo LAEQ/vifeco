@@ -44,7 +44,7 @@ public class StatisticTimeline extends Group {
     public void init(Video videoA, Video videoB) {
         this.videoA = videoA;
         this.videoB = videoB;
-        this.duration = Duration.millis(videoA.getDuration());
+        this.duration = videoA.getDuration();
         for (int i = 0; i < this.duration.toSeconds(); i++) {
             lines.add(drawLine(i));
             if (i % 5 == 0) {
@@ -117,19 +117,19 @@ public class StatisticTimeline extends Group {
     public void display(Category category){
         Graph graph = this.graphMap.get(category);
 
-        graph.vertices.keySet().forEach(point -> {
-            Circle circle = new Circle(-2,-2,4);
-            circle.setFill(Color.GRAY);
-
-            double y = point.getVideo().equals(videoA)? 10: 70;
-
-            circle.setLayoutY(y);
-            circle.setLayoutX(point.getStartDouble() / 1000 * this.ratio);
-
-            circlePointMap.put(point, circle);
-
-            vertices.getChildren().add(circle);
-        });
+//        graph.vertices.keySet().forEach(point -> {
+//            Circle circle = new Circle(-2,-2,4);
+//            circle.setFill(Color.GRAY);
+//
+//            double y = point.getVideo().equals(videoA)? 10: 70;
+//
+//            circle.setLayoutY(y);
+//            circle.setLayoutX(point.getStartDouble() / 1000 * this.ratio);
+//
+//            circlePointMap.put(point, circle);
+//
+//            vertices.getChildren().add(circle);
+//        });
 
 
         Set<Edge> edgeSet =  graph.edges.values().stream().flatMap(List::stream).collect(Collectors.toSet());
@@ -153,19 +153,19 @@ public class StatisticTimeline extends Group {
     public void drawDots(Category category) {
         Graph graph = this.graphMap.get(category);
 
-        graph.vertices.keySet().forEach(point -> {
-            Circle circle = new Circle(-2,-2,4);
-            circle.setFill(Color.GRAY);
-
-            double y = point.getVideo().equals(videoA)? 10: 70;
-
-            circle.setLayoutY(y);
-            circle.setLayoutX(point.getStartDouble() / 1000 * this.ratio);
-
-            circlePointMap.put(point, circle);
-
-            vertices.getChildren().add(circle);
-        });
+//        graph.vertices.keySet().forEach(point -> {
+//            Circle circle = new Circle(-2,-2,4);
+//            circle.setFill(Color.GRAY);
+//
+//            double y = point.getVideo().equals(videoA)? 10: 70;
+//
+//            circle.setLayoutY(y);
+//            circle.setLayoutX(point.getStartDouble() / 1000 * this.ratio);
+//
+//            circlePointMap.put(point, circle);
+//
+//            vertices.getChildren().add(circle);
+//        });
     }
 
     public void drawEdges(Collection<Edge> values) {

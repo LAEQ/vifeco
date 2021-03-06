@@ -24,3 +24,9 @@ db: contient les fichiers de la bd MySQL
 export: emplacement ou les fichiers json sont ‘exportés’
 import: emplacement ou l’on ajoute les fichiers json pour faire une comparaison statistique
 statistic: fichier généré pour faire les calculs stats entre
+
+
+# Tools
+https://github.com/Manevolent/ffmpeg4j
+
+https://javafxpedia.com/en/tutorial/5434/internationalization-in-javafx

@@ -1,3 +1,4 @@
+dist: trusty 
 language: java
 cache:
   directories:
@@ -10,4 +11,4 @@ jdk:
   - oraclejdk8
 
 script:
-  - ./gradlew clean test build
+  - ./gradlew clean test

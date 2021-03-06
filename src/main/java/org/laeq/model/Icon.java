@@ -59,7 +59,7 @@ public class Icon extends Group {
 
     public Icon(String path, String color){
         this.path = path;
-        this.size = 1;
+        this.size = 0.3;
         this.color = color;
         this.svgRatio = 0.5f;
 

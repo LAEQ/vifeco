@@ -3,98 +3,97 @@ package org.laeq.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleStringProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javafx.util.Duration;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.laeq.settings.Settings;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.laeq.model.converter.hibernate.DurationConverter;
+import org.laeq.model.converter.jackson.DurationToMilliConverter;
+import org.laeq.model.converter.jackson.MilliToDuration;
+import org.laeq.model.converter.jackson.PathConverterSerialize;
 
-import java.io.File;
+import javax.persistence.*;
 import java.nio.file.Paths;
-import java.sql.Timestamp;
-import java.util.Map;
-import java.util.Objects;
-import java.util.SortedSet;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
-@JsonIgnoreProperties({ "id", "name", "total", "createdAt", "updatedAt"})
-@JsonPropertyOrder({"uuid", "path", "user", "duration", "collection", "pointSet"})
-public class Video extends BaseEntity {
-    private Integer id;
-    private SimpleStringProperty path;
-    private SimpleStringProperty name;
-    private SimpleDoubleProperty duration;
-    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
-    private Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
+
+@JsonIgnoreProperties({"createdAt", "selected"})
+@JsonPropertyOrder({"id", "path", "duration", "user", "collection", "points"})
+@Entity
+@Table(name = "video")
+public class Video {
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
+
+    @Column(nullable = false)
+    @JsonSerialize(converter = PathConverterSerialize.class)
+    private String path;
+
+    @Column(nullable = false)
+    @Convert(converter = DurationConverter.class)
+    @JsonSerialize(converter = DurationToMilliConverter.class)
+    @JsonDeserialize(converter = MilliToDuration.class)
+    private Duration duration;
+
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "collection_id", nullable = false)
     private Collection collection;
+
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    private SimpleLongProperty total;
-    private SortedSet<Point> pointSet = new ConcurrentSkipListSet<>();
-    private UUID uuid = UUID.randomUUID();
 
-    public Video(Integer id, String path, Duration duration, User user, Collection collection) {
-        this.id = id;
-        this.path = new SimpleStringProperty(this, "path", path);
-        this.name = new SimpleStringProperty(this, "name", pathToName(path));
-        this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
-        this.total = new SimpleLongProperty(this, "total", 0);
-        this.user = user;
-        this.collection = collection;
-    }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "video", orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Point> points = new ArrayList<>();
 
-    public Video(String path, Duration duration, User user, Collection collection) {
-        this.path = new SimpleStringProperty(this, "test", path);
-        this.name = new SimpleStringProperty(this, "name", pathToName(path));
-        this.duration = new SimpleDoubleProperty(this, "duration", duration.toMillis());
-        this.total = new SimpleLongProperty(this, "total", 0);
-        this.user = user;
-        this.collection = collection;
-    }
+    @CreationTimestamp
+    private Date createdAt;
+
+    @Transient
+    private Boolean selected = Boolean.FALSE;
 
     public Video() {
-        this.path = new SimpleStringProperty(this, "test", "");
-        this.name = new SimpleStringProperty(this, "name", "");
-        this.duration = new SimpleDoubleProperty(this, "duration", 0.0);
-        this.total = new SimpleLongProperty(this, "total", 0);
+    }
+
+    public Video(String path, Duration duration, Collection collection, User user) {
+        this.path = path;
+        this.duration = duration;
+        this.setCollection(collection);
+        this.user = user;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getPath() {
-        return path.get();
-    }
-    public SimpleStringProperty pathProperty() {
         return path;
     }
     public void setPath(String path) {
-        this.path.set(path);
-        this.name.set(pathToName(path));
-    }
-    public String getName() {
-        return name.get();
-    }
-    public SimpleStringProperty nameProperty() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name.set(name);
-    }
-    public double getDuration() {
-        return duration.get();
-    }
-    public SimpleDoubleProperty durationProperty() {
-        return duration;
-    }
-    public void setDuration(double duration) {
-        this.duration.set(duration);
+        this.path = path;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
+    public Duration getDuration() {
+        return duration;
     }
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 
     public Collection getCollection() {
@@ -104,31 +103,6 @@ public class Video extends BaseEntity {
         this.collection = collection;
     }
 
-    public long getTotal() {
-        return total.get();
-    }
-    public SimpleLongProperty totalProperty() {
-        return total;
-    }
-    public void setTotal(long total) {
-        this.total.set(total);
-    }
-
-    @JsonIgnore
-    public String getDurationFormatted(){
-        return DurationFormatUtils.formatDuration(duration.getValue().longValue(), "H:mm:ss", true);
-    }
-
-    @JsonIgnore
-    public String getAbsolutePath(){
-        return String.format("%s%s%s", Settings.videoPath, File.separator, this.path.getValue());
-    }
-
-    @Override
-    public String toString() {
-        return "Video{" + uuid.toString() + '}';
-    }
-
     public User getUser() {
         return user;
     }
@@ -136,58 +110,91 @@ public class Video extends BaseEntity {
         this.user = user;
     }
 
-    @Override
-    public int getId() {
-        return id;
+    public List<Point> getPoints() {
+        return points;
     }
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPoints(List<Point> points) {
+        this.points = points;
     }
 
-    public void addPoint(Point point){
-        pointSet.add(point);
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void addPoint(Point p){
+        p.setVideo(this);
+        this.points.add(p);
+    }
+
+    public void removePoint(Point p){
+        this.points.remove(p);
+    }
+
+    @JsonIgnore
+    public List<CategoryCount> getCategoryCount(){
+        Map<Category, CategoryCount> tmp = new HashMap<>();
+
+        for (Category category : collection.getCategories()){
+            tmp.put(category, new CategoryCount(category, 0));
+        }
+
+        for(Point point : points){
+            tmp.get(point.getCategory()).increment();
+        }
+
+        return tmp.values().stream().collect(Collectors.toList());
+    }
+
+    @JsonIgnore
+    public String getDurationFormatted(){
+        return DurationFormatUtils.formatDuration((long) duration.toMillis(), "H:mm:ss", true);
+    }
+
+    @JsonIgnore
+    public String pathToName(){
+        return Paths.get(path).getFileName().toString();
+    }
+
+    @JsonIgnore
+    public String getCreatedAtFormatted() {
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(createdAt);
+    }
+
+    @JsonIgnore
+    public void updateCollection(Collection newValue) {
+        this.setCollection(newValue);
+        List<Point> filtered = points.stream().filter(p -> newValue.getCategories().contains(p.getCategory())).collect(Collectors.toList());
+        points.clear();
+        points.addAll(filtered);
+    }
+
+    public Boolean getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
+
         Video video = (Video) o;
-        return uuid.compareTo(video.uuid) == 0;
+
+        return new EqualsBuilder().append(id, video.id).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid.toString());
-    }
-
-    private String pathToName(String path){
-        return Paths.get(path).getFileName().toString();
-    }
-
-    public SortedSet<Point> getPointSet() {
-        return pointSet;
-    }
-
-    public long totalPoints() {
-        return pointSet.size();
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    @JsonIgnore
-    public Map<Category, Long> getTotalByCategory() {
-        return pointSet.stream().collect(Collectors.groupingBy(Point::getCategory, Collectors.counting()));
-    }
-
-    @JsonIgnore
-    public boolean isEditable(){
-        return new File(path.getValue()).exists();
+        return new HashCodeBuilder(17, 37).append(id).toHashCode();
     }
 }

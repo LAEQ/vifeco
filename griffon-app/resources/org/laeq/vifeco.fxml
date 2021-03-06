@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<AnchorPane prefHeight="800.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.VifecoController">
+   <children>
+      <Pane fx:id="menu" maxHeight="60.0" minHeight="60.0" prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: lightgray;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <AnchorPane fx:id="middle" maxHeight="60.0" minHeight="60.0" prefHeight="200.0" prefWidth="600.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0" />
+      <AnchorPane fx:id="bottom" maxHeight="60.0" minHeight="60.0" prefHeight="60.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+   </children>
+</AnchorPane>
