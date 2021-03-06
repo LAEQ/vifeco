@@ -23,12 +23,6 @@ public class ControlsController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        Stage controls = (Stage) getApplication().getWindowManager().findWindow("controls");
-        if(controls != null){
-            getApplication().getWindowManager().detach("controls");
-            controls.close();
-        }
-
         System.out.println("controls: " + getApplication().getMvcGroupManager().getGroups().keySet());
         System.out.println("controls: " + getApplication().getWindowManager().getWindowNames());
     }

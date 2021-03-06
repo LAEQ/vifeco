@@ -60,7 +60,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         stage.setOnCloseRequest(event -> {
             try {
                 mediaPlayer.stop();
-                getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
+                getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("display"));
             }catch (Exception e){
 
             }
@@ -103,13 +103,11 @@ public class DisplayView extends AbstractJavaFXGriffonView {
             volumeActionTarget.setText("");
 
             mediaPlayer.setOnReady(() -> {
-                runInsideUISync(() -> {
-                    mediaPlayer.play();
-                    mediaPlayer.seek(currentTime);
-                    mediaPlayer.pause();
-                    controller.isReady();
-                    mediaPlayer.rateProperty().bindBidirectional(controls.speed);
-                });
+                mediaPlayer.rateProperty().bindBidirectional(controls.speed);
+                controller.isReady();
+                mediaPlayer.play();
+                mediaPlayer.pause();
+                runOutsideUI(() -> mediaPlayer.seek(currentTime));
             });
 
             mediaPlayer.setOnError(() -> {
@@ -156,19 +154,14 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     }
 
     public void pause() {
-        runInsideUISync(() -> {
-            mediaPlayer.pause();
-        });
-
+        mediaPlayer.pause();
     }
 
     public void play() {
-        runInsideUISync(() -> {
-            mediaPlayer.play();
-        });
+        mediaPlayer.play();
     }
 
     public void seek(Duration currentTime) {
-        mediaPlayer.seek(currentTime);
+        runOutsideUI(() -> mediaPlayer.seek(currentTime));
     }
 }

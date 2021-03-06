@@ -80,7 +80,7 @@ public class VifecoController extends AbstractGriffonController {
      * @param name
      */
     private void cleanAndDestroy(String name){
-        System.out.println("Clean and destroy");
+        System.out.println("Clean and destroy " + name);
         destroyMVC(name);
         closeWindow(name);
     }

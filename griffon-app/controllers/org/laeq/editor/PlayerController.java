@@ -40,7 +40,7 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void stop() {
-        getApplication().getEventRouter().publishEvent("player.pause");
+        getApplication().getEventRouter().publishEventAsync("player.pause");
         view.pause();
     }
 
@@ -48,7 +48,7 @@ public class PlayerController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
         if(model.isReady.get()){
-            getApplication().getEventRouter().publishEvent("player.play");
+            getApplication().getEventRouter().publishEventAsync("player.play");
             getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(view.getCurrentTime()));
             view.play();
         }
@@ -59,8 +59,7 @@ public class PlayerController extends AbstractGriffonController {
     public void controls() {
         Stage display = (Stage) getApplication().getWindowManager().findWindow("controls");
         if(display != null){
-            getApplication().getWindowManager().detach("controls");
-            display.close();
+           return;
         }
 
         Map<String, Object> args = new HashMap<>();
@@ -169,12 +168,14 @@ public class PlayerController extends AbstractGriffonController {
         });
         list.put("opacity.change", objects -> {
             model.controls.opacity.set((Double) objects[0]);
+            model.refreshIcon();
         });
         list.put("duration.change", objects -> {
             model.controls.duration.set((Double) objects[0]);
         });
         list.put("size.change", objects -> {
             model.controls.size.set((Double) objects[0]);
+            model.refreshIcon();
         });
 
 

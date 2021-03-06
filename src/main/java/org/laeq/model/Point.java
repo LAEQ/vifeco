@@ -153,7 +153,7 @@ public class Point implements Comparable<Point> {
     @JsonIgnore
     public IconPointColorized getIconPoint(){
         if(this.icon == null){
-            this.icon = new IconPointColorized(new IconSize(category, 40));
+            this.icon = new IconPointColorized(new IconSize(category, 100));
             icon.decorate();
             icon.setLayoutX(x);
             icon.setLayoutY(y);

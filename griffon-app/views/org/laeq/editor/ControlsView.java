@@ -56,14 +56,15 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().attach("controls", stage);
         getApplication().getWindowManager().show("controls");
 
+
         stage.setOnCloseRequest(event -> {
-            closeAndDestroy("controls");
+            getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("controls"));
         });
 
         initSpeedSlider();
         initDurationSlider();
         initSizeSlider();
-        initOpacitySlicer();
+        initOpacitySlider();
     }
 
     private void initSpeedSlider() {
@@ -100,6 +101,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
 
     private void initSizeSlider() {
         sizeLabel.setText(String.format("%.0f px", controls.size.getValue()));
+        size.setValue(controls.size.getValue());
         size.setMin(controls.sizeValue[0]);
         size.setMax(controls.sizeValue[1]);
         size.setMajorTickUnit(5);
@@ -108,16 +110,17 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         size.valueProperty().addListener((obs, oldval, newVal) -> {
             double value = Math.round(newVal.doubleValue() * 1) / 1f;
             size.setValue(value);
-            sizeLabel.setText(String.format("%.0f s", value));
+            sizeLabel.setText(String.format("%.0f px", value));
             controller.dispatch("size.change", value);
         });
     }
 
-    private void initOpacitySlicer() {
-        opacityLabel.setText(String.format("%.0f", controls.opacity.getValue()));
+    private void initOpacitySlider() {
+        opacityLabel.setText(String.format("%.1f", controls.opacity.getValue()));
+        opacity.setValue(controls.opacity.getValue());
         opacity.setMin(controls.opacityValue[0]);
         opacity.setMax(controls.opacityValue[1]);
-        opacity.setMajorTickUnit(5);
+        opacity.setMajorTickUnit(.1);
         opacity.setShowTickMarks(true);
         opacity.setShowTickLabels(true);
         opacity.valueProperty().addListener((obs, oldval, newVal) -> {

@@ -55,28 +55,21 @@ public class DisplayController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         list.put("player.pause", objects -> {
-            runInsideUISync(() -> {
-                view.pause();
-            });
+            view.pause();
         });
 
         list.put("player.play", objects -> {
-            runInsideUISync(() -> {
-                view.play();
-            });
+            view.play();
         });
 
         list.put("player.currentTime", objects -> {
-            runOutsideUI(() -> {
-                Duration currentTime = (Duration) objects[0];
-                view.seek(currentTime);
-            });
+            view.seek((Duration) objects[0]);
         });
 
         return list;
     }
 
     public void isReady() {
-        getApplication().getEventRouter().publishEvent("display.ready");
+        getApplication().getEventRouter().publishEventOutsideUI("display.ready");
     }
 }

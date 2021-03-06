@@ -32,8 +32,6 @@ public class PlayerModel extends AbstractGriffonModel {
     //Video controls
     public Controls controls = new Controls();
 
-    //List for keeping an association between a point and its icon
-
     //List for icon panel
     public ObservableSet<Point> displayed = FXCollections.observableSet();
 
@@ -46,7 +44,6 @@ public class PlayerModel extends AbstractGriffonModel {
     //Property for normalizing the icon position
     public SimpleDoubleProperty width = new SimpleDoubleProperty(1);
     public SimpleDoubleProperty height = new SimpleDoubleProperty(1);
-
 
     public Boolean enabled = Boolean.FALSE;
     private Map<String, Category> shortcutMap= new HashMap();
@@ -121,5 +118,15 @@ public class PlayerModel extends AbstractGriffonModel {
 
     public Optional<Point> deletePoint(IconPointColorized icon) {
         return points.stream().filter(point -> point.getIconPoint().equals(icon)).findFirst();
+    }
+
+    public void refreshIcon() {
+        displayed.forEach( p -> {
+            IconPointColorized icon = p.getIconPoint();
+
+            icon.setScaleX(controls.scale());
+            icon.setScaleY(controls.scale());
+            icon.setOpacity(controls.opacity.getValue());
+        });
     }
 }

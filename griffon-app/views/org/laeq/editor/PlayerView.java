@@ -1,6 +1,7 @@
 package org.laeq.editor;
 
 import griffon.core.artifact.GriffonView;
+import griffon.core.i18n.MessageSource;
 import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
@@ -81,6 +82,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private Button stopActionTarget;
     @FXML private Button controlsActionTarget;
 
+    private MessageSource messageSource;
+
     @Override
     public void initUI() {
         Stage stage = (Stage) getApplication()
@@ -117,32 +120,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         controlsActionTarget.setText("");
 
         initPlayer();
+        messageSource = getApplication().getMessageSource();
     }
 
-    private void closeAndDestroy(String name){
-        destroy(name);
-        closeScene(name);
-    }
-
-    private void destroy(String name) {
-        try{
-            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
-            if(group != null){
-                group.destroy();
-            }
-        }catch (Exception e){
-
-        }
-    }
-    private void closeScene(String name){
-        try{
-            Stage window = (Stage) getApplication().getWindowManager().findWindow(name);
-            window.close();
-            getApplication().getWindowManager().detach(name);
-        }catch (Exception e){
-
-        }
-    }
 
     public void play(){
         runInsideUISync(() -> {
@@ -198,17 +178,19 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             scene.setOnKeyReleased(keyReleased());
 
             model.displayed.addListener((SetChangeListener<Point>) change ->  {
-                runInsideUIAsync(() -> {
-                    if(change.wasAdded()){
-                        Double x = change.getElementAdded().getX() * model.width.doubleValue();
-                        Double y = change.getElementAdded().getY() * model.height.doubleValue();
-                        change.getElementAdded().getIconPoint().setLayoutX(x);
-                        change.getElementAdded().getIconPoint().setLayoutY(y);
-                        iconPane.getChildren().add(change.getElementAdded().getIconPoint());
-                    } else if(change.wasRemoved()){
-                        iconPane.getChildren().remove(change.getElementRemoved().getIconPoint());
-                    }
-                });
+                if(change.wasAdded()){
+                    IconPointColorized icon = change.getElementAdded().getIconPoint();
+                    Double x = change.getElementAdded().getX() * model.width.doubleValue();
+                    Double y = change.getElementAdded().getY() * model.height.doubleValue();
+                    icon.setLayoutX(x);
+                    icon.setLayoutY(y);
+                    icon.setScaleX(model.controls.scale());
+                    icon.setScaleY(model.controls.scale());
+                    icon.setOpacity(model.controls.opacity.getValue());
+                    iconPane.getChildren().add(icon);
+                } else if(change.wasRemoved()){
+                    iconPane.getChildren().remove(change.getElementRemoved().getIconPoint());
+                }
             });
 
             mediaPlayer.rateProperty().bindBidirectional(model.controls.speed);
@@ -239,6 +221,15 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     private EventHandler<? super MouseEvent> mouseenter() {
         return (EventHandler<MouseEvent>) event -> { model.enabled = Boolean.TRUE; };
+    }
+
+    private EventHandler<MouseEvent> mousemove(){
+        return event -> {
+            if(model.enabled){
+                model.mousePosition[0] = event.getX();
+                model.mousePosition[1] = event.getY();
+            }
+        };
     }
 
     private Scene init() {
@@ -310,10 +301,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private Callback<TableColumn<Point, Void>, TableCell<Point, Void>> deleteActions() {
         return param -> {
             final  TableCell<Point, Void> cell = new TableCell<Point, Void>(){
-                Button delete = new Button("X");
+                Button delete = new Button(translate("btn.delete"));
                 {
                     delete.setLayoutX(5);
-                    delete.getStyleClass().addAll("btn", "btn-sm", "btn-alert");
+                    delete.getStyleClass().addAll("btn", "btn-danger", "btn-sm");
 
                     delete.setOnAction(event -> controller.deletePoint(timelineTable.getItems().get(getIndex())));
                 }
@@ -333,14 +324,18 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         };
     }
 
+    private String translate(String key) {
+        return messageSource.getMessage(key);
+    }
+
     //Listeners
     private InvalidationListener sliderListener(){
         return  observable -> {
             if(slider.isPressed()){
-                runOutsideUIAsync (() -> {
+                runOutsideUI (() -> {
                     mediaPlayer.seek(video.getDuration().multiply(slider.getValue() / 100));
-                    updateValues();
                 });
+                updateValues();
             }
         };
     }
@@ -348,22 +343,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         return (observable -> updateValues());
     }
 
-    //Icon pane
-    private EventHandler<MouseEvent> mousemove(){
-        return event -> {
-            if(model.enabled){
-                model.mousePosition[0] = event.getX();
-                model.mousePosition[1] = event.getY();
-            }
-        };
-    }
-
-    //Timelinetable
     private ChangeListener<Point> rowlistener(){
         return (observable, oldValue, newValue) -> {
             try{
-                controller.updateCurrentTime(newValue.getStart());
-                mediaPlayer.seek(newValue.getStart());
+                runOutsideUI(() -> {
+                    controller.updateCurrentTime(newValue.getStart());
+                    mediaPlayer.seek(newValue.getStart());
+                });
             } catch (Exception e){
 
             }
