@@ -45,6 +45,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.function.Predicate;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {
@@ -305,7 +306,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 {
                     delete.setLayoutX(5);
                     delete.getStyleClass().addAll("btn", "btn-danger", "btn-sm");
-
                     delete.setOnAction(event -> controller.deletePoint(timelineTable.getItems().get(getIndex())));
                 }
 
@@ -359,5 +359,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     public void reset() {
         mediaPlayer.stop();
         mediaPlayer.seek(Duration.ZERO);
+    }
+
+    public void removeIcon(IconPointColorized iconPoint) {
+        iconPane.getChildren().remove(iconPoint);
     }
 }

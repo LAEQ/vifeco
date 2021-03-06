@@ -110,7 +110,8 @@ public class PlayerController extends AbstractGriffonController {
         try{
             dbService.pointDAO.delete(point);
             model.removePoint(point);
-            view.refresh();
+            model.displayed.remove(point);
+
             getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
             getApplication().getEventRouter().publishEventOutsideUI("point.deleted");
         }catch (Exception e){
@@ -193,8 +194,8 @@ public class PlayerController extends AbstractGriffonController {
             Point pt = point.get();
             try {
                 dbService.pointDAO.delete(pt);
-                model.points.remove(pt);
                 model.displayed.remove(pt);
+                model.points.remove(pt);
                 getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", pt.toString()));
                 getApplication().getEventRouter().publishEventOutsideUI("point.deleted");
             }catch (Exception e){
