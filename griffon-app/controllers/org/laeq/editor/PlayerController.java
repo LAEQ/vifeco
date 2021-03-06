@@ -180,6 +180,6 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     public void updateCurrentTime(Duration start) {
-        getApplication().getEventRouter().publishEvent("player.currentTime", Arrays.asList(start));
+        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
     }
 }

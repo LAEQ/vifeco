@@ -169,10 +169,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     }
 
     public void seek(Duration currentTime) {
-        runInsideUISync(() -> {
-            Duration buffer = mediaPlayer.getBufferProgressTime();
-            System.out.println("buffer 2: " + DurationFormatUtils.formatDuration((long) buffer.toMillis(),"HH:mm:ss"));
-            mediaPlayer.seek(currentTime);
-        });
+        mediaPlayer.seek(currentTime);
     }
 }

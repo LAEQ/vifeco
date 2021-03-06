@@ -282,8 +282,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                     && video.getDuration().greaterThanOrEqualTo(Duration.ZERO)
                     && !slider.isValueChanging()) {
                 slider.setValue(mediaPlayer.getCurrentTime().divide(video.getDuration()).toMillis() * 100.0);
-
                 elapsed.setText(DurationFormatUtils.formatDuration((long) mediaPlayer.getCurrentTime().toMillis(), "HH:mm:ss"));
+            } else {
+                controller.updateCurrentTime(mediaPlayer.getCurrentTime());
             }
         });
     }
@@ -330,14 +331,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private InvalidationListener sliderListener(){
         return  observable -> {
             if(slider.isPressed()){
-                Duration buffer = mediaPlayer.getBufferProgressTime();
-                System.out.println(DurationFormatUtils.formatDuration((long) buffer.toMillis(),"HH:mm:ss"));
-                updateValues();
-                mediaPlayer.seek(video.getDuration().multiply(slider.getValue() / 100));
-
-
-                controller.updateCurrentTime(mediaPlayer.getCurrentTime());
-
+                runOutsideUIAsync (() -> {
+                    mediaPlayer.seek(video.getDuration().multiply(slider.getValue() / 100));
+                    updateValues();
+                });
             }
         };
     }
