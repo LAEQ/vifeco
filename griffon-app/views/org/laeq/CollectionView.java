@@ -3,6 +3,8 @@ package org.laeq;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -32,7 +34,7 @@ public class CollectionView extends AbstractJavaFXGriffonView {
     @FXML private Button clearActionTarget;
 
     @FXML private TableView<Collection> collectionTable;
-    @FXML private TableColumn<Collection, String> id;
+    @FXML private TableColumn<Collection, Integer> id;
     @FXML private TableColumn<Collection, String> name;
     @FXML private TableColumn<Collection, String> categories;
     @FXML private TableColumn<Collection, Icon> isDefault;
@@ -50,6 +52,7 @@ public class CollectionView extends AbstractJavaFXGriffonView {
     }
 
     private void init(){
+        id.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
         name.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
         categories.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getCategorieNames()));
         isDefault.setCellValueFactory(cellData -> cellData.getValue().getDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);

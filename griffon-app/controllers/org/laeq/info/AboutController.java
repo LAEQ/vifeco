@@ -26,10 +26,6 @@ public class AboutController extends AbstractGriffonController {
 
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
-        list.put("change.language", objects -> {
-            Locale locale = (Locale) objects[0];
-            view.changeLocale(locale);
-        });
 
         return list;
     }

@@ -27,9 +27,9 @@ public class UserController extends AbstractGriffonController{
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         try{
             model.userList.addAll(dbService.userDAO.findAll());
-            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
+            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.user.fetch.success"));
         } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.fetch.error"));
         }
 
         getApplication().getEventRouter().addEventListener(listeners());
@@ -50,9 +50,9 @@ public class UserController extends AbstractGriffonController{
             model.userList.clear();
             model.userList.addAll(dbService.userDAO.findAll());
             model.clear();
-            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.save"));
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.user.save.success", user.toString()));
         } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.save"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.save.error"));
         }
     }
 
@@ -62,9 +62,9 @@ public class UserController extends AbstractGriffonController{
         try {
             dbService.userDAO.delete(user);
             model.userList.remove(user);
-            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.delete"));
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.user.delete.success", user.toString()));
         }  catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.delete"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.delete.error"));
         }
     }
 }

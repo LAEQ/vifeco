@@ -25,9 +25,9 @@ public class CollectionController extends AbstractGriffonController {
         try {
             model.collections.addAll(dbService.collectionDAO.findAll());
             model.addCategories(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
+            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.collection.fetch.success"));
         } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.fetch.error"));
         }
 
         view.initForm();
@@ -43,10 +43,9 @@ public class CollectionController extends AbstractGriffonController {
             model.clear();
             model.collections.clear();
             model.collections.addAll(dbService.collectionDAO.findAll());
-
-            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.save"));
+            getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("db.collection.save.success", collection.getName()));
         }catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.save"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.save.error"));
         }
     }
 
@@ -61,9 +60,9 @@ public class CollectionController extends AbstractGriffonController {
             dbService.collectionDAO.delete(collection);
             model.collections.clear();
             model.collections.addAll(dbService.collectionDAO.findAll());
-            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.delete"));
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.collection.delete.success", collection.getName()));
         } catch (Exception e) {
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.delete"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.delete.error"));
         }
     }
 

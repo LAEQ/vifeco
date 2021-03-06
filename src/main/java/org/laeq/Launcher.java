@@ -10,7 +10,7 @@ import java.util.Locale;
 
 public class Launcher {
     public static void main(String[] args) throws Exception {
-        Locale.setDefault(Locale.FRENCH);
+        Locale.setDefault(Locale.ENGLISH);
         try{
             setUp();
             JavaFXGriffonApplication.main(args);

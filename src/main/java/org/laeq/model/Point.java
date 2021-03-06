@@ -46,7 +46,7 @@ public class Point implements Comparable<Point> {
     @JsonDeserialize(converter = MilliToDuration.class)
     private Duration start;
 
-    @ManyToOne(cascade = {CascadeType.DETACH})
+    @ManyToOne()
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     @JsonSerialize(converter = CategoryConverterSerialize.class)
     @JsonDeserialize(converter = CategoryConverterDeserialize.class)

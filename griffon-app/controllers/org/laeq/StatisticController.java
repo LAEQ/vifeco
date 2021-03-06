@@ -33,9 +33,9 @@ StatisticController extends AbstractGriffonController {
             List<Video> list = dbService.videoDAO.findAll();
             model.videos.addAll(list);
 
-            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
+            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.video.fetch.success"));
         } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
+            getApplication().getEventRouter().publishEventOutsideUI("status.error", Arrays.asList("db.video.fetch.error"));
         }
 
         getApplication().getEventRouter().addEventListener(listeners());

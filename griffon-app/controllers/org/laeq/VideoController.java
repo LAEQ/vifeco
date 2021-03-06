@@ -39,14 +39,14 @@ public class VideoController extends AbstractGriffonController {
             model.getUserSet().addAll(dbService.userDAO.findAll());
             model.getCollectionSet().addAll(dbService.collectionDAO.findAll());
             model.categorySet.addAll(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.success.fetch"));
+            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.video.fetch.success"));
 
             model.videoList.forEach(v -> setVideoDuration(v));
 
             //@todo add BiDirectionalBinding to remove this hack
             view.initForm();
         } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.video.fetch.error"));
         }
 
         getApplication().getEventRouter().addEventListener(listeners());
@@ -82,7 +82,8 @@ public class VideoController extends AbstractGriffonController {
             mediaPlayer.setOnError(new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("ERROR");
+                    getApplication().getEventRouter().publishEventOutsideUI("status.error", Arrays.asList("video.metadata.error", video.getPath()));
+
                 }
             });
         });
@@ -92,6 +93,7 @@ public class VideoController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void clear(){
+        getApplication().getEventRouter().publishEventOutsideUI("status.reset");
         model.clear();
     }
 
@@ -179,10 +181,9 @@ public class VideoController extends AbstractGriffonController {
     }
 
     public void select(Video video) {
-        runInsideUISync(() -> {
-            model.clear();
-            model.setSelectedVideo(video);
-        });
+        model.clear();
+        model.setSelectedVideo(video);
+        getApplication().getEventRouter().publishEventOutsideUI("status.info.parametrized", Arrays.asList("video.details.success", video.pathToName()));
     }
 
     private void refreshVideoList(){

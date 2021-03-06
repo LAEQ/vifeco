@@ -26,9 +26,9 @@ public class CategoryController extends AbstractGriffonController {
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         try{
             model.categoryList.addAll(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.success.fetch"));
+            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.success.fetch.category"));
         } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch.category"));
         }
 
         getApplication().getEventRouter().addEventListener(listeners());
@@ -38,14 +38,14 @@ public class CategoryController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void save(){
         try{
-            dbService.categoryDAO.create(model.getCategory());
+            Category category = model.getCategory();
+            dbService.categoryDAO.create(category);
             model.categoryList.clear();
             model.clear();
             model.categoryList.addAll(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.save"));
-
+            getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("db.category.save.success", category.getName()));
         } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.save"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.category.save.error"));
         }
     }
 
@@ -62,9 +62,9 @@ public class CategoryController extends AbstractGriffonController {
         try{
             dbService.categoryDAO.delete(category);
             model.categoryList.remove(category);
-            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("db.success.delete"));
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.category.delete.success", category.getName()));
         }  catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.delete"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.category.delete.error"));
         }
     }
 

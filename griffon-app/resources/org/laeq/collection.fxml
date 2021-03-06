@@ -16,8 +16,8 @@
                         <columns>
                             <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="z.id" />
                             <TableColumn fx:id="name" prefWidth="125.0" JavaFXUtils.i18nKey="z.name" />
-                            <TableColumn fx:id="categories" prefWidth="405.0" JavaFXUtils.i18nKey="z.categories" />
-                            <TableColumn fx:id="isDefault" prefWidth="95.0" JavaFXUtils.i18nKey="z.default" />
+                            <TableColumn fx:id="categories" prefWidth="205.0" JavaFXUtils.i18nKey="z.categories" />
+                            <TableColumn fx:id="isDefault" prefWidth="75.0" JavaFXUtils.i18nKey="z.default" />
                             <TableColumn fx:id="actions" prefWidth="200.0" JavaFXUtils.i18nKey="z.actions" />
                         </columns>
                 </TableView>
