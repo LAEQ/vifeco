@@ -31,10 +31,9 @@ public class AboutView extends AbstractJavaFXGriffonView {
         parentView.middle.getChildren().add(node);
 
         Locale currentLocale = Locale.getDefault();
-        System.out.println(currentLocale);
 
         WebEngine webEngine = citationView.getEngine();
-        String aboutPath = String.format("html/about_%s.html",currentLocale);
+        String aboutPath = String.format("html/about_%s.html", currentLocale);
         webEngine.load(getClass().getClassLoader().getResource(aboutPath).toExternalForm());
 
         webEngine = helpView.getEngine();
