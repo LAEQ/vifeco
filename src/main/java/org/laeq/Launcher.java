@@ -6,9 +6,11 @@ import org.laeq.settings.Settings;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Locale;
 
 public class Launcher {
     public static void main(String[] args) throws Exception {
+        Locale.setDefault(Locale.FRENCH);
         try{
             setUp();
             JavaFXGriffonApplication.main(args);

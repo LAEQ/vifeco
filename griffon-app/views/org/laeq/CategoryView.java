@@ -61,21 +61,6 @@ public class CategoryView extends AbstractJavaFXGriffonView {
         svgDisplayPane.getChildren().add(svgPath);
 
         init();
-        initForm();
-
-    }
-
-   public void initForm(){
-        final String[] colorStr = new String[1];
-
-//        colorPickerField.getText()
-
-//        colorPickerField.getText().addListener((observable, oldValue, newValue) -> {
-//            Color color = colorPickerField.getValue();
-//
-//            svgPath.setFill(color);
-//            model.setColor(toRGBCode(color));
-//        });
     }
 
 
@@ -111,26 +96,24 @@ public class CategoryView extends AbstractJavaFXGriffonView {
 
     private Callback<TableColumn<Category, Void>, TableCell<Category, Void>> addActions() {
         return param -> {
-            final  TableCell<Category, Void> cell = new TableCell<Category, Void>(){
-                Button edit = new Button("");
-                Button delete = new Button("");
+            final  TableCell<Category, Void> cell = new TableCell<>(){
+                Button edit = new Button(translate("btn.edit"));
+                Button delete = new Button(translate("btn.delete"));
 
                 Group btnGroup = new Group();
                 {
                     edit.setLayoutX(5);
-                    delete.setLayoutX(55);
+                    edit.getStyleClass().addAll("btn", "btn-sm", "btn-info");
+                    delete.setLayoutX(105);
+                    delete.getStyleClass().addAll("btn", "btn-sm", "btn-danger");
 
                     btnGroup.getChildren().addAll(edit, delete);
-                    Icon icon = new Icon(IconSVG.edit, org.laeq.model.icon.Color.gray_dark);
-                    edit.setGraphic(icon);
                     edit.setOnAction(event -> {
                         model.setSelectedCategory(categoryTable.getItems().get(getIndex()));
                         Category category = categoryTable.getItems().get(getIndex());
                         colorPickerField.setText(category.getColor());
                     });
 
-
-                    delete.setGraphic(new Icon(IconSVG.bin, org.laeq.model.icon.Color.gray_dark));
                     delete.setOnAction(event -> {
                         controller.delete(categoryTable.getItems().get(getIndex()));
                     });
@@ -166,7 +149,7 @@ public class CategoryView extends AbstractJavaFXGriffonView {
 
                         colorPickerField.setText(category.getColor());
                     } catch (Exception e){
-//                        getLog().error(e.getMessage());
+                        e.printStackTrace();
                     }
 
                     if (empty) {
@@ -179,5 +162,9 @@ public class CategoryView extends AbstractJavaFXGriffonView {
 
             return cell;
         };
+    }
+
+    private String translate(String key){
+        return getApplication().getMessageSource().getMessage(key);
     }
 }

@@ -56,7 +56,6 @@ public class CollectionView extends AbstractJavaFXGriffonView {
         actions.setCellFactory(addActions());
 
         collectionTable.setItems(this.model.collections);
-
         model.name.bindBidirectional(nameField.textProperty());
     }
 
@@ -86,8 +85,8 @@ public class CollectionView extends AbstractJavaFXGriffonView {
     private Callback<TableColumn<Collection, Void>, TableCell<Collection, Void>> addActions() {
         return param -> {
             final  TableCell<Collection, Void> cell = new TableCell<Collection, Void>(){
-                Button edit = new Button("edit");
-                Button delete = new Button("delete");
+                Button edit = new Button(translate("btn.edit"));
+                Button delete = new Button(translate("btn.delete"));
 
                 Group btnGroup = new Group();
                 {
@@ -95,16 +94,11 @@ public class CollectionView extends AbstractJavaFXGriffonView {
                     delete.setLayoutX(105);
 
                     btnGroup.getChildren().addAll(edit, delete);
-                    Icon icon = new Icon(IconSVG.edit, Color.gray_dark);
                     edit.getStyleClass().addAll("btn", "btn-sm", "btn-info");
-                    edit.setOnMouseClicked(event -> {
-                        model.setSelectedCollection(collectionTable.getItems().get(getIndex()));
-                    });
+                    edit.setOnMouseClicked(event -> model.setSelectedCollection(collectionTable.getItems().get(getIndex())));
 
                     delete.getStyleClass().addAll("btn", "btn-sm", "btn-danger");
-                    delete.setOnMouseClicked(event -> {
-                        controller.delete(collectionTable.getItems().get(getIndex()));
-                    });
+                    delete.setOnMouseClicked(event ->  controller.delete(collectionTable.getItems().get(getIndex())));
                 }
 
                 @Override
@@ -121,40 +115,8 @@ public class CollectionView extends AbstractJavaFXGriffonView {
             return cell;
         };
     }
-//    private Callback<TableColumn<Collection, Boolean>, TableCell<Collection, Boolean>> iconAction() {
-//        return  param -> {
-//            TableCell<Collection, Boolean> cell = new TableCell<Collection, Boolean>() {
-//
-//                @Override
-//                protected void updateItem(Boolean item, boolean empty) {
-//                    super.updateItem(item, empty);
-//
-//                    Group group = new Group();
-//
-//                    try {
-//                        Set<Category> categorySet = collectionTable.getItems().get(getIndex()).getCategorySet();
-//
-//                        if(categorySet != null){
-//                            IconDescriptorMatrice matrix = new IconDescriptorMatrice(categorySet);
-//                            group.getChildren().addAll(matrix.getIconMap().values());
-//                        }
-//                    } catch (ArrayIndexOutOfBoundsException e) {
-//                        getLog().error(e.getMessage());
-//                    } catch (Exception e) {
-//                        getLog().error(e.getMessage());
-//                    }
-//
-//                    if (empty) {
-//                        setGraphic(null);
-//                        setText(null);
-//                    } else {
-//                        setGraphic(group);
-//                    }
-//                }
-//            };
-//
-//            return cell;
-//        };
-//    }
 
+    private String translate(String key){
+        return getApplication().getMessageSource().getMessage(key);
+    }
 }

@@ -136,7 +136,7 @@ public class VideoView extends AbstractJavaFXGriffonView {
 
     private Callback<TableColumn<Video, Void>, TableCell<Video, Void>> delete() {
         return param -> {
-            final  TableCell<Video, Void> cell = new TableCell<Video, Void>(){
+            final  TableCell<Video, Void> cell = new TableCell<>(){
                 Button delete = new Button(translate("btn.delete"));
 
                 Group btnGroup = new Group();

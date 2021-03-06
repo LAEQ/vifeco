@@ -66,8 +66,8 @@ public class UserView extends AbstractJavaFXGriffonView {
     private Callback<TableColumn<User, Void>, TableCell<User, Void>> addActions() {
         return param -> {
            final  TableCell<User, Void> cell = new TableCell<User, Void>(){
-               Button edit = new Button("edit");
-               Button delete = new Button("delete");
+               Button edit = new Button(translate("btn.edit"));
+               Button delete = new Button(translate("btn.delete"));
 
                Group btnGroup = new Group();
                {
@@ -77,17 +77,8 @@ public class UserView extends AbstractJavaFXGriffonView {
                    delete.setLayoutX(105);
                    delete.getStyleClass().addAll("btn", "btn-sm", "btn-danger");
 
-
-                   Icon icon = new Icon(IconSVG.edit, Color.gray_dark);
-//                   edit.setGraphic(icon);
-                   edit.setOnAction(event -> {
-                       model.setSelectedUser(userTable.getItems().get(getIndex()));
-                   });
-
-//                   delete.setGraphic(new Icon(IconSVG.bin, Color.gray_dark));
-                   delete.setOnAction(event -> {
-                       controller.delete(userTable.getItems().get(getIndex()));
-                   });
+                   edit.setOnAction(event -> model.setSelectedUser(userTable.getItems().get(getIndex())));
+                   delete.setOnAction(event -> controller.delete(userTable.getItems().get(getIndex())));
                }
 
                @Override
@@ -103,5 +94,9 @@ public class UserView extends AbstractJavaFXGriffonView {
 
            return cell;
         };
+    }
+
+    private String translate(String key){
+        return getApplication().getMessageSource().getMessage(key);
     }
 }
