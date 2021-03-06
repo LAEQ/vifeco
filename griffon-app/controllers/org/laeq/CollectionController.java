@@ -56,6 +56,11 @@ public class CollectionController extends AbstractGriffonController {
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void delete(Collection collection) {
+        if(collection.getDefault()){
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.delete.default"));
+            return;
+        }
+
         try {
             dbService.collectionDAO.delete(collection);
             model.collections.clear();

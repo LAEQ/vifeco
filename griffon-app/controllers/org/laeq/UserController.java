@@ -59,6 +59,11 @@ public class UserController extends AbstractGriffonController{
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void delete(User user) {
+        if(user.getDefault()){
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.delete.default"));
+            return ;
+        }
+
         try {
             dbService.userDAO.delete(user);
             model.userList.remove(user);
