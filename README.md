@@ -30,7 +30,3 @@ VIFECO is a free software. Please cite the reference below, if you publish resul
 Maignan, David, Philippe Apparicio and Jérémy Gelb (2019).
 Video Feature Counter Software (version 1.1). 
 Montreal, Laboratoire d’équité environnementale (LAEQ), INRS Urbanisation Culture Société.
-
-
-
-https://www.programcreek.com/java-api-examples/?api=org.hibernate.boot.registry.StandardServiceRegistryBuilder
