@@ -14,6 +14,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.DatabaseService;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.model.icon.IconPointColorized;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @ArtifactProviderFor(GriffonController.class)
 public class PlayerController extends AbstractGriffonController {
@@ -181,5 +183,22 @@ public class PlayerController extends AbstractGriffonController {
 
     public void updateCurrentTime(Duration start) {
         getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+    }
+
+    public void deletePoint(IconPointColorized icon) {
+        Optional<Point> point = model.deletePoint(icon);
+
+        if(point.isPresent()){
+            Point pt = point.get();
+            try {
+                dbService.pointDAO.delete(pt);
+                model.points.remove(pt);
+                model.displayed.remove(pt);
+                getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", pt.toString()));
+                getApplication().getEventRouter().publishEventOutsideUI("point.deleted");
+            }catch (Exception e){
+                getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", pt.toString()));
+            }
+        }
     }
 }

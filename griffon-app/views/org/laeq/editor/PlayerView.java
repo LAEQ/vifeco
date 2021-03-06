@@ -14,6 +14,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.SetChangeListener;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -191,10 +192,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             slider.valueProperty().addListener(sliderListener());
             mediaPlayer.currentTimeProperty().addListener(currentTimeListener());
             iconPane.setOnMouseMoved(mousemove());
-
             iconPane.setOnMouseExited(mouseexit());
             iconPane.setOnMouseEntered(mouseenter());
-
+            iconPane.setOnMouseClicked(mouseclick());
             scene.setOnKeyReleased(keyReleased());
 
             model.displayed.addListener((SetChangeListener<Point>) change ->  {
@@ -211,16 +211,22 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 });
             });
 
-            iconPane.setOnMouseClicked(event -> {
-                System.out.println(event);
-            });
-
             mediaPlayer.rateProperty().bindBidirectional(model.controls.speed);
 
             updateValues();
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
         }
+    }
+
+    private EventHandler<? super MouseEvent> mouseclick() {
+        return (EventHandler<MouseEvent>) event -> {
+            Node node = event.getPickResult().getIntersectedNode();
+            Parent parent = node.getParent();
+            if(parent instanceof IconPointColorized) {
+                controller.deletePoint((IconPointColorized) parent);
+            }
+        };
     }
 
     private EventHandler<? super KeyEvent> keyReleased() {
@@ -355,8 +361,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     //Timelinetable
     private ChangeListener<Point> rowlistener(){
         return (observable, oldValue, newValue) -> {
-            controller.updateCurrentTime(newValue.getStart());
-            mediaPlayer.seek(newValue.getStart());
+            try{
+                controller.updateCurrentTime(newValue.getStart());
+                mediaPlayer.seek(newValue.getStart());
+            } catch (Exception e){
+
+            }
         };
     }
 

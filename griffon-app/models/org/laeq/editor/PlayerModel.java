@@ -15,10 +15,12 @@ import org.laeq.model.Category;
 import org.laeq.model.CategoryCount;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.model.icon.IconPointColorized;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -115,5 +117,9 @@ public class PlayerModel extends AbstractGriffonModel {
         }
 
         displayed.addAll(points.stream().filter(predicate).collect(Collectors.toSet()));
+    }
+
+    public Optional<Point> deletePoint(IconPointColorized icon) {
+        return points.stream().filter(point -> point.getIconPoint().equals(icon)).findFirst();
     }
 }
