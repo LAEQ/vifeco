@@ -96,7 +96,7 @@ public class CategoryView extends AbstractJavaFXGriffonView {
 
     private Callback<TableColumn<Category, Void>, TableCell<Category, Void>> addActions() {
         return param -> {
-            final  TableCell<Category, Void> cell = new TableCell<>(){
+            final  TableCell<Category, Void> cell = new TableCell<Category, Void>(){
                 Button edit = new Button(translate("btn.edit"));
                 Button delete = new Button(translate("btn.delete"));
 
