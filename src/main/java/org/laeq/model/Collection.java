@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -98,9 +99,9 @@ public class Collection {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Collection)) return false;
         Collection that = (Collection) o;
-        return Objects.equals(id, that.id) && name.equals(that.name);
+        return id.equals(that.id) && name.equals(that.name) && categories.equals(that.categories);
     }
 
     @Override
@@ -117,4 +118,11 @@ public class Collection {
     public String getCategorieNames() {
         return categories.stream().map(e -> e.getName()).collect(Collectors.joining("\n"));
     }
+    @JsonIgnore
+    public String getCategorieNamesAndIds() {
+        return categories.stream().sorted(Comparator.comparingInt(Category::getId))
+                .map(e -> String.format("%d - %s", e.getId(), e.getName()))
+                .collect(Collectors.joining("\n"));
+    }
+
 }

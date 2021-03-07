@@ -7,6 +7,7 @@ import org.hibernate.annotations.Type;
 import javax.annotation.Nonnull;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user")
@@ -90,6 +91,19 @@ final public class User
 
     public void setDefault(Boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id.equals(user.id) && firstName.equals(user.firstName) && lastName.equals(user.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName);
     }
 
     @Override

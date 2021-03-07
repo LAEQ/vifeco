@@ -113,7 +113,7 @@ public class PlayerController extends AbstractGriffonController {
             model.displayed.remove(point);
 
             getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
-            getApplication().getEventRouter().publishEventOutsideUI("point.deleted");
+            getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
         }catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
         }
@@ -182,19 +182,20 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     public void deletePoint(IconPointColorized icon) {
-        Optional<Point> point = model.deletePoint(icon);
+        Optional<Point> point = model.getPointFromIcon(icon);
 
         if(point.isPresent()){
-            Point pt = point.get();
-            try {
-                dbService.pointDAO.delete(pt);
-                model.displayed.remove(pt);
-                model.points.remove(pt);
-                getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", pt.toString()));
-                getApplication().getEventRouter().publishEventOutsideUI("point.deleted");
-            }catch (Exception e){
-                getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", pt.toString()));
-            }
+            deletePoint(point.get());
+//            Point pt = point.get();
+//            try {
+//                dbService.pointDAO.delete(pt);
+//                model.displayed.remove(pt);
+//                model.removePoint(pt);
+//                getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", pt.toString()));
+//                getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(pt));
+//            }catch (Exception e){
+//                getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", pt.toString()));
+//            }
         }
     }
 }

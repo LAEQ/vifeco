@@ -116,7 +116,7 @@ public class PlayerModel extends AbstractGriffonModel {
         displayed.addAll(points.stream().filter(predicate).collect(Collectors.toSet()));
     }
 
-    public Optional<Point> deletePoint(IconPointColorized icon) {
+    public Optional<Point> getPointFromIcon(IconPointColorized icon) {
         return points.stream().filter(point -> point.getIconPoint().equals(icon)).findFirst();
     }
 

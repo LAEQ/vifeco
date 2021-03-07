@@ -3,23 +3,17 @@ package org.laeq.tools;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.SVGPath;
-import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.CategoryController;
-import org.laeq.CategoryModel;
 import org.laeq.VifecoView;
-import org.laeq.model.Category;
+import org.laeq.model.Collection;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ImportView extends AbstractJavaFXGriffonView {
@@ -28,12 +22,14 @@ public class ImportView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private VifecoView parentView;
 
     @FXML private Label filename;
-    @FXML private TextArea warning;
+    @FXML private TextArea report;
+    @FXML private Label warning;
 
 
-//    @FXML private TableView<Category> categoryTable;
-//    @FXML private TableColumn<Category, String> id;
-//    @FXML private TableColumn<Category, String> name;
+    @FXML private TableView<Collection> collectionTable;
+    @FXML private TableColumn<Collection, Integer> id;
+    @FXML private TableColumn<Collection, String> name;
+    @FXML private TableColumn<Collection, String> categories;
 
 
     @Override
@@ -49,9 +45,20 @@ public class ImportView extends AbstractJavaFXGriffonView {
     }
 
     private void init(){
-       model.filename.bindBidirectional(filename.textProperty());
-       model.warning.bindBidirectional(warning.textProperty());
+        model.filename.bindBidirectional(filename.textProperty());
+        model.report.bindBidirectional(report.textProperty());
+        model.warning.bindBidirectional(warning.textProperty());
 
+        id.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
+        name.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
+        categories.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getCategorieNamesAndIds()));
+
+        collectionTable.setItems(this.model.collections);
+
+        model.styles.addListener((ListChangeListener<String>) c -> {
+            warning.getStyleClass().clear();
+            warning.getStyleClass().setAll(c.getList());
+        });
     }
 
     private String translate(String key){

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import griffon.javafx.support.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import java.lang.String?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import griffon.javafx.support.*?>
 
 <SplitPane dividerPositions="0.5" prefHeight="400.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.tools.ImportController">
   <items>
@@ -17,17 +17,36 @@
                   <String fx:value="btn-sm" />
                </styleClass>
             </Button>
+             <Button fx:id="clearActionTarget" mnemonicParsing="false" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="40.0" JavaFXUtils.i18nKey="btn.clear">
+                 <styleClass>
+                     <String fx:value="btn" />
+                     <String fx:value="btn-sm" />
+                 </styleClass>
+             </Button>
             <Label fx:id="filename" prefHeight="17.0" prefWidth="276.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />
-            <TextArea fx:id="warning" prefHeight="200.0" prefWidth="265.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="120.0" />
-            <Button fx:id="confirmActionTarget" mnemonicParsing="false" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="340.0" JavaFXUtils.i18nKey="btn.import">
+            <Button fx:id="confirmActionTarget" mnemonicParsing="false" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="360.0" JavaFXUtils.i18nKey="btn.import">
             <styleClass>
                <String fx:value="btn" />
                <String fx:value="btn-success" />
                <String fx:value="btn-sm" />
             </styleClass>
             </Button>
+            <TextArea fx:id="report" prefHeight="166.0" prefWidth="426.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="120.0" />
+            <Label fx:id="warning" layoutX="14.0" layoutY="299.0" prefHeight="17.0" prefWidth="276.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="300.0" />
          </children>
       </AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+         <children>
+
+            <TableView layoutX="14.0" layoutY="43.0" prefHeight="200.0" prefWidth="200.0"
+                       AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="35.0"
+                       fx:id="collectionTable" >
+              <columns>
+                  <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="z.id" />
+                  <TableColumn fx:id="name" prefWidth="125.0" JavaFXUtils.i18nKey="z.name" />
+                  <TableColumn fx:id="categories" prefWidth="205.0" JavaFXUtils.i18nKey="z.categories" />
+              </columns>
+            </TableView>
+         </children></AnchorPane>
   </items>
 </SplitPane>

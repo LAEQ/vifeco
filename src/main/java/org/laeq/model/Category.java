@@ -137,7 +137,7 @@ public class Category implements Comparable<Category> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return id == category.id;
+        return id == category.id && name.equals(category.name);
     }
 
     @Override

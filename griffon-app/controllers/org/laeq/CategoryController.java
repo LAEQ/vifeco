@@ -26,9 +26,9 @@ public class CategoryController extends AbstractGriffonController {
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         try{
             model.categoryList.addAll(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.success.fetch.category"));
+            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.category.fetch.success"));
         } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch.category"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.category.fetch.error"));
         }
 
         getApplication().getEventRouter().addEventListener(listeners());

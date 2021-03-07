@@ -33,7 +33,7 @@ class VideoTest extends Specification {
         String expected = "{'id':'${videoId}','path':'video.mp4','duration':10000.0," +
                 "'user':{'id':1,'firstName':'test','lastName':'test'}," +
                 "'collection':" +
-                    "{'name':'collection 1'," +
+                    "{'id':1,'name':'collection 1'," +
                     "'categories':[" +
                     "{'id':1,'name':'category 1'}," +
                     "{'id':2,'name':'category 2'}" +

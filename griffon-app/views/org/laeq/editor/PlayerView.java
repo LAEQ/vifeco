@@ -125,7 +125,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         messageSource = getApplication().getMessageSource();
     }
 
-
     public void play(){
         runInsideUISync(() -> {
             mediaPlayer.play();
