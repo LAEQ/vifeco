@@ -99,9 +99,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().show("editor");
 
         stage.setOnCloseRequest(event -> {
-            mediaPlayer.stop();
-            getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
-            getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
+            mediaPlayer.pause();
+            getApplication().getEventRouter().publishEventAsync("mvc.clean", Arrays.asList("editor"));
+            getApplication().getEventRouter().publishEventAsync("mvc.clean", Arrays.asList("display"));
+            mediaPlayer.pause();
         });
 
         Icon icon = new Icon(IconSVG.video_plus, org.laeq.model.icon.Color.white);
@@ -332,7 +333,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private InvalidationListener sliderListener(){
         return  observable -> {
             if(slider.isPressed()){
-                runOutsideUI (() -> {
+                runInsideUIAsync (() -> {
                     mediaPlayer.seek(video.getDuration().multiply(slider.getValue() / 100));
                 });
                 updateValues();
@@ -346,7 +347,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private ChangeListener<Point> rowlistener(){
         return (observable, oldValue, newValue) -> {
             try{
-                runOutsideUI(() -> {
+                runInsideUIAsync(() -> {
                     controller.updateCurrentTime(newValue.getStart());
                     mediaPlayer.seek(newValue.getStart());
                 });

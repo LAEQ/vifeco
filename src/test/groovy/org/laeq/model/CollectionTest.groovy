@@ -98,7 +98,7 @@ class CollectionTest extends Specification {
         when:
         String result = new ObjectMapper().writeValueAsString(categoryCollection)
 
-        String expected = '{"name":"collection","categories":[{"id":1,"name":"category 1"},{"id":2,"name":"category 2"},{"id":3,"name":"category 3"}]}'
+        String expected = '{"id":1,"name":"collection","categories":[{"id":1,"name":"category 1"},{"id":2,"name":"category 2"},{"id":3,"name":"category 3"}]}'
 
         then:
         result == expected

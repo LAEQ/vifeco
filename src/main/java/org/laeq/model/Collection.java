@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "collection")
-@JsonIgnoreProperties({ "id", "isDefault", "default"})
-@JsonPropertyOrder({"name", "categories"})
+@JsonIgnoreProperties({"isDefault", "default"})
+@JsonPropertyOrder({"id", "name", "categories"})
 public class Collection {
     @Id
     @GeneratedValue(generator = "increment")

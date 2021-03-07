@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import griffon.javafx.support.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+
+<SplitPane dividerPositions="0.5" prefHeight="400.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.tools.ImportController">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+         <children>
+            <Label AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" JavaFXUtils.i18nKey="import.title" />
+            <Button fx:id="importVideoActionTarget" mnemonicParsing="false" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="40.0" JavaFXUtils.i18nKey="btn.choose">
+               <styleClass>
+                  <String fx:value="btn" />
+                  <String fx:value="btn-warning" />
+                  <String fx:value="btn-sm" />
+               </styleClass>
+            </Button>
+            <Label fx:id="filename" prefHeight="17.0" prefWidth="276.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />
+            <TextArea fx:id="warning" prefHeight="200.0" prefWidth="265.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="120.0" />
+            <Button fx:id="confirmActionTarget" mnemonicParsing="false" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="340.0" JavaFXUtils.i18nKey="btn.import">
+            <styleClass>
+               <String fx:value="btn" />
+               <String fx:value="btn-success" />
+               <String fx:value="btn-sm" />
+            </styleClass>
+            </Button>
+         </children>
+      </AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+  </items>
+</SplitPane>

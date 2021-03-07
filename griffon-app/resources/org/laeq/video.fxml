@@ -10,7 +10,8 @@
     <items>
         <AnchorPane fx:id="videoPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
             <children>
-                <TableView fx:id="videoTable" layoutX="40.0" layoutY="82.0" prefHeight="460.0" prefWidth="6505.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <TableView fx:id="videoTable" layoutX="40.0" layoutY="82.0" prefHeight="460.0" prefWidth="6505.0"
+                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                    <columns>
                        <TableColumn fx:id="createdAt" prefWidth="95.0" JavaFXUtils.i18nKey="z.createdAt" />
                        <TableColumn fx:id="name" prefWidth="155.0" JavaFXUtils.i18nKey="z.name"  />
@@ -48,7 +49,6 @@
                         <Label fx:id="totalValue" prefHeight="16.0" prefWidth="241.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                     </children>
                 </GridPane>
-
                 <Button fx:id="clearActionTarget" layoutX="10.0" layoutY="462.0" minWidth="60.0" mnemonicParsing="false"
                         styleClass="btn, btn-default"
                         AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" JavaFXUtils.i18nKey="btn.clear"/>
@@ -60,7 +60,6 @@
                         <String fx:value="btn-large" />
                     </styleClass>
                 </Button>
-
                <TableView fx:id="categoryTable" layoutY="221.0" prefHeight="229.0" prefWidth="354.0"
                           AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="225.0">
                     <columns>

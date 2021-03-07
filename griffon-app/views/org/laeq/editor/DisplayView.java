@@ -162,6 +162,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     }
 
     public void seek(Duration currentTime) {
-        runOutsideUI(() -> mediaPlayer.seek(currentTime));
+        runInsideUIAsync(() -> mediaPlayer.seek(currentTime));
     }
 }

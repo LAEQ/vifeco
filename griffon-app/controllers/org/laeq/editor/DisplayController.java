@@ -70,6 +70,6 @@ public class DisplayController extends AbstractGriffonController {
     }
 
     public void isReady() {
-        getApplication().getEventRouter().publishEventOutsideUI("display.ready");
+        getApplication().getEventRouter().publishEventAsync("display.ready");
     }
 }

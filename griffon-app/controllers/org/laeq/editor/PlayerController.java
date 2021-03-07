@@ -125,13 +125,7 @@ public class PlayerController extends AbstractGriffonController {
         view.pause();
         model.isReady.set(Boolean.FALSE);
 
-        try {
-            Stage window = (Stage) getApplication().getWindowManager().findWindow("display");
-            window.close();
-            getApplication().getMvcGroupManager().findGroup("display").destroy();
-        }catch (Exception e){
-
-        }
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
