@@ -1,6 +1,7 @@
 package org.laeq.editor;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 public class Controls {

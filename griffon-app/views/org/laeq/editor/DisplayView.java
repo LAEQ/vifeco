@@ -111,7 +111,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
             });
 
             mediaPlayer.setOnError(() -> {
-                System.out.println("on error");
+
             });
 
             this.volumeOff();
@@ -162,6 +162,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     }
 
     public void seek(Duration currentTime) {
-        runInsideUIAsync(() -> mediaPlayer.seek(currentTime));
+         mediaPlayer.seek(currentTime);
     }
 }

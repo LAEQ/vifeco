@@ -49,7 +49,7 @@ public class PlayerController extends AbstractGriffonController {
     public void play() {
         if(model.isReady.get()){
             getApplication().getEventRouter().publishEventAsync("player.play");
-            getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(view.getCurrentTime()));
+            getApplication().getEventRouter().publishEventAsync("player.currentTime", Arrays.asList(view.getCurrentTime()));
             view.play();
         }
     }
@@ -173,12 +173,16 @@ public class PlayerController extends AbstractGriffonController {
             model.refreshIcon();
         });
 
+        list.put("player.currentTime", objects -> {
+           Duration currentTime = (Duration) objects[0];
+           view.setCurrentTime(currentTime);
+        });
 
         return list;
     }
 
     public void updateCurrentTime(Duration start) {
-        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+        getApplication().getEventRouter().publishEventAsync("player.currentTime", Arrays.asList(start));
     }
 
     public void deletePoint(IconPointColorized icon) {
@@ -186,16 +190,6 @@ public class PlayerController extends AbstractGriffonController {
 
         if(point.isPresent()){
             deletePoint(point.get());
-//            Point pt = point.get();
-//            try {
-//                dbService.pointDAO.delete(pt);
-//                model.displayed.remove(pt);
-//                model.removePoint(pt);
-//                getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", pt.toString()));
-//                getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(pt));
-//            }catch (Exception e){
-//                getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", pt.toString()));
-//            }
         }
     }
 }

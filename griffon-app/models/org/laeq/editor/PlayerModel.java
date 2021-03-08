@@ -19,6 +19,7 @@ import org.laeq.model.icon.IconPointColorized;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -27,10 +28,13 @@ import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class PlayerModel extends AbstractGriffonModel {
+
     @MVCMember @Nonnull private Video video;
 
     //Video controls
     public Controls controls = new Controls();
+
+    public SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
 
     //List for icon panel
     public ObservableSet<Point> displayed = FXCollections.observableSet();
@@ -54,6 +58,18 @@ public class PlayerModel extends AbstractGriffonModel {
 
     public void setVideo(@Nonnull Video video){
         this.video = video;
+
+        //Initialize icon position, size, opcacity
+        video.getPoints().parallelStream().forEach(p -> {
+            IconPointColorized icon = p.getIconPoint();
+            Double x = p.getX() * width.doubleValue();
+            Double y = p.getY() * height.doubleValue();
+            icon.setLayoutX(x);
+            icon.setLayoutY(y);
+            icon.setScaleX(controls.scale());
+            icon.setScaleY(controls.scale());
+            icon.setOpacity(controls.opacity.getValue());
+        });
 
         points.addAll(video.getPoints());
         displayed.addAll(points);
@@ -129,4 +145,6 @@ public class PlayerModel extends AbstractGriffonModel {
             icon.setOpacity(controls.opacity.getValue());
         });
     }
+
+
 }
