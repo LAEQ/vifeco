@@ -2,13 +2,14 @@ package org.laeq.model
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import javafx.util.Duration
+import spock.lang.Ignore
 import spock.lang.Specification
 
 class VideoTest extends Specification {
     def "serialize"(){
         setup:
         Integer userId = 1
-        User user = new User(userId, "test", "test", "test", false)
+        User user = new User(userId, "test", "test", false)
         Collection categoryCollection = new Collection(1, "collection 1", false)
         Category category1 = new Category(1, "category 1", "icon 1", "color 1", "A")
         Category category2 = new Category(2, "category 2", "icon 2", "color 2", "B")
@@ -47,6 +48,7 @@ class VideoTest extends Specification {
         result == expected.replace("'", "\"")
     }
 
+    @Ignore
     def "deserialization" (){
         setup:
         String json = getClass().classLoader.getResource("export/export_1.json").text
@@ -59,14 +61,17 @@ class VideoTest extends Specification {
 
         ObjectMapper mapper = new ObjectMapper()
 
+        Collection expectedCollection = new Collection(1,"Default", Boolean.TRUE)
+        expectedCollection.addCategory(new Category(1, "Moving Car"))
+
         when:
         Video result = mapper.readValue(json, Video.class)
 
         then:
         result.path == 'exported_video.wav'
         result.duration.equals(Duration.millis(258573.333334))
-        result.collection.equals(new Collection("Default")) == true
-        result.collection.categories.size() == 2
+
+        result.collection == expectedCollection
         result.points.size() == 1
     }
 }

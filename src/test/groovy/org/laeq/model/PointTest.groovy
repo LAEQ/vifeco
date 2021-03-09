@@ -8,7 +8,7 @@ import spock.lang.Specification
 class PointTest extends Specification {
     def "serialization "(){
         setup:
-        User user = new User(1, 'firstName', 'lastName', 'email', false)
+        User user = new User(1, 'firstName', 'lastName', false)
         Collection collection = new Collection(1, 'collection', false)
         Category category = new Category(1, "test", "test", "test" ,"A")
         collection.addCategory(category)

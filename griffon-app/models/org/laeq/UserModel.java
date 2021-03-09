@@ -13,7 +13,6 @@ public class UserModel extends AbstractGriffonModel {
     public ObservableList<User> userList = FXCollections.observableArrayList();
     public SimpleStringProperty firstName = new SimpleStringProperty(this, "firstName", "");
     public SimpleStringProperty lastName = new SimpleStringProperty(this, "lastName", "");
-    public SimpleStringProperty email = new SimpleStringProperty(this, "email", "");
 
     private User selectedUser;
 
@@ -21,7 +20,6 @@ public class UserModel extends AbstractGriffonModel {
         this.selectedUser = selectedUser;
         this.firstName.set(selectedUser.getFirstName());
         this.lastName.set(selectedUser.getLastName());
-        this.email.set(selectedUser.getEmail());
     }
 
     public void delete(User user) {
@@ -32,7 +30,6 @@ public class UserModel extends AbstractGriffonModel {
         this.selectedUser = null;
         this.firstName.set("");
         this.lastName.set("");
-        this.email.set("");
     }
 
     public User getUser() {
@@ -42,7 +39,6 @@ public class UserModel extends AbstractGriffonModel {
 
         this.selectedUser.setFirstName(firstName.get());
         this.selectedUser.setLastName(lastName.get());
-        this.selectedUser.setEmail(email.get());
 
         return this.selectedUser;
     }

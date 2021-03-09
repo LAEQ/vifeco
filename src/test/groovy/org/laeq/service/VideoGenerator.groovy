@@ -12,7 +12,7 @@ class VideoGenerator {
             collection.categories.add(category)
         })
 
-        User user = new User("test", "test", "test@test.com")
+        User user = new User("test", "test")
         Video video = new Video("path", Duration.millis(60000), collection, user)
         video.id = UUID.randomUUID()
 

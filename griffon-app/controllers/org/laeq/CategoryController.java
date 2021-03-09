@@ -8,6 +8,7 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Category;
+import org.laeq.model.Collection;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
-public class CategoryController extends AbstractGriffonController {
+public class CategoryController extends AbstractGriffonController implements CRUDInterface<Category> {
     @MVCMember @Nonnull private CategoryModel model;
     @MVCMember @Nonnull private CategoryView view;
     @Inject private DatabaseService dbService;
@@ -36,6 +37,7 @@ public class CategoryController extends AbstractGriffonController {
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Override
     public void save(){
         try{
             Category category = model.getCategory();
@@ -51,6 +53,7 @@ public class CategoryController extends AbstractGriffonController {
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Override
     public void clear(){
         model.clear();
         getApplication().getEventRouter().publishEvent("status.reset");
@@ -58,6 +61,7 @@ public class CategoryController extends AbstractGriffonController {
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Override
     public void delete(Category category) {
         try{
             dbService.categoryDAO.delete(category);

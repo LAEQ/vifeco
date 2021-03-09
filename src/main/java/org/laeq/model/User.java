@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "user")
-@JsonIgnoreProperties({"default", "email"})
+@JsonIgnoreProperties({"default"})
 @JsonPropertyOrder({"id", "firstName", "lastName"})
 final public class User
 {
@@ -26,27 +26,20 @@ final public class User
     @Size(min = 1)
     private String lastName;
 
-    @Column(nullable = false)
-    @Size(min = 1)
-    private String email;
-
     @Type(type = "boolean")
     private Boolean isDefault = Boolean.FALSE;
 
-    public User() {
-    }
+    public User() {}
 
-    public User(@Nonnull String firstName, @Nonnull String lastName, @Nonnull String email) {
+    public User(@Nonnull String firstName, @Nonnull String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
     }
 
-    public User(Integer id, @Size(min = 1) String firstName, @Size(min = 1) String lastName, @Size(min = 1) String email, Boolean isDefault) {
+    public User(Integer id, @Size(min = 1) String firstName, @Size(min = 1) String lastName, Boolean isDefault) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
         this.isDefault = isDefault;
     }
 
@@ -74,15 +67,6 @@ final public class User
 
     public void setLastName(@Nonnull String lastName) {
         this.lastName = lastName;
-    }
-
-    @Nonnull
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@Nonnull String email) {
-        this.email = email;
     }
 
     public Boolean getDefault() {

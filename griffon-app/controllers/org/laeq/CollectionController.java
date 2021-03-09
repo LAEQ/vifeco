@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
-public class CollectionController extends AbstractGriffonController {
+public class CollectionController extends AbstractGriffonController implements CRUDInterface<Collection> {
     @MVCMember @Nonnull private CollectionModel model;
     @MVCMember @Nonnull private CollectionView view;
     @Inject private DatabaseService dbService;
@@ -35,7 +35,8 @@ public class CollectionController extends AbstractGriffonController {
         getApplication().getEventRouter().addEventListener(listeners());
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Override
     public void save(){
         try{
             Collection collection = model.getCollection();
@@ -49,12 +50,14 @@ public class CollectionController extends AbstractGriffonController {
         }
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Override
     public void clear(){
         model.clear();
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Override
     public void delete(Collection collection) {
         if(collection.getDefault()){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.delete.default"));

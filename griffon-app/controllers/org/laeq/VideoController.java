@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
-public class VideoController extends AbstractGriffonController {
+public class VideoController extends AbstractGriffonController implements CRUDInterface<Video>{
     @MVCMember @Nonnull private VideoModel model;
     @MVCMember @Nonnull private VideoView view;
 
@@ -96,6 +96,11 @@ public class VideoController extends AbstractGriffonController {
     public void clear(){
         getApplication().getEventRouter().publishEventOutsideUI("status.reset");
         model.clear();
+    }
+
+    @Override
+    public void save() {
+        //noop
     }
 
     @ControllerAction

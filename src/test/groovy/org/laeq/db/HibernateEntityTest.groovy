@@ -49,7 +49,7 @@ class HibernateEntityTest extends Specification {
 
     def "test create user"(){
         setup:
-        User user = new User("David", "Maignan", "davidmaignan@email.com")
+        User user = new User("John", "Doe")
 
         when:
         session.save(user)
@@ -94,7 +94,7 @@ class HibernateEntityTest extends Specification {
     def "test create video"(){
         setup:
         Collection collection = new Collection("mock collection")
-        User user = new User("David", "Maignan", "davidmaignan@email.com")
+        User user = new User("John", "Doe")
         Video video = new Video("path", Duration.ONE, collection, user);
 
 
@@ -113,7 +113,7 @@ class HibernateEntityTest extends Specification {
         Collection collection = new Collection("mock collection")
         Category category = new Category("mock name", "mock icon", "#FFFFFF", "A")
         collection.addCategory(category)
-        User user = new User("David", "Maignan", "davidmaignan@email.com")
+        User user = new User("John", "Doe")
         Video video = new Video("path", Duration.ONE, collection, user)
         Point point = new Point(1.0, 1.0, Duration.ONE, category, video)
 

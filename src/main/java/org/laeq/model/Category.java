@@ -54,6 +54,11 @@ public class Category implements Comparable<Category> {
         this.id = id;
     }
 
+    public Category(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Category(Integer id, String name, String icon, String color, String shortcut) {
         this(name, icon, color, shortcut);
         this.id = id;
@@ -137,12 +142,12 @@ public class Category implements Comparable<Category> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return id == category.id && name.equals(category.name);
+        return id == category.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id);
     }
 
     @Override

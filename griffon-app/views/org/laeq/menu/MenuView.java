@@ -51,41 +51,45 @@ public class MenuView extends AbstractJavaFXGriffonView {
 
         parentView.menu.getChildren().add(node);
 
-        IconButton videoListBtn = generateButton(IconSVG.video, "video list", "org.laeq.menu.tooltip.video_list", "video.section");
-        videoListBtn.setLayoutX(10);
-        subMenuPane.getChildren().add(videoListBtn);
-
         IconButton videoAddBtn = generateButton(IconSVG.video_plus,"video add", "org.laeq.menu.tooltip.video_add", "video.open");
-        videoAddBtn.setLayoutX(55);
+        videoAddBtn.setLayoutX(10);
         subMenuPane.getChildren().add(videoAddBtn);
 
+        IconButton videoListBtn = generateButton(IconSVG.video, "video list", "org.laeq.menu.tooltip.video_list", "video.section");
+        videoListBtn.setLayoutX(65);
+        subMenuPane.getChildren().add(videoListBtn);
+
         IconButton userBtn = generateButton(IconSVG.user, "user", "org.laeq.menu.tooltip.user", "user.section");
-        userBtn.setLayoutX(115);
+        userBtn.setLayoutX(110);
         subMenuPane.getChildren().add(userBtn);
 
         IconButton categoryBtn  = generateButton(IconSVG.category, "category", "org.laeq.menu.tooltip.category", "category.section");
-        categoryBtn.setLayoutX(175);
+        categoryBtn.setLayoutX(155);
         subMenuPane.getChildren().add(categoryBtn);
 
         IconButton collectionBtn = generateButton(IconSVG.collection, "collection", "org.laeq.menu.tooltip.collection", "collection.section");
-        collectionBtn.setLayoutX(235);
+        collectionBtn.setLayoutX(200);
         subMenuPane.getChildren().add(collectionBtn);
 
         IconButton databaseBtn = generateButton(IconSVG.db, "database", "org.laeq.menu.tooltip.database", "database.backup");
-        databaseBtn.setLayoutX(295);
+        databaseBtn.setLayoutX(255);
         subMenuPane.getChildren().add(databaseBtn);
 
         IconButton importBtn = generateButton(IconSVG.importVideo, "import", "org.laeq.menu.tooltip.import_video", "video.import");
-        importBtn.setLayoutX(355);
+        importBtn.setLayoutX(300);
         subMenuPane.getChildren().add(importBtn);
 
         IconButton statisticBtn = generateButton(IconSVG.statistic, "statistic", "org.laeq.menu.tooltip.statistic", "statistic.section");
-        statisticBtn.setLayoutX(415);
+        statisticBtn.setLayoutX(345);
         subMenuPane.getChildren().add(statisticBtn);
 
         IconButton aboutBtn = generateButton(IconSVG.question, "about", "org.laeq.menu.tooltip.about", "about.section");
-        aboutBtn.setLayoutX(475);
+        aboutBtn.setLayoutX(390);
         subMenuPane.getChildren().add(aboutBtn);
+
+        IconButton configBtn = generateButton(IconSVG.cog, "config", "org.laeq.menu.tooltip.config", "config.section");
+        configBtn.setLayoutX(435);
+        subMenuPane.getChildren().add(configBtn);
     }
 
     private IconButton generateButton(String path, String name, String help, String eventName){
