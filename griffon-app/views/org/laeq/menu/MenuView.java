@@ -26,7 +26,6 @@ public class MenuView extends AbstractJavaFXGriffonView {
     private MenuModel model;
 
     @FXML private AnchorPane subMenuPane;
-    @FXML private ChoiceBox<String> languageMenu;
 
     @MVCMember @Nonnull private VifecoView parentView;
 

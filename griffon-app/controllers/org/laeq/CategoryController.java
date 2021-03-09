@@ -43,11 +43,12 @@ public class CategoryController extends AbstractGriffonController implements CRU
             Category category = model.getCategory();
             dbService.categoryDAO.create(category);
             model.categoryList.clear();
-            model.clear();
             model.categoryList.addAll(dbService.categoryDAO.findAll());
             getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("db.category.save.success", category.getName()));
         } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.category.save.error"));
+        }finally {
+            clear();
         }
     }
 
