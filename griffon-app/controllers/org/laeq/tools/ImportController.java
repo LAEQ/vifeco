@@ -35,30 +35,9 @@ public class ImportController extends AbstractGriffonController {
             model.collections.addAll(dbService.collectionDAO.findAll());
             model.users.addAll(dbService.userDAO.findAll());
             getApplication().getEventRouter().addEventListener(listeners());
+            getApplication().getEventRouter().publishEventAsync("status.reset");
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.fetch.error"));
-        }
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void open() {
-        fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter(
-                    "Json Files",
-                    "*.json")
-        );
-
-        Stage stage = (Stage) getApplication().getWindowManager().findWindow("mainWindow");
-
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        if (selectedFile != null) {
-            System.out.println("Importing " + selectedFile.getAbsolutePath());
-
-        } else {
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
         }
     }
 

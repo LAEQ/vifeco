@@ -169,10 +169,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 });
             });
             slider.valueProperty().addListener(sliderListener());
-            System.out.println("ICIC");
-            slider.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
-                System.out.println("ICIC");
-            });
+//            slider.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
+//            });
 
             mediaPlayer.currentTimeProperty().addListener(currentTimeListener());
             iconPane.setOnMouseMoved(mousemove());
@@ -198,19 +196,15 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             });
             mediaPlayer.rateProperty().bind(model.controls.speed);
 
-            elapListen = elapsedListener();
-
-            elapsed.focusedProperty().addListener((observable, oldValue, newValue) -> {
-                if(newValue){
-                    mediaPlayer.pause();
-                    elapsed.textProperty().addListener(elapListen);
-                }else{
-                    System.out.println(oldValue + " icdc");
-                    elapsed.textProperty().removeListener(elapListen);
-                }
-            });
-
-
+//            elapListen = elapsedListener();
+//            elapsed.focusedProperty().addListener((observable, oldValue, newValue) -> {
+//                if(newValue){
+//                    mediaPlayer.pause();
+//                    elapsed.textProperty().addListener(elapListen);
+//                }else{
+//                    elapsed.textProperty().removeListener(elapListen);
+//                }
+//            });
 
             updateValues();
         } catch (Exception e) {
@@ -365,8 +359,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private InvalidationListener sliderListener(){
         return  observable -> {
             if(slider.isPressed()){
-                controller.updateCurrentTime(video.getDuration().multiply(slider.getValue() / 100));
-                updateValues();
+                Duration now = video.getDuration().multiply(slider.getValue() / 100);
+                controller.updateCurrentTime(now);
+                runInsideUIAsync(() ->{
+                    mediaPlayer.seek(now);
+                });
+
+//                updateValues();
             }
         };
     }
@@ -381,6 +380,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void setCurrentTime(Duration currentTime) {
-        mediaPlayer.seek(currentTime);
+        runInsideUIAsync(() -> {
+            mediaPlayer.seek(currentTime);
+        });
     }
 }

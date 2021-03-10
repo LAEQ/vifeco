@@ -23,8 +23,7 @@ public class ControlsController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        System.out.println("controls: " + getApplication().getMvcGroupManager().getGroups().keySet());
-        System.out.println("controls: " + getApplication().getWindowManager().getWindowNames());
+
     }
 
     public void dispatch(String eventName, double value) {

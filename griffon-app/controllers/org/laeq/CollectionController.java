@@ -54,6 +54,7 @@ public class CollectionController extends AbstractGriffonController implements C
     @Override
     public void clear(){
         model.clear();
+        getApplication().getEventRouter().publishEvent("status.reset");
     }
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)

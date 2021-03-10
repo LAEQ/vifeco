@@ -46,6 +46,7 @@ public class UserController extends AbstractGriffonController implements CRUDInt
     @Override
     public void clear(){
         model.clear();
+        getApplication().getEventRouter().publishEvent("status.reset");
     }
 
     @ControllerAction

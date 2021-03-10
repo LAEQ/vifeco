@@ -48,9 +48,6 @@ StatisticController extends AbstractGriffonController {
             getApplication().getWindowManager().detach("statistic_display");
             statistic_display.close();
         }
-
-        System.out.println("A: " + getApplication().getMvcGroupManager().getGroups().keySet());
-        System.out.println("A: " + getApplication().getWindowManager().getWindowNames());
     }
 
     @ControllerAction
@@ -69,7 +66,6 @@ StatisticController extends AbstractGriffonController {
 
         try {
             StatisticService service = new StatisticService();
-            System.out.println(model.durationStep.get());
             service.execute(videos, model.durationStep.get());
 
             runInsideUISync(() -> {
@@ -109,9 +105,9 @@ StatisticController extends AbstractGriffonController {
         return list;
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void displayMatchedPoint(MatchedPoint mp) {
-        System.out.printf("F: %s\n", getApplication().getWindowManager().getWindowNames());
-        System.out.printf("F : %s\n", getApplication().getMvcGroupManager().getGroups().keySet());
         Object statistic_display = getApplication().getWindowManager().findWindow("statistic_display");
         if(statistic_display == null){
             Map<String, Object> args = new HashMap<>();

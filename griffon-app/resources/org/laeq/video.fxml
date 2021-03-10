@@ -17,8 +17,8 @@
                        <TableColumn fx:id="name" prefWidth="155.0" JavaFXUtils.i18nKey="z.name"  />
                        <TableColumn fx:id="path" prefWidth="75.0" JavaFXUtils.i18nKey="z.path" />
                        <TableColumn fx:id="duration" prefWidth="80.0" JavaFXUtils.i18nKey="z.duration" />
-                       <TableColumn fx:id="user" prefWidth="145.0" JavaFXUtils.i18nKey="z.user" />
-                       <TableColumn fx:id="collection" prefWidth="145.0" JavaFXUtils.i18nKey="z.collection" />
+                       <TableColumn fx:id="user" prefWidth="115.0" JavaFXUtils.i18nKey="z.user" />
+                       <TableColumn fx:id="collection" prefWidth="115.0" JavaFXUtils.i18nKey="z.collection" />
                        <TableColumn fx:id="total" prefWidth="75.0" JavaFXUtils.i18nKey="z.total" />
                        <TableColumn fx:id="actions" prefWidth="175.0" JavaFXUtils.i18nKey="z.actions" />
                        <TableColumn fx:id="delete" prefWidth="175.0" JavaFXUtils.i18nKey="z.delete" />

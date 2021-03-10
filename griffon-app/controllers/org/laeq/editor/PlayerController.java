@@ -80,13 +80,10 @@ public class PlayerController extends AbstractGriffonController {
             getApplication().getWindowManager().detach("controls");
             controls.close();
         }
-
-        System.out.println("C: " + getApplication().getMvcGroupManager().getGroups().keySet());
-        System.out.println("C: " + getApplication().getWindowManager().getWindowNames());
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void addPoint(KeyCode code, Duration currentTime) {
         if(model.enabled){
             Point point = model.generatePoint(code.getName(), currentTime);
@@ -105,7 +102,7 @@ public class PlayerController extends AbstractGriffonController {
         }
     }
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void deletePoint(Point point) {
         try{
             dbService.pointDAO.delete(point);
@@ -173,16 +170,18 @@ public class PlayerController extends AbstractGriffonController {
             model.refreshIcon();
         });
 
-        list.put("player.currentTime", objects -> {
-           Duration currentTime = (Duration) objects[0];
-           view.setCurrentTime(currentTime);
-        });
+//        list.put("player.currentTime", objects -> {
+//           Duration currentTime = (Duration) objects[0];
+//           view.setCurrentTime(currentTime);
+//        });
 
         return list;
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
     public void updateCurrentTime(Duration start) {
-        getApplication().getEventRouter().publishEventAsync("player.currentTime", Arrays.asList(start));
+        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
     }
 
     public void deletePoint(IconPointColorized icon) {

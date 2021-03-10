@@ -88,6 +88,7 @@ public class MenuController extends AbstractGriffonController {
             getApplication().getEventRouter().publishEvent("video.created");
             getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.create.success"));
         }catch (Exception e){
+            e.printStackTrace();
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
         }
     }

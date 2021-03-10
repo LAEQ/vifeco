@@ -25,11 +25,11 @@ public class Category implements Comparable<Category> {
     private Integer id;
 
     @Column(nullable = false)
-    @Size(min = 1, max = 255)
+    @Length(min = 1, max = 255)
     private String name;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    @Size(min = 1)
+    @Length(min = 1)
     private String icon;
 
     @Column(nullable = false)
