@@ -132,156 +132,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         messageSource = getApplication().getMessageSource();
     }
 
-    public void play(){
-        runInsideUISync(() -> {
-            mediaPlayer.play();
-        });
-    }
-
-    public void pause(){
-        runInsideUISync(() -> {
-            mediaPlayer.pause();
-        });
-    }
-
-    private void initPlayer(){
-        try {
-            File file = new File(video.getPath());
-            Media media = new Media(file.getCanonicalFile().toURI().toString());
-            mediaPlayer = new MediaPlayer(media);
-            mediaView.setMediaPlayer(mediaPlayer);
-
-            mediaPlayer.setOnReady(() ->{
-                model.isReady.set(Boolean.TRUE);
-                mediaPlayer.play();
-                mediaPlayer.pause();
-            });
-
-            duration.setText(video.getDurationFormatted());
-            mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
-                model.width.set(newValue.getWidth());
-                model.height.set(newValue.getHeight());
-                iconPane.setPrefWidth(model.width.doubleValue());
-                iconPane.setPrefHeight(model.height.doubleValue());
-                iconPane.getChildren().clear();
-                model.displayed.forEach(p ->{
-                    IconPointColorized icon = p.getIconPoint();
-                    Double x = p.getX() * model.width.doubleValue();
-                    Double y = p.getY() * model.height.doubleValue();
-                    icon.setLayoutX(x);
-                    icon.setLayoutY(y);
-                    iconPane.getChildren().add(icon);
-                });
-            });
-
-            slider.valueProperty().addListener(sliderListener());
-
-            mediaPlayer.currentTimeProperty().addListener(currentTimeListener());
-            iconPane.setOnMouseMoved(mousemove());
-            iconPane.setOnMouseExited(mouseexit());
-            iconPane.setOnMouseEntered(mouseenter());
-            iconPane.setOnMouseClicked(mouseclick());
-            scene.setOnKeyReleased(keyReleased());
-
-            model.displayed.addListener((SetChangeListener<Point>) change ->  {
-                if(change.wasAdded()){
-                    IconPointColorized icon = change.getElementAdded().getIconPoint();
-                    Double x = change.getElementAdded().getX() * model.width.doubleValue();
-                    Double y = change.getElementAdded().getY() * model.height.doubleValue();
-                    icon.setLayoutX(x);
-                    icon.setLayoutY(y);
-                    icon.setScaleX(model.controls.scale());
-                    icon.setScaleY(model.controls.scale());
-                    icon.setOpacity(model.controls.opacity.getValue());
-                    iconPane.getChildren().add(icon);
-                } else if(change.wasRemoved()){
-                    iconPane.getChildren().remove(change.getElementRemoved().getIconPoint());
-                }
-            });
-            mediaPlayer.rateProperty().bind(model.controls.speed);
-
-            elapListen = elapsedListener();
-            elapKeyListen = elapsedKeyPressed();
-            
-            
-            
-            elapsed.focusedProperty().addListener((observable, oldValue, newValue) -> {
-                if(newValue){
-                    mediaPlayer.pause();
-                    elapsed.textProperty().addListener(elapListen);
-                    elapsed.setOnKeyPressed(elapKeyListen);
-                }else{
-                    elapsed.textProperty().removeListener(elapListen);
-                    elapsed.removeEventFilter(KeyEvent.KEY_PRESSED, elapKeyListen);
-                }
-            });
-
-            updateValues();
-        } catch (Exception e) {
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
-        }
-    }
-
-    private EventHandler<KeyEvent> elapsedKeyPressed(){
-        return event -> {
-            if( event.getCode() == KeyCode.ENTER ) {
-                String time = elapsed.textProperty().get();
-
-                if(helperService.validTimeString(time)){
-                    String[] split = time.split(":");
-                    Double hours = Double.parseDouble(split[0]);
-                    Double minutes = Double.parseDouble(split[1]);
-                    Double seconds = Double.parseDouble(split[2]);
-
-                    Duration seekDuration = Duration.hours(hours).add(Duration.minutes(minutes)).add(Duration.seconds(seconds));
-                    elapsed.setFocusTraversable(false);
-                    controller.updateCurrentTime(seekDuration);
-                }
-            }
-        };
-    }
-
-
-
-    private ChangeListener<String> elapsedListener(){
-        return (observable, oldValue, newValue) -> {
-            if(HelperService.validTimeString(newValue) == false){
-                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("duration.pattern.invalid"));
-            }
-        };
-    }
-
-    private EventHandler<? super MouseEvent> mouseclick() {
-        return (EventHandler<MouseEvent>) event -> {
-            Node node = event.getPickResult().getIntersectedNode();
-            Parent parent = node.getParent();
-            if(parent instanceof IconPointColorized) {
-                controller.deletePoint((IconPointColorized) parent);
-            }
-        };
-    }
-
-    private EventHandler<? super KeyEvent> keyReleased() {
-        return (EventHandler<KeyEvent>) event -> { controller.addPoint(event.getCode(), mediaPlayer.getCurrentTime());};
-    }
-
-    private EventHandler<? super MouseEvent> mouseexit() {
-        return (EventHandler<MouseEvent>) event -> { model.enabled = Boolean.FALSE; };
-    }
-
-    private EventHandler<? super MouseEvent> mouseenter() {
-        return (EventHandler<MouseEvent>) event -> { model.enabled = Boolean.TRUE; };
-    }
-
-    private EventHandler<MouseEvent> mousemove(){
-        return event -> {
-            if(model.enabled){
-                model.mousePosition[0] = event.getX();
-                model.mousePosition[1] = event.getY();
-            }
-        };
-    }
-
     private Scene init() {
         Scene scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
@@ -318,6 +168,144 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         timelineTable.getSelectionModel().selectedItemProperty().addListener(rowlistener());
 
         return scene;
+    }
+
+    private void initPlayer(){
+        try {
+            File file = new File(video.getPath());
+            Media media = new Media(file.getCanonicalFile().toURI().toString());
+            mediaPlayer = new MediaPlayer(media);
+            mediaView.setMediaPlayer(mediaPlayer);
+            mediaPlayer.setOnReady(() ->{
+                model.isReady.set(Boolean.TRUE);
+                mediaPlayer.play();
+                mediaPlayer.pause();
+            });
+            duration.setText(video.getDurationFormatted());
+            mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
+                model.width.set(newValue.getWidth());
+                model.height.set(newValue.getHeight());
+                iconPane.setPrefWidth(model.width.doubleValue());
+                iconPane.setPrefHeight(model.height.doubleValue());
+                iconPane.getChildren().clear();
+                model.displayed.forEach(p ->{
+                    IconPointColorized icon = p.getIconPoint();
+                    Double x = p.getX() * model.width.doubleValue();
+                    Double y = p.getY() * model.height.doubleValue();
+                    icon.setLayoutX(x);
+                    icon.setLayoutY(y);
+                    iconPane.getChildren().add(icon);
+                });
+            });
+            mediaPlayer.rateProperty().bind(model.controls.speed);
+            iconPane.setOnMouseMoved(mousemove());
+            iconPane.setOnMouseExited(mouseexit());
+            iconPane.setOnMouseEntered(mouseenter());
+            iconPane.setOnMouseClicked(mouseclick());
+            scene.setOnKeyReleased(keyReleased());
+
+
+            slider.valueProperty().addListener(sliderListener());
+            mediaPlayer.currentTimeProperty().addListener(currentTimeListener());
+
+            model.displayed.addListener((SetChangeListener<Point>) change ->  {
+                if(change.wasAdded()){
+                    IconPointColorized icon = change.getElementAdded().getIconPoint();
+                    Double x = change.getElementAdded().getX() * model.width.doubleValue();
+                    Double y = change.getElementAdded().getY() * model.height.doubleValue();
+                    icon.setLayoutX(x);
+                    icon.setLayoutY(y);
+                    icon.setScaleX(model.controls.scale());
+                    icon.setScaleY(model.controls.scale());
+                    icon.setOpacity(model.controls.opacity.getValue());
+                    iconPane.getChildren().add(icon);
+                } else if(change.wasRemoved()){
+                    iconPane.getChildren().remove(change.getElementRemoved().getIconPoint());
+                }
+            });
+
+            elapListen = elapsedListener();
+            elapKeyListen = elapsedKeyPressed();
+            elapsed.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue){
+                    mediaPlayer.pause();
+                    elapsed.textProperty().addListener(elapListen);
+                    elapsed.setOnKeyPressed(elapKeyListen);
+                }else{
+                    elapsed.textProperty().removeListener(elapListen);
+                    elapsed.removeEventFilter(KeyEvent.KEY_PRESSED, elapKeyListen);
+                }
+            });
+
+            updateValues();
+        } catch (Exception e) {
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
+        }
+    }
+
+    public void play(){
+        runInsideUISync(() -> {
+            mediaPlayer.play();
+        });
+    }
+
+    public void pause(){
+        runInsideUISync(() -> {
+            mediaPlayer.pause();
+        });
+    }
+
+    // Mouse and keyboard events
+    private EventHandler<KeyEvent> elapsedKeyPressed(){
+        return event -> {
+            if( event.getCode() == KeyCode.ENTER ) {
+                String time = elapsed.textProperty().get();
+
+                if(helperService.validTimeString(time)){
+                    String[] split = time.split(":");
+                    Double hours = Double.parseDouble(split[0]);
+                    Double minutes = Double.parseDouble(split[1]);
+                    Double seconds = Double.parseDouble(split[2]);
+
+                    Duration seekDuration = Duration.hours(hours).add(Duration.minutes(minutes)).add(Duration.seconds(seconds));
+                    elapsed.setFocusTraversable(false);
+                    controller.updateCurrentTime(seekDuration);
+                }
+            }
+        };
+    }
+    private ChangeListener<String> elapsedListener(){
+        return (observable, oldValue, newValue) -> {
+            if(HelperService.validTimeString(newValue) == false){
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("duration.pattern.invalid"));
+            }
+        };
+    }
+    private EventHandler<? super MouseEvent> mouseclick() {
+        return (EventHandler<MouseEvent>) event -> {
+            Node node = event.getPickResult().getIntersectedNode();
+            Parent parent = node.getParent();
+            if(parent instanceof IconPointColorized) {
+                controller.deletePoint((IconPointColorized) parent);
+            }
+        };
+    }
+    private EventHandler<? super KeyEvent> keyReleased() {
+        return (EventHandler<KeyEvent>) event -> { controller.addPoint(event.getCode(), mediaPlayer.getCurrentTime());};
+    }
+    private EventHandler<? super MouseEvent> mouseexit() {
+        return (EventHandler<MouseEvent>) event -> { model.enabled = Boolean.FALSE; };
+    }
+    private EventHandler<? super MouseEvent> mouseenter() {
+        return (EventHandler<MouseEvent>) event -> { model.enabled = Boolean.TRUE; };
+    }
+    private EventHandler<MouseEvent> mousemove(){
+        return event -> {
+            if(model.enabled){
+                model.mousePosition[0] = event.getX();
+                model.mousePosition[1] = event.getY();
+            }
+        };
     }
 
     //Rendering method
