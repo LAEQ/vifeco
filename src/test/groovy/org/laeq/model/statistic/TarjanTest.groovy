@@ -21,8 +21,6 @@ class TarjanTest extends Specification {
         service = new StatisticService();
     }
 
-
-
     def "GetSummaries"() {
         when:
         service.execute(Arrays.asList(video1, video2), 1)

@@ -13,6 +13,7 @@ import org.laeq.model.statistic.MatchedPoint;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -26,12 +27,16 @@ StatisticController extends AbstractGriffonController {
     @MVCMember @Nonnull private StatisticView view;
 
     @Inject private DatabaseService dbService;
+    @Inject private ExportService exportService;
+
+    private StatisticService service;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         try{
             List<Video> list = dbService.videoDAO.findAll();
             model.videos.addAll(list);
+
 
             getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.video.fetch.success"));
         } catch (Exception e){
@@ -43,17 +48,26 @@ StatisticController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        Stage statistic_display = (Stage) getApplication().getWindowManager().findWindow("statistic_display");
-        if(statistic_display != null){
-            getApplication().getWindowManager().detach("statistic_display");
-            statistic_display.close();
+        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("statistic_display"));
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void export(){
+        try{
+            String filename = exportService.export(service);
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("statistic.export.success", filename));
+        } catch (Exception e) {
+            e.printStackTrace();
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("statistic.export.error"));
         }
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void compare(){
-        closeStatisticDisplay();
+        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("statistic_display"));
+
         model.reset();
         view.reset();
 
@@ -65,14 +79,14 @@ StatisticController extends AbstractGriffonController {
         }
 
         try {
-            StatisticService service = new StatisticService();
+            service = new StatisticService();
             service.execute(videos, model.durationStep.get());
 
             runInsideUISync(() -> {
                 model.tarjans.addAll(service.getTarjanDiff());
                 model.videoName.set(service.getVideo1().pathToName());
-                model.user1.set(service.getVideo1().getUser().toString());
-                model.user2.set(service.getVideo2().getUser().toString());
+                model.user1.set(String.format("1: %s", service.getVideo1().getUser().toString()));
+                model.user2.set(String.format("2: %s", service.getVideo2().getUser().toString()));
                 model.collection.set(service.getVideo1().getCollection().toString());
                 model.duration.set(service.getVideo1().getDurationFormatted());
             });
@@ -85,17 +99,6 @@ StatisticController extends AbstractGriffonController {
         }catch (Exception e){
             e.printStackTrace();
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("statistic.video.selection.error"));
-        }
-    }
-
-    private void closeStatisticDisplay(){
-        try{
-            Stage statistic_display = (Stage) getApplication().getWindowManager().findWindow("statistic_display");
-            getApplication().getWindowManager().detach("statistic_display");
-            statistic_display.close();
-            getApplication().getMvcGroupManager().findGroup("statistic_display").destroy();
-        } catch (Exception e){
-
         }
     }
 

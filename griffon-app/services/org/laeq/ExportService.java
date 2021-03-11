@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
+import org.hibernate.engine.spi.CascadingAction;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.serializer.VideoSerializer;
@@ -43,21 +44,20 @@ public class ExportService extends AbstractGriffonService {
         return fileName;
     }
 
-    public void export(StatisticService service){
-        try{
-            String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, service.getVideo1().pathToName(), System.currentTimeMillis());
+    public String export(StatisticService service) throws IOException {
+        String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, service.getVideo1().pathToName(), System.currentTimeMillis());
 
-            ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
 
-            SimpleModule module = new SimpleModule();
-            module.addSerializer(Point.class, new VideoSerializer());
-            mapper.registerModule(module);
+        service.getTarjanDiff();
 
-            mapper.writeValue(new File(statFileName), service);
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(Video.class, new VideoSerializer());
+        mapper.registerModule(module);
 
-        } catch (Exception exception){
-            getLog().error(exception.getMessage());
-        }
+        mapper.writeValue(new File(statFileName), service);
+
+        return statFileName;
     }
 
     private String getPathExport(String filename){

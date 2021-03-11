@@ -11,7 +11,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.SetChangeListener;
 import javafx.event.EventHandler;
@@ -21,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -33,6 +33,7 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.laeq.HelperService;
 import org.laeq.model.CategoryCount;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
@@ -41,6 +42,7 @@ import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconSVG;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,6 +54,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private PlayerController controller;
     @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private Video video;
+
+    @Inject private HelperService helperService;
 
     private Scene scene;
 
@@ -86,6 +90,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     private MessageSource messageSource;
     private ChangeListener<String> elapListen;
+    private EventHandler<KeyEvent> elapKeyListen;
 
     @Override
     public void initUI() {
@@ -168,9 +173,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                     iconPane.getChildren().add(icon);
                 });
             });
+
             slider.valueProperty().addListener(sliderListener());
-//            slider.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
-//            });
 
             mediaPlayer.currentTimeProperty().addListener(currentTimeListener());
             iconPane.setOnMouseMoved(mousemove());
@@ -196,15 +200,21 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             });
             mediaPlayer.rateProperty().bind(model.controls.speed);
 
-//            elapListen = elapsedListener();
-//            elapsed.focusedProperty().addListener((observable, oldValue, newValue) -> {
-//                if(newValue){
-//                    mediaPlayer.pause();
-//                    elapsed.textProperty().addListener(elapListen);
-//                }else{
-//                    elapsed.textProperty().removeListener(elapListen);
-//                }
-//            });
+            elapListen = elapsedListener();
+            elapKeyListen = elapsedKeyPressed();
+            
+            
+            
+            elapsed.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue){
+                    mediaPlayer.pause();
+                    elapsed.textProperty().addListener(elapListen);
+                    elapsed.setOnKeyPressed(elapKeyListen);
+                }else{
+                    elapsed.textProperty().removeListener(elapListen);
+                    elapsed.removeEventFilter(KeyEvent.KEY_PRESSED, elapKeyListen);
+                }
+            });
 
             updateValues();
         } catch (Exception e) {
@@ -212,20 +222,30 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         }
     }
 
+    private EventHandler<KeyEvent> elapsedKeyPressed(){
+        return event -> {
+            if( event.getCode() == KeyCode.ENTER ) {
+                String time = elapsed.textProperty().get();
+
+                if(helperService.validTimeString(time)){
+                    String[] split = time.split(":");
+                    Double hours = Double.parseDouble(split[0]);
+                    Double minutes = Double.parseDouble(split[1]);
+                    Double seconds = Double.parseDouble(split[2]);
+
+                    Duration seekDuration = Duration.hours(hours).add(Duration.minutes(minutes)).add(Duration.seconds(seconds));
+                    elapsed.setFocusTraversable(false);
+                    controller.updateCurrentTime(seekDuration);
+                }
+            }
+        };
+    }
+
+
+
     private ChangeListener<String> elapsedListener(){
         return (observable, oldValue, newValue) -> {
-            Pattern pattern = Pattern.compile("[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}");
-            Matcher matcher = pattern.matcher(newValue);
-            String[] split = newValue.split(":");
-
-            if(matcher.find()){
-                Double hours = Double.parseDouble(split[0]);
-                Double minutes = Double.parseDouble(split[1]);
-                Double seconds = Double.parseDouble(split[2]);
-
-                Duration seekDuration = Duration.hours(hours).add(Duration.minutes(minutes)).add(Duration.seconds(seconds));
-                controller.updateCurrentTime(seekDuration);
-            } else {
+            if(HelperService.validTimeString(newValue) == false){
                 getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("duration.pattern.invalid"));
             }
         };
@@ -361,11 +381,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             if(slider.isPressed()){
                 Duration now = video.getDuration().multiply(slider.getValue() / 100);
                 controller.updateCurrentTime(now);
-                runInsideUIAsync(() ->{
-                    mediaPlayer.seek(now);
-                });
-
-//                updateValues();
             }
         };
     }
@@ -380,7 +395,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void setCurrentTime(Duration currentTime) {
-        runInsideUIAsync(() -> {
+        Platform.runLater(() -> {
             mediaPlayer.seek(currentTime);
         });
     }

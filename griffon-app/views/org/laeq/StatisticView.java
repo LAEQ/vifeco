@@ -6,16 +6,11 @@ import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.StackedBarChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -27,7 +22,7 @@ import org.laeq.model.statistic.Tarjan;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,12 +57,13 @@ public class StatisticView extends AbstractJavaFXGriffonView {
     @FXML private TableColumn<Tarjan, String> category;
     @FXML private TableColumn<Tarjan, String> video1Col;
     @FXML private TableColumn<Tarjan, String> video2Col;
+    @FXML private TableColumn<Tarjan, String> videoOverallCol;
 
     @FXML private Accordion accordion;
     @FXML private TitledPane chartTitled;
     @FXML private ScrollPane chartAccordion;
     @FXML private Pane tableAccordion;
-    @FXML private Pane timelineAccordion;
+    @FXML private Pane concordanceIndexAccordion;
 
     @FXML private TableView<MatchedPoint> tableAcc;
     @FXML private TableColumn<MatchedPoint, String> tableAccPt1;
@@ -82,6 +78,10 @@ public class StatisticView extends AbstractJavaFXGriffonView {
     TableColumn<Tarjan, Number> v2Lonely = new TableColumn<>();
     TableColumn<Tarjan, String> v2Percent = new TableColumn<>();
 
+    TableColumn<Tarjan, Number> vOverallMatched = new TableColumn<>();
+    TableColumn<Tarjan, Number> vOverallUnMatched = new TableColumn<>();
+    TableColumn<Tarjan, String> vOverallConcordanceIndex = new TableColumn<>();
+
     @Override
     public void initUI() {
         Node node = loadFromFXML();
@@ -95,10 +95,16 @@ public class StatisticView extends AbstractJavaFXGriffonView {
         v2Lonely.setText(getApplication().getMessageSource().getMessage("statistic.column.unmatched"));
         v1Percent.setText(getApplication().getMessageSource().getMessage("statistic.column.percent"));
         v2Percent.setText(getApplication().getMessageSource().getMessage("statistic.column.percent"));
+        vOverallMatched.setText(getApplication().getMessageSource().getMessage("statistic.column.matched"));
+        vOverallUnMatched.setText(getApplication().getMessageSource().getMessage("statistic.column.unmatched"));
+        vOverallConcordanceIndex.setText(getApplication().getMessageSource().getMessage("statistic.column.concordance_index"));
 
         category.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getName()));
         video1Col.getColumns().addAll(v1Total, v1Lonely, v1Percent);
         video2Col.getColumns().addAll(v2Total, v2Lonely, v2Percent);
+        videoOverallCol.getColumns().addAll(vOverallMatched, vOverallUnMatched, vOverallConcordanceIndex);
+
+        vOverallConcordanceIndex.setPrefWidth(145);
 
         v1Total.setCellValueFactory(cellData-> new ReadOnlyIntegerWrapper(cellData.getValue().getSummaryVideo1().getMatched()));
         v1Lonely.setCellValueFactory(cellData-> new ReadOnlyIntegerWrapper(cellData.getValue().getSummaryVideo1().getLonely()));
@@ -107,6 +113,11 @@ public class StatisticView extends AbstractJavaFXGriffonView {
         v2Total.setCellValueFactory(cellData-> new ReadOnlyIntegerWrapper(cellData.getValue().getSummaryVideo2().getMatched()));
         v2Lonely.setCellValueFactory(cellData-> new ReadOnlyIntegerWrapper(cellData.getValue().getSummaryVideo2().getLonely()));
         v2Percent.setCellValueFactory(cellData-> new ReadOnlyStringWrapper(String.format("%.2f", cellData.getValue().getSummaryVideo2().getPercent())));
+
+        vOverallMatched.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getSummaryOverallMatched()));
+        vOverallUnMatched.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getSummaryOverallUnMatched()));
+        vOverallConcordanceIndex.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(String.format("%.2f", cellData.getValue().getSummaryOverallConcordanceIndex() * 100)));
+
 
         tableAccPt1.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPt1Formatted()));
         tableAccPt2.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPt2Formatted()));
@@ -231,6 +242,7 @@ public class StatisticView extends AbstractJavaFXGriffonView {
         sbc.getData().addAll(chartSerie_1, chartSerie_2, chartSerie_3);
 
         chartAccordion.setContent(sbc);
+
         tableAcc.getItems().clear();
 
         List<MatchedPoint> sorted = tarjan.matchedPoints.stream()
@@ -238,6 +250,48 @@ public class StatisticView extends AbstractJavaFXGriffonView {
                 .collect(Collectors.toList());
 
         tableAcc.getItems().addAll(FXCollections.observableArrayList(sorted));
+
+        concordanceIndexAccordion.getChildren().clear();
+
+        Map<String, Double> serie_concordanceIndex = new LinkedHashMap<>();
+
+        serie_1.forEach((s, integer) -> {
+            Double intersec = Double.valueOf(serie_3.get(s));
+            Double union = Double.valueOf(serie_1.get(s) + serie_2.get(s)) + intersec;
+
+            if(union == 0){
+                serie_concordanceIndex.put(s, 100d);
+            } else {
+                serie_concordanceIndex.put(s, intersec / union * 100);
+            }
+        });
+
+
+        CategoryAxis xAxisCI = new CategoryAxis();
+        xAxisCI.setLabel(translate("z.concordance_index"));
+        NumberAxis yAxisCI = new NumberAxis(0, 110, 10);
+
+        yAxisCI.setLabel("%");
+
+        XYChart.Series series = new XYChart.Series();
+        series.setName(translate("z.concordance_index"));
+
+        LineChart linechart = new LineChart(xAxisCI, yAxisCI);
+
+        linechart.setMinWidth(serie_1.keySet().size() * 20);
+
+        serie_concordanceIndex.forEach((s, value) -> {
+            series.getData().add(new XYChart.Data(s, value));
+        });
+
+        linechart.getData().add(series);
+
+        concordanceIndexAccordion.getChildren().add(linechart);
+
+    }
+
+    private String translate(String key){
+        return getApplication().getMessageSource().getMessage(key);
     }
 
     public void reset() {

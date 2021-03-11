@@ -170,18 +170,18 @@ public class PlayerController extends AbstractGriffonController {
             model.refreshIcon();
         });
 
-//        list.put("player.currentTime", objects -> {
-//           Duration currentTime = (Duration) objects[0];
-//           view.setCurrentTime(currentTime);
-//        });
+        list.put("player.currentTime", objects -> {
+           Duration currentTime = (Duration) objects[0];
+           view.setCurrentTime(currentTime);
+        });
 
         return list;
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void updateCurrentTime(Duration start) {
-        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+        getApplication().getEventRouter().publishEventAsync("player.currentTime", Arrays.asList(start));
     }
 
     public void deletePoint(IconPointColorized icon) {

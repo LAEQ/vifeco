@@ -4,6 +4,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -159,7 +160,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     }
 
     public void seek(Duration currentTime) {
-        runInsideUIAsync(() -> {
+        Platform.runLater(() -> {
             mediaPlayer.seek(currentTime);
         });
     }

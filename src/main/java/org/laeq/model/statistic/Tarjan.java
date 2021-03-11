@@ -248,4 +248,17 @@ public class Tarjan {
             matchedPoints.add(matchPointBuilder(null, pt2));
         }
     }
+
+    public Integer getSummaryOverallMatched() {
+        return summary.values().stream().map(result -> result.matched).mapToInt(Integer::intValue).sum();
+    }
+
+    public Integer getSummaryOverallUnMatched() {
+        return summary.values().stream().map(result -> result.lonely).mapToInt(Integer::intValue).sum();
+    }
+
+    public Double getSummaryOverallConcordanceIndex() {
+        Double result = Double.valueOf(getSummaryOverallMatched());
+        return result / (result + getSummaryOverallUnMatched());
+    }
 }
