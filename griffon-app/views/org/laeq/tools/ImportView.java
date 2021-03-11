@@ -45,9 +45,9 @@ public class ImportView extends AbstractJavaFXGriffonView {
     }
 
     private void init(){
-        model.filename.bindBidirectional(filename.textProperty());
-        model.report.bindBidirectional(report.textProperty());
-        model.warning.bindBidirectional(warning.textProperty());
+        filename.textProperty().bindBidirectional(model.filename);
+        report.textProperty().bindBidirectional(model.report);
+        warning.textProperty().bindBidirectional(model.warning);
 
         id.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
         name.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));

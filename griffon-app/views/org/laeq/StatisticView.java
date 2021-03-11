@@ -89,15 +89,15 @@ public class StatisticView extends AbstractJavaFXGriffonView {
         connectActions(node, controller);
         connectMessageSource(node);
 
-        v1Total.setText(getApplication().getMessageSource().getMessage("statistic.column.matched"));
-        v2Total.setText(getApplication().getMessageSource().getMessage("statistic.column.matched"));
-        v1Lonely.setText(getApplication().getMessageSource().getMessage("statistic.column.unmatched"));
-        v2Lonely.setText(getApplication().getMessageSource().getMessage("statistic.column.unmatched"));
-        v1Percent.setText(getApplication().getMessageSource().getMessage("statistic.column.percent"));
-        v2Percent.setText(getApplication().getMessageSource().getMessage("statistic.column.percent"));
-        vOverallMatched.setText(getApplication().getMessageSource().getMessage("statistic.column.matched"));
-        vOverallUnMatched.setText(getApplication().getMessageSource().getMessage("statistic.column.unmatched"));
-        vOverallConcordanceIndex.setText(getApplication().getMessageSource().getMessage("statistic.column.concordance_index"));
+        v1Total.setText(getApplication().getMessageSource().getMessage("z.matched"));
+        v2Total.setText(getApplication().getMessageSource().getMessage("z.matched"));
+        v1Lonely.setText(getApplication().getMessageSource().getMessage("z.unmatched"));
+        v2Lonely.setText(getApplication().getMessageSource().getMessage("z.unmatched"));
+        v1Percent.setText(getApplication().getMessageSource().getMessage("z.percent"));
+        v2Percent.setText(getApplication().getMessageSource().getMessage("z.percent"));
+        vOverallMatched.setText(getApplication().getMessageSource().getMessage("z.matched"));
+        vOverallUnMatched.setText(getApplication().getMessageSource().getMessage("z.unmatched"));
+        vOverallConcordanceIndex.setText(getApplication().getMessageSource().getMessage("z.concordance_index"));
 
         category.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getName()));
         video1Col.getColumns().addAll(v1Total, v1Lonely, v1Percent);

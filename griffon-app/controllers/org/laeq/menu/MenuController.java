@@ -94,39 +94,6 @@ public class MenuController extends AbstractGriffonController {
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void importVideo() {
-//        fileChooser = new FileChooser();
-//        fileChooser.setTitle("Import video file");
-//        fileChooser.getExtensionFilters().addAll(
-//                new FileChooser.ExtensionFilter(
-//                        "Video Files",
-//                        "*.json")
-//        );
-//
-//        Stage stage = (Stage) getApplication().getWindowManager().findWindow("mainWindow");
-//
-//        File selectedFile = fileChooser.showOpenDialog(stage);
-//        if (selectedFile != null) {
-//
-//            try {
-//                importService.execute(selectedFile);
-//                getApplication().getEventRouter().publishEvent("video.import.success");
-//            } catch (Exception e) {
-//                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.import.error"));
-//            }
-//        }
-    }
-
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void sendTo(){
-        getApplication().getEventRouter().publishEvent("org.laeq.user.create");
-        getApplication().getEventRouter().publishEvent("org.laeq.user.list");
-    }
-
-    @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public String archive() throws Exception {
         VideoDAO videoDAO = dbService.videoDAO;
@@ -182,10 +149,6 @@ public class MenuController extends AbstractGriffonController {
 
         list.put("video.open", objects -> {
             open();
-        });
-
-        list.put("video.import", objects -> {
-            importVideo();
         });
 
         list.put("database.backup", objects -> {

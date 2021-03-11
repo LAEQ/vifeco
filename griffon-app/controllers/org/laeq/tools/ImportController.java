@@ -17,6 +17,7 @@ import org.laeq.model.Video;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -78,12 +79,9 @@ public class ImportController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void confirm() {
         try {
-            if(model.valid.get()){
-                dbService.videoDAO.create(model.video);
-                getApplication().getEventRouter().publishEvent("video.import.success");
-            }
+            dbService.videoDAO.create(model.video);
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("video.import.success", model.video.pathToName()));
         } catch (Exception e) {
-            e.printStackTrace();
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.import.error"));
         } finally {
             model.clear();

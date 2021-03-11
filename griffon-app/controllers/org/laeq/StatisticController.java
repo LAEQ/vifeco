@@ -13,6 +13,7 @@ import org.laeq.model.statistic.MatchedPoint;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -112,6 +113,14 @@ StatisticController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void displayMatchedPoint(MatchedPoint mp) {
         Object statistic_display = getApplication().getWindowManager().findWindow("statistic_display");
+
+        File file = new File(mp.pt1.getVideo().getPath());
+
+        if(file.exists() == false){
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("statistic.display.error"));
+            return;
+        }
+
         if(statistic_display == null){
             Map<String, Object> args = new HashMap<>();
             args.put("matchedPoint", mp);
