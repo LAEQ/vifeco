@@ -43,6 +43,7 @@ griffon {
     includeGroovyDependencies = false
     version = '2.15.1'
     toolkit = 'javafx'
+    applicationIconName = 'griffon.icns'
     applicationProperties = [
         'build_date'    : buildDate,
         'build_time'    : buildTime,

@@ -8,6 +8,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -17,6 +18,7 @@ import org.laeq.editor.Controls;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +56,8 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
         stage.setScene(init());
         stage.sizeToScene();
+
+        stage.getIcons().add( getImage("vifeco-icon-16x16.png"));
         getApplication().getWindowManager().attach("mainWindow", stage);
     }
 
@@ -76,4 +80,8 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         return scene;
 
     }
+    private Image getImage(String path) {
+        return new Image(getClass().getClassLoader().getResourceAsStream(path));
+    }
+
 }

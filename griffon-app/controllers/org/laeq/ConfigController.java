@@ -43,7 +43,6 @@ public class ConfigController extends AbstractGriffonController{
         try {
             String releaseUrl = metadata.get("release.url");
             String latestRelease = helperService.fetchLatestRelease(releaseUrl);
-            model.latestVersion.bindBidirectional(new ReadOnlyStringWrapper(latestRelease));
 
             if(metadata.getApplicationVersion().equals(latestRelease) == false){
                 getApplication().getEventRouter().publishEventAsync("status.warning.parametrized",Arrays.asList("release.fetch.update", latestRelease));

@@ -40,16 +40,16 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void stop() {
-        getApplication().getEventRouter().publishEventAsync("player.pause");
         view.pause();
+        getApplication().getEventRouter().publishEventAsync("player.pause");
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
         if(model.isReady.get()){
-            getApplication().getEventRouter().publishEventAsync("player.play");
             getApplication().getEventRouter().publishEventAsync("player.currentTime", Arrays.asList(view.getCurrentTime()));
+            getApplication().getEventRouter().publishEventAsync("player.play");
             view.play();
         }
     }

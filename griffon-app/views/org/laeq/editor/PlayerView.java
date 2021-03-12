@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.SetChangeListener;
 import javafx.event.EventHandler;
@@ -46,8 +47,6 @@ import javax.inject.Inject;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {
@@ -87,10 +86,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private Button stopActionTarget;
     @FXML private Button controlsActionTarget;
 
+    private Boolean wasPlaying = false;
+
 
     private MessageSource messageSource;
     private ChangeListener<String> elapListen;
     private EventHandler<KeyEvent> elapKeyListen;
+    private boolean isPlaying = false;
 
     @Override
     public void initUI() {
@@ -206,6 +208,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
 
             slider.valueProperty().addListener(sliderListener());
+            slider.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+                if(isPlaying){
+                    controller.play();
+                }
+            });
             mediaPlayer.currentTimeProperty().addListener(currentTimeListener());
 
             model.displayed.addListener((SetChangeListener<Point>) change ->  {
@@ -228,7 +235,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             elapKeyListen = elapsedKeyPressed();
             elapsed.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if(newValue){
-                    mediaPlayer.pause();
+                    controller.stop();
                     elapsed.textProperty().addListener(elapListen);
                     elapsed.setOnKeyPressed(elapKeyListen);
                 }else{
@@ -245,12 +252,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void play(){
         runInsideUISync(() -> {
+            isPlaying = true;
             mediaPlayer.play();
         });
     }
 
     public void pause(){
         runInsideUISync(() -> {
+            isPlaying = false;
             mediaPlayer.pause();
         });
     }
@@ -364,9 +373,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     //Listeners
-    private InvalidationListener sliderListener(){
-        return  observable -> {
+    private ChangeListener<Number> sliderListener(){
+        return (observable, oldValue, newValue) -> {
+            System.out.println(oldValue + " " + newValue);
             if(slider.isPressed()){
+                mediaPlayer.pause();
+                getApplication().getEventRouter().publishEventAsync("player.pause");
                 Duration now = video.getDuration().multiply(slider.getValue() / 100);
                 controller.updateCurrentTime(now);
             }

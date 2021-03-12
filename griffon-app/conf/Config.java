@@ -13,7 +13,6 @@ public class Config extends AbstractMapResourceBundle {
         map(entries)
             .e("application", map()
                 .e("title", "vifeco")
-                    .e("test", "test")
                 .e("startupGroups", asList("vifeco"))
                 .e("autoShutdown", true)
             ).e("windowManager", map()
