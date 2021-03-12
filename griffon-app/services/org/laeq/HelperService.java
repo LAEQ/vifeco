@@ -32,24 +32,16 @@ public class HelperService extends AbstractGriffonService {
         return Boolean.FALSE;
     }
 
-    public static String fetchLatestRelease(String url){
+    public static String fetchLatestRelease(String url) throws IOException, InterruptedException {
         var client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder(
                 URI.create(url))
                 .header("accept", "application/json")
                 .build();
 
-        try {
-            var response = client.send(request, new JsonBodyHandler<>(GitRelease.class));
-            return response.body().get().getTag_name();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-
-        return null;
+        var response = client.send(request, new JsonBodyHandler<>(GitRelease.class));
+        return response.body().get().getTag_name();
     }
 
 }

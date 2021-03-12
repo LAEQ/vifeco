@@ -70,20 +70,17 @@ public class ConfigView extends AbstractJavaFXGriffonView {
         init();
     }
 
-
-
-
     private void init(){
-        List<String> langues = new ArrayList<>();
-        langues.add("English");
-        langues.add("Francais");
-        langues.add("Espanol");
+//        List<String> langues = new ArrayList<>();
+//        langues.add("English");
+//        langues.add("Français");
+//        langues.add("Espanol");
 
-        languages.setItems(FXCollections.observableArrayList(langues));
+//        languages.setItems(FXCollections.observableArrayList(langues));
         languages.getSelectionModel().select(0);
 
         languages.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            controller.setLocale((Integer) newValue);
+            controller.setLocale("es");
         });
 
         model.title.set(metadata.getApplicationName());

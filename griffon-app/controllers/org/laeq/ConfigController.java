@@ -14,8 +14,10 @@ import org.laeq.model.User;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -25,18 +27,28 @@ public class ConfigController extends AbstractGriffonController{
 
     @Inject private PreferencesService preferencesService;
     @Inject private HelperService helperService;
-
     @Inject private Metadata metadata;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-
-        String releaseUrl = metadata.get("release.url");
-        String latestRelease = helperService.fetchLatestRelease(releaseUrl);
-        model.latestVersion.bindBidirectional(new ReadOnlyStringWrapper(latestRelease));
-
-
         getApplication().getEventRouter().addEventListener(listeners());
+        fetchRelease();
+    }
+
+    private void fetchRelease(){
+        try {
+            String releaseUrl = metadata.get("release.url");
+            String latestRelease = helperService.fetchLatestRelease(releaseUrl);
+            model.latestVersion.bindBidirectional(new ReadOnlyStringWrapper(latestRelease));
+
+            if(metadata.getApplicationVersion().equals(latestRelease) == false){
+//                getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.category.fetch.success"));
+                getApplication().getEventRouter().publishEventAsync("status.warning.parametrized",Arrays.asList("release.fetch.update", latestRelease));
+            }
+
+        } catch (Exception e) {
+            getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("release.fetch.error"));
+        }
     }
 
     private Map<String, RunnableWithArgs> listeners() {
@@ -47,8 +59,8 @@ public class ConfigController extends AbstractGriffonController{
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void setLocale(Integer index){
-        getApplication().getEventRouter().publishEventAsync("locale.set", Arrays.asList(index));
+    public void setLocale(String key){
+        getApplication().setLocale(Locale.FRENCH);
     }
 
     @ControllerAction

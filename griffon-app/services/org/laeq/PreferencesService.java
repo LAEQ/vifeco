@@ -17,7 +17,7 @@ public class PreferencesService {
             try {
                 preferences = new ObjectMapper().readValue(file, Preferences.class);
             } catch (IOException e) {
-                e.printStackTrace();
+
             }
         } else {
             preferences = new Preferences();

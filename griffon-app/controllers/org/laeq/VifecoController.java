@@ -3,16 +3,19 @@ package org.laeq;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
+import griffon.core.env.Metadata;
 import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Preferences;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -22,6 +25,8 @@ public class VifecoController extends AbstractGriffonController {
     private VifecoModel model;
 
     @Inject private PreferencesService preferencesService;
+    @Inject private HelperService helperService;
+    @Inject private Metadata metadata;
 
     private Preferences preference;
 

@@ -8,6 +8,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <AnchorPane minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.ConfigController">
    <children>
       <GridPane prefHeight="239.0" prefWidth="410.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="380.0" AnchorPane.topAnchor="10.0">
@@ -45,7 +47,16 @@
          </children>
       </GridPane>
       <Label layoutX="440.0" layoutY="14.0" prefHeight="17.0" prefWidth="191.0" AnchorPane.rightAnchor="169.0" JavaFXUtils.i18nKey="z.language" />
-      <ComboBox fx:id="languages" layoutX="440.0" layoutY="42.0" prefWidth="150.0" AnchorPane.rightAnchor="210.0" />
-      <Label fx:id="warning" layoutX="10.0" layoutY="296.0" prefHeight="17.0" prefWidth="677.0" text="Label" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="296.0" />
+       <ComboBox fx:id="languages" layoutX="440.0" layoutY="42.0" prefWidth="150.0" AnchorPane.rightAnchor="210.0" >
+           <items>
+               <FXCollections fx:factory="observableArrayList">
+                   <String fx:value="English" />
+                   <String fx:value="Français" />
+                   <String fx:value="Español" />
+               </FXCollections>
+           </items>
+       </ComboBox>
+      <Label fx:id="warning" layoutX="10.0" layoutY="296.0" prefHeight="17.0" prefWidth="677.0" text="Label"
+             AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="296.0" />
    </children>
 </AnchorPane>
