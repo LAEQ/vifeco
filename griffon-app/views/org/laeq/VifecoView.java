@@ -57,7 +57,7 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         stage.setScene(init());
         stage.sizeToScene();
 
-        stage.getIcons().add( getImage("vifeco-icon-16x16.png"));
+        stage.getIcons().add( getImage("vifeco-icon-128x128.png"));
         getApplication().getWindowManager().attach("mainWindow", stage);
     }
 

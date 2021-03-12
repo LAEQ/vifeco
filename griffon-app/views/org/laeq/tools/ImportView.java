@@ -35,11 +35,10 @@ public class ImportView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-
+        connectActions(node, controller);
+        connectMessageSource(node);
         parentView.middle.getChildren().clear();
         parentView.middle.getChildren().add(node);
-        connectMessageSource(node);
-        connectActions(node, controller);
 
         init();
     }

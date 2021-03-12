@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import griffon.javafx.support.JavaFXUtils?>
 <?import java.lang.String?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import griffon.javafx.support.*?>
 
 <SplitPane dividerPositions="0.5" prefHeight="400.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.tools.ImportController">
   <items>
@@ -17,7 +22,7 @@
                   <String fx:value="btn-sm" />
                </styleClass>
             </Button>
-             <Button fx:id="clearActionTarget" mnemonicParsing="false" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="40.0" JavaFXUtils.i18nKey="btn.clear">
+             <Button fx:id="clearActionTarget" mnemonicParsing="false" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" JavaFXUtils.i18nKey="btn.clear">
                  <styleClass>
                      <String fx:value="btn" />
                      <String fx:value="btn-sm" />
@@ -38,9 +43,7 @@
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
 
-            <TableView layoutX="14.0" layoutY="43.0" prefHeight="200.0" prefWidth="200.0"
-                       AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="35.0"
-                       fx:id="collectionTable" >
+            <TableView fx:id="collectionTable" layoutX="14.0" layoutY="43.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="35.0">
               <columns>
                   <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="z.id" />
                   <TableColumn fx:id="name" prefWidth="125.0" JavaFXUtils.i18nKey="z.name" />

@@ -3,16 +3,16 @@
 <?import griffon.javafx.support.JavaFXUtils?>
 <?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.ConfigController">
    <children>
-      <Label layoutX="437.0" layoutY="165.0" prefHeight="17.0" prefWidth="191.0" AnchorPane.leftAnchor="437.0" JavaFXUtils.i18nKey="z.language" />
-       <ComboBox fx:id="languages" layoutX="437.0" layoutY="193.0" prefWidth="150.0" AnchorPane.leftAnchor="437.0">
+      <Label layoutX="433.0" layoutY="14.0" prefHeight="17.0" prefWidth="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" JavaFXUtils.i18nKey="z.language" />
+       <ComboBox fx:id="languages" layoutX="433.0" layoutY="42.0" prefWidth="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
            <items>
                <FXCollections fx:factory="observableArrayList">
                    <String fx:value="English" />
@@ -21,8 +21,7 @@
                </FXCollections>
            </items>
        </ComboBox>
-      <TextArea fx:id="summary" layoutX="14.0" layoutY="161.0" prefHeight="200.0" prefWidth="339.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="165.0" />
-      <ImageView fx:id="splash" layoutX="10.0" layoutY="6.0" pickOnBounds="true"
-                  AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <ImageView fx:id="splash" layoutX="10.0" layoutY="6.0" pickOnBounds="true" AnchorPane.topAnchor="100.0" />
+      <Group fx:id="summary" layoutX="14.0" layoutY="162.0" AnchorPane.topAnchor="260.0" />
    </children>
 </AnchorPane>

@@ -8,6 +8,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.hibernate.engine.spi.CascadingAction;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.model.serializer.StatisticSerializer;
 import org.laeq.model.serializer.VideoSerializer;
 import org.laeq.settings.Settings;
 
@@ -52,7 +53,7 @@ public class ExportService extends AbstractGriffonService {
         service.getTarjanDiff();
 
         SimpleModule module = new SimpleModule();
-        module.addSerializer(Video.class, new VideoSerializer());
+        module.addSerializer(StatisticService.class, new StatisticSerializer());
         mapper.registerModule(module);
 
         mapper.writeValue(new File(statFileName), service);

@@ -46,12 +46,9 @@ public class CategoryView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-
         parentView.middle.getChildren().add(node);
         connectMessageSource(node);
         connectActions(node, controller);
-
-
 
         init();
     }
