@@ -3,32 +3,19 @@ package org.laeq;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
-import griffon.core.env.Metadata;
 import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.model.Preferences;
-
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class VifecoController extends AbstractGriffonController {
     private VifecoModel model;
-
-    @Inject private PreferencesService preferencesService;
-    @Inject private HelperService helperService;
-    @Inject private Metadata metadata;
-
-    private Preferences preference;
 
     @MVCMember
     public void setModel(@Nonnull VifecoModel model) {
@@ -37,9 +24,6 @@ public class VifecoController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        preference = preferencesService.getPreferences();
-        getApplication().setLocale(preference.getLocale());
-
         getApplication().getEventRouter().addEventListener(listeners());
     }
 
@@ -54,17 +38,12 @@ public class VifecoController extends AbstractGriffonController {
         list.put("about.section", objects -> createGroup("about"));
         list.put("video.import", objects -> createGroup("import"));
         list.put("config.section", objects -> createGroup("config"));
-        list.put("locale.set", objects -> setLocale((String) objects[0]));
         list.put("mvc.clean", objects -> cleanAndDestroy((String) objects[0]));
 
         return list;
     }
 
-    private void setLocale(String locale) {
-        preference.setLocale(locale);
-        getApplication().setLocale(preference.getLocale());
-        createGroup(model.currentGroup);
-    }
+
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void createGroup(String groupName, Map<String, Object> args){

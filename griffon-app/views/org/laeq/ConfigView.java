@@ -46,7 +46,6 @@ public class ConfigView extends AbstractJavaFXGriffonView {
     @FXML private Label fxVersion;
     @FXML private Label notUsed;
 
-
     @Inject private PreferencesService preferencesService;
 
     @Inject private Metadata metadata;
@@ -77,10 +76,9 @@ public class ConfigView extends AbstractJavaFXGriffonView {
 //        langues.add("Espanol");
 
 //        languages.setItems(FXCollections.observableArrayList(langues));
-        languages.getSelectionModel().select(0);
 
         languages.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            controller.setLocale("es");
+            controller.setLocale((Integer) newValue);
         });
 
         model.title.set(metadata.getApplicationName());
@@ -94,5 +92,9 @@ public class ConfigView extends AbstractJavaFXGriffonView {
 
     private String translate(String key){
         return getApplication().getMessageSource().getMessage(key);
+    }
+
+    public void setLocale(int localeIndex) {
+        languages.getSelectionModel().select(localeIndex);
     }
 }

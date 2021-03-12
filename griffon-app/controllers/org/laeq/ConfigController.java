@@ -33,6 +33,10 @@ public class ConfigController extends AbstractGriffonController{
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listeners());
         fetchRelease();
+
+        Locale locale = getApplication().getLocale();
+
+        view.setLocale(preferencesService.getLocaleIndex(getApplication().getLocale()));
     }
 
     private void fetchRelease(){
@@ -42,7 +46,6 @@ public class ConfigController extends AbstractGriffonController{
             model.latestVersion.bindBidirectional(new ReadOnlyStringWrapper(latestRelease));
 
             if(metadata.getApplicationVersion().equals(latestRelease) == false){
-//                getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.category.fetch.success"));
                 getApplication().getEventRouter().publishEventAsync("status.warning.parametrized",Arrays.asList("release.fetch.update", latestRelease));
             }
 
@@ -59,8 +62,8 @@ public class ConfigController extends AbstractGriffonController{
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void setLocale(String key){
-        getApplication().setLocale(Locale.FRENCH);
+    public void setLocale(Integer index){
+        getApplication().setLocale(preferencesService.getLocale(index));
     }
 
     @ControllerAction

@@ -41,7 +41,7 @@ public class HelperService extends AbstractGriffonService {
 
 
         var response = client.send(request, new JsonBodyHandler<>(GitRelease.class));
-        return response.body().get().getTag_name();
+        return response.body().get().getName();
     }
 
 }
