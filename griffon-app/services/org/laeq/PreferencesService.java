@@ -21,7 +21,6 @@ public class PreferencesService {
             }
         } else {
             preferences = new Preferences();
-            export(preferences);
         }
     }
 
@@ -34,7 +33,7 @@ public class PreferencesService {
         try {
             objectMapper.writeValue(new File(getFileName()), preferences);
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
     }
 

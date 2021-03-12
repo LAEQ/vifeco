@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import griffon.javafx.support.JavaFXUtils?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.ConfigController">
+   <children>
+      <GridPane prefHeight="239.0" prefWidth="410.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="380.0" AnchorPane.topAnchor="10.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="97.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="313.0" minWidth="10.0" prefWidth="313.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="24.0" minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label prefHeight="17.0" prefWidth="195.0" text="Title" />
+            <Label prefHeight="17.0" prefWidth="195.0" text="Version" GridPane.rowIndex="1" />
+            <Label prefHeight="17.0" prefWidth="195.0" text="Build date" GridPane.rowIndex="2" />
+            <Label prefHeight="17.0" prefWidth="195.0" text="rootDir" GridPane.rowIndex="3" />
+            <Label prefHeight="17.0" prefWidth="195.0" text="exportDir" GridPane.rowIndex="4" />
+            <Label prefHeight="17.0" prefWidth="195.0" text="java version" GridPane.rowIndex="5" />
+            <Label prefHeight="17.0" prefWidth="195.0" text="java FX version" GridPane.rowIndex="6" />
+            <Label prefHeight="17.0" prefWidth="195.0" text="java FX version" GridPane.rowIndex="7" />
+            <Label fx:id="title" prefHeight="17.0" prefWidth="205.0" text="Label" GridPane.columnIndex="1" />
+            <Label fx:id="version" prefHeight="17.0" prefWidth="205.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="buildDate" prefHeight="17.0" prefWidth="205.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="rootDir" prefHeight="17.0" prefWidth="205.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="exportDir" prefHeight="17.0" prefWidth="205.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="javaVersion" prefHeight="17.0" prefWidth="205.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label fx:id="fxVersion" prefHeight="17.0" prefWidth="205.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label fx:id="notUsed" prefHeight="17.0" prefWidth="205.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+         </children>
+      </GridPane>
+      <Label layoutX="440.0" layoutY="14.0" prefHeight="17.0" prefWidth="191.0" AnchorPane.rightAnchor="169.0" JavaFXUtils.i18nKey="z.language" />
+      <ComboBox fx:id="languages" layoutX="440.0" layoutY="42.0" prefWidth="150.0" AnchorPane.rightAnchor="210.0" />
+      <Label fx:id="warning" layoutX="10.0" layoutY="296.0" prefHeight="17.0" prefWidth="677.0" text="Label" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="296.0" />
+   </children>
+</AnchorPane>

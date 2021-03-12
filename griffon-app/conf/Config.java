@@ -9,9 +9,11 @@ import static java.util.Arrays.asList;
 public class Config extends AbstractMapResourceBundle {
     @Override
     protected void initialize(@Nonnull Map<String, Object> entries) {
+        System.out.println(entries);
         map(entries)
             .e("application", map()
                 .e("title", "vifeco")
+                    .e("test", "test")
                 .e("startupGroups", asList("vifeco"))
                 .e("autoShutdown", true)
             ).e("windowManager", map()
@@ -31,6 +33,11 @@ public class Config extends AbstractMapResourceBundle {
                         .e("model", "org.laeq.menu.BottomModel")
                         .e("view", "org.laeq.menu.BottomView")
                         .e("controller", "org.laeq.menu.BottomController")
+                )
+                .e("config", map()
+                        .e("model", "org.laeq.ConfigModel")
+                        .e("view", "org.laeq.ConfigView")
+                        .e("controller", "org.laeq.ConfigController")
                 )
                 .e("user", map()
                         .e("model", "org.laeq.UserModel")
