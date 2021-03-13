@@ -30,9 +30,9 @@ apply plugin: 'org.codehaus.griffon.griffon'
 apply plugin: 'net.nemerosa.versioning'
 apply plugin: 'com.google.osdetector'
 
-ext.platform = osdetector.os != 'osx' ? osdetector.os : 'mac'
 
-print(platform)
+ext.platform = osdetector.os != 'osx' ? osdetector.os : 'mac'
+ext.platform = osdetector.os != 'windows' ? osdetector.os : 'win'
 
 
 Date buildTimeAndDate = new Date()
