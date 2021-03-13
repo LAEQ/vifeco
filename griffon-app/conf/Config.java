@@ -9,7 +9,6 @@ import static java.util.Arrays.asList;
 public class Config extends AbstractMapResourceBundle {
     @Override
     protected void initialize(@Nonnull Map<String, Object> entries) {
-        System.out.println(entries);
         map(entries)
             .e("application", map()
                 .e("title", "vifeco")

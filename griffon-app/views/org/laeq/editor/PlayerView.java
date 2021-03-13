@@ -375,7 +375,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     //Listeners
     private ChangeListener<Number> sliderListener(){
         return (observable, oldValue, newValue) -> {
-            System.out.println(oldValue + " " + newValue);
             if(slider.isPressed()){
                 mediaPlayer.pause();
                 getApplication().getEventRouter().publishEventAsync("player.pause");
