@@ -46,3 +46,6 @@ distribution/jre
 distribution/*.jar
 distribution/*.exe
 distribution/inno/*.exe
+distribution/archive
+distribution/linux/jre-11.0.10-full
+distribution/macos/jre-11.0.10-full
