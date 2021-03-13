@@ -58,7 +58,7 @@ public class ConfigView extends AbstractJavaFXGriffonView {
             controller.setLocale((Integer) newValue);
         });
 
-        Image image = new Image(getClass().getClassLoader().getResourceAsStream("vifeco-icon-128x128.png"));
+        Image image = new Image(getClass().getClassLoader().getResourceAsStream("vifeco_icon/vifeco-icon-128x128.png"));
         splash.setImage(image);
         splash.setPreserveRatio(true);
         splash.setSmooth(true);
