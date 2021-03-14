@@ -40,16 +40,18 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void stop() {
+        model.isPlaying.set(false);
         view.pause();
-        getApplication().getEventRouter().publishEventAsync("player.pause");
+        getApplication().getEventRouter().publishEventOutsideUI("player.pause");
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
         if(model.isReady.get()){
-            getApplication().getEventRouter().publishEventAsync("player.currentTime", Arrays.asList(view.getCurrentTime()));
-            getApplication().getEventRouter().publishEventAsync("player.play");
+            model.isPlaying.set(true);
+            getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(view.getCurrentTime()));
+            getApplication().getEventRouter().publishEventOutsideUI("player.play");
             view.play();
         }
     }
@@ -94,7 +96,7 @@ public class PlayerController extends AbstractGriffonController {
                     model.addPoint(point);
                     getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
                     getApplication().getEventRouter().publishEventOutsideUI("point.created");
-                    view.refresh();
+                    view.displayPoints();
                 } catch (Exception e) {
                     getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
                 }
@@ -170,18 +172,13 @@ public class PlayerController extends AbstractGriffonController {
             model.refreshIcon();
         });
 
-        list.put("player.currentTime", objects -> {
-           Duration currentTime = (Duration) objects[0];
-           view.setCurrentTime(currentTime);
-        });
-
         return list;
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
     public void updateCurrentTime(Duration start) {
-        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+        getApplication().getEventRouter().publishEvent("player.currentTime", Arrays.asList(start));
     }
 
     public void deletePoint(IconPointColorized icon) {

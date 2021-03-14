@@ -19,7 +19,6 @@ import org.laeq.model.icon.IconPointColorized;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;

@@ -5,13 +5,11 @@ import griffon.core.i18n.MessageSource;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.SetChangeListener;
 import javafx.event.EventHandler;
@@ -90,10 +88,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
 
     private MessageSource messageSource;
-    private ChangeListener<String> elapListen;
-    private EventHandler<KeyEvent> elapKeyListen;
-    private boolean isPlaying = false;
-    private boolean isSlided = true ;
+    private ChangeListener<String> elapListen = elapsedListener();
+    private EventHandler<KeyEvent> elapKeyListen = elapsedKeyPressed();
+    private ChangeListener<Number> sliderListener = sliderListener();
+    private ChangeListener<? super Duration> currentTimeListener = currentTimeListener();
 
     @Override
     public void initUI() {
@@ -206,15 +204,18 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             iconPane.setOnMouseClicked(mouseclick());
             scene.setOnKeyReleased(keyReleased());
 
-
-            slider.valueProperty().addListener(sliderListener());
             slider.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
-                isSlided = false;
-                if(isPlaying){
-                    controller.play();
+                setPlayingListeners(true);
+                if(model.isPlaying.getValue()){
+                    mediaPlayer.play();
+                    getApplication().getEventRouter().publishEventOutsideUI("player.play");
                 }
             });
-            mediaPlayer.currentTimeProperty().addListener(currentTimeListener());
+            slider.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                mediaPlayer.pause();
+                getApplication().getEventRouter().publishEventOutsideUI("player.pause");
+                setPlayingListeners(false);
+            });
 
             model.displayed.addListener((SetChangeListener<Point>) change ->  {
                 if(change.wasAdded()){
@@ -232,11 +233,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 }
             });
 
-            elapListen = elapsedListener();
-            elapKeyListen = elapsedKeyPressed();
             elapsed.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if(newValue){
-                    controller.stop();
+                    getApplication().getEventRouter().publishEventOutsideUI("player.pause");
+                    removePlayingListeners();
+                    mediaPlayer.pause();
+
                     elapsed.textProperty().addListener(elapListen);
                     elapsed.setOnKeyPressed(elapKeyListen);
                 }else{
@@ -245,24 +247,35 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 }
             });
 
-            updateValues();
+            model.setCurrentTime(mediaPlayer.getCurrentTime());
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
         }
     }
 
     public void play(){
-        runInsideUISync(() -> {
-            isPlaying = true;
-            mediaPlayer.play();
-        });
+        mediaPlayer.play();
+        setPlayingListeners(true);
     }
 
     public void pause(){
-        runInsideUISync(() -> {
-            isPlaying = false;
-            mediaPlayer.pause();
-        });
+        setPlayingListeners(false);
+        mediaPlayer.pause();
+    }
+
+    private void removePlayingListeners(){
+        slider.valueProperty().removeListener(sliderListener);
+        mediaPlayer.currentTimeProperty().removeListener(currentTimeListener);
+    }
+
+    private void setPlayingListeners(boolean playing){
+        if(playing){
+            slider.valueProperty().removeListener(sliderListener);
+            mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
+        } else {
+            mediaPlayer.currentTimeProperty().removeListener(currentTimeListener);
+            slider.valueProperty().addListener(sliderListener);
+        }
     }
 
     // Mouse and keyboard events
@@ -279,7 +292,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
                     Duration seekDuration = Duration.hours(hours).add(Duration.minutes(minutes)).add(Duration.seconds(seconds));
                     elapsed.setFocusTraversable(false);
+                    mediaPlayer.seek(seekDuration);
                     controller.updateCurrentTime(seekDuration);
+                    updateValues();
                 }
             }
         };
@@ -332,15 +347,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         });
     }
 
-    public void refresh() {
-        displayPoints();
-    }
-
     public Duration getCurrentTime() {
         return mediaPlayer.getCurrentTime();
     }
 
-    private void displayPoints() {
+    public void displayPoints() {
         model.setCurrentTime(mediaPlayer.getCurrentTime());
     }
 
@@ -376,31 +387,33 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     //Listeners
     private ChangeListener<Number> sliderListener(){
         return (observable, oldValue, newValue) -> {
-            if(slider.isPressed()){
-                if(isSlided == false){
-                    isSlided = true;
-                    mediaPlayer.pause();
-                    getApplication().getEventRouter().publishEvent("player.pause");
-                }
-
+            runInsideUIAsync(() -> {
                 Duration now = video.getDuration().multiply(slider.getValue() / 100);
                 controller.updateCurrentTime(now);
-            }
+                mediaPlayer.seek(now);
+                model.setCurrentTime(now);
+            });
         };
     }
-    private InvalidationListener currentTimeListener(){
-        return (observable -> updateValues());
+    private ChangeListener<Duration> currentTimeListener(){
+        return (observable, oldValue, newValue) -> {
+            updateValues();
+        };
     }
 
     private ChangeListener<Point> rowlistener(){
         return (observable, oldValue, newValue) -> {
-            controller.updateCurrentTime(newValue.getStart());
+            runInsideUIAsync(() -> {
+                controller.updateCurrentTime(newValue.getStart());
+                mediaPlayer.seek(newValue.getStart());
+                model.setCurrentTime(newValue.getStart());
+            });
         };
     }
 
-    public void setCurrentTime(Duration currentTime) {
-        Platform.runLater(() -> {
-            mediaPlayer.seek(currentTime);
-        });
-    }
+//    public void setCurrentTime(Duration currentTime) {
+//        Platform.runLater(() -> {
+//            mediaPlayer.seek(currentTime);
+//        });
+//    }
 }
