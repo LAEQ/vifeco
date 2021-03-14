@@ -227,9 +227,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                     icon.setScaleX(model.controls.scale());
                     icon.setScaleY(model.controls.scale());
                     icon.setOpacity(model.controls.opacity.getValue());
-                    iconPane.getChildren().add(icon);
+                    runInsideUIAsync(() -> {
+                        iconPane.getChildren().add(icon);
+                    });
                 } else if(change.wasRemoved()){
-                    iconPane.getChildren().remove(change.getElementRemoved().getIconPoint());
+                    runInsideUIAsync(() -> {
+                        iconPane.getChildren().remove(change.getElementRemoved().getIconPoint());
+                    });
                 }
             });
 
@@ -352,7 +356,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void displayPoints() {
-        model.setCurrentTime(mediaPlayer.getCurrentTime());
+        runOutsideUIAsync(() -> {
+            model.setCurrentTime(mediaPlayer.getCurrentTime());
+        });
     }
 
     private Callback<TableColumn<Point, Void>, TableCell<Point, Void>> deleteActions() {
@@ -391,7 +397,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 Duration now = video.getDuration().multiply(slider.getValue() / 100);
                 controller.updateCurrentTime(now);
                 mediaPlayer.seek(now);
-                model.setCurrentTime(now);
+                runOutsideUI(() -> {
+                    model.setCurrentTime(now);
+                });
             });
         };
     }
@@ -406,7 +414,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             runInsideUIAsync(() -> {
                 controller.updateCurrentTime(newValue.getStart());
                 mediaPlayer.seek(newValue.getStart());
-                model.setCurrentTime(newValue.getStart());
+                runOutsideUI(() -> {
+                    model.setCurrentTime(newValue.getStart());
+                });
             });
         };
     }

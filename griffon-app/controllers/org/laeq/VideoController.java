@@ -118,6 +118,7 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void edit(){
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
         if(model.selectedVideo == null){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.error"));
         } else {

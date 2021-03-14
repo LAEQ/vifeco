@@ -109,7 +109,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
             });
 
             mediaPlayer.setOnError(() -> {
-
+                getApplication().getEventRouter().publishEventOutsideUI("status.error", Arrays.asList("video.metadata.error"));
             });
 
             this.volumeOff();

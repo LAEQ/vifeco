@@ -29,7 +29,7 @@ public class DisplayController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("display"));
+
     }
 
     @ControllerAction

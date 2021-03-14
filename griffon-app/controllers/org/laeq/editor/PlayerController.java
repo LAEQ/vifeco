@@ -71,17 +71,7 @@ public class PlayerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        Stage display = (Stage) getApplication().getWindowManager().findWindow("display");
-        if(display != null){
-            getApplication().getWindowManager().detach("display");
-            display.close();
-        }
 
-        Stage controls = (Stage) getApplication().getWindowManager().findWindow("controls");
-        if(controls != null){
-            getApplication().getWindowManager().detach("controls");
-            controls.close();
-        }
     }
 
     @ControllerAction
