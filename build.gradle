@@ -101,15 +101,18 @@ task sourceJar(type: Jar) {
 }
 
 compileGroovy.enabled = false
+compileJava.options.encoding = 'UTF-8'
 
 tasks.withType(JavaCompile) {
     sourceCompatibility = project.sourceCompatibility
     targetCompatibility = project.targetCompatibility
+
+    options.encoding = 'UTF-8'
     run{
-        jvmArgs '-Dprism.vsync=false'
+//        jvmArgs '-Dprism.vsync=false'
         jvmArgs '-Dfile.encoding=UTF-8'
 //        jvmArgs '-Duser.country=CA'
-//        jvmArgs '-Duser.language=fr'
+        jvmArgs '-Duser.language=fr'
     }
 }
 

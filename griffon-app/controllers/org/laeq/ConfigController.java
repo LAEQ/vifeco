@@ -44,7 +44,8 @@ public class ConfigController extends AbstractGriffonController{
             String releaseUrl = metadata.get("release.url");
             String latestRelease = helperService.fetchLatestRelease(releaseUrl);
 
-            if(metadata.getApplicationVersion().equals(latestRelease) == false){
+
+            if(latestRelease != null && metadata.getApplicationVersion().equals(latestRelease) == false){
                 getApplication().getEventRouter().publishEventAsync("status.warning.parametrized",Arrays.asList("release.fetch.update", latestRelease));
             }
 
@@ -63,6 +64,7 @@ public class ConfigController extends AbstractGriffonController{
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void setLocale(Integer index){
         getApplication().setLocale(preferencesService.getLocale(index));
+        getApplication().getEventRouter().publishEvent("config.section");
     }
 
     @ControllerAction

@@ -48,7 +48,6 @@ class VideoTest extends Specification {
         result == expected.replace("'", "\"")
     }
 
-    @Ignore
     def "deserialization" (){
         setup:
         String json = getClass().classLoader.getResource("export/export_1.json").text
@@ -62,7 +61,8 @@ class VideoTest extends Specification {
         ObjectMapper mapper = new ObjectMapper()
 
         Collection expectedCollection = new Collection(1,"Default", Boolean.TRUE)
-        expectedCollection.addCategory(new Category(1, "Moving Car"))
+        expectedCollection.addCategory(new Category(1, "Moving car"))
+        expectedCollection.addCategory(new Category(2, "Moving bike"))
 
         when:
         Video result = mapper.readValue(json, Video.class)

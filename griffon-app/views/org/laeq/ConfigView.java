@@ -54,10 +54,6 @@ public class ConfigView extends AbstractJavaFXGriffonView {
     }
 
     private void init(){
-        languages.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            controller.setLocale((Integer) newValue);
-        });
-
         Image image = new Image(getClass().getClassLoader().getResourceAsStream("vifeco_icon/vifeco-icon-128x128.png"));
         splash.setImage(image);
         splash.setPreserveRatio(true);
@@ -106,5 +102,9 @@ public class ConfigView extends AbstractJavaFXGriffonView {
 
     public void setLocale(int localeIndex) {
         languages.getSelectionModel().select(localeIndex);
+
+        languages.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            controller.setLocale((Integer) newValue);
+        });
     }
 }
