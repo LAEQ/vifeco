@@ -93,6 +93,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private ChangeListener<String> elapListen;
     private EventHandler<KeyEvent> elapKeyListen;
     private boolean isPlaying = false;
+    private boolean isSlided = true ;
 
     @Override
     public void initUI() {
@@ -111,7 +112,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             mediaPlayer.pause();
             getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
             getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
-            mediaPlayer.pause();
         });
 
         Icon icon = new Icon(IconSVG.video_plus, org.laeq.model.icon.Color.white);
@@ -209,6 +209,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
             slider.valueProperty().addListener(sliderListener());
             slider.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+                isSlided = false;
                 if(isPlaying){
                     controller.play();
                 }
@@ -376,8 +377,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private ChangeListener<Number> sliderListener(){
         return (observable, oldValue, newValue) -> {
             if(slider.isPressed()){
-                mediaPlayer.pause();
-                getApplication().getEventRouter().publishEventAsync("player.pause");
+                if(isSlided == false){
+                    isSlided = true;
+                    mediaPlayer.pause();
+                    getApplication().getEventRouter().publishEvent("player.pause");
+                }
+
                 Duration now = video.getDuration().multiply(slider.getValue() / 100);
                 controller.updateCurrentTime(now);
             }
