@@ -1,6 +1,5 @@
 package org.laeq;
 
-import griffon.core.GriffonApplication;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
@@ -8,13 +7,10 @@ import griffon.core.env.Metadata;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.model.User;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
@@ -41,7 +37,7 @@ public class ConfigController extends AbstractGriffonController{
 
     private void fetchRelease(){
         try {
-            String releaseUrl = metadata.get("release.url");
+            String releaseUrl = metadata.get("release.api.url");
             String latestRelease = helperService.fetchLatestRelease(releaseUrl);
 
 

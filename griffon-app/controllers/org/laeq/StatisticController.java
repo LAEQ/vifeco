@@ -117,7 +117,7 @@ StatisticController extends AbstractGriffonController {
         File file = new File(mp.pt1.getVideo().getPath());
 
         if(file.exists() == false){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("statistic.display.error"));
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.file_not_found"));
             return;
         }
 

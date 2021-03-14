@@ -9,6 +9,8 @@ import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 
+import java.util.Optional;
+
 @ArtifactProviderFor(GriffonModel.class)
 public class CategoryModel extends AbstractGriffonModel {
     //Table section
@@ -54,5 +56,13 @@ public class CategoryModel extends AbstractGriffonModel {
         shortCut.set("");
 
         this.selectedCategory = null;
+    }
+
+    public void resetId() {
+        Optional<Category> first = categoryList.stream().filter(category -> category.getId().equals(selectedCategory.getId())).findFirst();
+
+        if(first.isPresent() == false){
+            this.selectedCategory.setId(null);
+        }
     }
 }

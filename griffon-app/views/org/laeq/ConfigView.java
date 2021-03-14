@@ -74,6 +74,7 @@ public class ConfigView extends AbstractJavaFXGriffonView {
         model.datas.put("z.exportDir",  Settings.exportPath);
         model.datas.put("z.javaVersion", System.getProperty("java.version"));
         model.datas.put("z.fxVersion", System.getProperty("javafx.runtime.version"));
+        model.datas.put("z.latest_release", metadata.get("release.url"));
 
         AtomicReference<Double> xPos = new AtomicReference<>(0d);
 

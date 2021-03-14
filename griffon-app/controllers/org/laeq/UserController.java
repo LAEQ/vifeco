@@ -58,10 +58,11 @@ public class UserController extends AbstractGriffonController implements CRUDInt
             dbService.userDAO.create(user);
             model.userList.clear();
             model.userList.addAll(dbService.userDAO.findAll());
-            model.clear();
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.user.save.success", user.toString()));
         } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.save.error"));
+        } finally {
+            model.clear();
         }
     }
 
