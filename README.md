@@ -3,10 +3,9 @@ Vifeco (video features counter) is a stand-alone, multiplatform (Windows, Mac an
 It allows you to create users, categories (feature) and organize them in collections. While reading a video, you can identify and manually features by positioning your mouse above it and pressing a predefined shortcut.
 Vifeco comes with tools to compare and analyze the counting concordance between two sessions. Written in Java 11 with the JavaFX UI toolkit, The software is available under Apache Licence
 
-<img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/player.png" width="400"/>
-<img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/category_list_final.png" width="400"/>
-<img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/video_list_final.png" width="400"/>
-<img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/statistic_final.png" width="400" />
+<a href="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/player_final.png"><img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/player_final.png" width="400"/></a>
+<a href="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/category_list_final.png"><img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/category_list_final.png" width="350"/></a>
+<a href="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/statistic_final.png"><img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/statistic_final.png" width="300" /></a>
 
 ### Build status
 
