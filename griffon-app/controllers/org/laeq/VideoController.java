@@ -12,6 +12,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Collection;
+import org.laeq.model.Point;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
-public class VideoController extends AbstractGriffonController {
+public class VideoController extends AbstractGriffonController implements CRUDInterface<Video>{
     @MVCMember @Nonnull private VideoModel model;
     @MVCMember @Nonnull private VideoView view;
 
@@ -97,6 +98,11 @@ public class VideoController extends AbstractGriffonController {
         model.clear();
     }
 
+    @Override
+    public void save() {
+        //noop
+    }
+
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void delete(Video video){
@@ -112,11 +118,19 @@ public class VideoController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void edit(){
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
         if(model.selectedVideo == null){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.error"));
         } else {
-            getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("video.edit.success",model.selectedVideo.getPath()));
-            createDisplay();
+
+            File file = new File(model.selectedVideo.getPath());
+
+            if(file.exists()){
+                getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("video.edit.success",model.selectedVideo.getPath()));
+                createDisplay();
+            } else {
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.file_not_found"));
+            }
         }
     }
 
@@ -126,7 +140,7 @@ public class VideoController extends AbstractGriffonController {
         }
 
         model.currentVideo = "editor";
-        if(model.selectedVideo.getDuration() != Duration.UNKNOWN){
+        if(model.selectedVideo.getDuration() != Duration.UNKNOWN && model.selectedVideo.getDuration() != Duration.ZERO){
             Map<String, Object> args = new HashMap<>();
             args.put("video",model.selectedVideo);
             createMVCGroup("editor", args);
@@ -208,9 +222,13 @@ public class VideoController extends AbstractGriffonController {
         list.put("video.created", objects -> refreshVideoList());
         list.put("videolist.refresh", objects -> view.refresh());
         list.put("point.created", objects -> {
-            runInsideUISync(() -> {
-                view.refresh();
-            });
+            view.refresh();
+        });
+
+        list.put("point.deleted", objects -> {
+            Point point = (Point) objects[0];
+            model.selectedVideo.removePoint(point);
+            view.refresh();
         });
 
         return list;

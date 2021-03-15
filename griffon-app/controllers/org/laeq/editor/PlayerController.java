@@ -40,16 +40,18 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void stop() {
-        getApplication().getEventRouter().publishEventAsync("player.pause");
+        model.isPlaying.set(false);
         view.pause();
+        getApplication().getEventRouter().publishEventOutsideUI("player.pause");
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
         if(model.isReady.get()){
-            getApplication().getEventRouter().publishEventAsync("player.play");
+            model.isPlaying.set(true);
             getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(view.getCurrentTime()));
+            getApplication().getEventRouter().publishEventOutsideUI("player.play");
             view.play();
         }
     }
@@ -69,24 +71,12 @@ public class PlayerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        Stage display = (Stage) getApplication().getWindowManager().findWindow("display");
-        if(display != null){
-            getApplication().getWindowManager().detach("display");
-            display.close();
-        }
-
-        Stage controls = (Stage) getApplication().getWindowManager().findWindow("controls");
-        if(controls != null){
-            getApplication().getWindowManager().detach("controls");
-            controls.close();
-        }
-
-        System.out.println("C: " + getApplication().getMvcGroupManager().getGroups().keySet());
-        System.out.println("C: " + getApplication().getWindowManager().getWindowNames());
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("controls"));
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void addPoint(KeyCode code, Duration currentTime) {
         if(model.enabled){
             Point point = model.generatePoint(code.getName(), currentTime);
@@ -97,7 +87,7 @@ public class PlayerController extends AbstractGriffonController {
                     model.addPoint(point);
                     getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
                     getApplication().getEventRouter().publishEventOutsideUI("point.created");
-                    view.refresh();
+                    view.displayPoints();
                 } catch (Exception e) {
                     getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
                 }
@@ -105,17 +95,24 @@ public class PlayerController extends AbstractGriffonController {
         }
     }
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void deletePoint(Point point) {
         try{
             dbService.pointDAO.delete(point);
             model.removePoint(point);
-            view.refresh();
+            model.displayed.remove(point);
+
             getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
-            getApplication().getEventRouter().publishEventOutsideUI("point.deleted");
+            getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
         }catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
         }
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    public void rewind(){
+        view.rewind();
     }
 
     @ControllerAction
@@ -124,13 +121,7 @@ public class PlayerController extends AbstractGriffonController {
         view.pause();
         model.isReady.set(Boolean.FALSE);
 
-        try {
-            Stage window = (Stage) getApplication().getWindowManager().findWindow("display");
-            window.close();
-            getApplication().getMvcGroupManager().findGroup("display").destroy();
-        }catch (Exception e){
-
-        }
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -178,28 +169,20 @@ public class PlayerController extends AbstractGriffonController {
             model.refreshIcon();
         });
 
-
         return list;
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void updateCurrentTime(Duration start) {
-        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+        getApplication().getEventRouter().publishEvent("player.currentTime", Arrays.asList(start));
     }
 
     public void deletePoint(IconPointColorized icon) {
-        Optional<Point> point = model.deletePoint(icon);
+        Optional<Point> point = model.getPointFromIcon(icon);
 
         if(point.isPresent()){
-            Point pt = point.get();
-            try {
-                dbService.pointDAO.delete(pt);
-                model.points.remove(pt);
-                model.displayed.remove(pt);
-                getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", pt.toString()));
-                getApplication().getEventRouter().publishEventOutsideUI("point.deleted");
-            }catch (Exception e){
-                getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", pt.toString()));
-            }
+            deletePoint(point.get());
         }
     }
 }

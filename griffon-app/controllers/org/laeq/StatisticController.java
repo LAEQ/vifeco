@@ -6,13 +6,13 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Video;
 import org.laeq.model.statistic.MatchedPoint;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -26,12 +26,16 @@ StatisticController extends AbstractGriffonController {
     @MVCMember @Nonnull private StatisticView view;
 
     @Inject private DatabaseService dbService;
+    @Inject private ExportService exportService;
+
+    private StatisticService service;
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         try{
             List<Video> list = dbService.videoDAO.findAll();
             model.videos.addAll(list);
+
 
             getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.video.fetch.success"));
         } catch (Exception e){
@@ -43,20 +47,25 @@ StatisticController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        Stage statistic_display = (Stage) getApplication().getWindowManager().findWindow("statistic_display");
-        if(statistic_display != null){
-            getApplication().getWindowManager().detach("statistic_display");
-            statistic_display.close();
-        }
+        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("statistic_display"));
+    }
 
-        System.out.println("A: " + getApplication().getMvcGroupManager().getGroups().keySet());
-        System.out.println("A: " + getApplication().getWindowManager().getWindowNames());
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void export(){
+        try{
+            String filename = exportService.export(service);
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("statistic.export.success", filename));
+        } catch (Exception e) {
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("statistic.export.error"));
+        }
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void compare(){
-        closeStatisticDisplay();
+        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("statistic_display"));
+
         model.reset();
         view.reset();
 
@@ -68,15 +77,14 @@ StatisticController extends AbstractGriffonController {
         }
 
         try {
-            StatisticService service = new StatisticService();
-            System.out.println(model.durationStep.get());
+            service = new StatisticService();
             service.execute(videos, model.durationStep.get());
 
             runInsideUISync(() -> {
                 model.tarjans.addAll(service.getTarjanDiff());
                 model.videoName.set(service.getVideo1().pathToName());
-                model.user1.set(service.getVideo1().getUser().toString());
-                model.user2.set(service.getVideo2().getUser().toString());
+                model.user1.set(String.format("1: %s", service.getVideo1().getUser().toString()));
+                model.user2.set(String.format("2: %s", service.getVideo2().getUser().toString()));
                 model.collection.set(service.getVideo1().getCollection().toString());
                 model.duration.set(service.getVideo1().getDurationFormatted());
             });
@@ -92,33 +100,34 @@ StatisticController extends AbstractGriffonController {
         }
     }
 
-    private void closeStatisticDisplay(){
-        try{
-            Stage statistic_display = (Stage) getApplication().getWindowManager().findWindow("statistic_display");
-            getApplication().getWindowManager().detach("statistic_display");
-            statistic_display.close();
-            getApplication().getMvcGroupManager().findGroup("statistic_display").destroy();
-        } catch (Exception e){
-
-        }
-    }
-
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         return list;
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void displayMatchedPoint(MatchedPoint mp) {
-        System.out.printf("F: %s\n", getApplication().getWindowManager().getWindowNames());
-        System.out.printf("F : %s\n", getApplication().getMvcGroupManager().getGroups().keySet());
-        Object statistic_display = getApplication().getWindowManager().findWindow("statistic_display");
-        if(statistic_display == null){
-            Map<String, Object> args = new HashMap<>();
-            args.put("matchedPoint", mp);
-            createMVCGroup("statistic_display", args);
-        } else {
-            getApplication().getEventRouter().publishEventOutsideUI("statistic.mapped_point.display", Arrays.asList(mp));
+        try {
+            Object statistic_display = getApplication().getWindowManager().findWindow("statistic_display");
+
+            File file = new File(mp.getPoint().getVideo().getPath());
+
+            if (file.exists() == false && statistic_display == null) {
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.file_not_found"));
+                return;
+            }
+
+            if (statistic_display == null) {
+                Map<String, Object> args = new HashMap<>();
+                args.put("matchedPoint", mp);
+                createMVCGroup("statistic_display", args);
+            } else {
+                getApplication().getEventRouter().publishEventOutsideUI("statistic.mapped_point.display", Arrays.asList(mp));
+            }
+        }catch (Exception e){
+
         }
     }
 }

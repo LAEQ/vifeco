@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
-public class CollectionController extends AbstractGriffonController {
+public class CollectionController extends AbstractGriffonController implements CRUDInterface<Collection> {
     @MVCMember @Nonnull private CollectionModel model;
     @MVCMember @Nonnull private CollectionView view;
     @Inject private DatabaseService dbService;
@@ -35,26 +35,30 @@ public class CollectionController extends AbstractGriffonController {
         getApplication().getEventRouter().addEventListener(listeners());
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Override
     public void save(){
         try{
             Collection collection = model.getCollection();
             dbService.collectionDAO.create(collection);
-            model.clear();
             model.collections.clear();
             model.collections.addAll(dbService.collectionDAO.findAll());
             getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("db.collection.save.success", collection.getName()));
+            model.clear();
         }catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.save.error"));
         }
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Override
     public void clear(){
         model.clear();
+        getApplication().getEventRouter().publishEvent("status.reset");
     }
 
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Override
     public void delete(Collection collection) {
         if(collection.getDefault()){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.delete.default"));
@@ -68,6 +72,8 @@ public class CollectionController extends AbstractGriffonController {
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.collection.delete.success", collection.getName()));
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.delete.error"));
+        }finally {
+            model.clear();
         }
     }
 

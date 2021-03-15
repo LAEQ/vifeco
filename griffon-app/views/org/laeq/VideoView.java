@@ -83,13 +83,11 @@ public class VideoView extends AbstractJavaFXGriffonView {
     public void initForm(){
         ObservableList<User> users = FXCollections.observableArrayList(model.getUserSet());
         user.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getUser()));
-        user.setMinWidth(140);
         user.setCellFactory(ComboBoxTableCell.forTableColumn(users));
         user.setOnEditCommit(event -> controller.updateUser(event));
 
         ObservableList<Collection> collections = FXCollections.observableArrayList(model.getCollectionSet());
         collection.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getCollection()));
-        collection.setMinWidth(140);
         collection.setCellFactory(ComboBoxTableCell.forTableColumn(collections));
         collection.setOnEditCommit(event -> controller.updateCollection(event.getRowValue(), event.getNewValue()));
     }

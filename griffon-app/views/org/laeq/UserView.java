@@ -29,7 +29,6 @@ public class UserView extends AbstractJavaFXGriffonView {
     @FXML private TableColumn<User, String> id;
     @FXML private TableColumn<User, String> firstName;
     @FXML private TableColumn<User, String> lastName;
-    @FXML private TableColumn<User, String> email;
     @FXML private TableColumn<User, Icon> isDefault;
     @FXML private TableColumn<User, Void> actions;
 
@@ -52,13 +51,11 @@ public class UserView extends AbstractJavaFXGriffonView {
         id.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getId().toString()));
         firstName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFirstName()));
         lastName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLastName()));
-        email.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
         isDefault.setCellValueFactory(cellData -> cellData.getValue().getDefault() ? new SimpleObjectProperty<>(new Icon(IconSVG.tick, Color.green)) : null);
         actions.setCellFactory(addActions());
 
         model.firstName.bindBidirectional(firstNameField.textProperty());
         model.lastName.bindBidirectional(lastNameField.textProperty());
-        model.email.bindBidirectional(emailField.textProperty());
 
         userTable.setItems(model.userList);
     }

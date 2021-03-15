@@ -8,40 +8,36 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
-@JsonPropertyOrder({"rate", "volume", "size", "duration", "opacity", "durationStep", "locale"})
+@JsonPropertyOrder({"locale"})
 @JsonIgnoreProperties({"localAvailables"})
 public class Preferences {
-    public  Double rate = 1d;
-    public  Double volume = 1d;
-    public  Double size = 60d;
-    public  Double duration = 5d;
-    public  Double opacity = 0.65;
-    public  Locale locale = Locale.CANADA_FRENCH;
-    public  Integer durationStep = 5;
+    public List<String> languages = new ArrayList<>();
 
-    public List<Locale> localAvailables;
+    public Locale locale;
 
-    public Preferences(){
-        localAvailables = new ArrayList<>();
-        localAvailables.add(Locale.CANADA_FRENCH);
-        localAvailables.add(new Locale("en", "CA"));
-        localAvailables.add(new Locale("es", "ES"));
+    public Preferences() {
+        languages.add("English");
+        languages.add("Français");
+        languages.add("Español");
     }
 
     @JsonIgnore
-    public int getLocalIndex(){
-        return localAvailables.indexOf(locale);
+    public void setLocale(String key){
+        locale = Locale.ENGLISH;
     }
 
     @JsonIgnore
-    public void setLocaleByIndex(int index){
-        locale = localAvailables.get(index);
+    public Locale getLocale(){
+        if(locale == null){
+            return getDefaultLocale();
+        }else {
+            return locale;
+        }
     }
 
     @JsonIgnore
-    public List<String> getLocales(){
-        return localAvailables.stream().map(locale1 -> locale1.getDisplayLanguage(locale1)).collect(Collectors.toList());
+    public Locale getDefaultLocale(){
+        return Locale.ENGLISH;
     }
 }

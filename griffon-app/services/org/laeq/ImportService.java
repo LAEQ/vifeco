@@ -13,16 +13,9 @@ import java.io.IOException;
 @ArtifactProviderFor(GriffonService.class)
 public class ImportService extends AbstractGriffonService {
 
-    public ImportService(){
-
-    }
-
-    public void execute(File file) throws IOException {
+    public Video execute(File file) throws IOException {
         Video result = new ObjectMapper().readValue(file, Video.class);
-        System.out.println(result);
 
-
-
-
+        return result;
     }
 }

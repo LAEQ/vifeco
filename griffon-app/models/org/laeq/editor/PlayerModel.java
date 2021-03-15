@@ -18,25 +18,27 @@ import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.*;
 
 
 @ArtifactProviderFor(GriffonModel.class)
 public class PlayerModel extends AbstractGriffonModel {
+
     @MVCMember @Nonnull private Video video;
 
     //Video controls
     public Controls controls = new Controls();
+
+    public SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
 
     //List for icon panel
     public ObservableSet<Point> displayed = FXCollections.observableSet();
 
     //List for summary table
     public ObservableList<Point> points = FXCollections.observableArrayList();
+
+    //List for displaying between two durations
+    public NavigableSet<Point> sortedPoints = new TreeSet<>();
 
     //List for the category table
     public ObservableList<CategoryCount> summary = FXCollections.observableArrayList();
@@ -55,8 +57,21 @@ public class PlayerModel extends AbstractGriffonModel {
     public void setVideo(@Nonnull Video video){
         this.video = video;
 
+        //Initialize icon settings
+        video.getPoints().parallelStream().forEach(p -> {
+            IconPointColorized icon = p.getIconPoint();
+            Double x = p.getX() * width.doubleValue();
+            Double y = p.getY() * height.doubleValue();
+            icon.setLayoutX(x);
+            icon.setLayoutY(y);
+            icon.setScaleX(controls.scale());
+            icon.setScaleY(controls.scale());
+            icon.setOpacity(controls.opacity.getValue());
+        });
+
+        sortedPoints.addAll(video.getPoints());
         points.addAll(video.getPoints());
-        displayed.addAll(points);
+
         summary.addAll(video.getCategoryCount());
         video.getCollection().getCategories().forEach(c -> shortcutMap.put(c.getShortcut(), c));
     }
@@ -93,6 +108,7 @@ public class PlayerModel extends AbstractGriffonModel {
     public void addPoint(Point point) {
         points.add(point);
         points.sort((o1, o2) -> o1.getStart().lessThan(o2.getStart()) ? -1 : 1);
+        sortedPoints.add(point);
         video.addPoint(point);
         displayed.add(point);
         summary.stream().filter(c -> c.category.equals(point.getCategory())).findFirst().get().increment();
@@ -100,24 +116,28 @@ public class PlayerModel extends AbstractGriffonModel {
 
     public void removePoint(Point point) {
         points.remove(point);
+        sortedPoints.remove(point);
         video.removePoint(point);
+        displayed.remove(point);
         summary.stream().filter(c -> c.category.equals(point.getCategory())).findFirst().get().decrement();
     }
 
     public void setCurrentTime(Duration currentTime){
-        Duration startDuration = currentTime.subtract(controls.display());
-        Predicate<Point> predicateFalse = pt -> ! pt.getStart().greaterThanOrEqualTo(startDuration) || ! pt.getStart().lessThanOrEqualTo(currentTime);
-        Predicate<Point> predicate = pt -> pt.getStart().greaterThanOrEqualTo(startDuration) && pt.getStart().lessThanOrEqualTo(currentTime);
+        Point start = new Point();
+        start.setStart(currentTime.subtract(controls.display()));
 
-        if(displayed.size() > 0){
-            displayed.removeAll(displayed.stream().filter(predicateFalse).collect(Collectors.toList()));
-        }
+        Point end = new Point();
+        end.setStart(currentTime);
 
-        displayed.addAll(points.stream().filter(predicate).collect(Collectors.toSet()));
+        final SortedSet<Point> points = sortedPoints.subSet(start, true, end, true);
+
+        // Remove obsolete previous subset
+        displayed.removeIf(point -> points.contains(point) == false);
+        displayed.addAll(points);
     }
 
-    public Optional<Point> deletePoint(IconPointColorized icon) {
-        return points.stream().filter(point -> point.getIconPoint().equals(icon)).findFirst();
+    public Optional<Point> getPointFromIcon(IconPointColorized icon) {
+        return sortedPoints.stream().filter(point -> point.getIconPoint().equals(icon)).findFirst();
     }
 
     public void refreshIcon() {

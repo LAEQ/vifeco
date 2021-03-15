@@ -4,11 +4,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.media.MediaView?>
-<SplitPane dividerPositions="0.7190184049079754" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.editor.PlayerController">
+<SplitPane dividerPositions="0.7190184049079754" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.editor.PlayerController">
 <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="680.0">
         <children>
-            <AnchorPane layoutX="34.0" layoutY="24.0" prefHeight="337.0" prefWidth="562.0" style="-fx-background-color: #dddddd;" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
+            <AnchorPane layoutX="34.0" layoutY="24.0" prefHeight="337.0" prefWidth="562.0" style="-fx-background-color: #dddddd;" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0">
                 <Pane fx:id="playerPane" layoutX="14.0" layoutY="23.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="25.0">
                     <MediaView fx:id="mediaView" fitHeight="${playerPane.height}" fitWidth="${playerPane.width}" layoutX="1.0" />
                     <Pane fx:id="iconPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: #aaaaaa;" />
@@ -17,8 +17,9 @@
             <!-- Player Buttons -->
             <Button fx:id="playActionTarget" layoutX="14.0" layoutY="408.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="62.0" styleClass="btn, btn-success" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
             <Button fx:id="stopActionTarget" layoutX="112.0" layoutY="412.0" mnemonicParsing="false" styleClass="btn, btn-danger" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" />
-            <Button fx:id="controlsActionTarget" layoutX="237.0" layoutY="612.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="190.0" />
-            <Button fx:id="addActionTarget" layoutX="656.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-info" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="290.0" />
+            <Button fx:id="controlsActionTarget" layoutX="237.0" layoutY="612.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="290.0" />
+            <Button fx:id="addActionTarget" layoutX="656.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-info" text=" " AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+            <Button fx:id="rewindActionTarget" layoutX="237.0" layoutY="612.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="200.0" />
 
             <Slider fx:id="slider" layoutX="10.0" layoutY="390.0" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
             <Label fx:id="title" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="622.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="5.0" />
@@ -49,9 +50,9 @@
                                   <columns>
                                       <TableColumn fx:id="iconTD" prefWidth="105.0" JavaFXUtils.i18nKey="z.type" />
                                       <TableColumn fx:id="startTD" prefWidth="105.0" JavaFXUtils.i18nKey="z.time" />
-                                      <TableColumn  fx:id="xTD" prefWidth="75.0" text="x" />
+                                      <TableColumn prefWidth="75.0" text="x" fx:id="xTD" />
                                       <TableColumn fx:id="yTD" prefWidth="75.0" text="y" />
-                                      <TableColumn fx:id="delete" prefWidth="50" minWidth="50" text="" />
+                                      <TableColumn fx:id="delete" maxWidth="200.0" minWidth="50" prefWidth="100.0" text="" />
                                   </columns>
                               </TableView>
                      </children>

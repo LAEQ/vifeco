@@ -1,4 +1,12 @@
 # vifeco
+Vifeco (video features counter) is a stand-alone, multiplatform (Windows, Mac and Linux) application that makes it possible to manually identify features on a video. 
+It allows you to create users, categories (feature) and organize them in collections. While reading a video, you can identify and manually features by positioning your mouse above it and pressing a predefined shortcut.
+Vifeco comes with tools to compare and analyze the counting concordance between two sessions. Written in Java 11 with the JavaFX UI toolkit, The software is available under Apache Licence
+
+<img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/player.png" width="400"/>
+<img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/category_list_final.png" width="400"/>
+<img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/video_list_final.png" width="400"/>
+<img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/statistic_final.png" width="400" />
 
 ### Build status
 
@@ -7,17 +15,44 @@
 | Master  |  ![build status](https://travis-ci.org/LAEQ/vifeco.svg?branch=master)| [![DOI](https://zenodo.org/badge/165725219.svg)](https://zenodo.org/badge/latestdoi/165725219)
 
 
-If you want to try this project you must have a JDK (>=1.8) installed with JavaFX. The gradle version is 4.7. 
+## Download
+You can download prebuilt binaries from the [release section](https://github.com/LAEQ/vifeco/releases). They come bundled with the Liberica JRE 11.
+
+
+## Requirements
+
+| # | version |
+| --- | --- |
+| Gradle | 6.3 |
+| Java | 11 |
+| JavaFX | 11.0 |
+
+
+## Our recommandation
+
+For gradle installation please check https://gradle.org/install/
+
+To compile and run Vifeco we recommand to use Liberica JDK 11 LTS from BellSoft. It is available for all the major platforms and comes bundled with Javafx.
+
+Linux and MacOS we recommand to use SDKMAN to install and manage multiple JDK/JRE.
+
+Windows users must download it directly from Bellsoft website and configure their environement manually (PATH, JAVA_HOME).
+
+For OpenJDK, you must install JavaFX separately and configure it at compile and runtime.
+
+SDKMAN: https://sdkman.io/
+
+JDK 11: https://bell-sw.com/pages/downloads/
+
+Install OpenJFX: https://openjfx.io/openjfx-docs/#install-javafx
+
+
+## Compile and test
 
 
 ```jshelllanguage
 git clone https://github.com/LAEQ/vifeco.git
 gradle test run
-```
-
-For a shadowJar
-```jshelllanguage
-gradle clean test build
 ```
 
 

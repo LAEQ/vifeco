@@ -6,7 +6,6 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
@@ -29,14 +28,7 @@ public class DisplayController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        Stage display = (Stage) getApplication().getWindowManager().findWindow("display");
-        if(display != null){
-            display.close();
-        }
 
-        System.out.println("Display video controller destroyed.");
-        System.out.println("B: " + getApplication().getMvcGroupManager().getGroups().keySet());
-        System.out.println("B: " + getApplication().getWindowManager().getWindowNames());
     }
 
     @ControllerAction
@@ -70,6 +62,6 @@ public class DisplayController extends AbstractGriffonController {
     }
 
     public void isReady() {
-        getApplication().getEventRouter().publishEventOutsideUI("display.ready");
+        getApplication().getEventRouter().publishEventAsync("display.ready");
     }
 }

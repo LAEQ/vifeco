@@ -19,6 +19,8 @@ out/*.jar
 *.zip
 *.tar.gz
 *.rar
+*.exe
+*.jar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
@@ -42,7 +44,8 @@ node_modules/
 package-lock.json
 
 # jre
-distribution/jre
+jre
 distribution/*.jar
-distribution/*.exe
-distribution/inno/*.exe
+distribution/archive
+jre-11.0.10-full
+

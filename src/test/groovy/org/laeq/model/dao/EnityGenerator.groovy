@@ -5,7 +5,7 @@ import org.laeq.model.*
 
 class EntityGenerator {
     static def createUser(){
-        return new User("mock first name", "mock last name", "mock@email.com")
+        return new User("mock first name", "mock last name")
     }
 
     static def createCategory(String shortcut){

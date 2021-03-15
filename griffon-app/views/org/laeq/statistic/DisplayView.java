@@ -114,6 +114,10 @@ public class DisplayView extends AbstractJavaFXGriffonView {
                 totalDuration.setText(formatDuration(video.getDuration()));
             });
 
+            mediaPlayer.setOnError(() -> {
+                getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("statistic_display"));
+            });
+
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
         }

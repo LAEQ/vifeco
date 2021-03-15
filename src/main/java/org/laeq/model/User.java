@@ -7,10 +7,11 @@ import org.hibernate.annotations.Type;
 import javax.annotation.Nonnull;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user")
-@JsonIgnoreProperties({"default", "email"})
+@JsonIgnoreProperties({"default"})
 @JsonPropertyOrder({"id", "firstName", "lastName"})
 final public class User
 {
@@ -25,27 +26,20 @@ final public class User
     @Size(min = 1)
     private String lastName;
 
-    @Column(nullable = false)
-    @Size(min = 1)
-    private String email;
-
     @Type(type = "boolean")
     private Boolean isDefault = Boolean.FALSE;
 
-    public User() {
-    }
+    public User() {}
 
-    public User(@Nonnull String firstName, @Nonnull String lastName, @Nonnull String email) {
+    public User(@Nonnull String firstName, @Nonnull String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
     }
 
-    public User(Integer id, @Size(min = 1) String firstName, @Size(min = 1) String lastName, @Size(min = 1) String email, Boolean isDefault) {
+    public User(Integer id, @Size(min = 1) String firstName, @Size(min = 1) String lastName, Boolean isDefault) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
         this.isDefault = isDefault;
     }
 
@@ -75,21 +69,25 @@ final public class User
         this.lastName = lastName;
     }
 
-    @Nonnull
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@Nonnull String email) {
-        this.email = email;
-    }
-
     public Boolean getDefault() {
         return isDefault;
     }
 
     public void setDefault(Boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id.equals(user.id) && firstName.equals(user.firstName) && lastName.equals(user.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName);
     }
 
     @Override

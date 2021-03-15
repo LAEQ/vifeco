@@ -14,11 +14,11 @@ import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Category;
-import org.laeq.model.Icon;
-import org.laeq.model.icon.IconSVG;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @ArtifactProviderFor(GriffonView.class)
 public class CategoryView extends AbstractJavaFXGriffonView {
@@ -31,8 +31,6 @@ public class CategoryView extends AbstractJavaFXGriffonView {
     @FXML private TextField pathField;
     @FXML private TextField colorPickerField;
     @FXML private Pane svgDisplayPane;
-
-
     @FXML private TableView<Category> categoryTable;
     @FXML private TableColumn<Category, String> id;
     @FXML private TableColumn<Category, Void> icon;
@@ -40,25 +38,12 @@ public class CategoryView extends AbstractJavaFXGriffonView {
     @FXML private TableColumn<Category, String> shortcut;
     @FXML private TableColumn<Category, Void> actions;
 
-    private SVGPath svgPath;
-
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-
         parentView.middle.getChildren().add(node);
         connectMessageSource(node);
         connectActions(node, controller);
-
-        svgPath = new SVGPath();
-        svgPath.setSmooth(true);
-        svgPath.setFill(Paint.valueOf("#000000"));
-        svgPath.setScaleX(4);
-        svgPath.setScaleY(4);
-        svgPath.setLayoutX(50);
-        svgPath.setLayoutY(50);
-
-        svgDisplayPane.getChildren().add(svgPath);
 
         init();
     }
@@ -71,27 +56,57 @@ public class CategoryView extends AbstractJavaFXGriffonView {
         icon.setCellFactory(iconAction());
         actions.setCellFactory(addActions());
 
-        //Form
-        model.name.bindBidirectional(nameField.textProperty());
-        model.shortCut.bindBidirectional(shortCutField.textProperty());
-        model.icon.bindBidirectional(pathField.textProperty());
-        model.color.bindBidirectional(colorPickerField.textProperty());
-
         pathField.textProperty().addListener((observable, oldValue, newValue) -> {
-               svgPath.setFill(Paint.valueOf(colorPickerField.textProperty().get()));
-               svgPath.setContent(newValue);
-        });
-
-        colorPickerField.textProperty().addListener((observable, oldValue, newValue) -> {
-            try{
-                svgPath.setFill(Paint.valueOf(newValue));
-                getApplication().getEventRouter().publishEvent("status.reset");
-            } catch (Exception e){
-                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("category.color.invalid"));
+            if(newValue.length() > 0){
+                createSVG();
+            } else {
+                deleteSVG();
             }
         });
 
+        colorPickerField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.length() > 0){
+                Pattern pattern = Pattern.compile("^#[0-9A-F]{6}$");
+                Matcher matcher = pattern.matcher(newValue);
+
+                if(matcher.find()){
+                    createSVG();
+                    getApplication().getEventRouter().publishEvent("status.reset");
+                } else {
+                    deleteSVG();
+                    getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("category.color.invalid"));
+                }
+            }
+        });
+
+        //Form
+        model.name.bindBidirectional(nameField.textProperty());
+        model.shortCut.bindBidirectional(shortCutField.textProperty());
+        model.color.bindBidirectional(colorPickerField.textProperty());
+        model.icon.bindBidirectional(pathField.textProperty());
+
         categoryTable.setItems(this.model.categoryList);
+    }
+
+    private void deleteSVG() {
+        svgDisplayPane.getChildren().clear();
+    }
+
+    private void createSVG() {
+        deleteSVG();
+        try{
+            SVGPath svgPath = new SVGPath();
+            svgPath.setSmooth(true);
+            svgPath.setScaleX(4);
+            svgPath.setScaleY(4);
+            svgPath.setLayoutX(50);
+            svgPath.setLayoutY(50);
+            svgPath.setContent(pathField.textProperty().getValue());
+            svgPath.setFill(Paint.valueOf(colorPickerField.textProperty().get()));
+            svgDisplayPane.getChildren().add(svgPath);
+        } catch (Exception e){
+            deleteSVG();
+        }
     }
 
     private Callback<TableColumn<Category, Void>, TableCell<Category, Void>> addActions() {

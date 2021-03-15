@@ -37,6 +37,8 @@ public class VifecoController extends AbstractGriffonController {
         list.put("video.section", objects -> createGroup("video"));
         list.put("statistic.section", objects -> createGroup("statistic"));
         list.put("about.section", objects -> createGroup("about"));
+        list.put("video.import", objects -> createGroup("import"));
+        list.put("config.section", objects -> createGroup("config"));
         list.put("mvc.clean", objects -> cleanAndDestroy((String) objects[0]));
 
         return list;
@@ -46,9 +48,6 @@ public class VifecoController extends AbstractGriffonController {
     public void createGroup(String groupName, Map<String, Object> args){
         destroyMVC(model.currentGroup);
         destroyMVC(groupName);
-
-        System.out.println("D: " + getApplication().getMvcGroupManager().getGroups().keySet());
-        System.out.println("D: " + getApplication().getWindowManager().getWindowNames());
 
         try{
             createMVCGroup(groupName, args);
@@ -62,10 +61,6 @@ public class VifecoController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void createGroup(String groupName){
         destroyMVC(model.currentGroup);
-        destroyMVC(groupName);
-
-        System.out.println("D: " + getApplication().getMvcGroupManager().getGroups().keySet());
-        System.out.println("D: " + getApplication().getWindowManager().getWindowNames());
 
         try{
             createMVCGroup(groupName);
@@ -80,7 +75,6 @@ public class VifecoController extends AbstractGriffonController {
      * @param name
      */
     private void cleanAndDestroy(String name){
-        System.out.println("Clean and destroy " + name);
         destroyMVC(name);
         closeWindow(name);
     }

@@ -8,7 +8,7 @@ class VideoTest extends Specification {
     def "serialize"(){
         setup:
         Integer userId = 1
-        User user = new User(userId, "test", "test", "test", false)
+        User user = new User(userId, "test", "test", false)
         Collection categoryCollection = new Collection(1, "collection 1", false)
         Category category1 = new Category(1, "category 1", "icon 1", "color 1", "A")
         Category category2 = new Category(2, "category 2", "icon 2", "color 2", "B")
@@ -33,7 +33,7 @@ class VideoTest extends Specification {
         String expected = "{'id':'${videoId}','path':'video.mp4','duration':10000.0," +
                 "'user':{'id':1,'firstName':'test','lastName':'test'}," +
                 "'collection':" +
-                    "{'name':'collection 1'," +
+                    "{'id':1,'name':'collection 1'," +
                     "'categories':[" +
                     "{'id':1,'name':'category 1'}," +
                     "{'id':2,'name':'category 2'}" +
@@ -59,14 +59,18 @@ class VideoTest extends Specification {
 
         ObjectMapper mapper = new ObjectMapper()
 
+        Collection expectedCollection = new Collection(1,"Default", Boolean.TRUE)
+        expectedCollection.addCategory(new Category(1, "Moving car"))
+        expectedCollection.addCategory(new Category(2, "Moving bike"))
+
         when:
         Video result = mapper.readValue(json, Video.class)
 
         then:
         result.path == 'exported_video.wav'
         result.duration.equals(Duration.millis(258573.333334))
-        result.collection.equals(new Collection("Default")) == true
-        result.collection.categories.size() == 2
+
+        result.collection == expectedCollection
         result.points.size() == 1
     }
 }

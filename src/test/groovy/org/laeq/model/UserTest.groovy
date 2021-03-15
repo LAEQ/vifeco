@@ -6,7 +6,7 @@ import spock.lang.Specification
 class UserTest extends Specification {
     def "serialize"(){
         setup:
-        User user = new User(1, "test", "test", "test@email", true)
+        User user = new User(1, "test", "test", true)
 
         when:
         String result = new ObjectMapper().writeValueAsString(user)
@@ -24,8 +24,7 @@ class UserTest extends Specification {
         String json = '{\n' +
                 '    "id": 3,\n' +
                 '    "firstName": "David",\n' +
-                '    "lastName": "Maignan",\n' +
-                '    "email": ""\n' +
+                '    "lastName": "Maignan"\n'+
                 '  }'
 
         ObjectMapper mapper = new ObjectMapper()

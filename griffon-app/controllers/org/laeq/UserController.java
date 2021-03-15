@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
-public class UserController extends AbstractGriffonController{
+public class UserController extends AbstractGriffonController implements CRUDInterface<User>{
     @MVCMember @Nonnull private UserModel model;
     @MVCMember @Nonnull private UserView view;
 
@@ -43,21 +43,32 @@ public class UserController extends AbstractGriffonController{
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Override
+    public void clear(){
+        model.clear();
+        getApplication().getEventRouter().publishEvent("status.reset");
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Override
     public void save(){
         try {
             User user = model.getUser();
             dbService.userDAO.create(user);
             model.userList.clear();
             model.userList.addAll(dbService.userDAO.findAll());
-            model.clear();
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.user.save.success", user.toString()));
         } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.save.error"));
+        } finally {
+            model.clear();
         }
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    @Override
     public void delete(User user) {
         if(user.getDefault()){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.delete.default"));

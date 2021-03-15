@@ -1,5 +1,7 @@
 package org.laeq.model.statistic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.util.Duration;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
@@ -9,6 +11,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@JsonIgnoreProperties({"vertices", "video1", "video2", "step", "summary"})
 public class Tarjan {
     public Category category;
     public List<List<Vertex>> vertices;
@@ -17,7 +20,6 @@ public class Tarjan {
     public Map<Video, Result> summary = new HashMap<>();
     public List<MatchedPoint> matchedPoints = new ArrayList<>();
     public Duration step;
-
 
     public Tarjan(Video video1, Video video2, Duration step, Category category, List<List<Vertex>> vertices) {
         this.video1 = video1;
@@ -28,11 +30,11 @@ public class Tarjan {
 
         this.generateSummary();
     }
-
+    @JsonIgnore
     public Result getSummaryVideo1() {
         return summary.get(video1);
     }
-
+    @JsonIgnore
     public Result getSummaryVideo2() {
         return summary.get(video2);
     }
@@ -71,6 +73,7 @@ public class Tarjan {
         });
     }
 
+    @JsonIgnore
     public LinkedHashMap<String, Integer> getSerieVideo1(double stepSize){
         Duration accumulator = Duration.seconds(stepSize);
         final Duration step = Duration.seconds(stepSize);
@@ -103,7 +106,7 @@ public class Tarjan {
 
         return result;
     }
-
+    @JsonIgnore
     public LinkedHashMap<String, Integer> getSerieVideo2(double stepSize){
         Duration accumulator = Duration.seconds(stepSize);
         final Duration step = Duration.seconds(stepSize);
@@ -136,7 +139,7 @@ public class Tarjan {
 
         return result;
     }
-
+    @JsonIgnore
     public LinkedHashMap<String, Integer> getSerieMatched(double stepSize){
         Duration accumulator = Duration.seconds(stepSize);
         final Duration step = Duration.seconds(stepSize);
@@ -247,5 +250,18 @@ public class Tarjan {
             pt2 = q2.remove();
             matchedPoints.add(matchPointBuilder(null, pt2));
         }
+    }
+    @JsonIgnore
+    public Integer getSummaryOverallMatched() {
+        return summary.values().stream().map(result -> result.matched).mapToInt(Integer::intValue).sum();
+    }
+    @JsonIgnore
+    public Integer getSummaryOverallUnMatched() {
+        return summary.values().stream().map(result -> result.lonely).mapToInt(Integer::intValue).sum();
+    }
+    @JsonIgnore
+    public Double getSummaryOverallConcordanceIndex() {
+        Double result = Double.valueOf(getSummaryOverallMatched());
+        return result / (result + getSummaryOverallUnMatched());
     }
 }

@@ -27,8 +27,6 @@ public class CollectionModel extends AbstractGriffonModel {
             SimpleBooleanProperty sbp = new SimpleBooleanProperty(false);
             categorySBP.put(category, sbp);
         });
-
-        System.out.println(categorySBP.size());
     }
 
 

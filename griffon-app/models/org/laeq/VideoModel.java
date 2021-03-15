@@ -42,7 +42,7 @@ public class VideoModel extends AbstractGriffonModel {
         name.set(video.pathToName());
         duration.set(video.getDurationFormatted());
         total.set(String.format("%d", video.getPoints().size()));
-
+        categoryCounts.clear();
         categoryCounts.addAll(this.selectedVideo.getCategoryCount());
     }
 

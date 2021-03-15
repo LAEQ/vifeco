@@ -90,13 +90,11 @@ public class StatisticService {
         });
     }
 
-
     private void tarjan(){
         graphs.entrySet().forEach(entry -> {
             tarjans.put(entry.getKey(), entry.getValue().tarjan());
         });
     }
-
 
     public List<Tarjan> getTarjanDiff() {
         List<Tarjan> result = new ArrayList<>();

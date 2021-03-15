@@ -17,7 +17,6 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Icon;
 import org.laeq.model.icon.IconSVG;
@@ -58,12 +57,8 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().show("display");
 
         stage.setOnCloseRequest(event -> {
-            try {
-                mediaPlayer.stop();
-                getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("display"));
-            }catch (Exception e){
-
-            }
+            mediaPlayer.stop();
+            getApplication().getEventRouter().publishEventAsync("mvc.clean", Arrays.asList("display"));
         });
     }
 
@@ -71,9 +66,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     private void closeAndDestroy(String name){
         destroy(name);
         closeScene(name);
-        System.out.println("Display view editor closing");
-        System.out.printf("Windows: %s\n", getApplication().getWindowManager().getWindowNames());
-        System.out.printf("MVC : %s\n", getApplication().getMvcGroupManager().getGroups());
     }
 
     private void destroy(String name) {
@@ -107,11 +99,11 @@ public class DisplayView extends AbstractJavaFXGriffonView {
                 controller.isReady();
                 mediaPlayer.play();
                 mediaPlayer.pause();
-                runOutsideUI(() -> mediaPlayer.seek(currentTime));
+                runOutsideUIAsync(() -> mediaPlayer.seek(currentTime));
             });
 
             mediaPlayer.setOnError(() -> {
-                System.out.println("on error");
+                getApplication().getEventRouter().publishEventOutsideUI("status.error", Arrays.asList("video.metadata.error"));
             });
 
             this.volumeOff();
@@ -162,6 +154,8 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     }
 
     public void seek(Duration currentTime) {
-        runOutsideUI(() -> mediaPlayer.seek(currentTime));
+        runOutsideUIAsync(() -> {
+            mediaPlayer.seek(currentTime);
+        });
     }
 }

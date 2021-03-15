@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import griffon.javafx.support.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 <SplitPane dividerPositions="0.6004464285714286" layoutY="7.0" prefHeight="535.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.info.AboutController">
     <items>
         <AnchorPane fx:id="categoryListPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -57,7 +48,10 @@
                         <TextField fx:id="colorPickerField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Pane fx:id="svgDisplayPane" layoutX="119.0" layoutY="267.0" prefHeight="123.0" prefWidth="117.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <TextField fx:id="pathField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label prefHeight="17.0" prefWidth="224.0" GridPane.columnIndex="1" GridPane.rowIndex="4" JavaFXUtils.i18nKey="z.color.help" />
+                        <Label prefHeight="17.0" prefWidth="224.0" GridPane.columnIndex="1" GridPane.rowIndex="4" JavaFXUtils.i18nKey="z.color.help">
+                     <font>
+                        <Font name="System Bold Italic" size="10.0" />
+                     </font></Label>
                   <Label layoutX="118.0" layoutY="117.0" prefHeight="17.0" prefWidth="224.0" />
                   <Label layoutX="10.0" layoutY="18.0" prefHeight="17.0" prefWidth="224.0" />
                     </children>

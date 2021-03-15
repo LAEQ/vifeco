@@ -77,12 +77,12 @@ public class IconButton extends Group implements IconDecorator {
 
     @Override
     public void clear() {
-
+        //noop
     }
 
     @Override
     public void position(Point2D point) {
-
+        //noop
     }
 
     public void listen(){

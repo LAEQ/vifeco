@@ -8,23 +8,24 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.editor.Controls;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
 public class VifecoView extends AbstractJavaFXGriffonView {
     @MVCMember
     private VifecoController controller;
+
+    @MVCMember @Nonnull private VifecoModel model;
 
     @MVCMember
     private void setController(@Nonnull VifecoController controller){
@@ -41,9 +42,9 @@ public class VifecoView extends AbstractJavaFXGriffonView {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
-        createMVCGroup("menu");
-        createMVCGroup("video");
         createMVCGroup("bottom");
+        createMVCGroup("menu");
+        createMVCGroup(model.currentGroup);
     }
 
     @Override
@@ -52,6 +53,8 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
         stage.setScene(init());
         stage.sizeToScene();
+
+        stage.getIcons().add( getImage("favicon-32x32.png"));
         getApplication().getWindowManager().attach("mainWindow", stage);
     }
 
@@ -74,4 +77,8 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         return scene;
 
     }
+    private Image getImage(String path) {
+        return new Image(getClass().getClassLoader().getResourceAsStream(path));
+    }
+
 }

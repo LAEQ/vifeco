@@ -8,7 +8,6 @@ import griffon.transform.Threading;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.DatabaseService;
 import org.laeq.ExportService;
@@ -27,7 +26,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.zip.ZipEntry;
@@ -56,7 +54,7 @@ public class MenuController extends AbstractGriffonController {
         fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter(
                     "Video Files",
-                    "*.mp4", "*.wav", "*.mkv", "*.avi", "*.wmv", "*.mov")
+                    "*.mp4", "*.avi", "*mp3")
         );
 
         Stage stage = (Stage) getApplication().getWindowManager().findWindow("mainWindow");
@@ -88,41 +86,9 @@ public class MenuController extends AbstractGriffonController {
             getApplication().getEventRouter().publishEvent("video.created");
             getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.create.success"));
         }catch (Exception e){
+            e.printStackTrace();
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
         }
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void importVideo() {
-        fileChooser = new FileChooser();
-        fileChooser.setTitle("Import video file");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(
-                        "Video Files",
-                        "*.json")
-        );
-
-        Stage stage = (Stage) getApplication().getWindowManager().findWindow("mainWindow");
-
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        if (selectedFile != null) {
-
-            try {
-                importService.execute(selectedFile);
-                getApplication().getEventRouter().publishEvent("video.import.success");
-            } catch (Exception e) {
-                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.import.error"));
-            }
-        }
-    }
-
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void sendTo(){
-        getApplication().getEventRouter().publishEvent("org.laeq.user.create");
-        getApplication().getEventRouter().publishEvent("org.laeq.user.list");
     }
 
     @ControllerAction
@@ -181,10 +147,6 @@ public class MenuController extends AbstractGriffonController {
 
         list.put("video.open", objects -> {
             open();
-        });
-
-        list.put("video.import", objects -> {
-            importVideo();
         });
 
         list.put("database.backup", objects -> {

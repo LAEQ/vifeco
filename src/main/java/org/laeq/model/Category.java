@@ -9,7 +9,6 @@ import org.laeq.model.icon.IconSize;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -25,11 +24,11 @@ public class Category implements Comparable<Category> {
     private Integer id;
 
     @Column(nullable = false)
-    @Size(min = 1, max = 255)
+    @Length(min = 1, max = 255)
     private String name;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    @Size(min = 1)
+    @Length(min = 1)
     private String icon;
 
     @Column(nullable = false)
@@ -52,6 +51,11 @@ public class Category implements Comparable<Category> {
 
     public Category(Integer id) {
         this.id = id;
+    }
+
+    public Category(Integer id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Category(Integer id, String name, String icon, String color, String shortcut) {
@@ -142,7 +146,7 @@ public class Category implements Comparable<Category> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id);
     }
 
     @Override
