@@ -8,11 +8,13 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.*;
@@ -74,6 +76,13 @@ public class VideoView extends AbstractJavaFXGriffonView {
 
         videoTable.setItems(this.model.videoList);
         categoryTable.setItems(this.model.categoryCounts);
+
+        path.setCellFactory(TextFieldTableCell.forTableColumn());
+        path.setOnEditCommit(event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setPath(event.getNewValue());
+            controller.save(event.getRowValue());
+            videoTable.refresh();
+        });
 
         icon.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().category.getIcon2()));
         category.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getName()));
