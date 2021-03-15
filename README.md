@@ -1,11 +1,10 @@
 # vifeco
-Vifeco (video features counter) is a stand-alone, multiplatform (Windows, Mac and Linux) application that makes it possible to manually identify features on a video. 
-It allows you to create users, categories (feature) and organize them in collections. While reading a video, you can identify and manually features by positioning your mouse above it and pressing a predefined shortcut.
-Vifeco comes with tools to compare and analyze the counting concordance between two sessions. Written in Java 11 with the JavaFX UI toolkit, The software is available under Apache Licence
+Vifeco (video features counter) is a stand-alone, multiplatform (Windows, Mac and Linux) application that makes it possible to manually identify features on a video. It allows you to create users, categories (feature) and organize them in collections. While reading a video, you can identify and manually features by positioning your mouse above it and pressing a predefined shortcut. Vifeco comes with tools to compare and analyze the counting concordance between two sessions. Written in Java 11 with the JavaFX UI toolkit, The software is available under Apache Licence
 
 <a href="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/player_final.png"><img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/player_final.png" width="400"/></a>
 <a href="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/category_list_final.png"><img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/category_list_final.png" width="350"/></a>
 <a href="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/statistic_final.png"><img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/statistic_final.png" width="300" /></a>
+<a href="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/collection_list_final.png"><img src="https://github.com/LAEQ/vifeco/raw/master/documentation/screenshots/collection_list_final.png" width="450" /></a>
 
 ### Build status
 
@@ -31,13 +30,7 @@ You can download prebuilt binaries from the [release section](https://github.com
 
 For gradle installation please check https://gradle.org/install/
 
-To compile and run Vifeco we recommand to use Liberica JDK 11 LTS from BellSoft. It is available for all the major platforms and comes bundled with Javafx.
-
-Linux and MacOS we recommand to use SDKMAN to install and manage multiple JDK/JRE.
-
-Windows users must download it directly from Bellsoft website and configure their environement manually (PATH, JAVA_HOME).
-
-For OpenJDK, you must install JavaFX separately and configure it at compile and runtime.
+To compile and run Vifeco we recommand to use Liberica JDK 11 LTS from BellSoft. It is available for all the major platforms and comes bundled with Javafx. Linux and MacOS we recommand to use SDKMAN to install and manage multiple JDK/JRE. Windows users must download it directly from Bellsoft website and configure their environement manually (PATH, JAVA_HOME). With OpenJDK, you must install JavaFX separately and configure it at compile and runtime.
 
 SDKMAN: https://sdkman.io/
 
@@ -45,15 +38,12 @@ JDK 11: https://bell-sw.com/pages/downloads/
 
 Install OpenJFX: https://openjfx.io/openjfx-docs/#install-javafx
 
-
 ## Compile and test
-
 
 ```jshelllanguage
 git clone https://github.com/LAEQ/vifeco.git
 gradle test run
 ```
-
 
 > The project will create a folder named **Vifeco** (~/vifeco) and will save all the necessary files to run the project (database, preferences, exports, imports, images, etc.).
 
