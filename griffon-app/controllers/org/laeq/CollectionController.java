@@ -44,9 +44,10 @@ public class CollectionController extends AbstractGriffonController implements C
             model.collections.clear();
             model.collections.addAll(dbService.collectionDAO.findAll());
             getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("db.collection.save.success", collection.getName()));
-            model.clear();
         }catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.save.error"));
+        }finally {
+            model.clear();
         }
     }
 

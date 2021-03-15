@@ -68,16 +68,17 @@
 
                             <TitledPane animated="true" JavaFXUtils.i18nKey="z.concordance_index">
                               <content>
-                                <AnchorPane fx:id="concordanceIndexAccordion" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                <ScrollPane fx:id="concordanceIndexAccordion" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                               </content>
                             </TitledPane>
                               <TitledPane animated="true" JavaFXUtils.i18nKey="z.pairing">
                                   <content>
                                       <AnchorPane fx:id="tableAccordion" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                                      <TableView fx:id="tableAcc" prefHeight="300.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                      <TableView fx:id="tableAcc" prefHeight="300.0" prefWidth="200.0"
+                                                 AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                                           <columns>
-                                              <TableColumn fx:id="tableAccPt1" prefWidth="205.0" />
-                                              <TableColumn fx:id="tableAccPt2" prefWidth="205.0" />
+                                              <TableColumn fx:id="tableAccPt1" prefWidth="205.0" JavaFXUtils.i18nKey="z.video_1" />
+                                              <TableColumn fx:id="tableAccPt2" prefWidth="205.0" JavaFXUtils.i18nKey="z.video_2" />
                                               <TableColumn fx:id="tableAccAction" prefWidth="205.0" />
                                           </columns>
                                       </TableView>

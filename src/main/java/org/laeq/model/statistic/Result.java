@@ -21,7 +21,7 @@ public class Result{
 
     public double getPercent(){
         if(matched + lonely != 0){
-            return matched / (matched + lonely) * 100;
+            return ((double) matched) / (matched + lonely) * 100;
         } else  {
             return 100;
         }

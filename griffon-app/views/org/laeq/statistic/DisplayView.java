@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -54,6 +55,8 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     public void initUI() {
         Stage stage = (Stage) getApplication()
             .createApplicationContainer(Collections.<String,Object>emptyMap());
+        stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
+        stage.getIcons().add( getImage("favicon-32x32.png"));
         stage.setScene(init());
         stage.sizeToScene();
         stage.setAlwaysOnTop(true);
@@ -188,5 +191,10 @@ public class DisplayView extends AbstractJavaFXGriffonView {
 
     public void seek(Duration currentTime) {
         mediaPlayer.seek(currentTime);
+    }
+
+
+    private Image getImage(String path) {
+        return new Image(getClass().getClassLoader().getResourceAsStream(path));
     }
 }

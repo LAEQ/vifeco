@@ -63,7 +63,7 @@ public class StatisticView extends AbstractJavaFXGriffonView {
     @FXML private TitledPane chartTitled;
     @FXML private ScrollPane chartAccordion;
     @FXML private Pane tableAccordion;
-    @FXML private Pane concordanceIndexAccordion;
+    @FXML private ScrollPane concordanceIndexAccordion;
 
     @FXML private TableView<MatchedPoint> tableAcc;
     @FXML private TableColumn<MatchedPoint, String> tableAccPt1;
@@ -251,7 +251,7 @@ public class StatisticView extends AbstractJavaFXGriffonView {
 
         tableAcc.getItems().addAll(FXCollections.observableArrayList(sorted));
 
-        concordanceIndexAccordion.getChildren().clear();
+        concordanceIndexAccordion.setContent(null);
 
         Map<String, Double> serie_concordanceIndex = new LinkedHashMap<>();
 
@@ -286,7 +286,7 @@ public class StatisticView extends AbstractJavaFXGriffonView {
 
         linechart.getData().add(series);
 
-        concordanceIndexAccordion.getChildren().add(linechart);
+        concordanceIndexAccordion.setContent(linechart);
 
     }
 

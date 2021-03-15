@@ -19,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -98,7 +99,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     public void initUI() {
         Stage stage = (Stage) getApplication()
             .createApplicationContainer(Collections.<String,Object>emptyMap());
-        stage.setTitle(getApplication().getConfiguration().getAsString(getApplication().getMessageSource().getMessage("editor.window.title")));
+        stage.setTitle(getApplication().getMessageSource().getMessage("editor.window.title"));
+        stage.getIcons().add( getImage("favicon-32x32.png"));
         scene = init();
         stage.setScene(scene);
         stage.sizeToScene();
@@ -447,5 +449,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         runInsideUIAsync(() -> {
             model.setCurrentTime(now);
         });
+    }
+
+    private Image getImage(String path) {
+        return new Image(getClass().getClassLoader().getResourceAsStream(path));
     }
 }

@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
@@ -50,7 +51,8 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     public void initUI() {
         Stage stage = (Stage) getApplication()
             .createApplicationContainer(Collections.<String,Object>emptyMap());
-        stage.setTitle("Controls");
+        stage.setTitle(getApplication().getMessageSource().getMessage("z.controls"));
+        stage.getIcons().add( getImage("favicon-32x32.png"));
         stage.setScene(init());
         stage.sizeToScene();
         stage.setAlwaysOnTop(true);
@@ -171,5 +173,9 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         connectMessageSource(node);
 
         return scene;
+    }
+
+    private Image getImage(String path) {
+        return new Image(getClass().getClassLoader().getResourceAsStream(path));
     }
 }
