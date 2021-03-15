@@ -7,8 +7,11 @@ cache:
   - $HOME/.gradle
 install: true
 
-jdk:
-  - oraclejdk8
+before_install:
+  - wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add -
+  - echo "deb [arch=amd64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list
+  - sudo apt-get -qq update
+  - sudo apt-get -y install bellsoft-java11
 
 script:
   - ./gradlew clean test
