@@ -3,12 +3,14 @@ package org.laeq;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
+import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.scene.control.TableColumn;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Collection;
@@ -118,7 +120,6 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void edit(){
-        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
         if(model.selectedVideo == null){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.error"));
         } else {
@@ -134,9 +135,39 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
         }
     }
 
+    /**
+     * Clean and destroy
+     * @param name
+     */
+    private void cleanAndDestroy(String name){
+        destroyMVC(name);
+        closeWindow(name);
+    }
+
+    private void closeWindow(String name){
+        try{
+            Stage window = (Stage) getApplication().getWindowManager().findWindow(name);
+            getApplication().getWindowManager().detach(name);
+            window.close();
+        } catch (Exception e){
+
+        }
+    }
+
+    private void destroyMVC(String name){
+        try{
+            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
+            if(group != null){
+                group.destroy();
+            }
+        }catch (Exception e){
+
+        }
+    }
+
     private void  createDisplay(){
         if(model.currentVideo != null){
-            destroyMVCGroup(model.currentVideo);
+            cleanAndDestroy("editor");
         }
 
         model.currentVideo = "editor";

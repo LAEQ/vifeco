@@ -14,6 +14,10 @@
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
   <icon>C:\Users\david\Documents\laeq\VifecoProjects\vifeco\distribution\windows\favicon_v\favicon.ico</icon>
+  <singleInstance>
+    <mutexName>vifeco</mutexName>
+    <windowTitle></windowTitle>
+  </singleInstance>
   <jre>
     <path>jre</path>
     <bundledJre64Bit>false</bundledJre64Bit>

@@ -71,6 +71,7 @@ public class PlayerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
+        view.pause();
         getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
         getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("controls"));
     }
@@ -100,7 +101,6 @@ public class PlayerController extends AbstractGriffonController {
         try{
             dbService.pointDAO.delete(point);
             model.removePoint(point);
-            model.displayed.remove(point);
 
             getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
             getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));

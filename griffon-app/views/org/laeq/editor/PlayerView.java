@@ -108,7 +108,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().show("editor");
 
         stage.setOnCloseRequest(event -> {
-            mediaPlayer.pause();
+            mediaPlayer.stop();
             getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
         });
 
