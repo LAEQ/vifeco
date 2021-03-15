@@ -71,7 +71,8 @@ public class PlayerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("controls"));
     }
 
     @ControllerAction
@@ -106,6 +107,12 @@ public class PlayerController extends AbstractGriffonController {
         }catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
         }
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    public void rewind(){
+        view.rewind();
     }
 
     @ControllerAction
@@ -166,7 +173,7 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void updateCurrentTime(Duration start) {
         getApplication().getEventRouter().publishEvent("player.currentTime", Arrays.asList(start));
     }

@@ -20,8 +20,8 @@
                        <TableColumn fx:id="user" prefWidth="115.0" JavaFXUtils.i18nKey="z.user" />
                        <TableColumn fx:id="collection" prefWidth="115.0" JavaFXUtils.i18nKey="z.collection" />
                        <TableColumn fx:id="total" prefWidth="75.0" JavaFXUtils.i18nKey="z.total" />
-                       <TableColumn fx:id="actions" prefWidth="175.0" JavaFXUtils.i18nKey="z.actions" />
-                       <TableColumn fx:id="delete" prefWidth="175.0" JavaFXUtils.i18nKey="z.delete" />
+                       <TableColumn fx:id="actions" prefWidth="180.0" JavaFXUtils.i18nKey="z.actions" />
+                       <TableColumn fx:id="delete" prefWidth="105.0" JavaFXUtils.i18nKey="z.delete" />
                    </columns>
                 </TableView>
             </children>

@@ -45,7 +45,7 @@ public class ExportService extends AbstractGriffonService {
         return fileName;
     }
 
-    public String export(StatisticService service) throws IOException {
+    public String export(StatisticService service) throws Exception {
         String statFileName = String.format("%s%s%s-%s.json", Settings.statisticPath, File.separator, service.getVideo1().pathToName(), System.currentTimeMillis());
 
         ObjectMapper mapper = new ObjectMapper();

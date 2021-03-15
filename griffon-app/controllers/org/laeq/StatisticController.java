@@ -59,7 +59,6 @@ StatisticController extends AbstractGriffonController {
             String filename = exportService.export(service);
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("statistic.export.success", filename));
         } catch (Exception e) {
-            e.printStackTrace();
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("statistic.export.error"));
         }
     }
@@ -112,21 +111,25 @@ StatisticController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void displayMatchedPoint(MatchedPoint mp) {
-        Object statistic_display = getApplication().getWindowManager().findWindow("statistic_display");
+        try {
+            Object statistic_display = getApplication().getWindowManager().findWindow("statistic_display");
 
-        File file = new File(mp.pt1.getVideo().getPath());
+            File file = new File(mp.getPoint().getVideo().getPath());
 
-        if(file.exists() == false){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.file_not_found"));
-            return;
-        }
+            if (file.exists() == false && statistic_display == null) {
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.file_not_found"));
+                return;
+            }
 
-        if(statistic_display == null){
-            Map<String, Object> args = new HashMap<>();
-            args.put("matchedPoint", mp);
-            createMVCGroup("statistic_display", args);
-        } else {
-            getApplication().getEventRouter().publishEventOutsideUI("statistic.mapped_point.display", Arrays.asList(mp));
+            if (statistic_display == null) {
+                Map<String, Object> args = new HashMap<>();
+                args.put("matchedPoint", mp);
+                createMVCGroup("statistic_display", args);
+            } else {
+                getApplication().getEventRouter().publishEventOutsideUI("statistic.mapped_point.display", Arrays.asList(mp));
+            }
+        }catch (Exception e){
+
         }
     }
 }

@@ -43,8 +43,6 @@ public class VifecoController extends AbstractGriffonController {
         return list;
     }
 
-
-
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void createGroup(String groupName, Map<String, Object> args){
         destroyMVC(model.currentGroup);

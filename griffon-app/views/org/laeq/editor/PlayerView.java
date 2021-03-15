@@ -45,6 +45,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.stream.Collector;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {
@@ -82,6 +83,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private Button addActionTarget;
     @FXML private Button playActionTarget;
     @FXML private Button stopActionTarget;
+    @FXML private Button rewindActionTarget;
     @FXML private Button controlsActionTarget;
 
     private Boolean wasPlaying = false;
@@ -108,7 +110,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         stage.setOnCloseRequest(event -> {
             mediaPlayer.pause();
-            getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
             getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
         });
 
@@ -127,6 +128,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         icon = new Icon(IconSVG.controls, org.laeq.model.icon.Color.gray_dark);
         controlsActionTarget.setGraphic(icon);
         controlsActionTarget.setText("");
+
+        icon = new Icon(IconSVG.backward30, org.laeq.model.icon.Color.gray_dark);
+        rewindActionTarget.setGraphic(icon);
+        rewindActionTarget.setText("");
 
         initPlayer();
         messageSource = getApplication().getMessageSource();
@@ -181,6 +186,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 mediaPlayer.play();
                 mediaPlayer.pause();
             });
+
+            mediaPlayer.setOnHalted(() -> {
+                System.out.println("On halted");
+            });
+
             duration.setText(video.getDurationFormatted());
             mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
                 model.width.set(newValue.getWidth());
@@ -227,13 +237,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                     icon.setScaleX(model.controls.scale());
                     icon.setScaleY(model.controls.scale());
                     icon.setOpacity(model.controls.opacity.getValue());
-                    runInsideUIAsync(() -> {
-                        iconPane.getChildren().add(icon);
-                    });
+                    iconPane.getChildren().add(icon);
                 } else if(change.wasRemoved()){
-                    runInsideUIAsync(() -> {
-                        iconPane.getChildren().remove(change.getElementRemoved().getIconPoint());
-                    });
+                    iconPane.getChildren().remove(change.getElementRemoved().getIconPoint());
                 }
             });
 
@@ -340,7 +346,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     //Rendering method
     private void updateValues() {
         Platform.runLater(() -> {
-            displayPoints();
             if (! slider.isDisabled()
                     && ! slider.isPressed()
                     && video.getDuration().greaterThanOrEqualTo(Duration.ZERO)
@@ -356,9 +361,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void displayPoints() {
-        runOutsideUIAsync(() -> {
-            model.setCurrentTime(mediaPlayer.getCurrentTime());
-        });
+        model.setCurrentTime(mediaPlayer.getCurrentTime());
     }
 
     private Callback<TableColumn<Point, Void>, TableCell<Point, Void>> deleteActions() {
@@ -393,37 +396,57 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     //Listeners
     private ChangeListener<Number> sliderListener(){
         return (observable, oldValue, newValue) -> {
-            runInsideUIAsync(() -> {
-                Duration now = video.getDuration().multiply(slider.getValue() / 100);
-                controller.updateCurrentTime(now);
+            Duration now = video.getDuration().multiply(slider.getValue() / 100);
+
+            runOutsideUIAsync(() -> {
                 mediaPlayer.seek(now);
-                runOutsideUI(() -> {
-                    model.setCurrentTime(now);
-                });
+                controller.updateCurrentTime(now);
+            });
+
+            runInsideUIAsync(() -> {
+                model.setCurrentTime(now);
+                elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
             });
         };
     }
     private ChangeListener<Duration> currentTimeListener(){
         return (observable, oldValue, newValue) -> {
             updateValues();
+            runInsideUIAsync(() -> {
+                displayPoints();
+            });
         };
     }
 
     private ChangeListener<Point> rowlistener(){
         return (observable, oldValue, newValue) -> {
-            runInsideUIAsync(() -> {
-                controller.updateCurrentTime(newValue.getStart());
+            runOutsideUI(() -> {
                 mediaPlayer.seek(newValue.getStart());
-                runOutsideUI(() -> {
-                    model.setCurrentTime(newValue.getStart());
-                });
+                controller.updateCurrentTime(newValue.getStart());
+            });
+
+            runInsideUIAsync(() -> {
+                model.setCurrentTime(newValue.getStart());
             });
         };
     }
 
-//    public void setCurrentTime(Duration currentTime) {
-//        Platform.runLater(() -> {
-//            mediaPlayer.seek(currentTime);
-//        });
-//    }
+    public void rewind() {
+        Duration start = getCurrentTime().subtract(Duration.seconds(30));
+
+        if(start.lessThan(Duration.ZERO)){
+            start = Duration.ZERO;
+        }
+
+        final Duration now = start;
+
+        runOutsideUIAsync(() -> {
+            mediaPlayer.seek(now);
+            controller.updateCurrentTime(now);
+        });
+
+        runInsideUIAsync(() -> {
+            model.setCurrentTime(now);
+        });
+    }
 }
