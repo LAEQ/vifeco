@@ -17,8 +17,9 @@ import org.laeq.model.Video;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ImportController extends AbstractGriffonController {

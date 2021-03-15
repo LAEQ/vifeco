@@ -19,8 +19,6 @@ import org.laeq.model.icon.IconPointColorized;
 
 import javax.annotation.Nonnull;
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 
 @ArtifactProviderFor(GriffonModel.class)

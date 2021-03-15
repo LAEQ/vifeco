@@ -2,7 +2,6 @@ package org.laeq.model
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import javafx.util.Duration
-import spock.lang.Ignore
 import spock.lang.Specification
 
 class VideoTest extends Specification {

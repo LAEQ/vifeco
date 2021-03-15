@@ -3,7 +3,6 @@ package org.laeq.model.serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.laeq.model.Video;
 import org.laeq.model.statistic.MatchedPoint;
 
 import java.io.IOException;

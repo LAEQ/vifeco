@@ -16,7 +16,8 @@ import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ControlsView extends AbstractJavaFXGriffonView {

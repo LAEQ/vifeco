@@ -9,6 +9,7 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;

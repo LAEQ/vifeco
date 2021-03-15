@@ -5,11 +5,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
-import org.hibernate.engine.spi.CascadingAction;
-import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.serializer.StatisticSerializer;
-import org.laeq.model.serializer.VideoSerializer;
 import org.laeq.settings.Settings;
 
 import java.io.File;

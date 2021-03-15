@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import griffon.javafx.support.JavaFXUtils?>
-<?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
-<?import javafx.scene.Group?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
 <AnchorPane minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.ConfigController">
    <children>
       <Label layoutX="433.0" layoutY="14.0" prefHeight="17.0" prefWidth="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" JavaFXUtils.i18nKey="z.language" />

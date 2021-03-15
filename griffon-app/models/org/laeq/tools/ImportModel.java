@@ -14,9 +14,7 @@ import org.laeq.model.Video;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ImportModel extends AbstractGriffonModel {

@@ -14,13 +14,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.editor.Controls;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.awt.*;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)

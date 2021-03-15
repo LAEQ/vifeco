@@ -5,7 +5,6 @@ import org.laeq.model.Preferences;
 import org.laeq.settings.Settings;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
