@@ -87,7 +87,6 @@ public class PlayerController extends AbstractGriffonController {
                     dbService.pointDAO.create(point);
                     model.addPoint(point);
                     getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
-                    getApplication().getEventRouter().publishEventOutsideUI("point.created");
                     view.displayPoints();
                 } catch (Exception e) {
                     getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
@@ -101,9 +100,7 @@ public class PlayerController extends AbstractGriffonController {
         try{
             dbService.pointDAO.delete(point);
             model.removePoint(point);
-
             getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
-            getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
         }catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
         }
