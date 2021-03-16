@@ -27,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -50,9 +51,7 @@ import org.laeq.model.icon.IconSVG;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {
@@ -71,12 +70,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML public TableColumn<CategoryCount, String> shortcutTS;
     @FXML public TableColumn<CategoryCount, Number> totalTS;
 
-    @FXML public TableView<Point> timelineTable;
-    @FXML public TableColumn<Point, Icon> iconTD;
-    @FXML public TableColumn<Point, String> startTD;
-    @FXML public TableColumn<Point, Number> xTD;
-    @FXML public TableColumn<Point, Number> yTD;
-    @FXML public TableColumn<Point, Void>  delete;
+    @FXML public AnchorPane timeline;
 
     //Video player
     private MediaPlayer mediaPlayer;
@@ -95,7 +89,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     private Boolean wasPlaying = false;
 
-
     private MessageSource messageSource;
     private ChangeListener<String> elapListen = elapsedListener();
     private EventHandler<KeyEvent> elapKeyListen = elapsedKeyPressed();
@@ -103,15 +96,21 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private ChangeListener<? super Duration> currentTimeListener = currentTimeListener();
 
     @Override
+    public void mvcGroupInit(@Nonnull Map<String, Object> args){
+        Map<String, Object> video = new HashMap<>();
+        video.put("video", args.get("video"));
+        createMVCGroup("timeline", video);
+    }
+
+    @Override
     public void initUI() {
-        Stage stage = (Stage) getApplication()
-            .createApplicationContainer(Collections.<String,Object>emptyMap());
+        Stage stage = (Stage) getApplication().createApplicationContainer(Collections.<String,Object>emptyMap());
         stage.setTitle(getApplication().getMessageSource().getMessage("editor.window.title"));
         stage.getIcons().add( getImage("favicon-32x32.png"));
         scene = init();
         stage.setScene(scene);
         stage.sizeToScene();
-        stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(false);
 
         getApplication().getWindowManager().attach("editor", stage);
         getApplication().getWindowManager().show("editor");
@@ -167,19 +166,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         shortcutTS.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getShortcut()));
         totalTS.setCellValueFactory(cellData -> cellData.getValue().total);
         summaryTable.setItems(model.summary);
-
-        iconTD.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCategory().getIcon2()));
-        startTD.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStartFormatted()));
-        xTD.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getX()));
-        yTD.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getY()));
-        delete.setCellFactory(deleteActions());
-
-        SortedList<Point> points = model.points.sorted();
-        points.setComparator(new DurationComparator());
-        timelineTable.setItems(points);
-        timelineTable.setPlaceholder(new Label(""));
-        timelineTable.getSelectionModel().selectedItemProperty().addListener(rowlistener());
-        points.comparatorProperty().bind(timelineTable.comparatorProperty());
 
         return scene;
     }
@@ -335,7 +321,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         };
     }
     private EventHandler<? super KeyEvent> keyReleased() {
-        return (EventHandler<KeyEvent>) event -> { controller.addPoint(event.getCode(), mediaPlayer.getCurrentTime());};
+        return (EventHandler<KeyEvent>) event -> {
+            runInsideUIAsync(() -> {
+                controller.addPoint(event.getCode(), mediaPlayer.getCurrentTime());
+            });
+        };
     }
     private EventHandler<? super MouseEvent> mouseexit() {
         return (EventHandler<MouseEvent>) event -> { model.enabled = Boolean.FALSE; };
@@ -373,31 +363,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         model.setCurrentTime(mediaPlayer.getCurrentTime());
     }
 
-    private Callback<TableColumn<Point, Void>, TableCell<Point, Void>> deleteActions() {
-        return param -> {
-            final  TableCell<Point, Void> cell = new TableCell<Point, Void>(){
-                Button delete = new Button(translate("btn.delete"));
-                {
-                    delete.setLayoutX(5);
-                    delete.getStyleClass().addAll("btn", "btn-danger", "btn-sm");
-                    delete.setOnAction(event -> controller.deletePoint(timelineTable.getItems().get(getIndex())));
-                }
-
-                @Override
-                public void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        setGraphic(delete);
-                    }
-                }
-            };
-
-            return cell;
-        };
-    }
-
     private String translate(String key) {
         return messageSource.getMessage(key);
     }
@@ -427,18 +392,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         };
     }
 
-    private ChangeListener<Point> rowlistener(){
-        return (observable, oldValue, newValue) -> {
-            runOutsideUI(() -> {
-                mediaPlayer.seek(newValue.getStart());
-                controller.updateCurrentTime(newValue.getStart());
-            });
-
-            runInsideUIAsync(() -> {
-                model.setCurrentTime(newValue.getStart());
-            });
-        };
-    }
 
     public void rewind() {
         Duration start = getCurrentTime().subtract(Duration.seconds(30));
