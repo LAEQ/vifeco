@@ -22,37 +22,35 @@ import java.util.*;
 
 
 @ArtifactProviderFor(GriffonModel.class)
-public class PlayerModel extends AbstractGriffonModel {
+final public class PlayerModel extends AbstractGriffonModel {
 
     @MVCMember @Nonnull private Video video;
 
     //Video controls
-    public Controls controls = new Controls();
+    final public Controls controls = new Controls();
 
-    public SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
+    final public SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
 
     //List for icon panel
-    public ObservableSet<Point> displayed = FXCollections.observableSet();
+    final public ObservableSet<Point> displayed = FXCollections.observableSet();
 
     //List for summary table
-    public ObservableList<Point> points = FXCollections.observableArrayList();
+    final public ObservableList<Point> points = FXCollections.observableArrayList();
 
     //List for displaying between two durations
-    public NavigableSet<Point> sortedPoints = new TreeSet<>();
+    final public NavigableSet<Point> sortedPoints = new TreeSet<>();
 
     //List for the category table
-    public ObservableList<CategoryCount> summary = FXCollections.observableArrayList();
+    final public ObservableList<CategoryCount> summary = FXCollections.observableArrayList();
 
     //Property for normalizing the icon position
-    public SimpleDoubleProperty width = new SimpleDoubleProperty(1);
-    public SimpleDoubleProperty height = new SimpleDoubleProperty(1);
+    final public SimpleDoubleProperty width = new SimpleDoubleProperty(1);
+    final public SimpleDoubleProperty height = new SimpleDoubleProperty(1);
+    final private Map<String, Category> shortcutMap= new HashMap();
+    final public SimpleBooleanProperty isReady = new SimpleBooleanProperty(Boolean.FALSE);
+    final public double[] mousePosition = new double[]{0,0};
 
-    public Boolean enabled = Boolean.FALSE;
-    private Map<String, Category> shortcutMap= new HashMap();
-
-    public SimpleBooleanProperty isReady = new SimpleBooleanProperty(Boolean.FALSE);
-
-    public double[] mousePosition = new double[]{0,0};
+    public Boolean enabled = new Boolean(false);
 
     public void setVideo(@Nonnull Video video){
         this.video = video;

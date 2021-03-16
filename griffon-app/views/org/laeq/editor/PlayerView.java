@@ -5,13 +5,17 @@ import griffon.core.i18n.MessageSource;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.SetChangeListener;
+import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -38,6 +42,8 @@ import org.laeq.model.CategoryCount;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.model.comparator.CategoryComparator;
+import org.laeq.model.comparator.DurationComparator;
 import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconSVG;
 
@@ -46,6 +52,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {
@@ -167,11 +174,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         yTD.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getY()));
         delete.setCellFactory(deleteActions());
 
-        FXCollections.sort(model.points);
-        timelineTable.setItems(model.points);
+        SortedList<Point> points = model.points.sorted();
+        points.setComparator(new DurationComparator());
+        timelineTable.setItems(points);
         timelineTable.setPlaceholder(new Label(""));
-
         timelineTable.getSelectionModel().selectedItemProperty().addListener(rowlistener());
+        points.comparatorProperty().bind(timelineTable.comparatorProperty());
 
         return scene;
     }
