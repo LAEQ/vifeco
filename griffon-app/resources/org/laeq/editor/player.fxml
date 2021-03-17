@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import griffon.javafx.support.*?>
+<?import griffon.javafx.support.JavaFXUtils?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.media.MediaView?>
@@ -25,28 +25,14 @@
             <Label fx:id="title" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="622.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="5.0" />
             <Label fx:id="duration" layoutX="615.0" layoutY="617.0" prefHeight="16.0" prefWidth="80.0" text="00:00:00" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="10.0" />
             <TextField fx:id="elapsed" alignment="BOTTOM_RIGHT" layoutX="429.0" layoutY="612.0" prefHeight="26.0" prefWidth="102.0" text="0:00:00" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="100.0" />
-
         </children>
     </AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="100.0">
         <children>
             <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                     <children>
-                              <TableView fx:id="summaryTable" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                  <columns>
-                                      <TableColumn fx:id="iconTS" prefWidth="75.0" />
-                                      <TableColumn fx:id="shortcutTS" prefWidth="75.0" JavaFXUtils.i18nKey="z.shortcut" />
-                                      <TableColumn fx:id="totalTS" prefWidth="75.0" JavaFXUtils.i18nKey="z.total" />
-                                      <TableColumn fx:id="nameTS" prefWidth="205.0" JavaFXUtils.i18nKey="z.name" />
-                                  </columns>
-                              </TableView>
-                     </children>
-                  </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" fx:id="timeline">
-                     <children />
-                  </AnchorPane>
+                <AnchorPane fx:id="summary" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" fx:id="timeline" />
               </items>
             </SplitPane>
         </children>

@@ -64,13 +64,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private Scene scene;
 
     @FXML public Label title;
-    @FXML public TableView<CategoryCount> summaryTable;
-    @FXML public TableColumn<CategoryCount, Icon> iconTS;
-    @FXML public TableColumn<CategoryCount, String> nameTS;
-    @FXML public TableColumn<CategoryCount, String> shortcutTS;
-    @FXML public TableColumn<CategoryCount, Number> totalTS;
 
     @FXML public AnchorPane timeline;
+    @FXML public AnchorPane summary;
 
     //Video player
     private MediaPlayer mediaPlayer;
@@ -100,6 +96,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         Map<String, Object> video = new HashMap<>();
         video.put("video", args.get("video"));
         createMVCGroup("timeline", video);
+        createMVCGroup("category_sum", video);
     }
 
     @Override
@@ -160,12 +157,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         connectMessageSource(node);
 
         title.setText(video.pathToName());
-
-        iconTS.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().category.getIcon2()));
-        nameTS.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getName()));
-        shortcutTS.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().category.getShortcut()));
-        totalTS.setCellValueFactory(cellData -> cellData.getValue().total);
-        summaryTable.setItems(model.summary);
 
         return scene;
     }
@@ -391,7 +382,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             });
         };
     }
-
 
     public void rewind() {
         Duration start = getCurrentTime().subtract(Duration.seconds(30));
