@@ -40,7 +40,7 @@ public class CategorySumController extends AbstractGriffonController {
             model.addPoint((Point) objects[0]);
         });
 
-        list.put("point.removed", objects ->{
+        list.put("point.deleted", objects ->{
             model.removePoint((Point) objects[0]);
         });
 

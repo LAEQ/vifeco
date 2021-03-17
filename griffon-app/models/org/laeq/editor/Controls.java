@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
 
 public class Controls {
-    public Double[] speedValue = new Double[]{0.25, 2.0};
+    public Double[] speedValue = new Double[]{0.25, 8.0};
     public Double[] opacityValue = new Double[]{.1, 1.0};
     public Double[] sizeValue = new Double[]{10d, 80d};
     public Double[] durationValue = new Double[]{1d, 30d};
