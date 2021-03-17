@@ -9,7 +9,7 @@ import java.util.List;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class VifecoModel extends AbstractGriffonModel {
-    public String currentGroup = "config";
+    public String currentGroup = "video";
     final public List<String> mvcKeep = Arrays.asList("vifeco", "menu", "bottom");
     final public List<String> windowKeep = Arrays.asList("mainWindow");
 }

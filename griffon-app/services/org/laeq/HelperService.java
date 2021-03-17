@@ -2,6 +2,7 @@ package org.laeq;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.helper.GitRelease;
 import org.laeq.helper.JsonBodyHandler;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.time.Duration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,4 +42,11 @@ public class HelperService extends AbstractGriffonService {
         return response.body().get().getName();
     }
 
+    public static String formatDuration(Duration duration){
+        return DurationFormatUtils.formatDuration((long) duration.toSeconds(), "HH:mm:ss");
+    }
+
+    public static Object formatDuration(javafx.util.Duration duration) {
+        return DurationFormatUtils.formatDuration((long) duration.toSeconds(), "HH:mm:ss");
+    }
 }

@@ -61,8 +61,7 @@ public class TimelineView extends AbstractJavaFXGriffonView {
         yTD.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getY()));
         delete.setCellFactory(deleteActions());
 
-        SortedList<Point> points = model.points.sorted();
-        points.setComparator(new DurationComparator());
+        SortedList<Point> points = model.points.sorted(new DurationComparator());
         timeline.setItems(points);
         timeline.setPlaceholder(new Label(""));
         timeline.getSelectionModel().selectedItemProperty().addListener(rowlistener());

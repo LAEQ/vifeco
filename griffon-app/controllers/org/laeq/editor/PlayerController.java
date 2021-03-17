@@ -82,17 +82,22 @@ public class PlayerController extends AbstractGriffonController {
         if(model.enabled){
             Point point = model.generatePoint(code.getName(), currentTime);
 
-            if(point != null){
+            if(point == null){
+                return;
+            }
+
+            runOutsideUIAsync(() -> {
                 try {
                     dbService.pointDAO.create(point);
-                    model.addPoint(point);
                     getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
-                    view.displayPoints();
                     getApplication().getEventRouter().publishEventOutsideUI("point.added", Arrays.asList(point));
                 } catch (Exception e) {
                     getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
+
                 }
-            }
+            });
+
+            model.addPoint(point);
         }
     }
     @ControllerAction
