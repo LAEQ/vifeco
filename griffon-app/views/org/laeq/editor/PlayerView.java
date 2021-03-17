@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -187,15 +188,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 iconPane.setPrefWidth(model.width.doubleValue());
                 iconPane.setPrefHeight(model.height.doubleValue());
                 iconPane.getChildren().clear();
-//                model.displayed.forEach(p ->{
-//                    IconPointColorized icon = p.getIconPoint();
-//                    Double x = p.getX() * model.width.doubleValue();
-//                    Double y = p.getY() * model.height.doubleValue();
-//                    icon.setLayoutX(x);
-//                    icon.setLayoutY(y);
-//                    iconPane.getChildren().add(icon);
-//                });
+
             });
+
             mediaPlayer.rateProperty().bind(model.controls.speed);
             iconPane.setOnMouseMoved(mousemove());
             iconPane.setOnMouseExited(mouseexit());
@@ -210,29 +205,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                     getApplication().getEventRouter().publishEventOutsideUI("player.play");
                 }
             });
-
             slider.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
                 mediaPlayer.pause();
                 getApplication().getEventRouter().publishEventOutsideUI("player.pause");
                 setPlayingListeners(false);
             });
-
-//            model.displayed.addListener((SetChangeListener<Point>) change ->  {
-//                if(change.wasAdded()){
-//                    IconPointColorized icon = change.getElementAdded().getIconPoint();
-//                    Double x = change.getElementAdded().getX() * model.width.doubleValue();
-//                    Double y = change.getElementAdded().getY() * model.height.doubleValue();
-//                    icon.setLayoutX(x);
-//                    icon.setLayoutY(y);
-//                    icon.setScaleX(model.controls.scale());
-//                    icon.setScaleY(model.controls.scale());
-//                    icon.setOpacity(model.controls.opacity.getValue());
-//                    iconPane.getChildren().add(icon);
-//                } else if(change.wasRemoved()){
-//                    iconPane.getChildren().remove(change.getElementRemoved().getIconPoint());
-//                }
-//            });
-
             elapsed.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if(newValue){
                     getApplication().getEventRouter().publishEventOutsideUI("player.pause");
@@ -246,7 +223,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                     elapsed.removeEventFilter(KeyEvent.KEY_PRESSED, elapKeyListen);
                 }
             });
-
 
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
@@ -328,12 +304,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         return (EventHandler<MouseEvent>) event -> { model.enabled = Boolean.TRUE; };
     }
     private EventHandler<MouseEvent> mousemove(){
-        return event -> {
-            if(model.enabled){
-                model.mousePosition[0] = event.getX();
-                model.mousePosition[1] = event.getY();
-            }
-        };
+        return event -> model.setMousePosition(new Point2D(event.getX(), event.getY()));
     }
 
     public Duration getCurrentTime() {
@@ -344,10 +315,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         return messageSource.getMessage(key);
     }
 
-    //Listeners
     private ChangeListener<Number> sliderListener(){
         return (observable, oldValue, newValue) -> {
             slider.setValue((Double) newValue);
+
             Duration now = video.getDuration().multiply((Double) newValue / 100);
             Collection<IconPointColorized> icons = model.setCurrentTime(now);
             Platform.runLater(() -> {
@@ -379,18 +350,30 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         }
 
         final Duration now = start;
-
-//        runOutsideUIAsync(() -> {
-//            mediaPlayer.seek(now);
-//            controller.updateCurrentTime(now);
-//        });
-//
-//        runInsideUIAsync(() -> {
-//            model.setCurrentTime(now);
-//        });
     }
 
     private Image getImage(String path) {
         return new Image(getClass().getClassLoader().getResourceAsStream(path));
+    }
+
+    public void addPoint(Point point) {
+        markers.put(point.getId().toString(), point.getStart());
+        iconPane.getChildren().add(model.getIcon(point.getId().toString()));
+    }
+
+    public void refreshOpacity(Double opacity) {
+        iconPane.getChildren().forEach(node -> node.setOpacity(opacity));
+    }
+
+    public void refreshSize(Double size) {
+        iconPane.getChildren().forEach(node -> {
+            node.setScaleX(size / 100);
+            node.setScaleY(size / 100);
+        });
+    }
+
+    public void removePoint(Point point) {
+        markers.remove(point.getId().toString());
+        iconPane.getChildren().remove(point.getIconPoint());
     }
 }

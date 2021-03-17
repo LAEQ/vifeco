@@ -16,7 +16,7 @@ import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
 import javax.annotation.Nonnull;
 import java.util.*;
-
+import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonModel.class)
 final public class PlayerModel extends AbstractGriffonModel {
@@ -31,7 +31,6 @@ final public class PlayerModel extends AbstractGriffonModel {
 
     public Map<String, Point> points = new HashMap<>();
     public ObservableList<IconPointColorized> icons = FXCollections.emptyObservableList();
-    public NavigableSet<Point> display = new TreeSet<>();
 
     //Property for normalizing the icon position
     final public SimpleDoubleProperty width = new SimpleDoubleProperty(1);
@@ -39,7 +38,8 @@ final public class PlayerModel extends AbstractGriffonModel {
 
     final private Map<String, Category> shortcutMap= new HashMap();
     final public SimpleBooleanProperty isReady = new SimpleBooleanProperty(Boolean.FALSE);
-    final public double[] mousePosition = new double[]{0,0};
+
+    public Point2D mousePosition;
 
     public Boolean enabled = new Boolean(false);
 
@@ -52,8 +52,8 @@ final public class PlayerModel extends AbstractGriffonModel {
         video.getCollection().getCategories().forEach(c -> shortcutMap.put(c.getShortcut(), c));
     }
 
-    public Point2D normalPosition() {
-        return new Point2D(mousePosition[0] / width.doubleValue(), mousePosition[1] / height.doubleValue());
+    public void setMousePosition(Point2D position){
+        this.mousePosition = position;
     }
 
     public Point2D position(Point point){
@@ -76,8 +76,8 @@ final public class PlayerModel extends AbstractGriffonModel {
             point.setVideo(video);
             point.setCategory(getCategoryByShortcut(code));
             point.setStart(currentTime);
-            point.setX(mousePosition[0] / Math.max(width.doubleValue(), 1));
-            point.setY(mousePosition[1] / Math.max(height.doubleValue(), 1));
+            point.setX(mousePosition.getX() / Math.max(width.doubleValue(), 1));
+            point.setY(mousePosition.getY() / Math.max(height.doubleValue(), 1));
 
             return point;
         }
@@ -86,13 +86,11 @@ final public class PlayerModel extends AbstractGriffonModel {
     }
 
     public void addPoint(Point point) {
-//        sortedPoints.add(point);
-//        displayed.add(point);
+        collection.addPoint(point);
     }
 
     public void removePoint(Point point) {
-//        sortedPoints.remove(point);
-//        displayed.remove(point);
+        collection.removePoint(point);
     }
 
     public Collection<IconPointColorized> setCurrentTime(Duration currentTime){
@@ -102,25 +100,16 @@ final public class PlayerModel extends AbstractGriffonModel {
         Point end = new Point();
         end.setStart(currentTime);
 
-        return collection.subList(start, end);
+        return collection.subList(start, end).stream().map(point -> {
+            IconPointColorized icon = point.getIconPoint();
+            icon.setScaleX(controls.scale().doubleValue());
+            icon.setScaleY(controls.scale().doubleValue());
+            icon.setLayoutX(point.getX() * width.doubleValue());
+            icon.setLayoutY(point.getY() * height.doubleValue());
+            icon.setOpacity(controls.opacity.getValue());
+            return icon;
+        }).collect(Collectors.toSet());
     }
-
-    public Optional<Point> getPointFromIcon(IconPointColorized icon) {
-        return Optional.empty();
-//        return sortedPoints.stream().filter(point -> point.getIconPoint().equals(icon)).findFirst();
-    }
-
-    public void refreshIcon() {
-//        displayed.forEach( p -> {
-//            IconPointColorized icon = p.getIconPoint();
-//
-//            icon.setScaleX(controls.scale());
-//            icon.setScaleY(controls.scale());
-//            icon.setOpacity(controls.opacity.getValue());
-//        });
-    }
-
-
 
     public IconPointColorized getIcon(String key) {
         Point point = collection.getIcon(key);
@@ -131,12 +120,10 @@ final public class PlayerModel extends AbstractGriffonModel {
         icon.setLayoutY(point.getY() * height.doubleValue());
         icon.setOpacity(controls.opacity.getValue());
 
-        display.add(point);
-
         return icon;
     }
 
-    public void slideCurrentTime(Duration now) {
-
+    public Optional<Point> getPointFromIcon(IconPointColorized icon) {
+        return collection.getPointFromIcon(icon);
     }
 }

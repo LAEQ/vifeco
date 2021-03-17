@@ -80,24 +80,23 @@ public class PlayerController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void addPoint(KeyCode code, Duration currentTime) {
         if(model.enabled){
-            Point point = model.generatePoint(code.getName(), currentTime);
-
-            if(point == null){
-                return;
-            }
-
             runOutsideUIAsync(() -> {
+                Point point = model.generatePoint(code.getName(), currentTime);
+
+                if(point == null){
+                    return;
+                }
+
                 try {
                     dbService.pointDAO.create(point);
+                    model.addPoint(point);
+                    view.addPoint(point);
                     getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
                     getApplication().getEventRouter().publishEventOutsideUI("point.added", Arrays.asList(point));
                 } catch (Exception e) {
                     getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
-
                 }
             });
-
-            model.addPoint(point);
         }
     }
     @ControllerAction
@@ -106,6 +105,7 @@ public class PlayerController extends AbstractGriffonController {
         try{
             dbService.pointDAO.delete(point);
             model.removePoint(point);
+            view.removePoint(point);
             getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
             getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
         }catch (Exception e){
@@ -163,14 +163,15 @@ public class PlayerController extends AbstractGriffonController {
         });
         list.put("opacity.change", objects -> {
             model.controls.opacity.set((Double) objects[0]);
-            model.refreshIcon();
+            view.refreshOpacity((Double) objects[0]);
         });
         list.put("duration.change", objects -> {
             model.controls.duration.set((Double) objects[0]);
+
         });
         list.put("size.change", objects -> {
             model.controls.size.set((Double) objects[0]);
-            model.refreshIcon();
+            view.refreshSize((Double) objects[0]);
         });
 
         return list;
