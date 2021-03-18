@@ -120,16 +120,25 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void rewind(){
-        runInsideUIAsync(() ->{
-            Duration start = view.getCurrentTime().subtract(Duration.seconds(30));
-            if(start.lessThan(Duration.ZERO)){
-                start = Duration.ZERO;
-            }
+        Duration start = view.getCurrentTime().subtract(Duration.seconds(30));
+        if(start.lessThan(Duration.ZERO)){
+            start = Duration.ZERO;
+        }
 
-            view.rewind(start);
-            getApplication().getEventRouter().publishEvent("player.currentTime", Arrays.asList(start));
-        });
+        view.rewind(start);
+        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+}
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    public void forward(){
+        Duration start = view.getCurrentTime().add(Duration.seconds(30));
+        if(start.greaterThan(video.getDuration())){
+           return;
+        }
+
+        view.rewind(start);
+        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
     }
 
     @ControllerAction

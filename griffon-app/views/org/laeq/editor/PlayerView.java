@@ -59,7 +59,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private MediaPlayer mediaPlayer;
     @FXML private Pane playerPane;
     @FXML private MediaView mediaView;
-    @FXML private IconPane iconPane;
+    @FXML private Pane iconPane;
     @FXML private Slider slider;
     @FXML private TextField elapsed;
     @FXML private Label duration;
@@ -68,6 +68,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private Button playActionTarget;
     @FXML private Button stopActionTarget;
     @FXML private Button rewindActionTarget;
+    @FXML private Button forwardActionTarget;
     @FXML private Button controlsActionTarget;
 
     private Boolean wasPlaying = false;
@@ -126,6 +127,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         icon = new Icon(IconSVG.backward30, org.laeq.model.icon.Color.gray_dark);
         rewindActionTarget.setGraphic(icon);
         rewindActionTarget.setText("");
+
+        icon = new Icon(IconSVG.forward30, org.laeq.model.icon.Color.gray_dark);
+        forwardActionTarget.setGraphic(icon);
+        forwardActionTarget.setText("");
 
         initPlayer();
     }
