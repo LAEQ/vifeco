@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -61,11 +62,12 @@ public class TimelineView extends AbstractJavaFXGriffonView {
         yTD.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getY()));
         delete.setCellFactory(deleteActions());
 
-        SortedList<Point> points = model.points.sorted(new DurationComparator());
-        timeline.setItems(points);
+//        SortedList<Point> points = model.points.sorted(new DurationComparator());
+        FXCollections.sort(model.points);
+        timeline.setItems(model.points);
         timeline.setPlaceholder(new Label(""));
         timeline.getSelectionModel().selectedItemProperty().addListener(rowlistener());
-        points.comparatorProperty().bind(timeline.comparatorProperty());
+//        points.comparatorProperty().bind(timeline.comparatorProperty());
     }
 
     private String translate(String key) {

@@ -128,7 +128,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         rewindActionTarget.setText("");
 
         initPlayer();
-        messageSource = getApplication().getMessageSource();
     }
 
     private Scene init() {
@@ -177,7 +176,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
             mediaPlayer.setOnMarker(event -> {
                 Platform.runLater(() -> {
-                    iconPane.getChildren().add(model.getIcon(event.getMarker().getKey()));
+                    try {
+                        iconPane.getChildren().add(model.getIcon(event.getMarker().getKey()));
+                    }catch (Exception e){
+                        //noop
+                    }
                 });
             });
 
@@ -187,8 +190,15 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 model.height.set(newValue.getHeight());
                 iconPane.setPrefWidth(model.width.doubleValue());
                 iconPane.setPrefHeight(model.height.doubleValue());
-                iconPane.getChildren().clear();
 
+                runInsideUIAsync(() -> {
+                    double ratioX = newValue.getWidth() * newValue.getWidth();
+                    double ratioY = newValue.getHeight() * newValue.getHeight();
+                    iconPane.getChildren().forEach(node -> {
+                        node.setLayoutX(node.getLayoutX()*ratioX);
+                        node.setLayoutX(node.getLayoutY()*ratioY);
+                    });
+                });
             });
 
             mediaPlayer.rateProperty().bind(model.controls.speed);
@@ -311,25 +321,26 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         return mediaPlayer.getCurrentTime();
     }
 
-    private String translate(String key) {
-        return messageSource.getMessage(key);
-    }
-
     private ChangeListener<Number> sliderListener(){
         return (observable, oldValue, newValue) -> {
             slider.setValue((Double) newValue);
 
             Duration now = video.getDuration().multiply((Double) newValue / 100);
-            Collection<IconPointColorized> icons = model.setCurrentTime(now);
-            Platform.runLater(() -> {
-                iconPane.getChildren().clear();
-                iconPane.getChildren().addAll(icons);
-
-                elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
-                mediaPlayer.seek(now);
-            });
+            refresh(now);
         };
     }
+
+    private void refresh(Duration now){
+        Collection<IconPointColorized> icons = model.setCurrentTime(now);
+        Platform.runLater(() -> {
+            iconPane.getChildren().clear();
+            iconPane.getChildren().addAll(icons);
+
+            elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
+            mediaPlayer.seek(now);
+        });
+    }
+
     private ChangeListener<Duration> currentTimeListener(){
         return (observable, oldValue, newValue) -> {
             Collection<IconPointColorized> icons = model.setCurrentTime(newValue);
@@ -349,7 +360,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             start = Duration.ZERO;
         }
 
-        final Duration now = start;
+        refresh(start);
     }
 
     private Image getImage(String path) {
@@ -358,7 +369,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void addPoint(Point point) {
         markers.put(point.getId().toString(), point.getStart());
-        iconPane.getChildren().add(model.getIcon(point.getId().toString()));
+
+        Platform.runLater(() -> {
+            iconPane.getChildren().add(model.getIcon(point.getId().toString()));
+        });
     }
 
     public void refreshOpacity(Double opacity) {
@@ -374,6 +388,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void removePoint(Point point) {
         markers.remove(point.getId().toString());
-        iconPane.getChildren().remove(point.getIconPoint());
+        Platform.runLater(() ->{
+            iconPane.getChildren().remove(point.getIconPoint());
+        });
+    }
+
+    public void rewind(Duration now) {
+        refresh(now);
     }
 }

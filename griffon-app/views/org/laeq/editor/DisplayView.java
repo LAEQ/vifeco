@@ -148,11 +148,15 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     }
 
     public void pause() {
-        mediaPlayer.pause();
+        runInsideUIAsync(() -> {
+            mediaPlayer.pause();
+        });
     }
 
     public void play() {
-        mediaPlayer.play();
+        runInsideUIAsync(() -> {
+            mediaPlayer.play();
+        });
     }
 
     public void seek(Duration currentTime) {

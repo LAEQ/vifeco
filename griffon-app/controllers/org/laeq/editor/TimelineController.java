@@ -59,7 +59,7 @@ public class TimelineController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
     public void updateCurrentTime(Duration start) {
-        System.out.println("update current time " + start);
+        getApplication().getEventRouter().publishEventOutsideUI("row.currentTime", Arrays.asList(start));
     }
 
     @ControllerAction

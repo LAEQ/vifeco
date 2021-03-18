@@ -94,6 +94,7 @@ public class PlayerController extends AbstractGriffonController {
                     getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
                     getApplication().getEventRouter().publishEventOutsideUI("point.added", Arrays.asList(point));
                 } catch (Exception e) {
+                    e.printStackTrace();
                     getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
                 }
             });
@@ -172,6 +173,10 @@ public class PlayerController extends AbstractGriffonController {
         list.put("size.change", objects -> {
             model.controls.size.set((Double) objects[0]);
             view.refreshSize((Double) objects[0]);
+        });
+
+        list.put("row.currentTime", objects -> {
+            view.rewind((Duration) objects[0]);
         });
 
         return list;
