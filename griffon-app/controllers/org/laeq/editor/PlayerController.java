@@ -103,21 +103,33 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void deletePoint(Point point) {
-        try{
-            dbService.pointDAO.delete(point);
-            model.removePoint(point);
-            view.removePoint(point);
-            getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
-            getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
-        }catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
-        }
+        runOutsideUIAsync(() -> {
+            try{
+                dbService.pointDAO.delete(point);
+                model.removePoint(point);
+                view.removePoint(point);
+                getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
+                getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
+            }catch (Exception e){
+                getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
+            }
+        });
+
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void rewind(){
-        view.rewind();
+        runInsideUIAsync(() ->{
+            Duration start = view.getCurrentTime().subtract(Duration.seconds(30));
+            if(start.lessThan(Duration.ZERO)){
+                start = Duration.ZERO;
+            }
+
+            view.rewind(start);
+            getApplication().getEventRouter().publishEvent("player.currentTime", Arrays.asList(start));
+        });
+
     }
 
     @ControllerAction
@@ -180,13 +192,21 @@ public class PlayerController extends AbstractGriffonController {
             view.rewind((Duration) objects[0]);
         });
 
+        list.put("volume.change", objects -> {
+            view.refreshVolume((Double) objects[0]);
+        });
+
+        list.put("point.delete", objects -> {
+            deletePoint((Point) objects[0]);
+        });
+
         return list;
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void updateCurrentTime(Duration start) {
-        getApplication().getEventRouter().publishEvent("player.currentTime", Arrays.asList(start));
+        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
     }
 
     public void deletePoint(IconPointColorized icon) {

@@ -65,6 +65,6 @@ public class TimelineController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
     public void deletePoint(Point point) {
-        System.out.println("update current time " + point);
+        getApplication().getEventRouter().publishEventOutsideUI("point.delete", Arrays.asList(point));
     }
 }
