@@ -201,7 +201,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 });
             });
 
-            mediaPlayer.rateProperty().bind(model.controls.speed);
+
             iconPane.setOnMouseMoved(mousemove());
             iconPane.setOnMouseExited(mouseexit());
             iconPane.setOnMouseEntered(mouseenter());
@@ -376,14 +376,19 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void refreshOpacity(Double opacity) {
-        iconPane.getChildren().forEach(node -> node.setOpacity(opacity));
+        Platform.runLater(() ->{
+            iconPane.getChildren().forEach(node -> node.setOpacity(opacity));
+        });
     }
 
     public void refreshSize(Double size) {
-        iconPane.getChildren().forEach(node -> {
-            node.setScaleX(size / 100);
-            node.setScaleY(size / 100);
+        Platform.runLater(() -> {
+            iconPane.getChildren().forEach(node -> {
+                node.setScaleX(size / 100);
+                node.setScaleY(size / 100);
+            });
         });
+
     }
 
     public void removePoint(Point point) {
@@ -395,5 +400,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void rewind(Duration now) {
         refresh(now);
+    }
+
+    public void refreshRate(Double rate) {
+        Platform.runLater(()->{
+            mediaPlayer.setRate(rate);
+        });
     }
 }

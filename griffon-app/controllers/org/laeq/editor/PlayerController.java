@@ -161,6 +161,7 @@ public class PlayerController extends AbstractGriffonController {
 
         list.put("speed.change", objects -> {
             model.controls.speed.set((Double) objects[0]);
+            view.refreshRate((Double) objects[0]);
         });
         list.put("opacity.change", objects -> {
             model.controls.opacity.set((Double) objects[0]);

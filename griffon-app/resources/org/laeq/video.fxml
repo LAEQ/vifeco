@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.String?>
-<SplitPane dividerPositions="0.6004464285714286" layoutY="7.0" prefHeight="500.0" prefWidth="1000.0"
+<SplitPane dividerPositions="0.80" layoutY="7.0" prefHeight="450.0" prefWidth="1000.0"
            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.UserController">
     <items>
@@ -64,7 +64,7 @@
                           AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="225.0">
                     <columns>
                         <TableColumn fx:id="icon" prefWidth="75.0"  />
-                        <TableColumn fx:id="category" prefWidth="275.0" JavaFXUtils.i18nKey="z.category" />
+                        <TableColumn fx:id="category" prefWidth="75.0" JavaFXUtils.i18nKey="z.category" />
                         <TableColumn fx:id="count" prefWidth="75.0" JavaFXUtils.i18nKey="z.total" />
                     </columns>
                 </TableView>

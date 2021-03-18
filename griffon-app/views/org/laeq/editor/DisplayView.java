@@ -4,6 +4,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -33,7 +34,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private DisplayModel model;
     @MVCMember @Nonnull File file;
     @MVCMember @Nonnull Duration currentTime;
-    @MVCMember @Nonnull Controls controls;
 
     private MediaPlayer mediaPlayer;
     @FXML private Pane playerPane;
@@ -97,7 +97,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
             volumeActionTarget.setText("");
 
             mediaPlayer.setOnReady(() -> {
-                mediaPlayer.rateProperty().bindBidirectional(controls.speed);
                 controller.isReady();
                 mediaPlayer.play();
                 mediaPlayer.pause();
@@ -160,8 +159,14 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     }
 
     public void seek(Duration currentTime) {
-        runOutsideUIAsync(() -> {
+        Platform.runLater(() -> {
             mediaPlayer.seek(currentTime);
+        });
+    }
+
+    public void refreshRate(Double rate) {
+        Platform.runLater(()->{
+            mediaPlayer.setRate(rate);
         });
     }
 
