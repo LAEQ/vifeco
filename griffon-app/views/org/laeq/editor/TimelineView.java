@@ -9,7 +9,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -19,10 +21,12 @@ import org.laeq.HelperService;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+import org.laeq.model.comparator.CategoryComparator;
 import org.laeq.model.comparator.DurationComparator;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Comparator;
 
 @ArtifactProviderFor(GriffonView.class)
 public class TimelineView extends AbstractJavaFXGriffonView {
@@ -43,6 +47,8 @@ public class TimelineView extends AbstractJavaFXGriffonView {
 
     private MessageSource messageSource;
 
+    private Comparator<Point> comparator;
+
     @Override
     public void initUI() {
         Node node = loadFromFXML();
@@ -51,6 +57,7 @@ public class TimelineView extends AbstractJavaFXGriffonView {
         connectActions(node, controller);
 
         messageSource = getApplication().getMessageSource();
+        comparator = new DurationComparator();
 
         init();
     }
@@ -62,12 +69,29 @@ public class TimelineView extends AbstractJavaFXGriffonView {
         yTD.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getY()));
         delete.setCellFactory(deleteActions());
 
-//        SortedList<Point> points = model.points.sorted(new DurationComparator());
-        FXCollections.sort(model.points);
-        timeline.setItems(model.points);
+        timeline.setOnSort(event ->{
+            ObservableList<TableColumn<Point, ?>> sortOrder = timeline.getSortOrder();
+            System.out.println(sortOrder.size());
+            if(sortOrder.size() > 0){
+                model.comparator = getComparator(sortOrder);
+            }
+        });
+
+        model.sortedList.comparatorProperty().bind(timeline.comparatorProperty());
+
+        timeline.setItems(model.sortedList);
         timeline.setPlaceholder(new Label(""));
         timeline.getSelectionModel().selectedItemProperty().addListener(rowlistener());
-//        points.comparatorProperty().bind(timeline.comparatorProperty());
+    }
+
+    private Comparator<Point> getComparator(ObservableList<TableColumn<Point,?>> sortOrder) {
+        if(sortOrder.get(0).equals(iconTD)){
+            return new CategoryComparator();
+        } else if(sortOrder.get(0).equals(startTD)){
+            return new DurationComparator();
+        } else {
+            return new DurationComparator();
+        }
     }
 
     private String translate(String key) {
@@ -76,7 +100,9 @@ public class TimelineView extends AbstractJavaFXGriffonView {
 
     private ChangeListener<Point> rowlistener(){
         return (observable, oldValue, newValue) -> {
-            controller.updateCurrentTime(newValue.getStart());
+            if(newValue != null){
+                controller.updateCurrentTime(newValue.getStart());
+            }
         };
     }
 
@@ -87,7 +113,9 @@ public class TimelineView extends AbstractJavaFXGriffonView {
                 {
                     delete.setLayoutX(5);
                     delete.getStyleClass().addAll("btn", "btn-danger", "btn-sm");
-                    delete.setOnAction(event -> controller.deletePoint(timeline.getItems().get(getIndex())));
+                    delete.setOnAction(event -> {
+                        controller.deletePoint(timeline.getItems().get(getIndex()));
+                    });
                 }
 
                 @Override
@@ -103,5 +131,13 @@ public class TimelineView extends AbstractJavaFXGriffonView {
 
             return cell;
         };
+    }
+
+    public void clear() {
+        timeline.getSelectionModel().clearSelection();
+    }
+
+    public void refesh() {
+        FXCollections.sort(model.points, comparator);
     }
 }

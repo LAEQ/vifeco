@@ -6,6 +6,7 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -79,7 +80,7 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void addPoint(KeyCode code, Duration currentTime) {
-        if(model.enabled){
+        if(model.isReady.get()){
             runOutsideUIAsync(() -> {
                 Point point = model.generatePoint(code.getName(), currentTime);
 
@@ -190,7 +191,7 @@ public class PlayerController extends AbstractGriffonController {
         });
         list.put("duration.change", objects -> {
             model.controls.duration.set((Double) objects[0]);
-
+            view.setDuration(model.controls.display());
         });
         list.put("size.change", objects -> {
             model.controls.size.set((Double) objects[0]);
@@ -209,6 +210,69 @@ public class PlayerController extends AbstractGriffonController {
             deletePoint((Point) objects[0]);
         });
 
+        list.put("icon.delete", objects -> {
+            deletePoint((IconPointColorized) objects[0]);
+        });
+
+        list.put("slider.release", objects -> {
+            Duration now = video.getDuration().multiply((Double) objects[0] / 100);
+            view.sliderReleased(now);
+        });
+
+        list.put("slider.pressed", objects -> {
+            view.sliderPressed();
+        });
+
+        list.put("slider.currentTime", objects -> {
+            Duration now = video.getDuration().multiply((Double) objects[0] / 100);
+            view.sliderCurrentTime(now);
+        });
+
+        list.put("mouse.position", objects -> {
+            model.setMousePosition((Point2D) objects[0]);
+        });
+
+        list.put("speed.change", objects -> {
+            model.controls.speed.set((Double) objects[0]);
+            view.refreshRate((Double) objects[0]);
+        });
+
+        list.put("speed.up", objects -> {
+            runInsideUIAsync(() ->{
+                model.controls.speedUp();
+            });
+
+            view.refreshRate(model.controls.speed.getValue());
+        });
+
+        list.put("speed.down", objects -> {
+            runInsideUIAsync(() -> {
+                model.controls.speedDown();
+            });
+
+            view.refreshRate(model.controls.speed.getValue());
+        });
+
+        list.put("player.forward.5", objects -> {
+            Duration start = view.getCurrentTime().add(Duration.seconds(5));
+            if(start.greaterThan(video.getDuration())){
+                return;
+            }
+
+            view.rewind(start);
+            getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+        });
+
+        list.put("player.rewind.5", objects -> {
+            Duration start = view.getCurrentTime().subtract(Duration.seconds(5));
+            if(start.lessThan(Duration.ZERO)){
+                return;
+            }
+
+            view.rewind(start);
+            getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+        });
+
         return list;
     }
 
@@ -219,6 +283,10 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     public void deletePoint(IconPointColorized icon) {
+        if(icon == null){
+            return;
+        }
+
         Optional<Point> point = model.getPointFromIcon(icon);
 
         if(point.isPresent()){

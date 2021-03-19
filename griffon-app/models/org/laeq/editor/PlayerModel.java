@@ -41,8 +41,6 @@ final public class PlayerModel extends AbstractGriffonModel {
 
     public Point2D mousePosition;
 
-    public Boolean enabled = new Boolean(false);
-
     public void setVideo(@Nonnull Video video){
         this.video = video;
 

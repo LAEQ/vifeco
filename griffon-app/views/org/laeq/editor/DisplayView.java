@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Icon;
+import org.laeq.model.Video;
 import org.laeq.model.icon.IconSVG;
 
 import javax.annotation.Nonnull;
@@ -42,8 +43,12 @@ public class DisplayView extends AbstractJavaFXGriffonView {
 
     public Stage stage;
 
+    private Boolean isPlaying = false;
+;
+
     private Icon volumeOn = new Icon(IconSVG.volumeOn, org.laeq.model.icon.Color.white);
     private Icon volumeOff = new Icon(IconSVG.volumeOff, org.laeq.model.icon.Color.white);
+    public Duration videoDuration;
 
     @Override
     public void initUI() {
@@ -52,7 +57,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         stage.getIcons().add( getImage("favicon-32x32.png"));
         stage.setScene(init());
         stage.sizeToScene();
-        stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(false);
         initPlayer();
 
         getApplication().getWindowManager().attach("display", stage);
@@ -101,6 +106,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
                 mediaPlayer.play();
                 mediaPlayer.pause();
                 runOutsideUIAsync(() -> mediaPlayer.seek(currentTime));
+                videoDuration = mediaPlayer.getTotalDuration();
             });
 
             mediaPlayer.setOnError(() -> {
@@ -147,30 +153,48 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     }
 
     public void pause() {
+        isPlaying = false;
         runInsideUIAsync(() -> {
             mediaPlayer.pause();
         });
     }
 
     public void play() {
+        isPlaying = true;
         runInsideUIAsync(() -> {
             mediaPlayer.play();
         });
     }
 
     public void seek(Duration currentTime) {
+
         Platform.runLater(() -> {
+            mediaPlayer.pause();
             mediaPlayer.seek(currentTime);
+
+            if(isPlaying){
+                mediaPlayer.play();
+            }
         });
     }
 
     public void refreshRate(Double rate) {
         Platform.runLater(()->{
+            mediaPlayer.pause();
             mediaPlayer.setRate(rate);
+            if(isPlaying){
+                mediaPlayer.play();
+            }
         });
     }
 
     private Image getImage(String path) {
         return new Image(getClass().getClassLoader().getResourceAsStream(path));
+    }
+
+    public void sliderPressed() {
+        Platform.runLater(() -> {
+            mediaPlayer.pause();
+        });
     }
 }

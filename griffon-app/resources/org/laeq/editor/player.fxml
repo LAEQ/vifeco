@@ -2,12 +2,13 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.media.MediaView?>
+<?import org.laeq.editor.IconPane?>
+<?import org.laeq.editor.VideoSlider?>
 
 <SplitPane dividerPositions="0.7190184049079754" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.editor.PlayerController">
 <items>
@@ -16,7 +17,7 @@
             <AnchorPane layoutX="34.0" layoutY="24.0" prefHeight="337.0" prefWidth="562.0" style="-fx-background-color: #dddddd;" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0">
                 <Pane fx:id="playerPane" layoutX="14.0" layoutY="23.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="25.0">
                     <MediaView fx:id="mediaView" fitHeight="${playerPane.height}" fitWidth="${playerPane.width}" layoutX="1.0" />
-                    <Pane fx:id="iconPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: #aaaaaa;" />
+                    <IconPane fx:id="iconPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: #aaaaaa;" />
                 </Pane>
             </AnchorPane>
             <!-- Player Buttons -->
@@ -27,8 +28,8 @@
             <Button fx:id="rewindActionTarget" layoutX="237.0" layoutY="612.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="200.0" />
             <Button fx:id="forwardActionTarget" layoutX="302.0" layoutY="612.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="300.0" />
 
-            <Slider fx:id="slider" layoutX="10.0" layoutY="390.0" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-            <Label fx:id="title" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="537.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="153.0" AnchorPane.topAnchor="5.0" />
+            <VideoSlider fx:id="slider" layoutX="10.0" layoutY="390.0" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+            <Label fx:id="title" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="537.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="453.0" AnchorPane.topAnchor="5.0" />
             <Label fx:id="duration" layoutX="615.0" layoutY="617.0" prefHeight="16.0" prefWidth="80.0" text="00:00:00" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="10.0" />
             <TextField fx:id="elapsed" alignment="BOTTOM_RIGHT" layoutX="429.0" layoutY="612.0" prefHeight="26.0" prefWidth="102.0" text="0:00:00" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="100.0" />
         </children>

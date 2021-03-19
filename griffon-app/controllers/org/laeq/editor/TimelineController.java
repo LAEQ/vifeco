@@ -47,10 +47,13 @@ public class TimelineController extends AbstractGriffonController {
 
         list.put("point.added", objects ->{
             model.points.add((Point) objects[0]);
+            view.refesh();
         });
 
         list.put("point.deleted", objects ->{
+            view.clear();
             model.points.remove(objects[0]);
+            view.refesh();
         });
 
         return list;

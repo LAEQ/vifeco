@@ -6,6 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 import org.laeq.model.Category;
 
 
@@ -16,9 +17,11 @@ public class IconPointColorized extends IconPoint {
     private final EventHandler<MouseEvent> mouseEnter;
     private final EventHandler<MouseEvent> mouseExit;
     private boolean isColorized = false;
+    private Duration start;
 
-    public IconPointColorized(IconSize iconSize) {
+    public IconPointColorized(IconSize iconSize, Duration start) {
         super(iconSize);
+        this.start = start;
         circle2 = generateCircle();
         circle2.setFill(Paint.valueOf(iconSize.category.getColor()));
         circleOver = generateCircle();
@@ -37,6 +40,10 @@ public class IconPointColorized extends IconPoint {
         mouseExit = event -> reset();
 
         listener();
+    }
+
+    public boolean obsolete(Duration now){
+        return start.lessThan(now);
     }
 
     @Override
