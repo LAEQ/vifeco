@@ -137,7 +137,7 @@
                         </li>
                     </ul>
                     <p class="alert alert-warning">
-                        L'utilisateur, la collection et les catégories doivent être présents dans la base de données.
+                        L'identifiant (id) de l'utilisateur et des catégories doivent être présents dans la base de données.
                     </p>
                 </td>
             </tr>
@@ -150,10 +150,11 @@
         </table>
         <hr/>
         <hr/>
-        <h2>Contrôles de la vidéo</h2>
+        <h2>Contrôles & raccourcis clavier</h2>
         <table class="table">
             <thead>
             <tr>
+                <th>Icône</th>
                 <th>titre</th>
                 <th>Min</th>
                 <th>Max</th>
@@ -161,24 +162,69 @@
             </thead>
             <tbody>
             <tr>
+                <td><img src="images/icons/rate.png"/></td>
                 <td>vitesse de lecture</td>
-                <td>0.25</td>
-                <td>2</td>
+                <td>0</td>
+                <td>10</td>
             </tr>
             <tr>
+                <td><img src="images/icons/volume.png"/></td>
+                <td>volume</td>
+                <td>0</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><img src="images/icons/size.png"/></td>
                 <td>taille d'affichage des icônes</td>
                 <td>10</td>
-                <td>80</td>
+                <td>100</td>
             </tr>
             <tr>
+                <td><img src="images/icons/duration.png"/></td>
                 <td>durée d'affichage des icônes en secondes</td>
                 <td>1</td>
                 <td>30</td>
             </tr>
             <tr>
+                <td><img src="images/icons/opacity.png"/></td>
                 <td>transparence des icônes</td>
                 <td>0.1</td>
                 <td>1</td>
+            </tr>
+            </tbody>
+        </table>
+        <h3>Évènements souris et clavier avec pointeur souris au dessus de la vidéo</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Touche</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>souris bouton gauche</td>
+                <td>recule 5 secondes</td>
+            </tr>
+            <tr>
+                <td>souris bouton droit</td>
+                <td>avance 5 seconds</td>
+            </tr>
+            <tr>
+                <td>souris roulette arrière</td>
+                <td>vitesse de lecture - 0.1</td>
+            </tr>
+            <tr>
+                <td>souris roulette avant</td>
+                <td>vitesse de lecture + 0.1</td>
+            </tr>
+            <tr>
+                <td>cliquer sur l'icône</td>
+                <td>suppression d'une  icône</td>
+            </tr>
+            <tr>
+                <td>Raccourcis clavier définis pour chaque catégorie</td>
+                <td>permet d'ajouter une icône sur la vidéo (avec la position du pointeur de la souris et à l'instant courant de la vidéo).</td>
             </tr>
             </tbody>
         </table>
