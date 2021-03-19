@@ -20,14 +20,12 @@ public class VideoSlider extends Slider {
     public VideoSlider() {
         clicks = EventStreams.eventsOf(this, MouseEvent.MOUSE_RELEASED);
         clicks.subscribe(parent -> {
-//            System.out.println("slider release");
             router.publishEventAsync("slider.release", Arrays.asList(this.valueProperty().get()));
             dispose();
         });
 
         pressed = EventStreams.eventsOf(this, MouseEvent.MOUSE_PRESSED);
         pressed.subscribe( pressedValue -> {
-//            System.out.println("slider pressed");
             router.publishEventAsync("slider.pressed"); 
             subscribe();
         });
@@ -44,7 +42,6 @@ public class VideoSlider extends Slider {
         EventStream<MouseEvent> mouseEventEventStream = EventStreams.eventsOf(this, MouseEvent.MOUSE_PRESSED);
         EventStream<Tuple2<MouseEvent, Number>> combine = EventStreams.combine(mouseEventEventStream, value);
         manageSubscription(combine.subscribe( tuple -> {
-            System.out.println("slider.currentTime");
             router.publishEventAsync("slider.currentTime", Arrays.asList(tuple._2));
         }));
     }

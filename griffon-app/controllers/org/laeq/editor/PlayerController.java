@@ -273,6 +273,14 @@ public class PlayerController extends AbstractGriffonController {
             getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
         });
 
+        list.put("elapsed.focus.on", objects -> {
+            stop();
+        });
+
+        list.put("elapsed.currentTime", objects -> {
+            view.rewind((Duration) objects[0]);
+        });
+
         return list;
     }
 

@@ -82,6 +82,10 @@ public class DisplayController extends AbstractGriffonController {
             view.seek(now);
         });
 
+        list.put("elapsed.currentTime", objects -> {
+            view.seek((Duration) objects[0]);
+        });
+
         return list;
     }
 

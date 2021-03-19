@@ -14,8 +14,6 @@ import org.laeq.model.icon.IconPointColorized;
 import org.reactfx.EventStream;
 import org.reactfx.EventStreams;
 import org.reactfx.Subscription;
-
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 
@@ -25,7 +23,6 @@ public class IconPane extends Pane {
 
     public IconPane() {
         EventStream<MouseEvent> clicks = EventStreams.eventsOf(this, MouseEvent.MOUSE_CLICKED);
-//        EventStream<MouseEvent> clickIcon = clicks.map(event -> event);
 
         manageSubscription(clicks.subscribe(event -> {
             if(event.isControlDown()){

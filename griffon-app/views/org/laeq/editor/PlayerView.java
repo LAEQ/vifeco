@@ -53,12 +53,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private Video video;
 
-    @Inject private HelperService helperService;
-
     private Scene scene;
 
     @FXML public Label title;
-
     @FXML public AnchorPane timeline;
     @FXML public AnchorPane summary;
 
@@ -68,7 +65,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private MediaView mediaView;
     @FXML private IconPane iconPane;
     @FXML private VideoSlider slider;
-    @FXML private TextField elapsed;
+    @FXML private ElapsedText elapsed;
     @FXML private Label duration;
 
     @FXML private Button addActionTarget;
@@ -82,12 +79,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private Double videoDuration;
 
     public ObservableMap<String, Duration> markers;
-
     public Subscription currentTimeSubscription;
-
-    private MessageSource messageSource;
-    private ChangeListener<String> elapListen = elapsedListener();
-    private EventHandler<KeyEvent> elapKeyListen = elapsedKeyPressed();
 
     private ChangeListener<? super Duration> currentTimeListener = currentTimeListener();
     private Duration display;
@@ -146,16 +138,17 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         iconPane.setEventRouter(getApplication().getEventRouter());
         slider.setEventRouter(getApplication().getEventRouter());
+        elapsed.setEventRouter(getApplication().getEventRouter());
 
         initPlayer();
     }
 
     private Scene init() {
-        Scene scene = new Scene(new Group());
+        final Scene scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
         scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
 
-        Node node = loadFromFXML();
+        final Node node = loadFromFXML();
 
         if (node instanceof Parent) {
             scene.setRoot((Parent) node);
@@ -172,8 +165,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     private void initPlayer(){
         try {
-            File file = new File(video.getPath());
-            Media media = new Media(file.getCanonicalFile().toURI().toString());
+            final File file = new File(video.getPath());
+            final Media media = new Media(file.getCanonicalFile().toURI().toString());
 
             videoDuration = video.getDuration().toMillis();
             display = model.controls.display();
@@ -185,7 +178,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
             mediaPlayer = new MediaPlayer(media);
             mediaView.setMediaPlayer(mediaPlayer);
-
 
             //mediaPlayer Event listeners
             mediaPlayer.setOnReady(() ->{
@@ -226,20 +218,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             //Mouse, Keyboard events
             scene.setOnKeyReleased(keyReleased());
 
-//            elapsed.focusedProperty().addListener((observable, oldValue, newValue) -> {
-//                if(newValue){
-//                    getApplication().getEventRouter().publishEventOutsideUI("player.pause");
-//                    removePlayingListeners();
-//                    mediaPlayer.pause();
-//
-//                    elapsed.textProperty().addListener(elapListen);
-//                    elapsed.setOnKeyPressed(elapKeyListen);
-//                }else{
-//                    elapsed.textProperty().removeListener(elapListen);
-//                    elapsed.removeEventFilter(KeyEvent.KEY_PRESSED, elapKeyListen);
-//                }
-//            });
-
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
         }
@@ -253,34 +231,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     public void pause(){
         mediaPlayer.currentTimeProperty().removeListener(currentTimeListener);
         mediaPlayer.pause();
-    }
-
-    // Mouse and keyboard events
-    private EventHandler<KeyEvent> elapsedKeyPressed(){
-        return event -> {
-            if( event.getCode() == KeyCode.ENTER ) {
-                String time = elapsed.textProperty().get();
-
-                if(helperService.validTimeString(time)){
-                    String[] split = time.split(":");
-                    Double hours = Double.parseDouble(split[0]);
-                    Double minutes = Double.parseDouble(split[1]);
-                    Double seconds = Double.parseDouble(split[2]);
-
-                    Duration seekDuration = Duration.hours(hours).add(Duration.minutes(minutes)).add(Duration.seconds(seconds));
-                    elapsed.setFocusTraversable(false);
-                    mediaPlayer.seek(seekDuration);
-                    controller.updateCurrentTime(seekDuration);
-                }
-            }
-        };
-    }
-    private ChangeListener<String> elapsedListener(){
-        return (observable, oldValue, newValue) -> {
-            if(HelperService.validTimeString(newValue) == false){
-                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("duration.pattern.invalid"));
-            }
-        };
     }
 
     private EventHandler<? super KeyEvent> keyReleased() {
@@ -297,7 +247,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     private void refresh(Duration now){
        runOutsideUIAsync(() -> {
-           Collection<IconPointColorized> icons = model.setCurrentTime(now);
+           final Collection<IconPointColorized> icons = model.setCurrentTime(now);
            mediaPlayer.pause();
 
            Platform.runLater(() -> {
@@ -316,7 +266,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private ChangeListener<Duration> currentTimeListener(){
         return (observable, oldValue, newValue) -> {
             Platform.runLater(() -> {
-                double now = newValue.toMillis();
+                final double now = newValue.toMillis();
                 Duration before = newValue.subtract(display);
                 slider.setValue(now / videoDuration * 100.0);
                 elapsed.setText(DurationFormatUtils.formatDuration((long) now, "HH:mm:ss"));
