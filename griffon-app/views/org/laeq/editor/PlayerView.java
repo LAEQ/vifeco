@@ -1,7 +1,6 @@
 package org.laeq.editor;
 
 import griffon.core.artifact.GriffonView;
-import griffon.core.i18n.MessageSource;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
@@ -9,16 +8,14 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -29,23 +26,16 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.HelperService;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconSVG;
-import org.reactfx.Change;
-import org.reactfx.EventStream;
-import org.reactfx.EventStreams;
 import org.reactfx.Subscription;
-import org.reactfx.value.Val;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.io.File;
 import java.util.*;
-import java.util.function.Consumer;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView {

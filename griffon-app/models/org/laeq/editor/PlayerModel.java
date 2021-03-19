@@ -14,8 +14,12 @@ import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
+
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonModel.class)

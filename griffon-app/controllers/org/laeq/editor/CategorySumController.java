@@ -8,12 +8,9 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.laeq.DatabaseService;
 import org.laeq.model.Point;
-import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,11 +1,9 @@
 package org.laeq.editor;
 
 import griffon.core.event.EventRouter;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -14,6 +12,7 @@ import org.laeq.model.icon.IconPointColorized;
 import org.reactfx.EventStream;
 import org.reactfx.EventStreams;
 import org.reactfx.Subscription;
+
 import java.util.Arrays;
 
 

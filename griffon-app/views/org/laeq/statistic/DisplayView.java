@@ -22,10 +22,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.model.icon.IconPointColorized;
-import org.laeq.model.icon.IconSize;
 import org.laeq.model.statistic.MatchedPoint;
 
 import javax.annotation.Nonnull;

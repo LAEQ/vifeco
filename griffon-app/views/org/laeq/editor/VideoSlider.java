@@ -7,6 +7,7 @@ import org.reactfx.EventStream;
 import org.reactfx.EventStreams;
 import org.reactfx.Subscription;
 import org.reactfx.util.Tuple2;
+
 import java.util.Arrays;
 
 
@@ -37,7 +38,6 @@ public class VideoSlider extends Slider {
     }
 
     void subscribe(){
-        System.out.println("subscribe");
         EventStream<Number> value = EventStreams.valuesOf(this.valueProperty());
         EventStream<MouseEvent> mouseEventEventStream = EventStreams.eventsOf(this, MouseEvent.MOUSE_PRESSED);
         EventStream<Tuple2<MouseEvent, Number>> combine = EventStreams.combine(mouseEventEventStream, value);
