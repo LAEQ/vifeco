@@ -21,7 +21,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Icon;
-import org.laeq.model.Video;
 import org.laeq.model.icon.IconSVG;
 
 import javax.annotation.Nonnull;

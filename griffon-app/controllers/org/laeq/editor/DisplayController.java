@@ -77,7 +77,6 @@ public class DisplayController extends AbstractGriffonController {
         });
 
         list.put("slider.currentTime", objects -> {
-            System.out.println("slider.currentTime");
             Duration now = view.videoDuration.multiply((Double) objects[0] / 100);
             view.seek(now);
         });

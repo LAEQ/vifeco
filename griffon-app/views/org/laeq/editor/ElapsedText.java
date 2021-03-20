@@ -6,7 +6,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
-import org.laeq.HelperService;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
