@@ -1,0 +1,6 @@
+Package: vifeco
+Version: 2.0.0
+Homepage: https://github.com/LAEQ/vifeco
+Architecture: amd64
+Maintainer: David Maignan <davidmaignan@gmail.com>
+Description: Vifeco (video features counter) is a stand-alone  application that makes it possible to manually identify features on a video.
