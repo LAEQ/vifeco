@@ -1,27 +1,47 @@
 #!/usr/bin/env bash
 
+# Preparing the package
+
+APP_NAME=vifeco
 VERSION=2.0.0
-JAR_FILE=vifeco-${VERSION}-all.jar
-SOURCE=build/libs/$JAR_FILE
-DEST=distribution/linux/$JAR_FILE
+JAR_FILE=../ressources/vifeco-${VERSION}-all.jar
+JRE=../jre/linux/jre-11.0.10-full
 
+PACKAGE_DIR=vifeco_${VERSION}_linux_noarch
+APP_DIR=${PACKAGE_DIR}/app
+BIN_DIR=${PACKAGE_DIR}/bin
+RUNTIME=${PACKAGE_DIR}/runtime
 
-# Move to project root
-cd ..
+rm -f ${PACKAGE_DIR}.tar.gz
 
-if [  ! -f $SOURCE ]
-then
-  gradle clean
-  gradle shadowJar
+# Validation
+if [ ! -f ${JAR_FILE} ]; then
+  echo "Missing jar"
+  exit 1
 fi
 
-cp $SOURCE $DEST
+if [ ! -d ${JRE} ]; then
+  echo "JRE is missing"
+  exit 1
+fi
 
-cd distribution/linux
-rm logs/*.log
 
-zip -r vifeco-${VERSION}.zip jre-11.0.10-full $JAR_FILE vifeco.sh logs licence.txt
+# Create structure
+mkdir -p ${PACKAGE_DIR}
+mkdir -p ${APP_DIR}
+mkdir -p ${BIN_DIR}
+mkdir -p ${RUNTIME}
 
-rm $JAR_FILE
-rmdir logs
-rm java_11_vifeco
+cp -r ${JRE}/* ${PACKAGE_DIR}/runtime/
+cp ${JAR_FILE} ${APP_DIR}
+cp vifeco $BIN_DIR
+
+
+tar -czvf ${PACKAGE_DIR}.tar.gz ${PACKAGE_DIR}
+rm -rf ${PACKAGE_DIR}
+
+exit 0
+
+
+
+
