@@ -171,14 +171,17 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
         }
 
         model.currentVideo = "editor";
-        if(model.selectedVideo.getDuration() != Duration.UNKNOWN && model.selectedVideo.getDuration() != Duration.ZERO){
-            Map<String, Object> args = new HashMap<>();
-            args.put("video",model.selectedVideo);
-            createMVCGroup("editor", args);
-        } else {
-            getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("video.media.unsupported", model.selectedVideo.pathToName()));
+        try{
+            if(model.selectedVideo.getDuration() != Duration.UNKNOWN && model.selectedVideo.getDuration() != Duration.ZERO){
+                Map<String, Object> args = new HashMap<>();
+                args.put("video",model.selectedVideo);
+                createMVCGroup("editor", args);
+            } else {
+                getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("video.media.unsupported", model.selectedVideo.pathToName()));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
     }
 
     @ControllerAction

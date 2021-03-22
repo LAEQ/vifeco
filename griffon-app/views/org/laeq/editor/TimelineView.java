@@ -69,7 +69,6 @@ public class TimelineView extends AbstractJavaFXGriffonView {
 
         timeline.setOnSort(event ->{
             ObservableList<TableColumn<Point, ?>> sortOrder = timeline.getSortOrder();
-            System.out.println(sortOrder.size());
             if(sortOrder.size() > 0){
                 model.comparator = getComparator(sortOrder);
             }
@@ -137,5 +136,6 @@ public class TimelineView extends AbstractJavaFXGriffonView {
 
     public void refesh() {
         FXCollections.sort(model.points, comparator);
+        timeline.refresh();
     }
 }

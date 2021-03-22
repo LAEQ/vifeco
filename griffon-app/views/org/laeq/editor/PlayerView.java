@@ -82,6 +82,16 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         createMVCGroup("category_sum", video);
     }
 
+//    @Override
+//    public void mvcGroupDestroy() {
+//        System.out.println("Player view destroying");
+//        mediaPlayer.stop();
+//        mediaPlayer.dispose();
+//        mediaPlayer = null;
+//        iconPane.dispose();
+//        slider.dispose();
+//    }
+
     @Override
     public void initUI() {
         Stage stage = (Stage) getApplication().createApplicationContainer(Collections.<String,Object>emptyMap());
@@ -96,9 +106,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().show("editor");
 
         stage.setOnCloseRequest(event -> {
-            mediaPlayer.stop();
-            iconPane.dispose();
-            slider.dispose();
+            runInsideUISync(()->{
+                mediaPlayer.stop();
+                mediaPlayer.dispose();
+                iconPane.dispose();
+                slider.dispose();
+            });
+
             getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
         });
 
@@ -176,7 +190,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 mediaPlayer.pause();
             });
             mediaPlayer.setOnHalted(() -> {
-                System.out.println("On halted");
+                //noop
             });
             mediaPlayer.setOnMarker(event -> {
                 Platform.runLater(() -> {

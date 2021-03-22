@@ -2,14 +2,10 @@ package org.laeq.editor;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
-import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import griffon.transform.Threading;
-import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Point;
-
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +14,6 @@ import java.util.Map;
 public class CategorySumController extends AbstractGriffonController {
     @MVCMember @Nonnull private CategorySumModel model;
     @MVCMember @Nonnull private CategorySumView view;
-
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
@@ -42,17 +37,5 @@ public class CategorySumController extends AbstractGriffonController {
         });
 
         return list;
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
-    public void updateCurrentTime(Duration start) {
-        System.out.println("update current time " + start);
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
-    public void deletePoint(Point point) {
-        System.out.println("update current time " + point);
     }
 }

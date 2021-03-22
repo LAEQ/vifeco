@@ -63,34 +63,13 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().show("display");
 
         stage.setOnCloseRequest(event -> {
-            mediaPlayer.stop();
+            runInsideUISync(()->{
+                mediaPlayer.stop();
+                mediaPlayer.dispose();
+            });
+
             getApplication().getEventRouter().publishEventAsync("mvc.clean", Arrays.asList("display"));
         });
-    }
-
-
-    private void closeAndDestroy(String name){
-        destroy(name);
-        closeScene(name);
-    }
-
-    private void destroy(String name) {
-        try{
-            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
-            if(group != null){
-                group.destroy();
-            }
-        }catch (Exception e){
-
-        }
-    }
-    private void closeScene(String name){
-        try{
-            Stage window = (Stage) getApplication().getWindowManager().findWindow(name);
-            window.close();
-        }catch (Exception e){
-
-        }
     }
 
     private void initPlayer(){

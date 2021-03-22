@@ -17,7 +17,6 @@ public class ElapsedText extends TextField {
 
     public ElapsedText() {
         this.focusedProperty().addListener( (observable, oldValue, newValue) -> {
-            System.out.println("focued " + newValue);
             if(newValue){
                 router.publishEventOutsideUI("elapsed.focus.on");
             }
