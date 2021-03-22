@@ -6,6 +6,7 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -79,40 +80,66 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void addPoint(KeyCode code, Duration currentTime) {
-        if(model.enabled){
-            Point point = model.generatePoint(code.getName(), currentTime);
+        if(model.isReady.get()){
+            runOutsideUIAsync(() -> {
+                Point point = model.generatePoint(code.getName(), currentTime);
 
-            if(point != null){
+                if(point == null){
+                    return;
+                }
+
                 try {
                     dbService.pointDAO.create(point);
                     model.addPoint(point);
+                    view.addPoint(point);
                     getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
-                    getApplication().getEventRouter().publishEventOutsideUI("point.created");
-                    view.displayPoints();
+                    getApplication().getEventRouter().publishEventOutsideUI("point.added", Arrays.asList(point));
                 } catch (Exception e) {
+                    e.printStackTrace();
                     getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
                 }
-            }
+            });
         }
     }
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void deletePoint(Point point) {
-        try{
-            dbService.pointDAO.delete(point);
-            model.removePoint(point);
+        runOutsideUIAsync(() -> {
+            try{
+                dbService.pointDAO.delete(point);
+                model.removePoint(point);
+                view.removePoint(point);
+                getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
+                getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
+            }catch (Exception e){
+                getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
+            }
+        });
 
-            getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
-            getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
-        }catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
-        }
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void rewind(){
-        view.rewind();
+        Duration start = view.getCurrentTime().subtract(Duration.seconds(30));
+        if(start.lessThan(Duration.ZERO)){
+            start = Duration.ZERO;
+        }
+
+        view.rewind(start);
+        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+}
+
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    public void forward(){
+        Duration start = view.getCurrentTime().add(Duration.seconds(30));
+        if(start.greaterThan(video.getDuration())){
+           return;
+        }
+
+        view.rewind(start);
+        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
     }
 
     @ControllerAction
@@ -156,17 +183,102 @@ public class PlayerController extends AbstractGriffonController {
 
         list.put("speed.change", objects -> {
             model.controls.speed.set((Double) objects[0]);
+            view.refreshRate((Double) objects[0]);
         });
         list.put("opacity.change", objects -> {
             model.controls.opacity.set((Double) objects[0]);
-            model.refreshIcon();
+            view.refreshOpacity((Double) objects[0]);
         });
         list.put("duration.change", objects -> {
             model.controls.duration.set((Double) objects[0]);
+            view.setDuration(model.controls.display());
         });
         list.put("size.change", objects -> {
             model.controls.size.set((Double) objects[0]);
-            model.refreshIcon();
+            view.refreshSize((Double) objects[0]);
+        });
+
+        list.put("row.currentTime", objects -> {
+            view.rewind((Duration) objects[0]);
+        });
+
+        list.put("volume.change", objects -> {
+            view.refreshVolume((Double) objects[0]);
+        });
+
+        list.put("point.delete", objects -> {
+            deletePoint((Point) objects[0]);
+        });
+
+        list.put("icon.delete", objects -> {
+            deletePoint((IconPointColorized) objects[0]);
+        });
+
+        list.put("slider.release", objects -> {
+            Duration now = video.getDuration().multiply((Double) objects[0] / 100);
+            view.sliderReleased(now);
+        });
+
+        list.put("slider.pressed", objects -> {
+            view.sliderPressed();
+        });
+
+        list.put("slider.currentTime", objects -> {
+            Duration now = video.getDuration().multiply((Double) objects[0] / 100);
+            view.sliderCurrentTime(now);
+        });
+
+        list.put("mouse.position", objects -> {
+            model.setMousePosition((Point2D) objects[0]);
+        });
+
+        list.put("speed.change", objects -> {
+            model.controls.speed.set((Double) objects[0]);
+            view.refreshRate((Double) objects[0]);
+        });
+
+        list.put("speed.up", objects -> {
+            runInsideUIAsync(() ->{
+                model.controls.speedUp();
+            });
+
+            view.refreshRate(model.controls.speed.getValue());
+        });
+
+        list.put("speed.down", objects -> {
+            runInsideUIAsync(() -> {
+                model.controls.speedDown();
+            });
+
+            view.refreshRate(model.controls.speed.getValue());
+        });
+
+        list.put("player.forward.5", objects -> {
+            Duration start = view.getCurrentTime().add(Duration.seconds(5));
+            if(start.greaterThan(video.getDuration())){
+                return;
+            }
+
+            view.rewind(start);
+            getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+        });
+
+        list.put("player.rewind.5", objects -> {
+            Duration start = view.getCurrentTime().subtract(Duration.seconds(5));
+            if(start.lessThan(Duration.ZERO)){
+                return;
+            }
+
+            view.rewind(start);
+            getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+        });
+
+        list.put("elapsed.focus.on", objects -> {
+            stop();
+        });
+
+        list.put("elapsed.currentTime", objects -> {
+            view.rewind((Duration) objects[0]);
         });
 
         return list;
@@ -175,10 +287,14 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void updateCurrentTime(Duration start) {
-        getApplication().getEventRouter().publishEvent("player.currentTime", Arrays.asList(start));
+        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
     }
 
     public void deletePoint(IconPointColorized icon) {
+        if(icon == null){
+            return;
+        }
+
         Optional<Point> point = model.getPointFromIcon(icon);
 
         if(point.isPresent()){

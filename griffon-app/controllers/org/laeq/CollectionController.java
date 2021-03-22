@@ -7,12 +7,16 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Collection;
+import org.laeq.model.Point;
+import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonController.class)
 public class CollectionController extends AbstractGriffonController implements CRUDInterface<Collection> {
@@ -40,6 +44,23 @@ public class CollectionController extends AbstractGriffonController implements C
     public void save(){
         try{
             Collection collection = model.getCollection();
+            List<Video> videoList = dbService.videoDAO.findAll();
+
+            videoList.stream().filter(video -> video.getCollection().getId().equals(collection.getId())).forEach(video -> {
+                video.getPoints().stream()
+                        .filter(point -> collection.getCategories().contains(point.getCategory()) == false)
+                        .forEach(point ->
+                                {
+                                    try {
+                                        dbService.pointDAO.delete(point);
+                                    } catch (Exception e) {
+                                        getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.save.error"));
+                                    }
+                                }
+                        );
+
+            });
+
             dbService.collectionDAO.create(collection);
             model.collections.clear();
             model.collections.addAll(dbService.collectionDAO.findAll());

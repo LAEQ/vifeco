@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import griffon.javafx.support.JavaFXUtils?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<TableView fx:id="timeline" prefHeight="200.0" prefWidth="200.0"
+           xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.editor.TimelineController"
+           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <columns>
+        <TableColumn fx:id="iconTD" prefWidth="105.0" JavaFXUtils.i18nKey="z.type" />
+        <TableColumn fx:id="startTD" prefWidth="105.0" JavaFXUtils.i18nKey="z.time" />
+        <TableColumn prefWidth="75.0" text="x" fx:id="xTD" />
+        <TableColumn fx:id="yTD" prefWidth="75.0" text="y" />
+        <TableColumn fx:id="delete" maxWidth="200.0" minWidth="50" prefWidth="100.0" text="" />
+    </columns>
+</TableView>

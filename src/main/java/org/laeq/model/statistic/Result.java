@@ -1,8 +1,8 @@
 package org.laeq.model.statistic;
 
 public class Result{
-    public Integer matched = new Integer(0);
-    public Integer lonely = new Integer(0);
+    public Integer matched = 0;
+    public Integer lonely = 0;
 
     public void addLonely(Integer value){
         lonely += value;

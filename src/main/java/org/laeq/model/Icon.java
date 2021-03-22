@@ -8,7 +8,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 
-public class Icon extends Group {
+public class Icon extends Group implements Comparable<Icon> {
     private double size;
     private final String path;
     private final String color;
@@ -120,5 +120,16 @@ public class Icon extends Group {
 
     public void setContent(String content) {
         this.svg.setContent(content);
+    }
+
+
+    @Override
+    public int compareTo(Icon o) {
+        int i = this.path.compareTo(o.path);
+        if(i != 0) {
+            return i;
+        }
+
+        return this.color.compareTo(o.color);
     }
 }

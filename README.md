@@ -45,6 +45,21 @@ git clone https://github.com/LAEQ/vifeco.git
 gradle test run
 ```
 
+## JavaFX settings
+
+
+
+```jshelllanguage
+-Dprism.order=d3d   # Accelerated graphics pipeline Windows
+-Dprism.order=es2    # Accelerated graphics pipeline Mac / OpenGL context
+-Dprism.order=sw    # Software graphics pipeline
+```
+
+```bash
+jvmArgs '-Dprism.vsync=false'
+jvmArgs '-Djavafx.pulseLogger=true'
+```
+
 > The project will create a folder named **Vifeco** (~/vifeco) and will save all the necessary files to run the project (database, preferences, exports, imports, images, etc.).
 
 

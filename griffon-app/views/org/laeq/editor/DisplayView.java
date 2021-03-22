@@ -4,6 +4,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -33,7 +34,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private DisplayModel model;
     @MVCMember @Nonnull File file;
     @MVCMember @Nonnull Duration currentTime;
-    @MVCMember @Nonnull Controls controls;
 
     private MediaPlayer mediaPlayer;
     @FXML private Pane playerPane;
@@ -42,8 +42,12 @@ public class DisplayView extends AbstractJavaFXGriffonView {
 
     public Stage stage;
 
+    private Boolean isPlaying = false;
+;
+
     private Icon volumeOn = new Icon(IconSVG.volumeOn, org.laeq.model.icon.Color.white);
     private Icon volumeOff = new Icon(IconSVG.volumeOff, org.laeq.model.icon.Color.white);
+    public Duration videoDuration;
 
     @Override
     public void initUI() {
@@ -52,41 +56,20 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         stage.getIcons().add( getImage("favicon-32x32.png"));
         stage.setScene(init());
         stage.sizeToScene();
-        stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(false);
         initPlayer();
 
         getApplication().getWindowManager().attach("display", stage);
         getApplication().getWindowManager().show("display");
 
         stage.setOnCloseRequest(event -> {
-            mediaPlayer.stop();
+            runInsideUISync(()->{
+                mediaPlayer.stop();
+                mediaPlayer.dispose();
+            });
+
             getApplication().getEventRouter().publishEventAsync("mvc.clean", Arrays.asList("display"));
         });
-    }
-
-
-    private void closeAndDestroy(String name){
-        destroy(name);
-        closeScene(name);
-    }
-
-    private void destroy(String name) {
-        try{
-            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
-            if(group != null){
-                group.destroy();
-            }
-        }catch (Exception e){
-
-        }
-    }
-    private void closeScene(String name){
-        try{
-            Stage window = (Stage) getApplication().getWindowManager().findWindow(name);
-            window.close();
-        }catch (Exception e){
-
-        }
     }
 
     private void initPlayer(){
@@ -97,11 +80,11 @@ public class DisplayView extends AbstractJavaFXGriffonView {
             volumeActionTarget.setText("");
 
             mediaPlayer.setOnReady(() -> {
-                mediaPlayer.rateProperty().bindBidirectional(controls.speed);
                 controller.isReady();
                 mediaPlayer.play();
                 mediaPlayer.pause();
                 runOutsideUIAsync(() -> mediaPlayer.seek(currentTime));
+                videoDuration = mediaPlayer.getTotalDuration();
             });
 
             mediaPlayer.setOnError(() -> {
@@ -148,20 +131,48 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     }
 
     public void pause() {
-        mediaPlayer.pause();
+        isPlaying = false;
+        runInsideUIAsync(() -> {
+            mediaPlayer.pause();
+        });
     }
 
     public void play() {
-        mediaPlayer.play();
+        isPlaying = true;
+        runInsideUIAsync(() -> {
+            mediaPlayer.play();
+        });
     }
 
     public void seek(Duration currentTime) {
-        runOutsideUIAsync(() -> {
+
+        Platform.runLater(() -> {
+            mediaPlayer.pause();
             mediaPlayer.seek(currentTime);
+
+            if(isPlaying){
+                mediaPlayer.play();
+            }
+        });
+    }
+
+    public void refreshRate(Double rate) {
+        Platform.runLater(()->{
+            mediaPlayer.pause();
+            mediaPlayer.setRate(rate);
+            if(isPlaying){
+                mediaPlayer.play();
+            }
         });
     }
 
     private Image getImage(String path) {
         return new Image(getClass().getClassLoader().getResourceAsStream(path));
+    }
+
+    public void sliderPressed() {
+        Platform.runLater(() -> {
+            mediaPlayer.pause();
+        });
     }
 }

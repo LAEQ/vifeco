@@ -151,9 +151,9 @@ public class Point implements Comparable<Point> {
     }
 
     @JsonIgnore
-    public IconPointColorized getIconPoint(){
+    public IconPointColorized getIconPoint(Double scale, Double opacity){
         if(this.icon == null){
-            this.icon = new IconPointColorized(new IconSize(category, 100));
+            this.icon = new IconPointColorized(new IconSize(category, 100), this.start);
             icon.decorate();
             icon.setLayoutX(x);
             icon.setLayoutY(y);
@@ -161,6 +161,17 @@ public class Point implements Comparable<Point> {
 
         return this.icon;
     }
+
+    @JsonIgnore
+    public IconPointColorized getIconPoint(){
+        if(this.icon == null){
+            this.icon = new IconPointColorized(new IconSize(category, 100), this.start);
+            icon.decorate();
+        }
+
+        return this.icon;
+    }
+
 
     @JsonIgnore
     public String getStartFormatted(){
@@ -178,7 +189,7 @@ public class Point implements Comparable<Point> {
             return 0;
         }
 
-        return this.start.compareTo(o.start);
+        return this.start.lessThanOrEqualTo(o.start) ? -1 : 1;
     }
 
     @Override

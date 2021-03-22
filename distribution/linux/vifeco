@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+../runtime/bin/java -jar ../app/vifeco-2.0.0-all.jar 2>&1
+

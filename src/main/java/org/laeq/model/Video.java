@@ -55,7 +55,7 @@ public class Video {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "video", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "video", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Point> points = new ArrayList<>();
 
     @CreationTimestamp

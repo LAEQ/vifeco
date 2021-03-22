@@ -171,14 +171,17 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
         }
 
         model.currentVideo = "editor";
-        if(model.selectedVideo.getDuration() != Duration.UNKNOWN && model.selectedVideo.getDuration() != Duration.ZERO){
-            Map<String, Object> args = new HashMap<>();
-            args.put("video",model.selectedVideo);
-            createMVCGroup("editor", args);
-        } else {
-            getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("video.media.unsupported", model.selectedVideo.pathToName()));
+        try{
+            if(model.selectedVideo.getDuration() != Duration.UNKNOWN && model.selectedVideo.getDuration() != Duration.ZERO){
+                Map<String, Object> args = new HashMap<>();
+                args.put("video",model.selectedVideo);
+                createMVCGroup("editor", args);
+            } else {
+                getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("video.media.unsupported", model.selectedVideo.pathToName()));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
     }
 
     @ControllerAction
@@ -263,5 +266,16 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
         });
 
         return list;
+    }
+
+    @ControllerAction
+    @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
+    public void save(Video video) {
+        try{
+            dbService.videoDAO.create(video);
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("video.update.success", video.pathToName()));
+        }catch (Exception e){
+            getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("video.update.error", video.pathToName()));
+        }
     }
 }

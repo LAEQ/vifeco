@@ -58,6 +58,33 @@ public class DisplayController extends AbstractGriffonController {
             view.seek((Duration) objects[0]);
         });
 
+        list.put("speed.change", objects -> {
+            view.refreshRate((Double) objects[0]);
+        });
+
+
+        list.put("row.currentTime", objects -> {
+            view.seek((Duration) objects[0]);
+        });
+
+        list.put("slider.release", objects -> {
+            Duration now = view.videoDuration.multiply((Double) objects[0] / 100);
+            view.seek(now);
+        });
+
+        list.put("slider.pressed", objects -> {
+            view.sliderPressed();
+        });
+
+        list.put("slider.currentTime", objects -> {
+            Duration now = view.videoDuration.multiply((Double) objects[0] / 100);
+            view.seek(now);
+        });
+
+        list.put("elapsed.currentTime", objects -> {
+            view.seek((Duration) objects[0]);
+        });
+
         return list;
     }
 

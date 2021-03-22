@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=vifeco
+Comment=vifeco
+Exec=/usr/local/bin/vifeco
+Icon=/usr/share/vifeco/vifeco.png
+Terminal=false
+Type=Application
+Categories=Video

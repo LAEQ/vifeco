@@ -31,11 +31,13 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     @FXML private Slider size;
     @FXML private Slider duration;
     @FXML private Slider opacity;
+    @FXML private Slider volume;
 
     @FXML private Label speedLabel;
     @FXML private Label durationLabel;
     @FXML private Label opacityLabel;
     @FXML private Label sizeLabel;
+    @FXML private Label volumeLabel;
 
     @MVCMember
     public void setController(@Nonnull ControlsController controller) {
@@ -68,6 +70,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         initDurationSlider();
         initSizeSlider();
         initOpacitySlider();
+        initVolumeSlider();
     }
 
     private void initSpeedSlider() {
@@ -131,6 +134,22 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             opacity.setValue(value);
             opacityLabel.setText(String.format("%.1f", value));
             controller.dispatch("opacity.change", value);
+        });
+    }
+
+    private void initVolumeSlider() {
+        volumeLabel.setText(String.format("%.1f", controls.volume.getValue()));
+        volume.setValue(controls.volume.getValue());
+        volume.setMin(controls.volumeValue[0]);
+        volume.setMax(controls.volumeValue[1]);
+        volume.setMajorTickUnit(.1);
+        volume.setShowTickMarks(true);
+        volume.setShowTickLabels(true);
+        volume.valueProperty().addListener((obs, oldval, newVal) -> {
+            double value = Math.round(newVal.doubleValue() * 10) / 10f;
+            volume.setValue(value);
+            volumeLabel.setText(String.format("%.1f", value));
+            controller.dispatch("volume.change", value);
         });
     }
 

@@ -22,10 +22,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.model.icon.IconPointColorized;
-import org.laeq.model.icon.IconSize;
 import org.laeq.model.statistic.MatchedPoint;
 
 import javax.annotation.Nonnull;
@@ -151,7 +148,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         currentDuration.setText(formatDuration(start));
 
         mp.getPoints().forEach(p -> {
-            iconPane.getChildren().add(getIconPoint(p));
+            iconPane.getChildren().add(p.getIconPoint());
         });
     }
 
@@ -159,14 +156,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         return DurationFormatUtils.formatDuration((long)duration.toMillis(), "H:m:s");
     }
 
-    private IconPointColorized getIconPoint(Point point){
-        IconPointColorized icon = new IconPointColorized(new IconSize(point.getCategory(), 40));
-        icon.decorate();
-        icon.setLayoutX(point.getX() * width.doubleValue());
-        icon.setLayoutY(point.getY() * height.doubleValue());
-
-        return icon;
-    }
 
 
     // build the UI
