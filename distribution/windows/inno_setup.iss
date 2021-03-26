@@ -28,11 +28,12 @@ InfoAfterFile=docs\info_after.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=inno
-OutputBaseFilename=vifeco_setup
+OutputBaseFilename=vifeco_2.0.0_setup
 SetupIconFile=favicon_io\favicon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+UninstallDisplayIcon={app}\{#MyAppExeName}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

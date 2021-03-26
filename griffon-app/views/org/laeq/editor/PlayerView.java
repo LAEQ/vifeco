@@ -314,6 +314,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void rewind(Duration now) {
+        final double value = now.toMillis();
+        slider.setValue(value / videoDuration * 100.0);
+        elapsed.setText(DurationFormatUtils.formatDuration((long) value, "HH:mm:ss"));
         refresh(now);
     }
 

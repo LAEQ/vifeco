@@ -10,7 +10,7 @@ public class Controls {
     public Double[] durationValue = new Double[]{1d, 30d};
     public Double[] volumeValue = new Double[]{0d, 1.0};
 
-    public SimpleDoubleProperty duration = new SimpleDoubleProperty(10);
+    public SimpleDoubleProperty duration = new SimpleDoubleProperty(3);
     public SimpleDoubleProperty speed = new SimpleDoubleProperty(1);
     public SimpleDoubleProperty size = new SimpleDoubleProperty(50);
     public SimpleDoubleProperty opacity = new SimpleDoubleProperty(.7);

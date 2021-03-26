@@ -21,13 +21,12 @@ buildscript {
     }
 }
 
-apply plugin: 'groovy'
+//apply plugin: 'groovy'
 apply plugin: 'org.codehaus.griffon.griffon'
 apply plugin: 'net.nemerosa.versioning'
 apply plugin: 'com.google.osdetector'
 
-ext.platform = osdetector.os != 'osx' ? osdetector.os : 'mac'
-ext.platform = osdetector.os != 'windows' ? osdetector.os : 'win'
+ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
 
 Date buildTimeAndDate = new Date()
 ext {
@@ -95,14 +94,16 @@ task sourceJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
-compileGroovy.enabled = false
-compileJava.options.encoding = 'UTF-8'
+//compileGroovy.enabled = false
+
+
+compileJava {
+    sourceCompatibility = 11
+    targetCompatibility = 11
+    options.encoding = 'UTF-8'
+}
 
 tasks.withType(JavaCompile) {
-    sourceCompatibility = project.sourceCompatibility
-    targetCompatibility = project.targetCompatibility
-
-    options.encoding = 'UTF-8'
     run{
 //        jvmArgs '-Dprism.vsync=false'
         jvmArgs '-Dfile.encoding=UTF-8'
@@ -115,11 +116,11 @@ tasks.withType(JavaCompile) {
     }
 }
 
-tasks.withType(GroovyCompile) {
-    sourceCompatibility = project.sourceCompatibility
-    targetCompatibility = project.targetCompatibility
-    options.encoding = 'UTF-8'
-}
+//tasks.withType(GroovyCompile) {
+//    sourceCompatibility = project.sourceCompatibility
+//    targetCompatibility = project.targetCompatibility
+//    options.encoding = 'UTF-8'
+//}
 
 import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer

@@ -2,12 +2,17 @@ package org.laeq;
 
 import griffon.core.artifact.GriffonService;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import org.laeq.model.Category;
 import org.laeq.model.Collection;
 import org.laeq.model.User;
+import org.laeq.model.Video;
 import org.laeq.model.dao.*;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,14 +82,19 @@ public class DatabaseService extends AbstractGriffonService{
         collection2.addCategory(categories.get(0));
 
         this.collectionDAO.create(collection2);
-//
-//        Video video = new Video();
-//        video.setPath("/home/david/Videos/sample.mp4");
-//        video.setCollection(collection);
-//        video.setUser(defaultUser);
-//        video.setDuration(Duration.millis(1000));
-//
-//        videoDAO.create(video);
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL resource = classLoader.getResource("sample/sample.mp4");
+        File file = new File(resource.toURI());
+
+
+        Video video = new Video();
+        video.setPath(file.getAbsolutePath());
+        video.setCollection(collection);
+        video.setUser(defaultUser);
+        video.setDuration(Duration.seconds(22));
+
+        videoDAO.create(video);
     }
     
     private List<Category> getCategoryFixtures(){
