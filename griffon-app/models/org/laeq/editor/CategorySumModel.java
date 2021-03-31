@@ -11,6 +11,7 @@ import org.laeq.model.Point;
 import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 @ArtifactProviderFor(GriffonModel.class)
 final public class CategorySumModel extends AbstractGriffonModel {
@@ -24,10 +25,16 @@ final public class CategorySumModel extends AbstractGriffonModel {
     }
 
     public void addPoint(Point point) {
-        summary.stream().filter(c -> c.category.equals(point.getCategory())).findFirst().get().increment();
+        Optional<CategoryCount> first = summary.stream().filter(c -> c.category.equals(point.getCategory())).findFirst();
+        if(first.isPresent()){
+            first.get().increment();
+        }
     }
 
     public void removePoint(Point point) {
-        summary.stream().filter(c -> c.category.equals(point.getCategory())).findFirst().get().decrement();
+        Optional<CategoryCount> first = summary.stream().filter(c -> c.category.equals(point.getCategory())).findFirst();
+        if(first.isPresent()){
+            first.get().decrement();
+        }
     }
 }
