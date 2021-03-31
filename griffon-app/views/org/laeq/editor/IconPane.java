@@ -41,11 +41,11 @@ public class IconPane extends Pane {
         EventStream<Point2D> mouseCoordinates = moves.map(event -> new Point2D(event.getX(), event.getY()));
         manageSubscription(mouseCoordinates.subscribe(point -> router.publishEventOutsideUI("mouse.position", Arrays.asList(point))));
 
-        EventStream<ScrollEvent> scroll = EventStreams.eventsOf(this, ScrollEvent.SCROLL);
-        manageSubscription(scroll.subscribe(scrollEvent -> {
-            String eventName = scrollEvent.getDeltaY() >= 0 ? "speed.up" : "speed.down";
-            router.publishEventOutsideUI(eventName);
-        }));
+//        EventStream<ScrollEvent> scroll = EventStreams.eventsOf(this, ScrollEvent.SCROLL);
+//        manageSubscription(scroll.subscribe(scrollEvent -> {
+//            String eventName = scrollEvent.getDeltaY() >= 0 ? "speed.up" : "speed.down";
+//            router.publishEventOutsideUI(eventName);
+//        }));
     }
 
     void manageSubscription(Subscription other) {

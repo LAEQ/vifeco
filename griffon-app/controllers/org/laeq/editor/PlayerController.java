@@ -237,22 +237,6 @@ public class PlayerController extends AbstractGriffonController {
             view.refreshRate((Double) objects[0]);
         });
 
-        list.put("speed.up", objects -> {
-            runInsideUIAsync(() ->{
-                model.controls.speedUp();
-            });
-
-            view.refreshRate(model.controls.speed.getValue());
-        });
-
-        list.put("speed.down", objects -> {
-            runInsideUIAsync(() -> {
-                model.controls.speedDown();
-            });
-
-            view.refreshRate(model.controls.speed.getValue());
-        });
-
         list.put("player.forward.5", objects -> {
             Duration start = view.getCurrentTime().add(Duration.seconds(5));
             if(start.greaterThan(video.getDuration())){
@@ -282,12 +266,6 @@ public class PlayerController extends AbstractGriffonController {
         });
 
         return list;
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void updateCurrentTime(Duration start) {
-        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
     }
 
     public void deletePoint(IconPointColorized icon) {

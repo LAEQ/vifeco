@@ -62,7 +62,6 @@ public class DisplayController extends AbstractGriffonController {
             view.refreshRate((Double) objects[0]);
         });
 
-
         list.put("row.currentTime", objects -> {
             view.seek((Duration) objects[0]);
         });

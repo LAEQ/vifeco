@@ -57,7 +57,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         stage.getIcons().add( getImage("favicon-32x32.png"));
         stage.setScene(init());
         stage.sizeToScene();
-        stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(false);
         getApplication().getWindowManager().attach("controls", stage);
         getApplication().getWindowManager().show("controls");
 
