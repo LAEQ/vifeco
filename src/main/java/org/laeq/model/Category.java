@@ -40,14 +40,16 @@ public class Category implements Comparable<Category> {
     @Length(min = 1, max = 1)
     private String shortcut;
 
+    @Transient
+    private Boolean selected = Boolean.FALSE;
+
     @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY, mappedBy = "categories")
     private Set<Collection> collections = new HashSet<>();
 
 
-    public Category() {
-    }
+    public Category() { }
 
     public Category(Integer id) {
         this.id = id;
@@ -134,6 +136,14 @@ public class Category implements Comparable<Category> {
 
     public void setCollections(Set<Collection> collections) {
         this.collections = collections;
+    }
+
+    public Boolean getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
     }
 
     @Override

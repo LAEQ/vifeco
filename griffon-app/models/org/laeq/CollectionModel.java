@@ -18,6 +18,7 @@ import java.util.Set;
 @ArtifactProviderFor(GriffonModel.class)
 public class CollectionModel extends AbstractGriffonModel {
     public ObservableList<Collection> collections = FXCollections.observableArrayList();
+    public ObservableList<Category> categories = FXCollections.observableArrayList();
     public Map<Category, SimpleBooleanProperty> categorySBP = new HashMap<>();
     public SimpleStringProperty name = new SimpleStringProperty(this, "name", "");
     public Collection selectedCollection;

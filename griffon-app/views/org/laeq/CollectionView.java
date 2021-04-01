@@ -12,10 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Category;
-import org.laeq.model.CategoryCheckedBox;
-import org.laeq.model.Collection;
-import org.laeq.model.Icon;
+import org.laeq.model.*;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconSVG;
 
@@ -39,6 +36,11 @@ public class CollectionView extends AbstractJavaFXGriffonView {
     @FXML private TableColumn<Collection, Icon> isDefault;
     @FXML private TableColumn<Collection, Void> actions;
 
+    @FXML private TableView<Category> categoryTable;
+    @FXML private TableColumn<Category, CheckBox> checkboxColumn;
+    @FXML private TableColumn<Category, Icon> iconColumn;
+    @FXML private TableColumn<Category, String> categoryColumn;
+
 
     @Override
     public void initUI() {
@@ -47,7 +49,6 @@ public class CollectionView extends AbstractJavaFXGriffonView {
         connectMessageSource(node);
         connectActions(node, controller);
         init();
-        initForm();
     }
 
     private void init(){
@@ -59,29 +60,18 @@ public class CollectionView extends AbstractJavaFXGriffonView {
 
         collectionTable.setItems(this.model.collections);
         model.name.bindBidirectional(nameField.textProperty());
-    }
 
-    public void initForm(){
-        runInsideUIAsync(() -> {
-            double x = 0;
-            double y = 0;
-            double index = 0;
-            for (Category category : model.getCategories()) {
-                CategoryCheckedBox checkedBox = new CategoryCheckedBox(category);
-                checkedBox.setLayoutX(x);
-                checkedBox.setLayoutY(y);
-                x += checkedBox.getWidth() + 20;
-                index++;
+        checkboxColumn.setCellValueFactory(c -> {
+            Category category = c.getValue();
+            CheckBox checkBox = new CheckBox();
+            checkBox.selectedProperty().bindBidirectional(model.categorySBP.get(category));
 
-                if (index != 0 && index % 3 == 0) {
-                    x = 0;
-                    y += 45;
-                }
-
-                categoryContainer.getChildren().add(checkedBox);
-                checkedBox.getBox().selectedProperty().bindBidirectional(model.categorySBP.get(category));
-            }
+            return new SimpleObjectProperty<>(checkBox);
         });
+        iconColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getIcon2()));
+        categoryColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getName()));
+
+        categoryTable.setItems(model.categories);
     }
 
     private Callback<TableColumn<Collection, Void>, TableCell<Collection, Void>> addActions() {
@@ -97,7 +87,10 @@ public class CollectionView extends AbstractJavaFXGriffonView {
 
                     btnGroup.getChildren().addAll(edit, delete);
                     edit.getStyleClass().addAll("btn", "btn-sm", "btn-info");
-                    edit.setOnMouseClicked(event -> model.setSelectedCollection(collectionTable.getItems().get(getIndex())));
+                    edit.setOnMouseClicked(event -> {
+                        model.clear();
+                        model.setSelectedCollection(collectionTable.getItems().get(getIndex()));
+                    });
 
                     delete.getStyleClass().addAll("btn", "btn-sm", "btn-danger");
                     delete.setOnMouseClicked(event ->  controller.delete(collectionTable.getItems().get(getIndex())));

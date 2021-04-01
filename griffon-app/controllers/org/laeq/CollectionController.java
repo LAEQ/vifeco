@@ -7,16 +7,13 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Collection;
-import org.laeq.model.Point;
 import org.laeq.model.Video;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonController.class)
 public class CollectionController extends AbstractGriffonController implements CRUDInterface<Collection> {
@@ -29,12 +26,11 @@ public class CollectionController extends AbstractGriffonController implements C
         try {
             model.collections.addAll(dbService.collectionDAO.findAll());
             model.addCategories(dbService.categoryDAO.findAll());
+            model.categories.addAll(dbService.categoryDAO.findAll());
             getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.collection.fetch.success"));
         } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.fetch.error"));
         }
-
-        view.initForm();
 
         getApplication().getEventRouter().addEventListener(listeners());
     }
