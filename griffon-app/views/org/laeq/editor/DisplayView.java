@@ -187,4 +187,8 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     public void elapsedCurrentTime(Duration now) {
         mediaPlayer.seek(now);
     }
+
+    public void rewind(Duration now) {
+        mediaPlayer.seek(now);
+    }
 }

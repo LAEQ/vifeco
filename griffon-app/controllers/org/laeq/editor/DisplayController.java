@@ -55,7 +55,7 @@ public class DisplayController extends AbstractGriffonController {
         });
 
         list.put("player.rewind", objects -> {
-            System.out.println("rewind" + getApplication().getUIThreadManager().isUIThread());
+            view.rewind((Duration) objects[0]);
         });
 
         list.put("slider.currentTime", objects -> {

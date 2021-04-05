@@ -196,16 +196,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
                 model.width.set(newValue.getWidth());
                 model.height.set(newValue.getHeight());
+
                 iconPane.setPrefWidth(model.width.doubleValue());
                 iconPane.setPrefHeight(model.height.doubleValue());
 
-                runInsideUIAsync(() -> {
-                    double ratioX = newValue.getWidth() * newValue.getWidth();
-                    double ratioY = newValue.getHeight() * newValue.getHeight();
-                    iconPane.getChildren().forEach(node -> {
-                        node.setLayoutX(node.getLayoutX()*ratioX);
-                        node.setLayoutX(node.getLayoutY()*ratioY);
-                    });
+                Platform.runLater(() -> {
+                    final Collection<IconPointColorized> icons = model.setCurrentTime(mediaPlayer.getCurrentTime());
+                    iconPane.getChildren().clear();
+                    iconPane.getChildren().addAll(icons);
                 });
             });
 
@@ -366,5 +364,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void setDuration(Duration display) {
         this.display = display;
+    }
+
+    public void reposition(Double x, Double y) {
+        Platform.runLater(() -> {
+
+        });
     }
 }

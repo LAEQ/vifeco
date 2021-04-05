@@ -224,8 +224,6 @@ public class PlayerController extends AbstractGriffonController {
             model.setMousePosition((Point2D) objects[0]);
         });
 
-
-
         list.put("player.forward.5", objects -> {
             Duration start = view.getCurrentTime().add(Duration.seconds(5));
             if(start.greaterThan(video.getDuration())){

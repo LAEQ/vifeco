@@ -12,6 +12,7 @@ import org.laeq.model.icon.IconPointColorized;
 import org.reactfx.EventStream;
 import org.reactfx.EventStreams;
 import org.reactfx.Subscription;
+import org.reactfx.util.Tuple2;
 
 import java.util.Arrays;
 
