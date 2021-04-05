@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 @ArtifactProviderFor(GriffonController.class)
 public class CollectionController extends AbstractGriffonController implements CRUDInterface<Collection> {
@@ -42,29 +43,31 @@ public class CollectionController extends AbstractGriffonController implements C
             Collection collection = model.getCollection();
             List<Video> videoList = dbService.videoDAO.findAll();
 
+            AtomicReference<Boolean> result = new AtomicReference<>(Boolean.TRUE);
+
             videoList.stream().filter(video -> video.getCollection().getId().equals(collection.getId())).forEach(video -> {
                 video.getPoints().stream()
                         .filter(point -> collection.getCategories().contains(point.getCategory()) == false)
-                        .forEach(point ->
-                                {
-                                    try {
-                                        dbService.pointDAO.delete(point);
-                                    } catch (Exception e) {
-                                        getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.save.error"));
-                                    }
-                                }
-                        );
-
+                        .forEach(point -> {
+                                   if(dbService.pointDAO.delete(point) == false){
+                                       result.set(Boolean.FALSE);
+                                   }
+                        }
+                );
             });
 
-            dbService.collectionDAO.create(collection);
-            model.collections.clear();
-            model.collections.addAll(dbService.collectionDAO.findAll());
-            getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("db.collection.save.success", collection.getName()));
-        }catch (Exception e){
+            if(result.get() && dbService.collectionDAO.create(collection)){
+                if(model.collections.contains(collection) == false){
+                    model.collections.add(collection);
+                }
+                view.refresh();
+                model.clear();
+                getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("db.collection.save.success", collection.getName()));
+            } else {
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.save.error"));
+            }
+        } catch (Exception e){
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.save.error"));
-        }finally {
-            model.clear();
         }
     }
 
@@ -83,15 +86,14 @@ public class CollectionController extends AbstractGriffonController implements C
             return;
         }
 
-        try {
-            dbService.collectionDAO.delete(collection);
-            model.collections.clear();
-            model.collections.addAll(dbService.collectionDAO.findAll());
-            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.collection.delete.success", collection.getName()));
-        } catch (Exception e) {
+       if(dbService.collectionDAO.delete(collection)){
+           if(model.collections.contains(collection) == false){
+               model.collections.add(collection);
+           }
+           view.refresh();
+           getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.collection.delete.success", collection.getName()));
+        } else {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.delete.error"));
-        }finally {
-            model.clear();
         }
     }
 

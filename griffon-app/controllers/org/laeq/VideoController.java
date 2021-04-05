@@ -64,31 +64,23 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
         if(video.getDuration().equals(Duration.UNKNOWN) == false){
             return;
         }
+
         runOutsideUI(() -> {
             File file = new File(video.getPath());
 
             Media media = new Media(file.toURI().toString());
             MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setOnReady(new Runnable() {
-                @Override
-                public void run() {
-                    video.setDuration(media.getDuration());
-                    try {
-                        dbService.videoDAO.create(video);
-                        getApplication().getEventRouter().publishEvent("videolist.refresh");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+            mediaPlayer.setOnReady(() -> {
+                video.setDuration(media.getDuration());
+                try {
+                    dbService.videoDAO.create(video);
+                    getApplication().getEventRouter().publishEvent("videolist.refresh");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
 
-            mediaPlayer.setOnError(new Runnable() {
-                @Override
-                public void run() {
-                    getApplication().getEventRouter().publishEventOutsideUI("status.error", Arrays.asList("video.metadata.error", video.getPath()));
-
-                }
-            });
+            mediaPlayer.setOnError(() -> getApplication().getEventRouter().publishEventOutsideUI("status.error", Arrays.asList("video.metadata.error", video.getPath())));
         });
 
     }
@@ -108,11 +100,11 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void delete(Video video){
-        try{
-            dbService.videoDAO.delete(video);
+        if(dbService.videoDAO.delete(video)){
             model.videoList.remove(video);
+            view.refresh();
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("video.delete.success", video.pathToName()));
-        }  catch (Exception e){
+        }  else {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.delete.error"));
         }
     }
@@ -230,8 +222,31 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
 
     public void select(Video video) {
         model.clear();
-        model.setSelectedVideo(video);
-        getApplication().getEventRouter().publishEventOutsideUI("status.info.parametrized", Arrays.asList("video.details.success", video.pathToName()));
+
+        if(video.getDuration().equals(Duration.UNKNOWN) || video.getDuration().equals(Duration.ZERO)){
+            runOutsideUI(() -> {
+                File file = new File(video.getPath());
+
+                Media media = new Media(file.toURI().toString());
+                MediaPlayer mediaPlayer = new MediaPlayer(media);
+                mediaPlayer.setOnReady(() -> {
+                    video.setDuration(media.getDuration());
+                    model.setSelectedVideo(video);
+                    getApplication().getEventRouter().publishEventOutsideUI("status.info.parametrized", Arrays.asList("video.details.success", video.pathToName()));
+
+                    try {
+                        dbService.videoDAO.create(video);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+                mediaPlayer.setOnError(() -> getApplication().getEventRouter().publishEventOutsideUI("status.error", Arrays.asList("video.metadata.error", video.getPath())));
+            });
+        } else {
+            model.setSelectedVideo(video);
+            getApplication().getEventRouter().publishEventOutsideUI("status.info.parametrized", Arrays.asList("video.details.success", video.pathToName()));
+        }
     }
 
     private void refreshVideoList(){
@@ -271,10 +286,10 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
     public void save(Video video) {
-        try{
-            dbService.videoDAO.create(video);
+        if(dbService.videoDAO.create(video)){
+            view.refresh();
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("video.update.success", video.pathToName()));
-        }catch (Exception e){
+        } else {
             getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("video.update.error", video.pathToName()));
         }
     }

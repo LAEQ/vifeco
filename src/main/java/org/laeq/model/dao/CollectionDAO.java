@@ -11,16 +11,13 @@ public class CollectionDAO extends AbstractDAO<Collection> {
     }
 
     @Override
-    public void create(Collection collection) throws Exception {
-        super.saveOrUpdate(collection);
+    public Boolean create(Collection collection) {
+        return super.saveOrUpdate(collection);
     }
 
     @Override
-    public void delete(Collection collection) throws Exception {
-        if(collection.getDefault() == Boolean.TRUE){
-            throw new Exception("");
-        }
-        super.delete(collection);
+    public Boolean delete(Collection collection) {
+        return super.delete(collection);
     }
 
     @Override

@@ -4,4 +4,4 @@
 <?import javafx.scene.layout.AnchorPane?>
 <Label fx:id="message" layoutX="10.0" layoutY="10.0" prefHeight="16.0" prefWidth="1500.0" minWidth="900"
        AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
-       xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.menu.BottomController"/>
+       xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.menu.BottomController"/>

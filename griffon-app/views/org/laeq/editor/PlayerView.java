@@ -82,16 +82,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         createMVCGroup("category_sum", video);
     }
 
-//    @Override
-//    public void mvcGroupDestroy() {
-//        System.out.println("Player view destroying");
-//        mediaPlayer.stop();
-//        mediaPlayer.dispose();
-//        mediaPlayer = null;
-//        iconPane.dispose();
-//        slider.dispose();
-//    }
-
     @Override
     public void initUI() {
         Stage stage = (Stage) getApplication().createApplicationContainer(Collections.<String,Object>emptyMap());
@@ -239,9 +229,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     private EventHandler<? super KeyEvent> keyReleased() {
         return (EventHandler<KeyEvent>) event -> {
-            runInsideUIAsync(() -> {
-                controller.addPoint(event.getCode(), mediaPlayer.getCurrentTime());
-            });
+            controller.addPoint(event.getCode(), mediaPlayer.getCurrentTime());
         };
     }
 
@@ -270,11 +258,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private ChangeListener<Duration> currentTimeListener(){
         return (observable, oldValue, newValue) -> {
             Platform.runLater(() -> {
-                final double now = newValue.toMillis();
-                Duration before = newValue.subtract(display);
-                slider.setValue(now / videoDuration * 100.0);
-                elapsed.setText(DurationFormatUtils.formatDuration((long) now, "HH:mm:ss"));
-                iconPane.getChildren().removeIf(node -> ((IconPointColorized)node).obsolete(before));
+                if(! slider.isPressed()){
+                    final double now = newValue.toMillis();
+                    Duration before = newValue.subtract(display);
+                    slider.setValue(now / videoDuration * 100.0);
+                    elapsed.setText(DurationFormatUtils.formatDuration((long) now, "HH:mm:ss"));
+                    iconPane.getChildren().removeIf(node -> ((IconPointColorized)node).obsolete(before));
+                }
             });
         };
     }
@@ -314,10 +304,20 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void rewind(Duration now) {
-        final double value = now.toMillis();
-        slider.setValue(value / videoDuration * 100.0);
-        elapsed.setText(DurationFormatUtils.formatDuration((long) value, "HH:mm:ss"));
-        refresh(now);
+        Collection<IconPointColorized> icons = model.setCurrentTime(now);
+        mediaPlayer.pause();
+
+        Platform.runLater(() -> {
+            iconPane.getChildren().clear();
+            iconPane.getChildren().addAll(icons);
+            elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
+            mediaPlayer.seek(now);
+            mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
+
+            if(model.isPlaying.getValue()){
+                mediaPlayer.play();
+            }
+        });
     }
 
     public void refreshRate(Double rate) {
@@ -334,27 +334,33 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void sliderPressed() {
         mediaPlayer.currentTimeProperty().removeListener(currentTimeListener);
-        Platform.runLater(() -> {
-            mediaPlayer.pause();
-        });
+        mediaPlayer.pause();
     }
 
     public void sliderReleased(Duration now) {
-        mediaPlayer.currentTimeProperty().removeListener(currentTimeListener);
-        mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
-        refresh(now);
+        Collection<IconPointColorized> icons = model.setCurrentTime(now);
+
+        Platform.runLater(() -> {
+            iconPane.getChildren().clear();
+            iconPane.getChildren().addAll(icons);
+            elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
+            mediaPlayer.seek(now);
+            mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
+
+            if(model.isPlaying.getValue()){
+                mediaPlayer.play();
+            }
+        });
     }
 
     public void sliderCurrentTime(Duration now) {
-        runOutsideUIAsync(() ->{
-            Collection<IconPointColorized> icons = model.setCurrentTime(now);
-            Platform.runLater(() -> {
-                iconPane.getChildren().clear();
-                iconPane.getChildren().addAll(icons);
+        Collection<IconPointColorized> icons = model.setCurrentTime(now);
+        Platform.runLater(() -> {
+            iconPane.getChildren().clear();
+            iconPane.getChildren().addAll(icons);
 
-                elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
-                mediaPlayer.seek(now);
-            });
+            elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
+            mediaPlayer.seek(now);
         });
     }
 

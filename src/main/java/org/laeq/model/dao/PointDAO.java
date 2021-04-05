@@ -10,13 +10,13 @@ public class PointDAO extends AbstractDAO<Point> {
     }
 
     @Override
-    public void create(Point point) throws Exception {
-        super.saveOrUpdate(point);
+    public Boolean create(Point point)  {
+        return super.saveOrUpdate(point);
     }
 
     @Override
-    public void delete(Point point) throws Exception {
-        super.delete(point);
+    public Boolean delete(Point point)  {
+        return super.delete(point);
     }
 
     @Override

@@ -8,7 +8,6 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Category;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -38,17 +37,18 @@ public class CategoryController extends AbstractGriffonController implements CRU
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     @Override
     public void save(){
-        try{
             Category category = model.getCategory();
-            dbService.categoryDAO.create(category);
-            model.categoryList.clear();
-            model.categoryList.addAll(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.category.save.success", category.getName()));
-            model.clear();
-        } catch (Exception e){
-            model.resetId();
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.category.save.error"));
-        }
+            if(dbService.categoryDAO.create(category)){
+                if(model.categoryList.contains(category) == false){
+                    model.categoryList.addAll(category);
+                }
+
+                model.clear();
+                view.refresh();
+                getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.category.save.success", category.getName()));
+            }else{
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.category.save.error"));
+            }
     }
 
     @ControllerAction
@@ -63,11 +63,11 @@ public class CategoryController extends AbstractGriffonController implements CRU
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     @Override
     public void delete(Category category) {
-        try{
-            dbService.categoryDAO.delete(category);
+        if(dbService.categoryDAO.delete(category)){
             model.categoryList.remove(category);
+            view.refresh();
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.category.delete.success", category.getName()));
-        }  catch (Exception e){
+        }  else {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.category.delete.error"));
         }
     }

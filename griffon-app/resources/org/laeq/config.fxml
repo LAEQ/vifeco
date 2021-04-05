@@ -8,7 +8,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.String?>
-<AnchorPane minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.ConfigController">
+<AnchorPane minHeight="400.0" minWidth="400.0" prefHeight="400.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.ConfigController">
    <children>
       <Label layoutX="433.0" layoutY="14.0" prefHeight="17.0" prefWidth="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" JavaFXUtils.i18nKey="z.language" />
        <ComboBox fx:id="languages" layoutX="433.0" layoutY="42.0" prefWidth="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">

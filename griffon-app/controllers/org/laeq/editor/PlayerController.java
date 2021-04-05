@@ -78,7 +78,6 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void addPoint(KeyCode code, Duration currentTime) {
         if(model.isReady.get()){
             runOutsideUIAsync(() -> {
@@ -88,30 +87,28 @@ public class PlayerController extends AbstractGriffonController {
                     return;
                 }
 
-                try {
-                    dbService.pointDAO.create(point);
+                if(dbService.pointDAO.create(point)){
                     model.addPoint(point);
                     view.addPoint(point);
-                    getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
-                    getApplication().getEventRouter().publishEventOutsideUI("point.added", Arrays.asList(point));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
+                    getApplication().getEventRouter().publishEvent("point.added", Arrays.asList(point));
+                } else {
                     getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
                 }
             });
         }
     }
+
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void deletePoint(Point point) {
         runOutsideUIAsync(() -> {
-            try{
-                dbService.pointDAO.delete(point);
+            if(dbService.pointDAO.delete(point)){
                 model.removePoint(point);
                 view.removePoint(point);
                 getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
                 getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
-            }catch (Exception e){
+            } else {
                 getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
             }
         });
@@ -119,27 +116,27 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void rewind(){
         Duration start = view.getCurrentTime().subtract(Duration.seconds(30));
         if(start.lessThan(Duration.ZERO)){
             start = Duration.ZERO;
         }
 
+        getApplication().getEventRouter().publishEvent("player.rewind", Arrays.asList(start));
         view.rewind(start);
-        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
-}
+    }
 
     @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void forward(){
         Duration start = view.getCurrentTime().add(Duration.seconds(30));
         if(start.greaterThan(video.getDuration())){
            return;
         }
 
+        getApplication().getEventRouter().publishEvent("player.rewind", Arrays.asList(start));
         view.rewind(start);
-        getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
     }
 
     @ControllerAction
@@ -197,32 +194,27 @@ public class PlayerController extends AbstractGriffonController {
             model.controls.size.set((Double) objects[0]);
             view.refreshSize((Double) objects[0]);
         });
+        list.put("volume.change", objects -> {
+            view.refreshVolume((Double) objects[0]);
+        });
 
         list.put("row.currentTime", objects -> {
             view.rewind((Duration) objects[0]);
         });
 
-        list.put("volume.change", objects -> {
-            view.refreshVolume((Double) objects[0]);
-        });
-
         list.put("point.delete", objects -> {
             deletePoint((Point) objects[0]);
         });
-
         list.put("icon.delete", objects -> {
             deletePoint((IconPointColorized) objects[0]);
         });
 
         list.put("slider.release", objects -> {
-            Duration now = video.getDuration().multiply((Double) objects[0] / 100);
-            view.sliderReleased(now);
+            view.sliderReleased(video.getDuration().multiply((Double) objects[0] / 100));
         });
-
         list.put("slider.pressed", objects -> {
             view.sliderPressed();
         });
-
         list.put("slider.currentTime", objects -> {
             Duration now = video.getDuration().multiply((Double) objects[0] / 100);
             view.sliderCurrentTime(now);
@@ -232,10 +224,7 @@ public class PlayerController extends AbstractGriffonController {
             model.setMousePosition((Point2D) objects[0]);
         });
 
-        list.put("speed.change", objects -> {
-            model.controls.speed.set((Double) objects[0]);
-            view.refreshRate((Double) objects[0]);
-        });
+
 
         list.put("player.forward.5", objects -> {
             Duration start = view.getCurrentTime().add(Duration.seconds(5));
@@ -244,9 +233,8 @@ public class PlayerController extends AbstractGriffonController {
             }
 
             view.rewind(start);
-            getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(start));
         });
-
         list.put("player.rewind.5", objects -> {
             Duration start = view.getCurrentTime().subtract(Duration.seconds(5));
             if(start.lessThan(Duration.ZERO)){
@@ -254,13 +242,12 @@ public class PlayerController extends AbstractGriffonController {
             }
 
             view.rewind(start);
-            getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(start));
+            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(start));
         });
 
         list.put("elapsed.focus.on", objects -> {
             stop();
         });
-
         list.put("elapsed.currentTime", objects -> {
             view.rewind((Duration) objects[0]);
         });

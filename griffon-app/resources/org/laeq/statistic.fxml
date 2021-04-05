@@ -5,11 +5,12 @@
 <?import javafx.scene.layout.*?>
 <SplitPane dividerPositions="0.35" prefHeight="800.0" prefWidth="1000.0"
            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
-           xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.StatisticController">
+           xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.StatisticController">
    <items>
       <AnchorPane fx:id="userListPane" minHeight="0.0" minWidth="300.0" prefHeight="363.0" prefWidth="316.0">
          <children>
-            <TableView fx:id="videoTable" layoutX="40.0" layoutY="82.0" prefHeight="314.0" prefWidth="260.0" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TableView fx:id="videoTable" layoutX="40.0" layoutY="82.0" prefHeight="314.0" prefWidth="260.0" AnchorPane.bottomAnchor="49.0"
+                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <columns>
                   <TableColumn fx:id="select" prefWidth="50" />
                   <TableColumn fx:id="name" prefWidth="55.0" JavaFXUtils.i18nKey="z.name" />

@@ -11,13 +11,13 @@ public class VideoDAO extends AbstractDAO<Video> {
     }
 
     @Override
-    public void create(Video video) throws Exception {
-        super.saveOrUpdate(video);
+    public Boolean create(Video video){
+        return super.saveOrUpdate(video);
     }
 
     @Override
-    public void delete(Video video) throws Exception {
-        super.delete(video);
+    public Boolean delete(Video video) {
+        return super.delete(video);
     }
 
     @Override

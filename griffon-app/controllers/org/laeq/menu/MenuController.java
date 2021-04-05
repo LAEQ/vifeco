@@ -82,9 +82,12 @@ public class MenuController extends AbstractGriffonController {
             video.setCollection(defaultCollection);
             video.setUser(defaultUser);
             video.setDuration(Duration.UNKNOWN);
-            dbService.videoDAO.create(video);
-            getApplication().getEventRouter().publishEvent("video.created");
-            getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.create.success"));
+            if(dbService.videoDAO.create(video)){
+                getApplication().getEventRouter().publishEvent("video.created");
+                getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.create.success"));
+            } else{
+                throw new Exception();
+            }
         }catch (Exception e){
             e.printStackTrace();
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));

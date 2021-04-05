@@ -21,7 +21,8 @@ public abstract class AbstractDAO<T> {
         this.hib = hib;
     }
 
-    protected void saveOrUpdate(T obj) throws Exception{
+    protected Boolean saveOrUpdate(T obj) {
+        Boolean result = true;
         try {
 
             ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -35,19 +36,30 @@ public abstract class AbstractDAO<T> {
             startOperation();
             session.saveOrUpdate(obj);
             transaction.commit();
+        } catch (Exception e) {
+            result = false;
+            transaction.rollback();
         } finally {
             session.close();
         }
+
+        return result;
     }
 
-    protected void delete(T obj) throws Exception {
+    protected Boolean delete(T obj)  {
+        Boolean result = Boolean.TRUE;
         try {
             startOperation();
             session.delete(obj);
             transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            result = Boolean.FALSE;
         } finally {
             session.close();
         }
+
+        return result;
     }
 
     protected List findAll(Class clazz) throws Exception {
@@ -80,7 +92,7 @@ public abstract class AbstractDAO<T> {
         transaction = session.beginTransaction();
     }
 
-    public abstract void create(T object) throws Exception;
+    public abstract Boolean create(T object);
     public abstract List<T> findAll() throws Exception;
     public abstract T findOneById(int id) throws Exception;
 }

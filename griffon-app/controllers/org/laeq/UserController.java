@@ -53,16 +53,17 @@ public class UserController extends AbstractGriffonController implements CRUDInt
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     @Override
     public void save(){
-        try {
-            User user = model.getUser();
-            dbService.userDAO.create(user);
-            model.userList.clear();
-            model.userList.addAll(dbService.userDAO.findAll());
-            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.user.save.success", user.toString()));
-        } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.save.error"));
-        } finally {
+        User user = model.getUser();
+        if (dbService.userDAO.create(user)) {
+            if(model.userList.contains(user) == false){
+                model.userList.addAll(user);
+            }
+
             model.clear();
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.user.save.success", user.toString()));
+        } else {
+            model.getUser().setId(null);
+            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.save.error"));
         }
     }
 
@@ -75,11 +76,11 @@ public class UserController extends AbstractGriffonController implements CRUDInt
             return ;
         }
 
-        try {
-            dbService.userDAO.delete(user);
+        if(dbService.userDAO.delete(user)){
             model.userList.remove(user);
+            view.refresh();
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.user.delete.success", user.toString()));
-        }  catch (Exception e){
+        } else {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.delete.error"));
         }
     }

@@ -6,7 +6,8 @@
 <?import org.laeq.editor.ElapsedText?>
 <?import org.laeq.editor.IconPane?>
 <?import org.laeq.editor.VideoSlider?>
-<SplitPane dividerPositions="0.7190184049079754" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.editor.PlayerController">
+<SplitPane dividerPositions="0.7190184049079754" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0"
+           prefWidth="980.0" xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.editor.PlayerController">
 <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="680.0">
         <children>

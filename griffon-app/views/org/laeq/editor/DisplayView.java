@@ -34,6 +34,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private DisplayModel model;
     @MVCMember @Nonnull File file;
     @MVCMember @Nonnull Duration currentTime;
+    @MVCMember @Nonnull Controls controls;
 
     private MediaPlayer mediaPlayer;
     @FXML private Pane playerPane;
@@ -85,6 +86,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
                 mediaPlayer.pause();
                 runOutsideUIAsync(() -> mediaPlayer.seek(currentTime));
                 videoDuration = mediaPlayer.getTotalDuration();
+                mediaPlayer.setRate(controls.speed.getValue());
             });
 
             mediaPlayer.setOnError(() -> {
@@ -132,27 +134,15 @@ public class DisplayView extends AbstractJavaFXGriffonView {
 
     public void pause() {
         isPlaying = false;
-        runInsideUIAsync(() -> {
+        Platform.runLater(() -> {
             mediaPlayer.pause();
         });
     }
 
     public void play() {
         isPlaying = true;
-        runInsideUIAsync(() -> {
-            mediaPlayer.play();
-        });
-    }
-
-    public void seek(Duration currentTime) {
-
         Platform.runLater(() -> {
-            mediaPlayer.pause();
-            mediaPlayer.seek(currentTime);
-
-            if(isPlaying){
-                mediaPlayer.play();
-            }
+            mediaPlayer.play();
         });
     }
 
@@ -170,9 +160,31 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         return new Image(getClass().getClassLoader().getResourceAsStream(path));
     }
 
-    public void sliderPressed() {
+
+    //Slider events
+    public void sliderReleased(Duration now){
         Platform.runLater(() -> {
-            mediaPlayer.pause();
+            mediaPlayer.seek(now);
+            if(isPlaying){
+                mediaPlayer.play();
+            }
         });
+    }
+
+    public void sliderPressed() {
+        mediaPlayer.pause();
+    }
+
+    public void sliderCurrentTime(Double object) {
+        Duration now = videoDuration.multiply(object / 100);
+        mediaPlayer.seek(now);
+    }
+
+    public void rowCurrentTime(Duration now) {
+        mediaPlayer.seek(now);
+    }
+
+    public void elapsedCurrentTime(Duration now) {
+        mediaPlayer.seek(now);
     }
 }

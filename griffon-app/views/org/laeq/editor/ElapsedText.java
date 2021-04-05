@@ -44,7 +44,7 @@ public class ElapsedText extends TextField {
 
                     Duration seekDuration = Duration.hours(hours).add(Duration.minutes(minutes)).add(Duration.seconds(seconds));
                     this.setFocusTraversable(false);
-                    router.publishEventAsync("elapsed.currentTime", Arrays.asList(seekDuration));
+                    router.publishEventOutsideUI("elapsed.currentTime", Arrays.asList(seekDuration));
                 }
             }
         };

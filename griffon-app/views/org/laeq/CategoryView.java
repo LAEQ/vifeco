@@ -182,4 +182,8 @@ public class CategoryView extends AbstractJavaFXGriffonView {
     private String translate(String key){
         return getApplication().getMessageSource().getMessage(key);
     }
+
+    public void refresh() {
+        categoryTable.refresh();
+    }
 }

@@ -11,16 +11,13 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     @Override
-    public void create(User user) throws Exception {
-        super.saveOrUpdate(user);
+    public Boolean create(User user) {
+        return super.saveOrUpdate(user);
     }
 
     @Override
-    public void delete(User user) throws Exception {
-        if(user.getDefault() == Boolean.TRUE){
-            throw new Exception("Cannot delete default user");
-        }
-        super.delete(user);
+    public Boolean delete(User user) {
+        return super.delete(user);
     }
 
     @Override

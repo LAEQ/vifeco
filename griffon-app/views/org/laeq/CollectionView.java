@@ -114,4 +114,8 @@ public class CollectionView extends AbstractJavaFXGriffonView {
     private String translate(String key){
         return getApplication().getMessageSource().getMessage(key);
     }
+
+    public void refresh() {
+        collectionTable.refresh();
+    }
 }

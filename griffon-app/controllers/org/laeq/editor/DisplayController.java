@@ -54,8 +54,12 @@ public class DisplayController extends AbstractGriffonController {
             view.play();
         });
 
-        list.put("player.currentTime", objects -> {
-            view.seek((Duration) objects[0]);
+        list.put("player.rewind", objects -> {
+            System.out.println("rewind" + getApplication().getUIThreadManager().isUIThread());
+        });
+
+        list.put("slider.currentTime", objects -> {
+            view.sliderCurrentTime( (Double)objects[0]);
         });
 
         list.put("speed.change", objects -> {
@@ -63,25 +67,20 @@ public class DisplayController extends AbstractGriffonController {
         });
 
         list.put("row.currentTime", objects -> {
-            view.seek((Duration) objects[0]);
+            view.rowCurrentTime((Duration) objects[0]);
         });
 
         list.put("slider.release", objects -> {
             Duration now = view.videoDuration.multiply((Double) objects[0] / 100);
-            view.seek(now);
+            view.sliderReleased(now);
         });
 
         list.put("slider.pressed", objects -> {
             view.sliderPressed();
         });
 
-        list.put("slider.currentTime", objects -> {
-            Duration now = view.videoDuration.multiply((Double) objects[0] / 100);
-            view.seek(now);
-        });
-
         list.put("elapsed.currentTime", objects -> {
-            view.seek((Duration) objects[0]);
+            view.elapsedCurrentTime((Duration) objects[0]);
         });
 
         return list;
