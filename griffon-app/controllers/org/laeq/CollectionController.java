@@ -9,13 +9,13 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Collection;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 @ArtifactProviderFor(GriffonController.class)
 public class CollectionController extends AbstractGriffonController implements CRUDInterface<Collection> {

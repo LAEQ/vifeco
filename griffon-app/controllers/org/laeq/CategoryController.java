@@ -8,6 +8,7 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Category;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;

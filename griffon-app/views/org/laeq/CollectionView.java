@@ -12,7 +12,9 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.*;
+import org.laeq.model.Category;
+import org.laeq.model.Collection;
+import org.laeq.model.Icon;
 import org.laeq.model.icon.Color;
 import org.laeq.model.icon.IconSVG;
 

@@ -23,6 +23,8 @@ import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Video;
+import org.laeq.model.icon.IconPoint;
+import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.statistic.MatchedPoint;
 
 import javax.annotation.Nonnull;
@@ -148,6 +150,12 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         currentDuration.setText(formatDuration(start));
 
         mp.getPoints().forEach(p -> {
+            IconPointColorized icon = p.getIconPoint();
+            icon.setScaleX(.4);
+            icon.setScaleY(.4);
+            icon.setOpacity(.7);
+            icon.setLayoutX(p.getX() * iconPane.getWidth());
+            icon.setLayoutY(p.getY() * iconPane.getHeight());
             iconPane.getChildren().add(p.getIconPoint());
         });
     }

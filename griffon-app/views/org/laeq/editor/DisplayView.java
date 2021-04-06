@@ -1,7 +1,6 @@
 package org.laeq.editor;
 
 import griffon.core.artifact.GriffonView;
-import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
