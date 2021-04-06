@@ -34,7 +34,7 @@ public class BottomController extends AbstractGriffonController {
     public void setMessage(String message, List<String> styles){
         String text = messageSource.getMessage(message);
 
-        runInsideUISync(() -> {
+        runInsideUIAsync(() -> {
             model.message.set(text);
             model.styles.clear();
             model.styles.addAll(styles);
@@ -46,7 +46,7 @@ public class BottomController extends AbstractGriffonController {
         String param = (String) objects[1];
         String text = messageSource.getMessage(key, Arrays.asList(param));
 
-        runInsideUISync(() -> {
+        runInsideUIAsync(() -> {
             model.message.set(text);
             model.styles.clear();
             model.styles.addAll(styles);
