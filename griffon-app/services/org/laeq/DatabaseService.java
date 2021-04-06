@@ -9,9 +9,13 @@ import org.laeq.model.Collection;
 import org.laeq.model.User;
 import org.laeq.model.Video;
 import org.laeq.model.dao.*;
+import org.laeq.settings.Settings;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,10 +87,11 @@ public class DatabaseService extends AbstractGriffonService{
         this.collectionDAO.create(collection2);
 
         ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource("sample/sample.mp4");
-        File file = new File(resource.toURI());
+        InputStream resource = classLoader.getResourceAsStream("sample/sample.mp4");
+        String filePath = String.format("%s%s%s", Settings.videoPath, File.separator, "sample.mp4");
+        Files.copy(resource, Paths.get(filePath));
 
-
+        File file = new File(filePath);
         Video video = new Video();
         video.setPath(file.getAbsolutePath());
         video.setCollection(collection);
