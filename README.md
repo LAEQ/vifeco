@@ -14,7 +14,7 @@ Vifeco (video features counter) is a stand-alone, multiplatform (Windows, Mac an
 
 
 ## Download
-You can download prebuilt binaries from the [release section](https://github.com/LAEQ/vifeco/releases). To use the java-only binaries you need to configure your JRE with JavaFax at the runtime.
+You can download prebuilt binaries from the [release section](https://github.com/LAEQ/vifeco/releases). You can find more information by reading the [instruction guide](https://github.com/LAEQ/vifeco/GUIDE.md).
 
 ## Requirements
 
