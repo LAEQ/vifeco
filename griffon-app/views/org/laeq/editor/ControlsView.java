@@ -86,6 +86,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             speed.setValue(value);
             speedLabel.setText(String.format("%.2f", value));
             controller.dispatch("speed.change", value);
+            controls.speed.set(value);
         });
     }
 
@@ -102,6 +103,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             duration.setValue(value);
             durationLabel.setText(String.format("%.0f s", value));
             controller.dispatch("duration.change", value);
+            controls.duration.set(value);
         });
     }
 
@@ -118,6 +120,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             size.setValue(value);
             sizeLabel.setText(String.format("%.0f px", value));
             controller.dispatch("size.change", value);
+            controls.size.setValue(value);
         });
     }
 
@@ -134,6 +137,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             opacity.setValue(value);
             opacityLabel.setText(String.format("%.1f", value));
             controller.dispatch("opacity.change", value);
+            controls.opacity.setValue(value);
         });
     }
 
@@ -150,6 +154,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             volume.setValue(value);
             volumeLabel.setText(String.format("%.1f", value));
             controller.dispatch("volume.change", value);
+            controls.volume.setValue(value);
         });
     }
 

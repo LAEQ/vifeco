@@ -175,6 +175,7 @@ public class VideoView extends AbstractJavaFXGriffonView {
     public void refresh() {
         runInsideUIAsync(() -> {
             videoTable.refresh();
+            categoryTable.refresh();
         });
     }
 

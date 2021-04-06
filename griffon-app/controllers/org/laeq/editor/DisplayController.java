@@ -66,6 +66,10 @@ public class DisplayController extends AbstractGriffonController {
             view.refreshRate((Double) objects[0]);
         });
 
+        list.put("video.currentTime", objects -> {
+            view.rowCurrentTime((Duration) objects[0]);
+        });
+
         list.put("row.currentTime", objects -> {
             view.rowCurrentTime((Duration) objects[0]);
         });

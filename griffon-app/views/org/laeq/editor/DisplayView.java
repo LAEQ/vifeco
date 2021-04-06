@@ -148,11 +148,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
 
     public void refreshRate(Double rate) {
         Platform.runLater(()->{
-            mediaPlayer.pause();
             mediaPlayer.setRate(rate);
-            if(isPlaying){
-                mediaPlayer.play();
-            }
         });
     }
 

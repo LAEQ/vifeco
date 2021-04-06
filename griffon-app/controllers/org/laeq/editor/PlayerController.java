@@ -80,7 +80,7 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     public void addPoint(KeyCode code, Duration currentTime) {
         if(model.isReady.get()){
-            runOutsideUIAsync(() -> {
+            runOutsideUI(() -> {
                 Point point = model.generatePoint(code.getName(), currentTime);
 
                 if(point == null){
@@ -179,19 +179,17 @@ public class PlayerController extends AbstractGriffonController {
         });
 
         list.put("speed.change", objects -> {
-            model.controls.speed.set((Double) objects[0]);
             view.refreshRate((Double) objects[0]);
+            getApplication().getEventRouter().publishEvent("video.currentTime", Arrays.asList(view.getCurrentTime()));
         });
+
         list.put("opacity.change", objects -> {
-            model.controls.opacity.set((Double) objects[0]);
             view.refreshOpacity((Double) objects[0]);
         });
         list.put("duration.change", objects -> {
-            model.controls.duration.set((Double) objects[0]);
             view.setDuration(model.controls.display());
         });
         list.put("size.change", objects -> {
-            model.controls.size.set((Double) objects[0]);
             view.refreshSize((Double) objects[0]);
         });
         list.put("volume.change", objects -> {

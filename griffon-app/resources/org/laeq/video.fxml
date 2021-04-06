@@ -63,9 +63,9 @@
                <TableView fx:id="categoryTable" layoutY="221.0" prefHeight="229.0" prefWidth="354.0"
                           AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="225.0">
                     <columns>
-                        <TableColumn fx:id="icon" prefWidth="75.0"  />
-                        <TableColumn fx:id="category" prefWidth="75.0" JavaFXUtils.i18nKey="z.category" />
-                        <TableColumn fx:id="count" prefWidth="75.0" JavaFXUtils.i18nKey="z.total" />
+                        <TableColumn fx:id="icon" prefWidth="45.0"  />
+                        <TableColumn fx:id="category" prefWidth="105.0" JavaFXUtils.i18nKey="z.category" />
+                        <TableColumn fx:id="count" prefWidth="45.0" JavaFXUtils.i18nKey="z.total" />
                     </columns>
                 </TableView>
             </children>

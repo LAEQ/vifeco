@@ -21,6 +21,6 @@ public class ControlsController extends AbstractGriffonController {
     }
 
     public void dispatch(String eventName, double value) {
-        getApplication().getEventRouter().publishEvent(eventName, Arrays.asList(value));
+        getApplication().getEventRouter().publishEventOutsideUI(eventName, Arrays.asList(value));
     }
 }
