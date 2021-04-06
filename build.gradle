@@ -106,10 +106,10 @@ compileJava {
 tasks.withType(JavaCompile) {
     run{
 //        jvmArgs '-Dprism.vsync=false'
-        jvmArgs '-Dfile.encoding=UTF-8'
+//        jvmArgs '-Dfile.encoding=UTF-8'
 //        jvmArgs '-Djavafx.pulseLogger=true'
-        jvmArgs '-Dprism.forceGPU=true'
-        jvmArgs '-Dprism.order=d3d,es2,es1,sw,j2d'
+//        jvmArgs '-Dprism.forceGPU=true'
+//        jvmArgs '-Dprism.order=d3d,es2,es1,sw,j2d'
 //        jvmArgs '-Dprism.order=d3d'
 //        jvmArgs '-Duser.country=CA'
 //        jvmArgs '-Duser.language=fr'

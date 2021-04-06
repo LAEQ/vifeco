@@ -11,17 +11,17 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<SplitPane dividerPositions="0.5" layoutY="7.0" prefHeight="500.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0"
+<SplitPane dividerPositions="0.61" layoutY="7.0" prefHeight="500.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0"
            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.CollectionController">
     <items>
         <AnchorPane fx:id="collectionListPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="400.0">
             <children>
                 <TableView fx:id="collectionTable" layoutX="40.0" layoutY="82.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                        <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="z.id" />
-                        <TableColumn fx:id="name" prefWidth="125.0" JavaFXUtils.i18nKey="z.name" />
-                        <TableColumn fx:id="categories" prefWidth="205.0" JavaFXUtils.i18nKey="z.categories" />
-                        <TableColumn fx:id="isDefault" prefWidth="75.0" JavaFXUtils.i18nKey="z.default" />
+                        <TableColumn fx:id="id" prefWidth="25.0" JavaFXUtils.i18nKey="z.id" />
+                        <TableColumn fx:id="name" prefWidth="105.0" JavaFXUtils.i18nKey="z.name" />
+                        <TableColumn fx:id="categories" prefWidth="155.0" JavaFXUtils.i18nKey="z.categories" />
+                        <TableColumn fx:id="isDefault" prefWidth="55.0" JavaFXUtils.i18nKey="z.default" />
                         <TableColumn fx:id="actions" prefWidth="200.0" JavaFXUtils.i18nKey="z.actions" />
                     </columns>
                 </TableView>
@@ -37,8 +37,8 @@
             <Group fx:id="categoryContainer" layoutX="14.0" layoutY="140.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="140.0" />
             <TableView fx:id="categoryTable" layoutX="14.0" layoutY="249.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="125.0">
                 <columns>
-                    <TableColumn fx:id="checkboxColumn" prefWidth="75.0" />
-                    <TableColumn fx:id="iconColumn" prefWidth="75.0" JavaFXUtils.i18nKey="z.icon" />
+                    <TableColumn fx:id="checkboxColumn" prefWidth="25.0" />
+                    <TableColumn fx:id="iconColumn" prefWidth="45.0" JavaFXUtils.i18nKey="z.icon" />
                     <TableColumn fx:id="categoryColumn" prefWidth="155.0" JavaFXUtils.i18nKey="z.name" />
                 </columns>
             </TableView>

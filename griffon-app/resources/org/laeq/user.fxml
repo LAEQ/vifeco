@@ -11,10 +11,10 @@
         <children>
             <TableView fx:id="userTable" layoutX="40.0" layoutY="82.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columns>
-                <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="z.id" />
-                <TableColumn fx:id="firstName" prefWidth="125.0" JavaFXUtils.i18nKey="z.firstname" />
-                <TableColumn fx:id="lastName" prefWidth="125.0" JavaFXUtils.i18nKey="z.lastname" />
-                <TableColumn fx:id="isDefault" prefWidth="95.0" JavaFXUtils.i18nKey="z.default" />
+                <TableColumn fx:id="id" prefWidth="25.0" JavaFXUtils.i18nKey="z.id" />
+                <TableColumn fx:id="firstName" prefWidth="100.0" JavaFXUtils.i18nKey="z.firstname" />
+                <TableColumn fx:id="lastName" prefWidth="100.0" JavaFXUtils.i18nKey="z.lastname" />
+                <TableColumn fx:id="isDefault" prefWidth="55.0" JavaFXUtils.i18nKey="z.default" />
                 <TableColumn fx:id="actions" prefWidth="200.0" JavaFXUtils.i18nKey="z.actions" />
             </columns>
             </TableView>

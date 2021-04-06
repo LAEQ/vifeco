@@ -29,8 +29,8 @@ public abstract class AbstractDAO<T> {
             Validator validator = factory.getValidator();
             Set<ConstraintViolation<T>> violations = validator.validate(obj);
 
-            if(violations.size() > 2){
-                throw new Exception("Invalid");
+            if(violations.size() > 0){
+                throw new Exception();
             }
 
             startOperation();
@@ -53,7 +53,6 @@ public abstract class AbstractDAO<T> {
             session.delete(obj);
             transaction.commit();
         } catch (Exception e) {
-            transaction.rollback();
             result = Boolean.FALSE;
         } finally {
             session.close();

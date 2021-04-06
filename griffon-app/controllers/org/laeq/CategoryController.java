@@ -37,18 +37,23 @@ public class CategoryController extends AbstractGriffonController implements CRU
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     @Override
     public void save(){
-            Category category = model.getCategory();
-            if(dbService.categoryDAO.create(category)){
-                if(model.categoryList.contains(category) == false){
-                    model.categoryList.addAll(category);
-                }
+        if(model.isValid() == false){
+            getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("db.category.save.error"));
+            return;
+        }
 
-                model.clear();
-                view.refresh();
-                getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.category.save.success", category.getName()));
-            }else{
-                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.category.save.error"));
+        Category category = model.getCategory();
+        if(dbService.categoryDAO.create(category)){
+            if(model.categoryList.contains(category) == false){
+                model.categoryList.addAll(category);
             }
+
+            model.clear();
+            view.refresh();
+            getApplication().getEventRouter().publishEventAsync("status.success.parametrized", Arrays.asList("db.category.save.success", category.toString()));
+        }else{
+            getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("db.category.save.error"));
+        }
     }
 
     @ControllerAction

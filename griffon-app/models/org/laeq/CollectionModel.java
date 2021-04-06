@@ -65,4 +65,8 @@ public class CollectionModel extends AbstractGriffonModel {
 
         return this.selectedCollection;
     }
+
+    public boolean isValid() {
+        return this.name.length().get() == 0;
+    }
 }

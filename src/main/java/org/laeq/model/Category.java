@@ -161,10 +161,7 @@ public class Category implements Comparable<Category> {
 
     @Override
     public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return String.format("%s", this.name);
     }
 
     @Override

@@ -8,6 +8,12 @@ import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.User;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.Set;
+
 @ArtifactProviderFor(GriffonModel.class)
 public class UserModel extends AbstractGriffonModel {
     public ObservableList<User> userList = FXCollections.observableArrayList();
@@ -30,6 +36,22 @@ public class UserModel extends AbstractGriffonModel {
         this.selectedUser = null;
         this.firstName.set("");
         this.lastName.set("");
+    }
+
+    public Boolean isValid(){
+        User user = new User();
+        user.setFirstName(firstName.get());
+        user.setLastName(lastName.get());
+
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+
+        if(violations.size() > 0){
+            return false;
+        }
+
+        return true;
     }
 
     public User getUser() {

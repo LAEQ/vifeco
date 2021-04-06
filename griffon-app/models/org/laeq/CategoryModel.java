@@ -9,7 +9,12 @@ import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Optional;
+import java.util.Set;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class CategoryModel extends AbstractGriffonModel {
@@ -36,6 +41,25 @@ public class CategoryModel extends AbstractGriffonModel {
         shortCut.set(category.getShortcut());
     }
 
+    public Boolean isValid(){
+        Category category = new Category();
+        category.setName(name.get());
+        category.setIcon(icon.get());
+        category.setColor(color.get());
+        category.setShortcut(shortCut.get());
+
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<Category>> violations = validator.validate(category);
+        Optional<Category> find = categoryList.stream().filter(cat -> cat.getShortcut().equals(shortCut.get())).findFirst();
+
+        if(violations.size() > 0 && find.isPresent()){
+            return false;
+        }
+
+        return true;
+    }
+
     public Category getCategory() {
         if(this.selectedCategory == null){
            this.selectedCategory = new Category();
@@ -52,7 +76,7 @@ public class CategoryModel extends AbstractGriffonModel {
     public void clear() {
         name.set("");
         icon.set("");
-        color.set("");
+//        color.set("");
         shortCut.set("");
 
         this.selectedCategory = null;

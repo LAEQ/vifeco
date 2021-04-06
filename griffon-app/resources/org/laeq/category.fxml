@@ -11,11 +11,11 @@
             <children>
                 <TableView fx:id="categoryTable" layoutX="40.0" layoutY="82.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                        <TableColumn fx:id="id" prefWidth="95.0" JavaFXUtils.i18nKey="z.id" />
-                        <TableColumn fx:id="icon" prefWidth="95.0" JavaFXUtils.i18nKey="z.icon" />
-                        <TableColumn fx:id="name" prefWidth="95.0" JavaFXUtils.i18nKey="z.name" />
-                        <TableColumn fx:id="shortcut" prefWidth="95.0" JavaFXUtils.i18nKey="z.shortcut" />
-                        <TableColumn fx:id="actions" maxWidth="800" minWidth="150.0" prefWidth="180.0" JavaFXUtils.i18nKey="z.actions" />
+                        <TableColumn fx:id="id" prefWidth="25.0" JavaFXUtils.i18nKey="z.id" />
+                        <TableColumn fx:id="icon" prefWidth="45.0" JavaFXUtils.i18nKey="z.icon" />
+                        <TableColumn fx:id="name" prefWidth="145.0" JavaFXUtils.i18nKey="z.name" />
+                        <TableColumn fx:id="shortcut" prefWidth="65.0" JavaFXUtils.i18nKey="z.shortcut" />
+                        <TableColumn fx:id="actions"  prefWidth="200.0" JavaFXUtils.i18nKey="z.actions" />
                     </columns>
                 </TableView>
             </children>

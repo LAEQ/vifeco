@@ -7,6 +7,7 @@ import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Collection;
+import org.laeq.model.Point;
 import org.laeq.model.Video;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -43,23 +44,19 @@ public class CollectionController extends AbstractGriffonController implements C
             Collection collection = model.getCollection();
             List<Video> videoList = dbService.videoDAO.findAll();
 
-            AtomicReference<Boolean> result = new AtomicReference<>(Boolean.TRUE);
+            for(Video video : videoList){
+                for(Point point : video.getPoints()){
+                    if(collection.getCategories().contains(point.getCategory()) == false){
+                        dbService.pointDAO.delete(point);
+                    }
+                }
+            }
 
-            videoList.stream().filter(video -> video.getCollection().getId().equals(collection.getId())).forEach(video -> {
-                video.getPoints().stream()
-                        .filter(point -> collection.getCategories().contains(point.getCategory()) == false)
-                        .forEach(point -> {
-                                   if(dbService.pointDAO.delete(point) == false){
-                                       result.set(Boolean.FALSE);
-                                   }
-                        }
-                );
-            });
-
-            if(result.get() && dbService.collectionDAO.create(collection)){
+            if(dbService.collectionDAO.create(collection)){
                 if(model.collections.contains(collection) == false){
                     model.collections.add(collection);
                 }
+
                 view.refresh();
                 model.clear();
                 getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("db.collection.save.success", collection.getName()));
