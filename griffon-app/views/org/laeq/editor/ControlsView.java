@@ -85,7 +85,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             double value = Math.round(newVal.doubleValue() * 4) / 4f;
             speed.setValue(value);
             speedLabel.setText(String.format("%.2f", value));
-            controller.dispatch("speed.change", value);
+            controller.dispatch("speed.change", Double.valueOf(value));
             controls.speed.set(value);
         });
     }
@@ -102,7 +102,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             double value = Math.round(newVal.doubleValue() * 1) / 1f;
             duration.setValue(value);
             durationLabel.setText(String.format("%.0f s", value));
-            controller.dispatch("duration.change", value);
+            controller.dispatch("duration.change", Double.valueOf(value));
             controls.duration.set(value);
         });
     }
@@ -119,7 +119,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             double value = Math.round(newVal.doubleValue() * 1) / 1f;
             size.setValue(value);
             sizeLabel.setText(String.format("%.0f px", value));
-            controller.dispatch("size.change", value);
+            controller.dispatch("size.change",  Double.valueOf(value));
             controls.size.setValue(value);
         });
     }
@@ -136,7 +136,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             double value = Math.round(newVal.doubleValue() * 10) / 10f;
             opacity.setValue(value);
             opacityLabel.setText(String.format("%.1f", value));
-            controller.dispatch("opacity.change", value);
+            controller.dispatch("opacity.change",  Double.valueOf(value));
             controls.opacity.setValue(value);
         });
     }
@@ -153,7 +153,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
             double value = Math.round(newVal.doubleValue() * 10) / 10f;
             volume.setValue(value);
             volumeLabel.setText(String.format("%.1f", value));
-            controller.dispatch("volume.change", value);
+            controller.dispatch("volume.change",  Double.valueOf(value));
             controls.volume.setValue(value);
         });
     }

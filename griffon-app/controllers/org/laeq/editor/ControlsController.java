@@ -14,13 +14,9 @@ public class ControlsController extends AbstractGriffonController {
     @MVCMember @Nonnull private ControlsView view;
     @MVCMember @Nonnull private Controls controls;
 
-
-    @Override
-    public void mvcGroupDestroy(){
-
-    }
-
-    public void dispatch(String eventName, double value) {
-        getApplication().getEventRouter().publishEventOutsideUI(eventName, Arrays.asList(value));
+    public void dispatch(String eventName, Double value) {
+        if(value != null){
+            getApplication().getEventRouter().publishEventOutsideUI(eventName, Arrays.asList(value));
+        }
     }
 }
