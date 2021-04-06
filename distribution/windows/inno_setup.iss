@@ -6,6 +6,7 @@
 #define MyAppPublisher "LAEQ"
 #define MyAppURL "http://laeq.ucs.inrs.ca/"
 #define MyAppExeName "vifeco.exe"
+#define Version = "2.0.0"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -28,7 +29,7 @@ InfoAfterFile=docs\info_after.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=inno
-OutputBaseFilename=vifeco_2.0.0_setup
+OutputBaseFilename=vifeco-{#Version}.win-setup
 SetupIconFile=favicon_io\favicon.ico
 Compression=lzma
 SolidCompression=yes
