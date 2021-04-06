@@ -116,7 +116,8 @@ public class StatisticView extends AbstractJavaFXGriffonView {
 
         vOverallMatched.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getSummaryOverallMatched()));
         vOverallUnMatched.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getSummaryOverallUnMatched()));
-        vOverallConcordanceIndex.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(String.format("%.2f", cellData.getValue().getSummaryOverallConcordanceIndex() * 100)));
+        vOverallConcordanceIndex.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(String.format("%.2f",
+                cellData.getValue().getSummaryOverallConcordanceIndex() * 100)));
 
 
         tableAccPt1.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getPt1Formatted()));

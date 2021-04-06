@@ -303,17 +303,15 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void rewind(Duration now) {
         Collection<IconPointColorized> icons = model.setCurrentTime(now);
-        mediaPlayer.pause();
 
         Platform.runLater(() -> {
             iconPane.getChildren().clear();
             iconPane.getChildren().addAll(icons);
             elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
             mediaPlayer.seek(now);
-            mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
 
-            if(model.isPlaying.getValue()){
-                mediaPlayer.play();
+            if(model.isPlaying.getValue() == false){
+                slider.setValue(now.toMillis() / videoDuration * 100);
             }
         });
     }
@@ -364,11 +362,5 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void setDuration(Duration display) {
         this.display = display;
-    }
-
-    public void reposition(Double x, Double y) {
-        Platform.runLater(() -> {
-
-        });
     }
 }

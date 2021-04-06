@@ -100,7 +100,7 @@ final public class PlayerModel extends AbstractGriffonModel {
         start.setStart(currentTime.subtract(controls.display()));
 
         Point end = new Point();
-        end.setStart(currentTime);
+        end.setStart(currentTime.add(Duration.millis(1d)));
 
         return collection.subList(start, end).stream().map(point -> {
             IconPointColorized icon = point.getIconPoint();

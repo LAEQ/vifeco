@@ -262,6 +262,12 @@ public class Tarjan {
     @JsonIgnore
     public Double getSummaryOverallConcordanceIndex() {
         Double result = Double.valueOf(getSummaryOverallMatched());
+        Double diviseur = result + getSummaryOverallUnMatched();
+
+        if(diviseur == 0){
+            return 1d;
+        }
+
         return result / (result + getSummaryOverallUnMatched());
     }
 }
