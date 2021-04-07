@@ -47,7 +47,7 @@ StatisticController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("statistic_display"));
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("statistic_display"));
     }
 
     @ControllerAction

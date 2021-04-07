@@ -21,21 +21,15 @@ public class DisplayController extends AbstractGriffonController {
         getApplication().getEventRouter().addEventListener(listeners());
     }
 
-    @Override
-    public void mvcGroupDestroy(){
-
-    }
-
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         list.put("statistic.mapped_point.display", objects ->{
-            MatchedPoint mp = (MatchedPoint) objects[0];
+            model.mp = (MatchedPoint) objects[0];
             runInsideUIAsync(() -> {
-                view.displayPoints(mp);
+                view.displayPoints();
             });
         });
-
 
         return list;
     }

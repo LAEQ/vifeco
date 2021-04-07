@@ -94,7 +94,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         }
     }
 
-
     private void initPlayer(){
         Video video = matchedPoint.getVideo();
 
@@ -105,14 +104,16 @@ public class DisplayView extends AbstractJavaFXGriffonView {
             mediaView.setMediaPlayer(mediaPlayer);
 
             mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
+                iconPane.setPrefWidth(newValue.getWidth());
+                iconPane.setPrefHeight(newValue.getHeight());
                 width.set(newValue.getWidth());
                 height.set(newValue.getHeight());
-                iconPane.setPrefWidth(width.doubleValue());
-                iconPane.setPrefHeight(height.doubleValue());
+                displayPoints();
             });
 
             mediaPlayer.setOnReady(() -> {
-                displayPoints(matchedPoint);
+                model.mp = matchedPoint;
+                displayPoints();
                 totalDuration.setText(formatDuration(video.getDuration()));
             });
 
@@ -123,40 +124,26 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
         }
-
-        currentDuration.textProperty().addListener((observable, oldValue, newValue) -> {
-            Pattern pattern = Pattern.compile("[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}");
-            Matcher matcher = pattern.matcher(newValue);
-            String[] split = newValue.split(":");
-
-            if(matcher.find()){
-                Double hours = Double.parseDouble(split[0]);
-                Double minutes = Double.parseDouble(split[1]);
-                Double seconds = Double.parseDouble(split[2]);
-
-                Duration seekDuration = Duration.hours(hours).add(Duration.minutes(minutes)).add(Duration.seconds(seconds));
-                mediaPlayer.seek(seekDuration);
-            } else {
-                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("duration.pattern.invalid"));
-            }
-        });
     }
 
-    public void displayPoints(MatchedPoint mp) {
+    public void displayPoints() {
         iconPane.getChildren().clear();
+        if(model.mp == null){
+            return;
+        }
 
-        Duration start = mp.getStarts().get(0);
+        Duration start = model.mp.getStarts().get(0);
         mediaPlayer.seek(start);
         currentDuration.setText(formatDuration(start));
 
-        mp.getPoints().forEach(p -> {
+        model.mp.getPoints().forEach(p -> {
             IconPointColorized icon = p.getIconPoint();
             icon.setScaleX(.4);
             icon.setScaleY(.4);
             icon.setOpacity(.7);
-            icon.setLayoutX(p.getX() * iconPane.getWidth());
-            icon.setLayoutY(p.getY() * iconPane.getHeight());
-            iconPane.getChildren().add(p.getIconPoint());
+            icon.setLayoutX(p.getX() * width.get());
+            icon.setLayoutY(p.getY() * height.get());
+            iconPane.getChildren().add(icon);
         });
     }
 
