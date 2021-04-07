@@ -80,7 +80,7 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     public void addPoint(KeyCode code, Duration currentTime) {
         if(model.isReady.get()){
-            runInsideUISync(() -> {
+            runInsideUIAsync(() -> {
                 Point point = model.generatePoint(code.getName(), currentTime);
 
                 if(point == null){

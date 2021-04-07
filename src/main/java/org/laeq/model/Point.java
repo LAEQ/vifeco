@@ -9,7 +9,6 @@ import javafx.util.Duration;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.hibernate.annotations.GenericGenerator;
 import org.laeq.model.converter.hibernate.DurationConverter;
 import org.laeq.model.converter.jackson.CategoryConverterDeserialize;
 import org.laeq.model.converter.jackson.CategoryConverterSerialize;
@@ -27,11 +26,6 @@ import java.util.UUID;
 @JsonPropertyOrder({"id", "x", "y", "start", "category"})
 public class Point implements Comparable<Point> {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -52,7 +46,7 @@ public class Point implements Comparable<Point> {
     @JsonDeserialize(converter = CategoryConverterDeserialize.class)
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE} )
     @JoinColumn(name = "video_id", nullable = false)
     private Video video;
 
@@ -60,7 +54,9 @@ public class Point implements Comparable<Point> {
     @Transient
     public IconPointColorized icon;
 
-    public Point() {}
+    public Point() {
+        this.id = UUID.randomUUID();
+    }
 
     public Point(UUID id) {
         this.id = id;

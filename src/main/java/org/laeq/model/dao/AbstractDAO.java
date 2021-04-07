@@ -23,8 +23,9 @@ public abstract class AbstractDAO<T> {
 
     protected Boolean saveOrUpdate(T obj) {
         Boolean result = true;
+        Session currentSession = this.hib.sessionFactory.openSession();
+        Transaction tx = currentSession.beginTransaction();
         try {
-
             ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
             Validator validator = factory.getValidator();
             Set<ConstraintViolation<T>> violations = validator.validate(obj);
@@ -33,14 +34,13 @@ public abstract class AbstractDAO<T> {
                 throw new Exception();
             }
 
-            startOperation();
-            session.saveOrUpdate(obj);
-            transaction.commit();
+            currentSession.saveOrUpdate(obj);
+            tx.commit();
         } catch (Exception e) {
             result = false;
-            transaction.rollback();
+            tx.rollback();
         } finally {
-            session.close();
+            currentSession.close();
         }
 
         return result;
