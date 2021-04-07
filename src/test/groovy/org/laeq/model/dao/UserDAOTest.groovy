@@ -46,10 +46,10 @@ class UserDAOTest extends Specification {
         dao.create(user)
 
         when:
-        dao.delete(user)
+        def result = dao.delete(user)
 
         then:
-        thrown Exception
+        result == false
     }
 
     def "FindDefault"() {

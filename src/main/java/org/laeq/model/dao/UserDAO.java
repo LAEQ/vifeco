@@ -17,6 +17,9 @@ public class UserDAO extends AbstractDAO<User> {
 
     @Override
     public Boolean delete(User user) {
+        if(user.getDefault() == true){
+            return false;
+        }
         return super.delete(user);
     }
 

@@ -125,10 +125,10 @@ class CollectionDAOTest extends Specification {
         dao.create(col_2)
 
         when:
-        catDao.delete(category_1)
+        def result = catDao.delete(category_1)
 
         then:
-        thrown Exception
+        result == false
     }
 
     def "FindDefault"() {

@@ -21,7 +21,7 @@ buildscript {
     }
 }
 
-//apply plugin: 'groovy'
+apply plugin: 'groovy'
 apply plugin: 'org.codehaus.griffon.griffon'
 apply plugin: 'net.nemerosa.versioning'
 apply plugin: 'com.google.osdetector'
@@ -94,8 +94,7 @@ task sourceJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
-//compileGroovy.enabled = false
-
+compileGroovy.enabled = false
 
 compileJava {
     sourceCompatibility = 11
@@ -116,11 +115,11 @@ tasks.withType(JavaCompile) {
     }
 }
 
-//tasks.withType(GroovyCompile) {
-//    sourceCompatibility = project.sourceCompatibility
-//    targetCompatibility = project.targetCompatibility
-//    options.encoding = 'UTF-8'
-//}
+tasks.withType(GroovyCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+    options.encoding = 'UTF-8'
+}
 
 import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer

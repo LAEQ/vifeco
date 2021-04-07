@@ -138,6 +138,7 @@ public class Category implements Comparable<Category> {
         this.collections = collections;
     }
 
+    @JsonIgnore
     public Boolean getSelected() {
         return selected;
     }

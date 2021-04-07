@@ -76,10 +76,10 @@ class PointDAOTest extends Specification {
         Point point = new Point(1,1,Duration.ONE, category_1, null)
 
         when:
-        pointDAO.create(point)
+        def result = pointDAO.create(point)
 
         then:
-        thrown Exception
+        result == false
     }
 
     def "add invalid point (category is null)"(){
@@ -87,9 +87,9 @@ class PointDAOTest extends Specification {
         Point point = new Point(1,1,Duration.ONE, null, video)
 
         when:
-        pointDAO.create(point)
+        def result = pointDAO.create(point)
 
         then:
-        thrown Exception
+        result == false
     }
 }

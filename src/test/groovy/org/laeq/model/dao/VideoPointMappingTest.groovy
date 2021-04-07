@@ -102,19 +102,19 @@ class VideoPointMappingTest extends Specification {
 
     def "cannot delete a user with videos."(){
         when:
-        userDAO.delete(user1)
+        def result = userDAO.delete(user1)
 
         then:
-        thrown Exception
+        result == false
     }
 
     def "cannot delete a category with points."(){
         when:
         collection.removeCategory(category_1)
         colDAO.create(collection)
-        catDAO.delete(category_1)
+        def result = catDAO.delete(category_1)
 
         then:
-        thrown Exception
+        result == false
     }
 }
