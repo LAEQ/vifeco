@@ -52,11 +52,7 @@ public class DatabaseService extends AbstractGriffonService{
         defaultUser.setFirstName("default");
         defaultUser.setLastName("default");
         defaultUser.setDefault(Boolean.TRUE);
-
         userDAO.create(defaultUser);
-
-        User user = new User("John", "Doe");
-        userDAO.create(user);
 
         Collection collection = new Collection();
         collection.setName("Transport");
