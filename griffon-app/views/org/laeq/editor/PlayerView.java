@@ -303,12 +303,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void rewind(Duration now) {
         Collection<IconPointColorized> icons = model.setCurrentTime(now);
+        mediaPlayer.seek(now);
 
         Platform.runLater(() -> {
             iconPane.getChildren().clear();
             iconPane.getChildren().addAll(icons);
             elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
-            mediaPlayer.seek(now);
 
             if(model.isPlaying.getValue() == false){
                 slider.setValue(now.toMillis() / videoDuration * 100);
