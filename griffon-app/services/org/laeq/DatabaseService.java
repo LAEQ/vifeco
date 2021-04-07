@@ -39,16 +39,12 @@ public class DatabaseService extends AbstractGriffonService{
 
         try {
             int total = this.userDAO.findAll().size();
-
-
             if(total == 0){
                 setUpDefaults();
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     private void setUpDefaults() throws Exception {
