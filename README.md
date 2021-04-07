@@ -14,8 +14,7 @@ Vifeco (video features counter) is a stand-alone, multiplatform (Windows, Mac an
 
 
 ## Download
-You can download prebuilt binaries from the [release section](https://github.com/LAEQ/vifeco/releases). They come bundled with the Liberica JRE 11.
-
+You can download prebuilt binaries from the [release section](https://github.com/LAEQ/vifeco/releases). You can find more information by reading the [instruction guide](https://github.com/LAEQ/vifeco/GUIDE.md).
 
 ## Requirements
 
@@ -26,7 +25,7 @@ You can download prebuilt binaries from the [release section](https://github.com
 | JavaFX | 11.0 |
 
 
-## Our recommandation
+## Our recommendation
 
 For gradle installation please check https://gradle.org/install/
 
