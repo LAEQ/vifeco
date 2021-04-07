@@ -1,7 +1,6 @@
 package org.laeq.model.dao;
 
 import org.laeq.model.Point;
-
 import java.util.List;
 
 public class PointDAO extends AbstractDAO<Point> {

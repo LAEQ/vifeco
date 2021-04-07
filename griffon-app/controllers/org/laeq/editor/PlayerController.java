@@ -80,7 +80,7 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     public void addPoint(KeyCode code, Duration currentTime) {
         if(model.isReady.get()){
-            runOutsideUI(() -> {
+            runInsideUISync(() -> {
                 Point point = model.generatePoint(code.getName(), currentTime);
 
                 if(point == null){
@@ -90,6 +90,7 @@ public class PlayerController extends AbstractGriffonController {
                 if(dbService.pointDAO.create(point)){
                     model.addPoint(point);
                     view.addPoint(point);
+
                     getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
                     getApplication().getEventRouter().publishEvent("point.added", Arrays.asList(point));
                 } else {
@@ -102,10 +103,10 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void deletePoint(Point point) {
-        runOutsideUIAsync(() -> {
+        runInsideUISync(() -> {
+            model.removePoint(point);
+            view.removePoint(point);
             if(dbService.pointDAO.delete(point)){
-                model.removePoint(point);
-                view.removePoint(point);
                 getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
                 getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
             } else {
@@ -118,25 +119,25 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void rewind(){
-        Duration start = view.getCurrentTime().subtract(Duration.seconds(30));
-        if(start.lessThan(Duration.ZERO)){
-            start = Duration.ZERO;
+        Duration now = view.getCurrentTime().subtract(Duration.seconds(30));
+        if(now.lessThan(Duration.ZERO)){
+            now = Duration.ZERO;
         }
 
-        getApplication().getEventRouter().publishEvent("player.rewind", Arrays.asList(start));
-        view.rewind(start);
+        getApplication().getEventRouter().publishEvent("player.rewind", Arrays.asList(now));
+        view.rewind(now);
     }
 
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void forward(){
-        Duration start = view.getCurrentTime().add(Duration.seconds(30));
-        if(start.greaterThan(video.getDuration())){
-           return;
+        Duration now = view.getCurrentTime().add(Duration.seconds(30));
+        if(now.greaterThan(video.getDuration())){
+           now = video.getDuration();
         }
 
-        getApplication().getEventRouter().publishEvent("player.rewind", Arrays.asList(start));
-        view.rewind(start);
+        getApplication().getEventRouter().publishEvent("player.rewind", Arrays.asList(now));
+        view.rewind(now);
     }
 
     @ControllerAction
@@ -223,22 +224,22 @@ public class PlayerController extends AbstractGriffonController {
         });
 
         list.put("player.forward.5", objects -> {
-            Duration start = view.getCurrentTime().add(Duration.seconds(5));
-            if(start.greaterThan(video.getDuration())){
-                return;
+            Duration now = view.getCurrentTime().add(Duration.seconds(5));
+            if(now.greaterThan(video.getDuration())){
+                now = video.getDuration();
             }
 
-            view.rewind(start);
-            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(start));
+            view.rewind(now);
+            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(now));
         });
         list.put("player.rewind.5", objects -> {
-            Duration start = view.getCurrentTime().subtract(Duration.seconds(5));
-            if(start.lessThan(Duration.ZERO)){
-                return;
+            Duration now = view.getCurrentTime().subtract(Duration.seconds(5));
+            if(now.lessThan(Duration.ZERO)){
+                now = Duration.ZERO;
             }
 
-            view.rewind(start);
-            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(start));
+            view.rewind(now);
+            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(now));
         });
 
         list.put("elapsed.focus.on", objects -> {
