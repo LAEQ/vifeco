@@ -3,31 +3,31 @@ package org.laeq.editor;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
 
-public class Controls {
-    public Double[] speedValue = new Double[]{0.25d, 10.0};
-    public Double[] opacityValue = new Double[]{.1, 1.0};
-    public Double[] sizeValue = new Double[]{10d, 80d};
-    public Double[] durationValue = new Double[]{1d, 30d};
-    public Double[] volumeValue = new Double[]{0d, 1.0};
+public final class Controls {
+    public final Double[] speedValue = new Double[]{0.25d, 10.0};
+    public final Double[] opacityValue = new Double[]{.1, 1.0};
+    public final Double[] sizeValue = new Double[]{10d, 80d};
+    public final Double[] durationValue = new Double[]{1d, 30d};
+    public final Double[] volumeValue = new Double[]{0d, 1.0};
 
-    public SimpleDoubleProperty duration = new SimpleDoubleProperty(3);
-    public SimpleDoubleProperty speed = new SimpleDoubleProperty(1);
-    public SimpleDoubleProperty size = new SimpleDoubleProperty(50);
-    public SimpleDoubleProperty opacity = new SimpleDoubleProperty(.7);
-    public SimpleDoubleProperty volume = new SimpleDoubleProperty(.6);
+    public final SimpleDoubleProperty duration = new SimpleDoubleProperty(3);
+    public final SimpleDoubleProperty speed = new SimpleDoubleProperty(1);
+    public final SimpleDoubleProperty size = new SimpleDoubleProperty(50);
+    public final SimpleDoubleProperty opacity = new SimpleDoubleProperty(.7);
+    public final SimpleDoubleProperty volume = new SimpleDoubleProperty(.6);
 
-    public Double scale(){ return size.getValue() / 100 ;}
-    public Duration display(){
+    public final Double scale(){ return size.getValue() / 100 ;}
+    public final Duration display(){
         return Duration.seconds(duration.get());
     }
 
-    public void speedUp() {
+    public final void speedUp() {
         if(speed.doubleValue() <= speedValue[1] - .25){
             speed.set(speed.doubleValue() + .25);
         }
     }
 
-    public void speedDown() {
+    public final void speedDown() {
         if(speed.doubleValue() >= speedValue[0] + .25){
             speed.set(speed.doubleValue() - .25);
         }
