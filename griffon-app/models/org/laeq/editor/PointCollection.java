@@ -32,7 +32,7 @@ public class PointCollection {
     }
 
     public Optional<Point> getPointFromIcon(IconPointColorized icon) {
-        return points.stream().filter(pt -> pt.getIconPoint().equals(icon)).findFirst();
+        return points.parallelStream().filter(pt -> pt.getIconPoint().equals(icon)).findFirst();
     }
 
     public void removePoint(Point point) {

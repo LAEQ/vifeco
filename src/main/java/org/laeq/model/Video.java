@@ -17,6 +17,7 @@ import org.laeq.model.converter.jackson.MilliToDuration;
 import org.laeq.model.converter.jackson.PathConverterSerialize;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -55,7 +56,7 @@ public class Video {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "video", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "video", cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private List<Point> points = new ArrayList<>();
 
     @CreationTimestamp

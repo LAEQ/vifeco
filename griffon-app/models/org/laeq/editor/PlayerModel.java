@@ -30,11 +30,8 @@ final public class PlayerModel extends AbstractGriffonModel {
     final public Controls controls = new Controls();
     final public SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
 
-    //Media markers list
+    //Manager for the points
     final public PointCollection collection = new PointCollection();
-
-    public Map<String, Point> points = new HashMap<>();
-    public ObservableList<IconPointColorized> icons = FXCollections.emptyObservableList();
 
     //Property for normalizing the icon position
     final public SimpleDoubleProperty width = new SimpleDoubleProperty(1);
@@ -76,6 +73,7 @@ final public class PlayerModel extends AbstractGriffonModel {
         if(category != null){
             Point point = new Point();
             point.setVideo(video);
+            video.addPoint(point);
             point.setCategory(getCategoryByShortcut(code));
             point.setStart(currentTime);
             point.setX(mousePosition.getX() / Math.max(width.doubleValue(), 1));
@@ -92,6 +90,7 @@ final public class PlayerModel extends AbstractGriffonModel {
     }
 
     public void removePoint(Point point) {
+        video.removePoint(point);
         collection.removePoint(point);
     }
 
@@ -127,5 +126,9 @@ final public class PlayerModel extends AbstractGriffonModel {
 
     public Optional<Point> getPointFromIcon(IconPointColorized icon) {
         return collection.getPointFromIcon(icon);
+    }
+
+    public Video getVideo() {
+        return video;
     }
 }

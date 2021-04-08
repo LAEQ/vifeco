@@ -16,6 +16,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -31,6 +33,8 @@ import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconSVG;
+import org.reactfx.EventStream;
+import org.reactfx.EventStreams;
 import org.reactfx.Subscription;
 
 import javax.annotation.Nonnull;
@@ -74,6 +78,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private ChangeListener<? super Duration> currentTimeListener = currentTimeListener();
     private Duration display;
 
+    private Subscription subscription = () -> {};
+
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
         Map<String, Object> video = new HashMap<>();
@@ -99,7 +105,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             runInsideUISync(()->{
                 mediaPlayer.stop();
                 mediaPlayer.dispose();
-                iconPane.dispose();
+//                iconPane.dispose();
+                subscription.unsubscribe();
                 slider.dispose();
             });
 
@@ -210,9 +217,30 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             //Mouse, Keyboard events
             scene.setOnKeyReleased(keyReleased());
 
+            EventStream<MouseEvent> clicks = EventStreams.eventsOf(iconPane, MouseEvent.MOUSE_CLICKED);
+
+            manageSubscription(clicks.subscribe(event -> {
+                if(event.isControlDown()){
+                    Node node = event.getPickResult().getIntersectedNode();
+                    Parent parent = node.getParent();
+                    if(parent instanceof IconPointColorized) {
+//                        getApplication().getEventRouter().publishEventOutsideUI("icon.delete", Arrays.asList(parent));
+                        controller.deletePoint((IconPointColorized) parent);
+                    }
+                } else if (event.getButton() == MouseButton.PRIMARY){
+                    getApplication().getEventRouter().publishEvent("player.rewind.5");
+                } else if (event.getButton() == MouseButton.SECONDARY){
+                    getApplication().getEventRouter().publishEvent("player.forward.5");
+                }
+            }));
+
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
         }
+    }
+
+    void manageSubscription(Subscription other) {
+        subscription.and(other);
     }
 
     public void play(){
@@ -296,12 +324,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void removePoint(Point point) {
         markers.remove(point.getId().toString());
-        Platform.runLater(() ->{
+        Platform.runLater(() -> {
             iconPane.getChildren().remove(point.getIconPoint());
         });
     }
 
     public void rewind(Duration now) {
+        System.out.println(getApplication().getUIThreadManager().isUIThread());
         Collection<IconPointColorized> icons = model.setCurrentTime(now);
         mediaPlayer.seek(now);
 

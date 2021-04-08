@@ -18,7 +18,6 @@ public class VideoModel extends AbstractGriffonModel {
     public ObservableList<CategoryCount> categoryCounts = FXCollections.observableArrayList();
 
 
-
     // Form Section
     public Video selectedVideo;
     public SimpleStringProperty name = new SimpleStringProperty(this, "name", "");
@@ -34,8 +33,6 @@ public class VideoModel extends AbstractGriffonModel {
     public Set<User> getUserSet() {
         return userSet;
     }
-
-
 
     public void setSelectedVideo(Video video) {
         this.selectedVideo = video;
@@ -76,7 +73,6 @@ public class VideoModel extends AbstractGriffonModel {
     }
 
     public void removePoint(Point point) {
-        selectedVideo.removePoint(point);
         Optional<CategoryCount> first = categoryCounts.stream().filter(categoryCount -> categoryCount.category.equals(point.getCategory())).findFirst();
 
         if(first.isPresent()){
@@ -85,7 +81,6 @@ public class VideoModel extends AbstractGriffonModel {
     }
 
     public void addPoint(Point point) {
-        selectedVideo.addPoint(point);
         Optional<CategoryCount> first = categoryCounts.stream().filter(categoryCount -> categoryCount.category.equals(point.getCategory())).findFirst();
 
         if(first.isPresent()){

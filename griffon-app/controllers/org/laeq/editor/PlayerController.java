@@ -20,10 +20,7 @@ import org.laeq.model.icon.IconPointColorized;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
 public class PlayerController extends AbstractGriffonController {
@@ -98,22 +95,6 @@ public class PlayerController extends AbstractGriffonController {
                 }
             });
         }
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void deletePoint(Point point) {
-        runInsideUISync(() -> {
-            model.removePoint(point);
-            view.removePoint(point);
-            if(dbService.pointDAO.delete(point)){
-                getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("editor.point.delete.success", point.toString()));
-                getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
-            } else {
-                getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.delete.error", point.toString()));
-            }
-        });
-
     }
 
     @ControllerAction
@@ -201,9 +182,12 @@ public class PlayerController extends AbstractGriffonController {
             view.rewind((Duration) objects[0]);
         });
 
-        list.put("point.delete", objects -> {
-            deletePoint((Point) objects[0]);
+        list.put("timeline.point.deleted", objects -> {
+            Point pt = (Point) objects[0];
+            model.removePoint(pt);
+            view.removePoint(pt);
         });
+
         list.put("icon.delete", objects -> {
             deletePoint((IconPointColorized) objects[0]);
         });
@@ -252,15 +236,18 @@ public class PlayerController extends AbstractGriffonController {
         return list;
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void deletePoint(IconPointColorized icon) {
-        if(icon == null){
-            return;
-        }
+        runInsideUIAsync(() -> {
+            Optional<Point> point = model.getPointFromIcon(icon);
+            if(point.isPresent() && dbService.pointDAO.delete(point.get())) {
+                Point pt = point.get();
+                getApplication().getEventRouter().publishEvent("player.point.deleted", Arrays.asList(pt));
 
-        Optional<Point> point = model.getPointFromIcon(icon);
-
-        if(point.isPresent()){
-            deletePoint(point.get());
-        }
+                model.removePoint(pt);
+                view.removePoint(pt);
+            }
+        });
     }
 }

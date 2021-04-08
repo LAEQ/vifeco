@@ -270,20 +270,26 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
 
         list.put("video.created", objects -> refreshVideoList());
         list.put("videolist.refresh", objects -> view.refresh());
+
         list.put("point.added", objects -> {
-            Point point = (Point) objects[0];
-            model.addPoint(point);
+            model.addPoint((Point) objects[0]);
             view.refresh();
         });
 
-        list.put("point.deleted", objects -> {
-            Point point = (Point) objects[0];
-            model.removePoint(point);
+        list.put("timeline.point.deleted", objects -> {
+            model.removePoint((Point) objects[0]);
+            view.refresh();
+        });
+
+        list.put("player.point.deleted", objects -> {
+            model.removePoint((Point) objects[0]);
             view.refresh();
         });
 
         return list;
     }
+
+
 
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)

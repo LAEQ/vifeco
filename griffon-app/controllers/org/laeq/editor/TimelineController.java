@@ -40,27 +40,42 @@ public class TimelineController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         list.put("point.added", objects ->{
-            model.points.add((Point) objects[0]);
-            view.refesh();
+            synchronized (this){
+                model.points.add((Point) objects[0]);
+                view.refesh();
+            }
         });
 
-        list.put("point.deleted", objects ->{
-            view.clear();
-            model.points.remove(objects[0]);
-            view.refesh();
+        list.put("player.point.deleted", objects ->{
+            synchronized (this){
+                model.points.remove(objects[0]);
+                view.refesh();
+            }
         });
 
         return list;
     }
 
     @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void updateCurrentTime(Duration start) {
-        getApplication().getEventRouter().publishEventOutsideUI("row.currentTime", Arrays.asList(start));
+        getApplication().getEventRouter().publishEventAsync("row.currentTime", Arrays.asList(start));
     }
 
     @ControllerAction
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void deletePoint(Point point) {
-        getApplication().getEventRouter().publishEvent("point.delete", Arrays.asList(point));
+        runInsideUIAsync(() -> {
+            if(dbService.pointDAO.delete(point)){
+                video.getPoints().remove(point);
+                getApplication().getEventRouter().publishEvent("timeline.point.deleted", Arrays.asList(point));
+
+                synchronized (this){
+                    view.clear();
+                    model.points.remove(point);
+                    view.refesh();
+                }
+            }
+        });
     }
 }

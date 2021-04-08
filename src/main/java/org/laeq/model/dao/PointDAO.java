@@ -1,7 +1,18 @@
 package org.laeq.model.dao;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.laeq.model.Point;
+import org.laeq.model.Video;
+
+import javax.persistence.Query;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class PointDAO extends AbstractDAO<Point> {
     public PointDAO(HibernateUtil hib) {
@@ -15,7 +26,21 @@ public class PointDAO extends AbstractDAO<Point> {
 
     @Override
     public Boolean delete(Point point)  {
-        return super.delete(point);
+        Boolean result = true;
+        Session currentSession = this.hib.sessionFactory.getCurrentSession();
+        Transaction tx = currentSession.beginTransaction();
+        try {
+            currentSession.delete(point);
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false;
+            tx.rollback();
+        } finally {
+            currentSession.close();
+        }
+
+        return result;
     }
 
     @Override

@@ -13,7 +13,7 @@ import java.util.Set;
 
 
 public abstract class AbstractDAO<T> {
-    private HibernateUtil hib;
+    protected HibernateUtil hib;
     protected Session session;
     protected Transaction transaction;
 
@@ -37,6 +37,7 @@ public abstract class AbstractDAO<T> {
             currentSession.saveOrUpdate(obj);
             tx.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             result = false;
             tx.rollback();
         } finally {
@@ -53,6 +54,7 @@ public abstract class AbstractDAO<T> {
             session.delete(obj);
             transaction.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             result = Boolean.FALSE;
         } finally {
             session.close();
@@ -87,7 +89,7 @@ public abstract class AbstractDAO<T> {
     }
 
     protected void startOperation() throws Exception {
-        session = hib.sessionFactory.openSession();
+        session = hib.sessionFactory.getCurrentSession();
         transaction = session.beginTransaction();
     }
 
