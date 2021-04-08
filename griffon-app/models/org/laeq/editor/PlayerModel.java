@@ -23,22 +23,22 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonModel.class)
-final public class PlayerModel extends AbstractGriffonModel {
+public final class PlayerModel extends AbstractGriffonModel {
     @MVCMember @Nonnull private Video video;
 
     //Video controls
-    final public Controls controls = new Controls();
-    final public SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
+    public final Controls controls = new Controls();
+    public final SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
 
     //Manager for the points
-    final public PointCollection collection = new PointCollection();
+    public final PointCollection collection = new PointCollection();
 
     //Property for normalizing the icon position
-    final public SimpleDoubleProperty width = new SimpleDoubleProperty(1);
-    final public SimpleDoubleProperty height = new SimpleDoubleProperty(1);
+    public final SimpleDoubleProperty width = new SimpleDoubleProperty(1);
+    public final SimpleDoubleProperty height = new SimpleDoubleProperty(1);
 
-    final private Map<String, Category> shortcutMap= new HashMap();
-    final public SimpleBooleanProperty isReady = new SimpleBooleanProperty(Boolean.FALSE);
+    private final Map<String, Category> shortcutMap= new HashMap();
+    public final SimpleBooleanProperty isReady = new SimpleBooleanProperty(Boolean.FALSE);
 
     public Point2D mousePosition;
 
