@@ -26,21 +26,7 @@ public class PointDAO extends AbstractDAO<Point> {
 
     @Override
     public Boolean delete(Point point)  {
-        Boolean result = true;
-        Session currentSession = this.hib.sessionFactory.getCurrentSession();
-        Transaction tx = currentSession.beginTransaction();
-        try {
-            currentSession.delete(point);
-            tx.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            result = false;
-            tx.rollback();
-        } finally {
-            currentSession.close();
-        }
-
-        return result;
+        return super.delete(point);
     }
 
     @Override

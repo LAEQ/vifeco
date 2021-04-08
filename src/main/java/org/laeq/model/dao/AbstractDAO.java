@@ -21,7 +21,7 @@ public abstract class AbstractDAO<T> {
         this.hib = hib;
     }
 
-    protected Boolean saveOrUpdate(T obj) {
+    protected synchronized Boolean saveOrUpdate(T obj) {
         Boolean result = true;
         Session currentSession = this.hib.sessionFactory.openSession();
         Transaction tx = currentSession.beginTransaction();
@@ -47,17 +47,19 @@ public abstract class AbstractDAO<T> {
         return result;
     }
 
-    protected Boolean delete(T obj)  {
-        Boolean result = Boolean.TRUE;
+    protected synchronized Boolean delete(T obj)  {
+        Boolean result = true;
+        Session currentSession = this.hib.sessionFactory.openSession();
+        Transaction tx = currentSession.beginTransaction();
         try {
-            startOperation();
-            session.delete(obj);
-            transaction.commit();
+            currentSession.delete(obj);
+            tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
             result = Boolean.FALSE;
+            tx.rollback();
         } finally {
-            session.close();
+            currentSession.close();
         }
 
         return result;
