@@ -224,12 +224,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                     Node node = event.getPickResult().getIntersectedNode();
                     Parent parent = node.getParent();
                     if(parent instanceof IconPointColorized) {
-//                        getApplication().getEventRouter().publishEventOutsideUI("icon.delete", Arrays.asList(parent));
                         controller.deletePoint((IconPointColorized) parent);
                     }
                 } else if (event.getButton() == MouseButton.PRIMARY){
+                    controller.rewind(5d);
                     getApplication().getEventRouter().publishEvent("player.rewind.5");
                 } else if (event.getButton() == MouseButton.SECONDARY){
+                    controller.forward(5d);
                     getApplication().getEventRouter().publishEvent("player.forward.5");
                 }
             }));
@@ -263,24 +264,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         return mediaPlayer.getCurrentTime();
     }
 
-    private void refresh(Duration now){
-       runOutsideUIAsync(() -> {
-           final Collection<IconPointColorized> icons = model.setCurrentTime(now);
-           mediaPlayer.pause();
-
-           Platform.runLater(() -> {
-               iconPane.getChildren().clear();
-               iconPane.getChildren().addAll(icons);
-
-               elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
-               mediaPlayer.seek(now);
-               if(model.isPlaying.getValue()){
-                   mediaPlayer.play();
-               }
-           });
-       });
-    }
-
     private ChangeListener<Duration> currentTimeListener(){
         return (observable, oldValue, newValue) -> {
             Platform.runLater(() -> {
@@ -309,13 +292,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void refreshOpacity(Double opacity) {
         Platform.runLater(() ->{
-            iconPane.getChildren().forEach(node -> node.setOpacity(opacity));
+            iconPane.getChildren().parallelStream().forEach(node -> node.setOpacity(opacity));
         });
     }
 
     public void refreshSize(Double size) {
         Platform.runLater(() -> {
-            iconPane.getChildren().forEach(node -> {
+            iconPane.getChildren().parallelStream().forEach(node -> {
                 node.setScaleX(size / 100);
                 node.setScaleY(size / 100);
             });
@@ -330,7 +313,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void rewind(Duration now) {
-        Collection<IconPointColorized> icons = model.setCurrentTime(now);
+        final Collection<IconPointColorized> icons = model.setCurrentTime(now);
         mediaPlayer.seek(now);
 
         Platform.runLater(() -> {
@@ -345,15 +328,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void refreshRate(Double rate) {
-        Platform.runLater(()->{
-            mediaPlayer.setRate(rate);
-        });
+        mediaPlayer.setRate(rate);
     }
 
     public void refreshVolume(Double volume) {
-        Platform.runLater(()->{
-            mediaPlayer.setVolume(volume);
-        });
+        mediaPlayer.setVolume(volume);
     }
 
     public void sliderPressed() {
@@ -362,13 +341,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void sliderReleased(Duration now) {
-        Collection<IconPointColorized> icons = model.setCurrentTime(now);
-
+        final Collection<IconPointColorized> icons = model.setCurrentTime(now);
+        mediaPlayer.seek(now);
         Platform.runLater(() -> {
             iconPane.getChildren().clear();
             iconPane.getChildren().addAll(icons);
             elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
-            mediaPlayer.seek(now);
             mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
 
             if(model.isPlaying.getValue()){
@@ -377,14 +355,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         });
     }
 
-    public void sliderCurrentTime(Duration now) {
-        Collection<IconPointColorized> icons = model.setCurrentTime(now);
+    public void sliderCurrentTime(final Duration now) {
+        final Collection<IconPointColorized> icons = model.setCurrentTime(now);
+        mediaPlayer.seek(now);
         Platform.runLater(() -> {
             iconPane.getChildren().clear();
             iconPane.getChildren().addAll(icons);
-
             elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
-            mediaPlayer.seek(now);
         });
     }
 

@@ -78,7 +78,7 @@ public class PlayerController extends AbstractGriffonController {
     public void addPoint(KeyCode code, Duration currentTime) {
         if(model.isReady.get()){
             runInsideUIAsync(() -> {
-                Point point = model.generatePoint(code.getName(), currentTime);
+                final Point point = model.generatePoint(code.getName(), currentTime);
 
                 if(point == null){
                     return;
@@ -207,25 +207,6 @@ public class PlayerController extends AbstractGriffonController {
             model.setMousePosition((Point2D) objects[0]);
         });
 
-        list.put("player.forward.5", objects -> {
-            Duration now = view.getCurrentTime().add(Duration.seconds(5));
-            if(now.greaterThan(video.getDuration())){
-                now = video.getDuration();
-            }
-
-            view.rewind(now);
-            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(now));
-        });
-        list.put("player.rewind.5", objects -> {
-            Duration now = view.getCurrentTime().subtract(Duration.seconds(5));
-            if(now.lessThan(Duration.ZERO)){
-                now = Duration.ZERO;
-            }
-
-            view.rewind(now);
-            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(now));
-        });
-
         list.put("elapsed.focus.on", objects -> {
             stop();
         });
@@ -249,5 +230,24 @@ public class PlayerController extends AbstractGriffonController {
                 view.removePoint(pt);
             }
         });
+    }
+
+    public void rewind(double value) {
+        final Duration now = view.getCurrentTime().subtract(Duration.seconds(value));
+        if(now.lessThan(Duration.ZERO)){
+            view.rewind(Duration.ZERO);
+            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(Duration.ZERO));
+        } else{
+            view.rewind(now);
+            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(now));
+        }
+    }
+
+    public void forward(double value) {
+        final Duration now = view.getCurrentTime().add(Duration.seconds(value));
+        if(now.greaterThan(video.getDuration()) == false){
+            view.rewind(now);
+            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(now));
+        }
     }
 }

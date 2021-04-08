@@ -81,8 +81,7 @@ public class ImportController extends AbstractGriffonController {
     public void confirm() {
         try {
             dbService.videoDAO.create(model.video);
-
-
+            dbService.pointDAO.create(model.video.getPoints());
 
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("video.import.success", model.video.pathToName()));
         } catch (Exception e) {

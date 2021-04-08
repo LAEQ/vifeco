@@ -38,4 +38,25 @@ public class PointDAO extends AbstractDAO<Point> {
     public Point findOneById(int id) throws Exception {
         return super.findById(id, Point.class);
     }
+
+    public boolean create(List<Point> points) {
+        Boolean result = true;
+        Session currentSession = this.hib.sessionFactory.openSession();
+        Transaction tx = currentSession.beginTransaction();
+        try {
+            for (Point p: points) {
+                currentSession.save(p);
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false;
+            tx.rollback();
+        } finally {
+            currentSession.close();
+        }
+
+        return result;
+    }
 }

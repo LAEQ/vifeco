@@ -22,12 +22,12 @@ import java.util.List;
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
 public class DatabaseService extends AbstractGriffonService{
-    private HibernateUtil hbu;
-    public UserDAO userDAO;
-    public CategoryDAO categoryDAO;
-    public CollectionDAO collectionDAO;
-    public VideoDAO videoDAO;
-    public PointDAO pointDAO;
+    private final HibernateUtil hbu;
+    public final UserDAO userDAO;
+    public final CategoryDAO categoryDAO;
+    public final CollectionDAO collectionDAO;
+    public final VideoDAO videoDAO;
+    public final PointDAO pointDAO;
 
     public DatabaseService(){
         this.hbu = new HibernateUtil("hibernate.cfg.xml");
@@ -69,14 +69,6 @@ public class DatabaseService extends AbstractGriffonService{
         });
 
         this.collectionDAO.create(collection);
-
-        Collection collection2 = new Collection();
-        collection2.setName("Transport 2");
-        collection2.setDefault(Boolean.FALSE);
-
-        collection2.addCategory(categories.get(0));
-
-        this.collectionDAO.create(collection2);
 
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream resource = classLoader.getResourceAsStream("sample/sample.mp4");
