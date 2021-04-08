@@ -46,10 +46,10 @@ class CollectionDAOTest extends Specification {
         Collection collection = new Collection("")
 
         when:
-        dao.create(collection)
+        def result = dao.create(collection)
 
         then:
-        thrown Exception
+        result == false
     }
 
     def "test multiple collection "(){

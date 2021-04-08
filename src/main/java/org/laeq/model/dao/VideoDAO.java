@@ -1,5 +1,8 @@
 package org.laeq.model.dao;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.laeq.model.Point;
 import org.laeq.model.Video;
 
 import java.util.List;
@@ -17,7 +20,24 @@ public class VideoDAO extends AbstractDAO<Video> {
 
     @Override
     public Boolean delete(Video video) {
-        return super.delete(video);
+        Boolean result = true;
+        Session currentSession = this.hib.sessionFactory.openSession();
+        Transaction tx = currentSession.beginTransaction();
+        try {
+            for(Point pt : video.getPoints()){
+                currentSession.delete(pt);
+            }
+            currentSession.delete(video);
+            tx.commit();
+        } catch (Exception e) {
+            result = Boolean.FALSE;
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            currentSession.close();
+        }
+
+        return result;
     }
 
     @Override

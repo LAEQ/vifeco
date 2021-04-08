@@ -10,9 +10,6 @@ class UserTest extends Specification {
 
         when:
         String result = new ObjectMapper().writeValueAsString(user)
-
-        println result
-
         String expected = '{"id":1,"firstName":"test","lastName":"test"}'
 
         then:

@@ -34,10 +34,10 @@ class CategoryDAOTest extends Specification {
         category.setName("")
 
         when:
-        dao.create(category)
+        def result = dao.create(category)
 
         then:
-        thrown Exception
+        result == false
     }
 
     def "test delete"() {

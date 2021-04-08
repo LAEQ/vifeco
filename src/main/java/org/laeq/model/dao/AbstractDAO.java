@@ -37,7 +37,6 @@ public abstract class AbstractDAO<T> {
             currentSession.saveOrUpdate(obj);
             tx.commit();
         } catch (Exception e) {
-            e.printStackTrace();
             result = false;
             tx.rollback();
         } finally {
@@ -55,7 +54,6 @@ public abstract class AbstractDAO<T> {
             currentSession.delete(obj);
             tx.commit();
         } catch (Exception e) {
-            e.printStackTrace();
             result = Boolean.FALSE;
             tx.rollback();
         } finally {
