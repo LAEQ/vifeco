@@ -330,7 +330,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void rewind(Duration now) {
-        System.out.println(getApplication().getUIThreadManager().isUIThread());
         Collection<IconPointColorized> icons = model.setCurrentTime(now);
         mediaPlayer.seek(now);
 

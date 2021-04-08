@@ -88,7 +88,7 @@ public class DatabaseService extends AbstractGriffonService{
         video.setPath(file.getAbsolutePath());
         video.setCollection(collection);
         video.setUser(defaultUser);
-        video.setDuration(Duration.seconds(22));
+        video.setDuration(Duration.seconds(23));
 
         videoDAO.create(video);
     }
