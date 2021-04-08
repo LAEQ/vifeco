@@ -292,13 +292,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void refreshOpacity(Double opacity) {
         Platform.runLater(() ->{
-            iconPane.getChildren().parallelStream().forEach(node -> node.setOpacity(opacity));
+            iconPane.getChildren().forEach(node -> node.setOpacity(opacity));
         });
     }
 
     public void refreshSize(Double size) {
         Platform.runLater(() -> {
-            iconPane.getChildren().parallelStream().forEach(node -> {
+            iconPane.getChildren().forEach(node -> {
                 node.setScaleX(size / 100);
                 node.setScaleY(size / 100);
             });
