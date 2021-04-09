@@ -5,7 +5,7 @@ Don’t be afraid to remove previous vifeco version – your settings won’t be
 
 - Mac/linux: ~/vifeco.
 
-- Windows: C:\Users\<user>\vifeco
+- Windows: C:\Users\\<user\>\vifeco
 
 ### Windows
 To install vifeo, download the binaries vifeco-<version>.win-setup.exe and follow the installer instructions.
