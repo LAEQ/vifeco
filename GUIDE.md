@@ -46,7 +46,11 @@ sudo dpkg -r vifeco
 ```
 
 ### Jar only
-You must install Java 11 with JavaFX prior to run the jar. We recommand Bellsoft Liberica [FullJRE 11](https://bell-sw.com/pages/downloads/#/java-11-lts). 
+You must install Java 11 with JavaFX prior to run the jar only. We recommand Bellsoft Liberica [FullJRE 11](https://bell-sw.com/pages/downloads/#/java-11-lts). 
+
+```bash
+java -jar vifeco-<version>.jar
+```
 
 
 ### Database
