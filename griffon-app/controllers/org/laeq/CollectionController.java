@@ -45,9 +45,11 @@ public class CollectionController extends AbstractGriffonController implements C
             List<Video> videoList = dbService.videoDAO.findAll();
 
             for(Video video : videoList){
-                for(Point point : video.getPoints()){
-                    if(collection.getCategories().contains(point.getCategory()) == false){
-                        dbService.pointDAO.delete(point);
+                if(video.getCollection().equals(collection)){
+                    for(Point point : video.getPoints()){
+                        if(collection.getCategories().contains(point.getCategory()) == false){
+                            dbService.pointDAO.delete(point);
+                        }
                     }
                 }
             }
