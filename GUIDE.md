@@ -3,7 +3,7 @@
 Latest \<version\> is 3.0.0
 
 ## Upgrade
-Don’t be afraid to remove previous vifeco version – your settings won’t be lost. All settings are kept in the separate folder.
+Don’t be afraid to remove previous vifeco version – your settings and database won’t be lost. All settings are kept in the separate folder.
 
 - Mac/linux: ~/vifeco.
 
