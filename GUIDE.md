@@ -8,7 +8,7 @@ Don’t be afraid to remove previous vifeco version – your settings won’t be
 - Windows: C:\Users\\<user\>\vifeco
 
 ### Windows
-To install vifeo, download the binaries vifeco-<version>.win-setup.exe and follow the installer instructions.
+To install vifeo, download the binaries vifeco-\<version\>.win-setup.exe and follow the installer instructions.
 To uninstall vifeco, go to Add/Remove program in system settings, search for vifeco and click uninstall.
 
 ### Mac
