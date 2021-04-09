@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonController.class)
 public class CollectionController extends AbstractGriffonController implements CRUDInterface<Collection> {
@@ -42,16 +43,16 @@ public class CollectionController extends AbstractGriffonController implements C
     public void save(){
         try{
             Collection collection = model.getCollection();
-            List<Video> videoList = dbService.videoDAO.findAll();
+            List<Video> videoList = dbService.videoDAO.findAll().stream()
+                    .filter(video -> video.getCollection().getId() == collection.getId())
+                    .collect(Collectors.toList());
 
             for(Video video : videoList){
-                if(video.getCollection().equals(collection)){
-                    for(Point point : video.getPoints()){
-                        if(collection.getCategories().contains(point.getCategory()) == false){
-                            dbService.pointDAO.delete(point);
-                        }
+                video.getPoints().forEach(point -> {
+                    if(! collection.getCategories().contains(point.getCategory())) {
+                        dbService.pointDAO.delete(point);
                     }
-                }
+                });
             }
 
             if(dbService.collectionDAO.create(collection)){
