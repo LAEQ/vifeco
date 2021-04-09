@@ -20,7 +20,11 @@ jobs:
       run: wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add -
     - name: Set up repository
       run: echo "deb [arch=amd64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list
+    - name: Update
+      run: sudo apt-get update
+    - name: Install jdk11
+      run: sudo apt-get install bellsoft-java11
   #  - name: Grant execute permission for gradlew
   #    run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+  #  - name: Build with Gradle
+  #    run: ./gradlew build
