@@ -3,7 +3,7 @@
 # Preparing the package
 
 APP_NAME=vifeco
-VERSION=2.0.0
+VERSION=3.0.0
 JAR_FILE=vifeco-${VERSION}-all.jar
 JRE=jre-11.0.10-full
 
