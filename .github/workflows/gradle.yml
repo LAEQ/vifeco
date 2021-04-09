@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
-      run: curl -s "https://get.sdkman.io" | bash
+      run: curl -s "https://get.sdkman.io?rcupdate=false" | bash
     - name: Set up repository
       run: source "$HOME/.sdkman/bin/sdkman-init.sh"
     - name: Update
