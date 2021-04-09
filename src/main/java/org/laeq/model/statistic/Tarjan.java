@@ -88,7 +88,7 @@ public class Tarjan {
             final Duration limit = accumulator;
             Integer count = tmp.stream().filter(point -> {
                 Duration diff = limit.subtract(point.getStart());
-                return diff.lessThan(step) && diff.greaterThanOrEqualTo(Duration.ZERO);
+                return diff.lessThanOrEqualTo(step) && diff.greaterThan(Duration.ZERO);
             }).collect(Collectors.toList()).size();
 
             result.put(key, count);
@@ -99,7 +99,7 @@ public class Tarjan {
         final Duration limit = accumulator;
         Integer count = tmp.stream().filter(point -> {
             Duration diff = limit.subtract(point.getStart());
-            return diff.lessThan(step) && diff.greaterThanOrEqualTo(Duration.ZERO);
+            return diff.lessThanOrEqualTo(step) && diff.greaterThan(Duration.ZERO);
         }).collect(Collectors.toList()).size();
 
         result.put(key, count);
@@ -121,7 +121,7 @@ public class Tarjan {
             final Duration limit = accumulator;
             Integer count = tmp.stream().filter(point -> {
                 Duration diff = limit.subtract(point.getStart());
-                return diff.lessThan(step) && diff.greaterThanOrEqualTo(Duration.ZERO);
+                return diff.lessThanOrEqualTo(step) && diff.greaterThan(Duration.ZERO);
             }).collect(Collectors.toList()).size();
 
             result.put(key, count);
@@ -132,7 +132,7 @@ public class Tarjan {
         final Duration limit = accumulator;
         Integer count = tmp.stream().filter(point -> {
             Duration diff = limit.subtract(point.getStart());
-            return diff.lessThan(step) && diff.greaterThanOrEqualTo(Duration.ZERO);
+            return diff.lessThanOrEqualTo(step) && diff.greaterThan(Duration.ZERO);
         }).collect(Collectors.toList()).size();
 
         result.put(key, count);
@@ -153,7 +153,7 @@ public class Tarjan {
             final Duration limit = accumulator;
             Integer count = tmp.stream().filter(point -> {
                 Duration diff = limit.subtract(point.getStart());
-                return diff.lessThan(step) && diff.greaterThanOrEqualTo(Duration.ZERO);
+                return diff.lessThanOrEqualTo(step) && diff.greaterThan(Duration.ZERO);
             }).collect(Collectors.toList()).size();
 
             result.put(key, count);
@@ -164,7 +164,7 @@ public class Tarjan {
         final Duration limit = accumulator;
         Integer count = tmp.stream().filter(point -> {
             Duration diff = limit.subtract(point.getStart());
-            return diff.lessThan(step) && diff.greaterThanOrEqualTo(Duration.ZERO);
+            return diff.lessThanOrEqualTo(step) && diff.greaterThan(Duration.ZERO);
         }).collect(Collectors.toList()).size();
 
         //Matched is double (one for each video);
