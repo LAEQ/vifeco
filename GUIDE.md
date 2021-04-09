@@ -8,11 +8,11 @@ Don’t be afraid to remove previous vifeco version – your settings won’t be
 - Windows: C:\Users\\<user\>\vifeco
 
 ### Windows
-To install vifeo, download the binaries vifeco-\<version\>.win-setup.exe and follow the installer instructions.
+To install vifeo, download the binaries [vifeco-\<version\>.win-setup.exe](https://github.com/LAEQ/vifeco/releases) and follow the installer instructions.
 To uninstall vifeco, go to Add/Remove program in system settings, search for vifeco and click uninstall.
 
 ### Mac
-Download the binaries vifeco-macos-installer-x64-\<version\>.pkg and follow the installer instructions.
+Download the binaries [vifeco-macos-installer-x64-\<version\>.pkg](https://github.com/LAEQ/vifeco/releases) and follow the installer instructions.
 To start vifeco, open a terminal and run the following command
 ```bash
 vifeco-2.0.0
@@ -25,7 +25,7 @@ sudo bash /Library/vifeco/<version>/uninstall.sh
 ```
 
 ### Linux (Debian distribution)
-Download the binaries vifeco_\<version\>_amd64.deb.
+Download the binaries [vifeco_\<version\>_amd64.deb](https://github.com/LAEQ/vifeco/releases) and run the following commands to install, run and uninstall.
   
 ```bash
 #Install
