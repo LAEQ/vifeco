@@ -1,5 +1,7 @@
 ## Guide
 
+Latest \<version\> is 3.0.0
+
 ## Upgrade
 Don’t be afraid to remove previous vifeco version – your settings won’t be lost. All settings are kept in the separate folder.
 
@@ -7,9 +9,13 @@ Don’t be afraid to remove previous vifeco version – your settings won’t be
 
 - Windows: C:\Users\\<user\>\vifeco
 
+--- 
+
 ### Windows
 To install vifeo, download the binaries [vifeco-\<version\>.win-setup.exe](https://github.com/LAEQ/vifeco/releases) and follow the installer instructions.
 To uninstall vifeco, go to Add/Remove program in system settings, search for vifeco and click uninstall.
+
+---
 
 ### Mac
 Download the binaries [vifeco-macos-installer-x64-\<version\>.pkg](https://github.com/LAEQ/vifeco/releases) and follow the installer instructions.
@@ -23,6 +29,8 @@ Run the following command
 ```bash
 sudo bash /Library/vifeco/<version>/uninstall.sh
 ```
+
+---
 
 ### Linux (Debian distribution)
 Download the binaries [vifeco_\<version\>_amd64.deb](https://github.com/LAEQ/vifeco/releases) and run the following commands to install, run and uninstall.
