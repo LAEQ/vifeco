@@ -1,6 +1,8 @@
 ## Guide
 
-Latest \<version\> is 3.0.0
+Vifeco is a JavaFX application written in Java 11 with the JavaFX UI toolkit, 
+
+The latest \<version\> is 3.0.0.
 
 ## Upgrade
 Don’t be afraid to remove previous vifeco version – your settings and database won’t be lost. All settings are kept in the separate folder.
