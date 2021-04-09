@@ -49,5 +49,5 @@ sudo dpkg -r vifeco
 You must install Java 11 with JavaFX prior to run the jar. We recommand Bellsoft Liberica [FullJRE 11](https://bell-sw.com/pages/downloads/#/java-11-lts). 
 
 
-### Important
-The H2 SQL database is located at ~/vifeco/db/vifeco.mv. You can use [DBeaver](https://dbeaver.io/download/) to connect to it.
+### Database
+The H2 SQL database is a file located at ~/vifeco/db/vifeco.mv. You can use [DBeaver](https://dbeaver.io/download/) to connect to it.
