@@ -207,6 +207,10 @@ public class PlayerController extends AbstractGriffonController {
             model.setMousePosition((Point2D) objects[0]);
         });
 
+        list.put("mouse.active", objects -> {
+            model.setMouseActive((boolean) objects[0]);
+        });
+
         list.put("elapsed.focus.on", objects -> {
             stop();
         });

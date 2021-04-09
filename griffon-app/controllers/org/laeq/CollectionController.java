@@ -56,10 +56,10 @@ public class CollectionController extends AbstractGriffonController implements C
                 if(model.collections.contains(collection) == false){
                     model.collections.add(collection);
                 }
+                getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("db.collection.save.success", collection.getName()));
 
                 view.refresh();
                 model.clear();
-                getApplication().getEventRouter().publishEventOutsideUI("status.success.parametrized", Arrays.asList("db.collection.save.success", collection.getName()));
             } else {
                 getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.save.error"));
             }

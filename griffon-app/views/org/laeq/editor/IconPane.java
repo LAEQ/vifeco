@@ -19,6 +19,15 @@ public class IconPane extends Pane {
         EventStream<MouseEvent> moves = EventStreams.eventsOf(this, MouseEvent.MOUSE_MOVED);
         EventStream<Point2D> mouseCoordinates = moves.map(event -> new Point2D(event.getX(), event.getY()));
         subscription.and(mouseCoordinates.subscribe(point -> router.publishEventOutsideUI("mouse.position", Arrays.asList(point))));
+
+        EventStream<MouseEvent> enter = EventStreams.eventsOf(this, MouseEvent.MOUSE_ENTERED);
+        EventStream<Boolean> mouseEnter = enter.map(event -> true);
+        subscription.and(mouseEnter.subscribe(value -> router.publishEventAsync("mouse.active", Arrays.asList(value))));
+
+        EventStream<MouseEvent> out = EventStreams.eventsOf(this, MouseEvent.MOUSE_EXITED);
+        EventStream<Boolean> mouseOut = out.map(event -> false);
+        subscription.and(mouseOut.subscribe(value -> router.publishEventAsync("mouse.active", Arrays.asList(value))));
+
     }
 
     public IconPane(Node... children) {

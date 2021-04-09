@@ -89,6 +89,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     @Override
+    public void mvcGroupDestroy(){
+        mediaPlayer.currentTimeProperty().removeListener(currentTimeListener);
+    }
+
+    @Override
     public void initUI() {
         Stage stage = (Stage) getApplication().createApplicationContainer(Collections.<String,Object>emptyMap());
         stage.setTitle(getApplication().getMessageSource().getMessage("editor.window.title"));
@@ -102,10 +107,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().show("editor");
 
         stage.setOnCloseRequest(event -> {
-            runInsideUISync(()->{
+            runInsideUIAsync(() -> {
                 mediaPlayer.stop();
-                mediaPlayer.dispose();
-//                iconPane.dispose();
+                iconPane.dispose();
                 subscription.unsubscribe();
                 slider.dispose();
             });

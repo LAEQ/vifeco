@@ -49,9 +49,10 @@ public class CategoryController extends AbstractGriffonController implements CRU
                 model.categoryList.addAll(category);
             }
 
+            getApplication().getEventRouter().publishEventAsync("status.success.parametrized", Arrays.asList("db.category.save.success", category.toString()));
+
             model.clear();
             view.refresh();
-            getApplication().getEventRouter().publishEventAsync("status.success.parametrized", Arrays.asList("db.category.save.success", category.toString()));
         }else{
             getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("db.category.save.error"));
         }

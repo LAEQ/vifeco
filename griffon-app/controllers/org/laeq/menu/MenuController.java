@@ -86,10 +86,10 @@ public class MenuController extends AbstractGriffonController {
                 getApplication().getEventRouter().publishEvent("video.created");
                 getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.create.success"));
             } else{
-                throw new Exception();
+                getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
             }
         }catch (Exception e){
-            e.printStackTrace();
+            getLog().error(e.getMessage());
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.create.error"));
         }
     }
@@ -157,6 +157,7 @@ public class MenuController extends AbstractGriffonController {
                 String filename = this.archive();
                 getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("db.export.success", filename));
             } catch (Exception e) {
+                getLog().error(e.getMessage());
                 getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("db.export.error"));
             }
         });

@@ -41,7 +41,7 @@ public class BottomController extends AbstractGriffonController {
         });
     }
 
-    private void setMessageParametized(Object[] objects, List<String> styles) {
+    private void setMessageParametrized(Object[] objects, List<String> styles) {
         String key = (String) objects[0];
         String param = (String) objects[1];
         String text = messageSource.getMessage(key, Arrays.asList(param));
@@ -61,7 +61,7 @@ public class BottomController extends AbstractGriffonController {
             setMessage((String) objects[0], Arrays.asList("alert", "alert-success"));
         });
         list.put("status.success.parametrized", objects -> {
-            setMessageParametized(objects, Arrays.asList("alert", "alert-success"));
+            setMessageParametrized(objects, Arrays.asList("alert", "alert-success"));
         });
 
         //Error
@@ -69,12 +69,12 @@ public class BottomController extends AbstractGriffonController {
             setMessage((String) objects[0], Arrays.asList("alert", "alert-danger"));
         });
         list.put("status.error.parametrized", objects -> {
-            setMessageParametized(objects, Arrays.asList("alert", "alert-danger"));
+            setMessageParametrized(objects, Arrays.asList("alert", "alert-danger"));
         });
 
         //Info
         list.put("status.info.parametrized", objects -> {
-            setMessageParametized(objects, Arrays.asList("alert", "alert-info"));
+            setMessageParametrized(objects, Arrays.asList("alert", "alert-info"));
         });
         list.put("status.info", objects -> {
             setMessage((String) objects[0], Arrays.asList("alert", "alert-info"));
@@ -82,7 +82,7 @@ public class BottomController extends AbstractGriffonController {
 
         //Info
         list.put("status.warning.parametrized", objects -> {
-            setMessageParametized(objects, Arrays.asList("alert", "alert-warning"));
+            setMessageParametrized(objects, Arrays.asList("alert", "alert-warning"));
         });
         list.put("status.warning", objects -> {
             setMessage((String) objects[0], Arrays.asList("alert", "alert-warning"));

@@ -41,6 +41,7 @@ public final class PlayerModel extends AbstractGriffonModel {
     public final SimpleBooleanProperty isReady = new SimpleBooleanProperty(Boolean.FALSE);
 
     public Point2D mousePosition;
+    private boolean mouseActive = false;
 
     public void setVideo(@Nonnull Video video){
         this.video = video;
@@ -70,7 +71,7 @@ public final class PlayerModel extends AbstractGriffonModel {
     public Point generatePoint(String code, Duration currentTime) {
         Category category = getCategoryByShortcut(code);
 
-        if(category != null){
+        if(category != null && mouseActive){
             Point point = new Point();
             point.setVideo(video);
             video.addPoint(point);
@@ -130,5 +131,9 @@ public final class PlayerModel extends AbstractGriffonModel {
 
     public Video getVideo() {
         return video;
+    }
+
+    public void setMouseActive(boolean active) {
+        this.mouseActive = active;
     }
 }

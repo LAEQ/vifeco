@@ -64,10 +64,10 @@ public class UserController extends AbstractGriffonController implements CRUDInt
             if(model.userList.contains(user) == false){
                 model.userList.addAll(user);
             }
+            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.user.save.success", user.toString()));
 
             model.clear();
             view.refresh();
-            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.user.save.success", user.toString()));
         } else {
             model.getUser().setId(null);
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.save.error"));
