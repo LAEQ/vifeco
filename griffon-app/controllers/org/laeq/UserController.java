@@ -25,12 +25,14 @@ public class UserController extends AbstractGriffonController implements CRUDInt
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        try{
-            model.userList.addAll(dbService.userDAO.findAll());
-            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.user.fetch.success"));
-        } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.user.fetch.error"));
-        }
+        runInsideUIAsync(() -> {
+            try{
+                model.userList.addAll(dbService.userDAO.findAll());
+                getApplication().getEventRouter().publishEventAsync("status.info", Arrays.asList("db.user.fetch.success"));
+            } catch (Exception e){
+                getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("db.user.fetch.error"));
+            }
+        });
 
         getApplication().getEventRouter().addEventListener(listeners());
     }

@@ -4,6 +4,8 @@ import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -38,6 +40,8 @@ public class CategoryView extends AbstractJavaFXGriffonView {
     @FXML private TableColumn<Category, String> shortcut;
     @FXML private TableColumn<Category, Void> actions;
 
+    private ChangeListener<String> colorPickerListener = colorPickerListener();
+
     @Override
     public void initUI() {
         Node node = loadFromFXML();
@@ -46,6 +50,11 @@ public class CategoryView extends AbstractJavaFXGriffonView {
         connectActions(node, controller);
 
         init();
+    }
+
+    @Override
+    public void mvcGroupDestroy(){
+        removeColorListener();
     }
 
     private void init(){
@@ -64,8 +73,25 @@ public class CategoryView extends AbstractJavaFXGriffonView {
             }
         });
 
-        colorPickerField.textProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue.length());
+        //Form
+        model.name.bindBidirectional(nameField.textProperty());
+        model.shortCut.bindBidirectional(shortCutField.textProperty());
+        model.color.bindBidirectional(colorPickerField.textProperty());
+        model.icon.bindBidirectional(pathField.textProperty());
+
+        categoryTable.setItems(this.model.categoryList);
+    }
+
+    public void removeColorListener(){
+        colorPickerField.textProperty().removeListener(colorPickerListener);
+    }
+
+    public void addColorListener(){
+        colorPickerField.textProperty().addListener(colorPickerListener);
+    }
+
+    private ChangeListener<String> colorPickerListener(){
+        return (observable, oldValue, newValue) -> {
             if(newValue.length() > 0){
                 Pattern pattern = Pattern.compile("^#[0-9A-F]{6}$");
                 Matcher matcher = pattern.matcher(newValue);
@@ -78,15 +104,7 @@ public class CategoryView extends AbstractJavaFXGriffonView {
                     getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("category.color.invalid"));
                 }
             }
-        });
-
-        //Form
-        model.name.bindBidirectional(nameField.textProperty());
-        model.shortCut.bindBidirectional(shortCutField.textProperty());
-        model.color.bindBidirectional(colorPickerField.textProperty());
-        model.icon.bindBidirectional(pathField.textProperty());
-
-        categoryTable.setItems(this.model.categoryList);
+        };
     }
 
     private void deleteSVG() {
@@ -128,6 +146,7 @@ public class CategoryView extends AbstractJavaFXGriffonView {
                         model.setSelectedCategory(categoryTable.getItems().get(getIndex()));
                         Category category = categoryTable.getItems().get(getIndex());
                         colorPickerField.setText(category.getColor());
+                        addColorListener();
                     });
 
                     delete.setOnAction(event -> {
@@ -185,7 +204,7 @@ public class CategoryView extends AbstractJavaFXGriffonView {
     }
 
     public void refresh() {
-        colorPickerField.setText("");
+        removeColorListener();
         categoryTable.refresh();
     }
 }

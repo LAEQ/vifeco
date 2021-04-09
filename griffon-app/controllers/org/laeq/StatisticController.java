@@ -32,15 +32,15 @@ StatisticController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        try{
-            List<Video> list = dbService.videoDAO.findAll();
-            model.videos.addAll(list);
-
-
-            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.video.fetch.success"));
-        } catch (Exception e){
-            getApplication().getEventRouter().publishEventOutsideUI("status.error", Arrays.asList("db.video.fetch.error"));
-        }
+        runInsideUIAsync(() -> {
+            try{
+                List<Video> list = dbService.videoDAO.findAll();
+                model.videos.addAll(list);
+                getApplication().getEventRouter().publishEventAsync("status.info", Arrays.asList("db.video.fetch.success"));
+            } catch (Exception e){
+                getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("db.video.fetch.error"));
+            }
+        });
 
         getApplication().getEventRouter().addEventListener(listeners());
     }

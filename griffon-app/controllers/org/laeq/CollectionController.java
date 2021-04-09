@@ -26,14 +26,16 @@ public class CollectionController extends AbstractGriffonController implements C
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        try {
-            model.collections.addAll(dbService.collectionDAO.findAll());
-            model.addCategories(dbService.categoryDAO.findAll());
-            model.categories.addAll(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.collection.fetch.success"));
-        } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.fetch.error"));
-        }
+        runInsideUIAsync(() -> {
+            try {
+                model.collections.addAll(dbService.collectionDAO.findAll());
+                model.addCategories(dbService.categoryDAO.findAll());
+                model.categories.addAll(dbService.categoryDAO.findAll());
+                getApplication().getEventRouter().publishEventAsync("status.info", Arrays.asList("db.collection.fetch.success"));
+            } catch (Exception e){
+                getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("db.collection.fetch.error"));
+            }
+        });
 
         getApplication().getEventRouter().addEventListener(listeners());
     }

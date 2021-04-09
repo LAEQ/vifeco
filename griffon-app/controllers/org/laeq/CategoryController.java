@@ -24,12 +24,14 @@ public class CategoryController extends AbstractGriffonController implements CRU
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        try{
-            model.categoryList.addAll(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.category.fetch.success"));
-        } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.category.fetch.error"));
-        }
+        runInsideUIAsync(() -> {
+            try{
+                model.categoryList.addAll(dbService.categoryDAO.findAll());
+                getApplication().getEventRouter().publishEventAsync("status.info", Arrays.asList("db.category.fetch.success"));
+            } catch (Exception e){
+                getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("db.category.fetch.error"));
+            }
+        });
 
         getApplication().getEventRouter().addEventListener(listeners());
     }
@@ -48,11 +50,9 @@ public class CategoryController extends AbstractGriffonController implements CRU
             if(model.categoryList.contains(category) == false){
                 model.categoryList.addAll(category);
             }
-
-            getApplication().getEventRouter().publishEventAsync("status.success.parametrized", Arrays.asList("db.category.save.success", category.toString()));
-
-            model.clear();
             view.refresh();
+            getApplication().getEventRouter().publishEventAsync("status.success.parametrized", Arrays.asList("db.category.save.success", category.toString()));
+            model.clear();
         }else{
             getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("db.category.save.error"));
         }

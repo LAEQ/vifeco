@@ -37,20 +37,22 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
 
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        try{
-            model.videoList.addAll(dbService.videoDAO.findAll());
-            model.getUserSet().addAll(dbService.userDAO.findAll());
-            model.getCollectionSet().addAll(dbService.collectionDAO.findAll());
-            model.categorySet.addAll(dbService.categoryDAO.findAll());
-            getApplication().getEventRouter().publishEventOutsideUI("status.info", Arrays.asList("db.video.fetch.success"));
+        runInsideUIAsync(() -> {
+            try{
+                model.videoList.addAll(dbService.videoDAO.findAll());
+                model.getUserSet().addAll(dbService.userDAO.findAll());
+                model.getCollectionSet().addAll(dbService.collectionDAO.findAll());
+                model.categorySet.addAll(dbService.categoryDAO.findAll());
+                model.videoList.forEach(v -> setVideoDuration(v));
 
-            model.videoList.forEach(v -> setVideoDuration(v));
+                getApplication().getEventRouter().publishEventAsync("status.info", Arrays.asList("db.video.fetch.success"));
+            } catch (Exception e){
+                getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("db.video.fetch.error"));
+            }
+        });
 
-            //@todo add BiDirectionalBinding to remove this hack
-            view.initForm();
-        } catch (Exception e){
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.video.fetch.error"));
-        }
+        //@todo add BiDirectionalBinding to remove this hack
+        view.initForm();
 
         getApplication().getEventRouter().addEventListener(listeners());
     }
