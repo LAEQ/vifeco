@@ -15,7 +15,7 @@ To uninstall vifeco, go to Add/Remove program in system settings, search for vif
 Download the binaries [vifeco-macos-installer-x64-\<version\>.pkg](https://github.com/LAEQ/vifeco/releases) and follow the installer instructions.
 To start vifeco, open a terminal and run the following command
 ```bash
-vifeco-2.0.0
+vifeco-<version>
 ```
   
 To uninstall vifeco. 
