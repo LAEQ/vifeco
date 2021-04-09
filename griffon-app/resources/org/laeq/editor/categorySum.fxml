@@ -7,9 +7,9 @@
            xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.editor.CategorySumController"
            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
     <columns>
-        <TableColumn fx:id="iconTS" prefWidth="75.0" />
-        <TableColumn fx:id="shortcutTS" prefWidth="75.0" JavaFXUtils.i18nKey="z.shortcut" />
-        <TableColumn fx:id="totalTS" prefWidth="75.0" JavaFXUtils.i18nKey="z.total" />
-        <TableColumn fx:id="nameTS" prefWidth="205.0" JavaFXUtils.i18nKey="z.name" />
+        <TableColumn fx:id="iconTS" prefWidth="45.0" />
+        <TableColumn fx:id="shortcutTS" prefWidth="35.0" JavaFXUtils.i18nKey="z.shortcut" />
+        <TableColumn fx:id="totalTS" prefWidth="45.0" JavaFXUtils.i18nKey="z.total" />
+        <TableColumn fx:id="nameTS" prefWidth="135.0" JavaFXUtils.i18nKey="z.name" />
     </columns>
 </TableView>
