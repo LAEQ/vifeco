@@ -76,7 +76,7 @@ public class CategoryModel extends AbstractGriffonModel {
     public void clear() {
         name.set("");
         icon.set("");
-//        color.set("");
+        color.set("");
         shortCut.set("");
 
         this.selectedCategory = null;

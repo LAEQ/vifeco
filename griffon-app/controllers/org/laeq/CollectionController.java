@@ -87,11 +87,12 @@ public class CollectionController extends AbstractGriffonController implements C
         }
 
        if(dbService.collectionDAO.delete(collection)){
-           if(model.collections.contains(collection) == false){
-               model.collections.add(collection);
-           }
-           view.refresh();
+           model.collections.remove(collection);
+
            getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.collection.delete.success", collection.getName()));
+
+           model.clear();
+           view.refresh();
         } else {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.collection.delete.error"));
         }

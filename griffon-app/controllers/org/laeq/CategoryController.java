@@ -72,8 +72,10 @@ public class CategoryController extends AbstractGriffonController implements CRU
     public void delete(Category category) {
         if(dbService.categoryDAO.delete(category)){
             model.categoryList.remove(category);
-            view.refresh();
+
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("db.category.delete.success", category.getName()));
+            view.refresh();
+            model.clear();
         }  else {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.category.delete.error"));
         }

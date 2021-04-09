@@ -65,6 +65,7 @@ public class CategoryView extends AbstractJavaFXGriffonView {
         });
 
         colorPickerField.textProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(newValue.length());
             if(newValue.length() > 0){
                 Pattern pattern = Pattern.compile("^#[0-9A-F]{6}$");
                 Matcher matcher = pattern.matcher(newValue);
@@ -184,6 +185,7 @@ public class CategoryView extends AbstractJavaFXGriffonView {
     }
 
     public void refresh() {
+        colorPickerField.setText("");
         categoryTable.refresh();
     }
 }
