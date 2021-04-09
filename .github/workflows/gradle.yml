@@ -17,20 +17,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
-      run: curl -s "https://get.sdkman.io?rcupdate=false" | bash
-    - name: Set up repository
-      run: source "$HOME/.sdkman/bin/sdkman-init.sh"
-    - name: Update
-      run: sdk version
-    - name: Install jdk11
-      run: sdk install java 11.0.10.fx-librca
-    - name: Install gradle
-      run: sdk innstall gradle 6.3
-    - name: test
-      run : java -version
-    - name: test
-      run: gradle -v
-#     - name: Grant execute permission for gradlew
-#       run: chmod +x gradlew
-#     - name: Build with Gradle
-#       run: ./gradlew test
+    
