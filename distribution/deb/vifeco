@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-/usr/share/vifeco/runtime/bin/java -jar /usr/share/vifeco/app/vifeco-2.0.0-all.jar 2>&1
+/usr/share/vifeco/runtime/bin/java -jar /usr/share/vifeco/app/vifeco-3.0.0-all.jar 2>&1
 
