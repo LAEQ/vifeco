@@ -56,4 +56,4 @@ java -jar vifeco-<version>.jar
 
 
 ### Database
-The H2 SQL database is a file located at ~/vifeco/db/vifeco.mv. You can use [DBeaver](https://dbeaver.io/download/) to connect to it.
+The H2 SQL database is a file located at ~/vifeco/db/vifeco.mv.
