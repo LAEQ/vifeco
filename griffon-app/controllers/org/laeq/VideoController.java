@@ -45,6 +45,8 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
                 model.categorySet.addAll(dbService.categoryDAO.findAll());
                 model.videoList.forEach(v -> setVideoDuration(v));
 
+                view.initForm();
+
                 getApplication().getEventRouter().publishEventAsync("status.info", Arrays.asList("db.video.fetch.success"));
             } catch (Exception e){
                 getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("db.video.fetch.error"));
@@ -52,7 +54,6 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
         });
 
         //@todo add BiDirectionalBinding to remove this hack
-        view.initForm();
 
         getApplication().getEventRouter().addEventListener(listeners());
     }

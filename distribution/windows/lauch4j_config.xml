@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\david\Documents\laeq\VifecoProjects\vifeco\distribution\windows\vifeco-3.0.0-all.jar</jar>
+  <jar>C:\Users\david\Documents\laeq\VifecoProjects\vifeco\distribution\windows\vifeco-3.0.1-all.jar</jar>
   <outfile>C:\Users\david\Documents\laeq\VifecoProjects\vifeco\distribution\windows\vifeco.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
