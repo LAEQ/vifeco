@@ -82,7 +82,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         speed.setShowTickMarks(true);
         speed.setShowTickLabels(true);
         speed.valueProperty().addListener((obs, oldval, newVal) -> {
-            double value = Math.round(newVal.doubleValue() * 4) / 4f;
+            double value = Math.round(newVal.doubleValue() * 10) / 10f;
             speed.setValue(value);
             speedLabel.setText(String.format("%.2f", value));
             controller.dispatch("speed.change", Double.valueOf(value));
