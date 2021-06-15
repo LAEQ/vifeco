@@ -46,10 +46,10 @@ class TarjanTest extends Specification {
 
         def expected_1 = new HashMap()
         expected_1.put("5", 2);
-        expected_1.put("10", 3);
-        expected_1.put("15", 2);
-        expected_1.put("20", 3);
-        expected_1.put("25", 0);
+        expected_1.put("10", 2);
+        expected_1.put("15", 3);
+        expected_1.put("20", 2);
+        expected_1.put("25", 1);
         expected_1.put("30", 0);
         expected_1.put("35", 0);
         expected_1.put("40", 0);
@@ -59,10 +59,10 @@ class TarjanTest extends Specification {
         expected_1.put("60", 0);
 
         def matched_expected = new HashMap()
-        matched_expected.put("5", 3);
-        matched_expected.put("10", 2);
-        matched_expected.put("15", 3);
-        matched_expected.put("20", 2);
+        matched_expected.put("5", 2);
+        matched_expected.put("10", 3);
+        matched_expected.put("15", 2);
+        matched_expected.put("20", 3);
         matched_expected.put("25", 0);
         matched_expected.put("30", 0);
         matched_expected.put("35", 0);
@@ -91,6 +91,5 @@ class TarjanTest extends Specification {
         serie_1 == expected_1
         serie_2 == expected_2
         serie_matched == matched_expected
-
     }
 }
