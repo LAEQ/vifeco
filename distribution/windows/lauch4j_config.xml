@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\david\Documents\laeq\VifecoProjects\vifeco\distribution\windows\vifeco-3.0.1-all.jar</jar>
+  <jar>C:\Users\david\Documents\laeq\VifecoProjects\vifeco\distribution\windows\vifeco-3.0.2-all.jar</jar>
   <outfile>C:\Users\david\Documents\laeq\VifecoProjects\vifeco\distribution\windows\vifeco.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
@@ -28,11 +28,11 @@
     <runtimeBits>64/32</runtimeBits>
   </jre>
   <versionInfo>
-    <fileVersion>3.0.0.0</fileVersion>
+    <fileVersion>3.0.0.2</fileVersion>
     <txtFileVersion>1.0.0</txtFileVersion>
     <fileDescription>Vifeco</fileDescription>
     <copyright>Free software</copyright>
-    <productVersion>3.0.0.0</productVersion>
+    <productVersion>3.0.0.2</productVersion>
     <txtProductVersion>1</txtProductVersion>
     <productName>Vifeco</productName>
     <companyName></companyName>
