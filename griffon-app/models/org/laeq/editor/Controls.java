@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
 
 public final class Controls {
-    public final Double[] speedValue = new Double[]{0.25d, 10.0};
+    public final Double[] speedValue = new Double[]{0.1d, 10.0};
     public final Double[] opacityValue = new Double[]{.1, 1.0};
     public final Double[] sizeValue = new Double[]{10d, 80d};
     public final Double[] durationValue = new Double[]{1d, 30d};
@@ -22,14 +22,14 @@ public final class Controls {
     }
 
     public final void speedUp() {
-        if(speed.doubleValue() <= speedValue[1] - .25){
-            speed.set(speed.doubleValue() + .25);
+        if(speed.doubleValue() <= speedValue[1] - .1){
+            speed.set(speed.doubleValue() + .1);
         }
     }
 
     public final void speedDown() {
-        if(speed.doubleValue() >= speedValue[0] + .25){
-            speed.set(speed.doubleValue() - .25);
+        if(speed.doubleValue() >= speedValue[0] + .1){
+            speed.set(speed.doubleValue() - .1);
         }
     }
 }
