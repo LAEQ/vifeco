@@ -27,7 +27,6 @@ public class IconPane extends Pane {
         EventStream<MouseEvent> out = EventStreams.eventsOf(this, MouseEvent.MOUSE_EXITED);
         EventStream<Boolean> mouseOut = out.map(event -> false);
         subscription.and(mouseOut.subscribe(value -> router.publishEventAsync("mouse.active", Arrays.asList(value))));
-
     }
 
     public IconPane(Node... children) {

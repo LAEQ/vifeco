@@ -55,6 +55,16 @@ public class PlayerController extends AbstractGriffonController {
     }
 
     @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    public void togglePlay() {
+        if(model.isPlaying.getValue()){
+            stop();
+        } else {
+            play();
+        }
+    }
+
+    @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void controls() {
         Stage display = (Stage) getApplication().getWindowManager().findWindow("controls");
