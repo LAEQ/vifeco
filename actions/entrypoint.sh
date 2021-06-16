@@ -1,6 +1,8 @@
 #!/bin/bash
 
-echo $HOME
+echo "HOME: $HOME"
+echo "JAVA_HOME: $JAVA_HOME"
+echo "GRADLE_HOME: $GRADLE_HOME"
 
 ls -la /root/
 
