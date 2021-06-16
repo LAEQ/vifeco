@@ -31,5 +31,5 @@ RUN bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && \
 
 #ADD entrypoint.sh /entrypoint.sh
 #RUN chmod +x /entrypoint.sh
-#ENTRYPOINT ["/entrypoint.sh"]
-ENTRYPOINT bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && $0 $@"
+ENTRYPOINT ["/entrypoint.sh"]
+#ENTRYPOINT bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && $0 $@"
