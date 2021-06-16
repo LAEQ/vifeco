@@ -9,8 +9,12 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Set up JDK 11
-        uses: ./actions
+        uses: actions/setup-java@v2
         with:
-          MY_NAME: "David"
-      - name: Build with Gradle
-        run: /root/.sdkman/candidates/gradle/current/gradle -version
+          distribution: 'zulu'
+          java-version: '11'
+          java-package: jdk+fx # optional (jdk, jre, jdk+fx or jre+fx) - defaults to jdk
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: 6.3
+          arguments: build --dry-run
