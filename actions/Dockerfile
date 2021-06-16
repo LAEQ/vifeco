@@ -26,14 +26,14 @@ RUN apt-get update && \
 
 RUN curl -s "https://get.sdkman.io" | bash
 #
-RUN bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && \
+RUN bash -c "source /github/home/.sdkman/bin/sdkman-init.sh && \
     yes | sdk install java $JAVA_VERSION && \
     yes | sdk install gradle $GRADLE_VERSION && \
-    rm -rf $HOME/.sdkman/archives/* && \
-    rm -rf $HOME/.sdkman/tmp/*"
+    rm -rf /github/home/.sdkman/archives/* && \
+    rm -rf /github/home/.sdkman/tmp/*"
 
-ENV GRADLE_HOME="$HOME/.sdkman/candidates/gradle/current"
-ENV JAVA_HOME="$HOME/.sdkman/candidates/java/current"
+ENV GRADLE_HOME="/github/home/.sdkman/candidates/gradle/current"
+ENV JAVA_HOME="/github/home/.sdkman/candidates/java/current"
 ENV PATH="$GRADLE_HOME/bin:$JAVA_HOME/bin:$PATH"
 
 ADD entrypoint.sh /entrypoint.sh
