@@ -17,24 +17,24 @@ ARG GRADLE_VERSION="6.3"
 
 SHELL ["/bin/bash", "-c"]
 
-#RUN apt-get update && \
-#	apt-get install -y zip unzip curl && \
-#	rm -rf /var/lib/apt/lists/* && \
-#	rm -rf /tmp/*
+RUN apt-get update && \
+	apt-get install -y zip unzip curl && \
+	rm -rf /var/lib/apt/lists/* && \
+	rm -rf /tmp/*
 
 #USER $USER_UID:$USER_GID
 
-#RUN curl -s "https://get.sdkman.io" | bash
+RUN curl -s "https://get.sdkman.io" | bash
 #
-#RUN bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && \
-#    yes | sdk install java $JAVA_VERSION && \
-#    yes | sdk install gradle $GRADLE_VERSION && \
-#    rm -rf $HOME/.sdkman/archives/* && \
-#    rm -rf $HOME/.sdkman/tmp/*"
+RUN bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && \
+    yes | sdk install java $JAVA_VERSION && \
+    yes | sdk install gradle $GRADLE_VERSION && \
+    rm -rf $HOME/.sdkman/archives/* && \
+    rm -rf $HOME/.sdkman/tmp/*"
 
-#ENV MAVEN_HOME="/root/.sdkman/candidates/maven/current"
-#ENV JAVA_HOME="/root/.sdkman/candidates/java/current"
-#ENV PATH="$MAVEN_HOME/bin:$JAVA_HOME/bin:$PATH"
+ENV GRADLE_HOME="$HOME/.sdkman/candidates/gradle/current"
+ENV JAVA_HOME="$HOME/.sdkman/candidates/java/current"
+ENV PATH="$GRADLE_HOME/bin:$JAVA_HOME/bin:$PATH"
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
