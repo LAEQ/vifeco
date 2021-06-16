@@ -13,4 +13,4 @@ jobs:
         with:
           MY_NAME: "David"
       - name: Build with Gradle
-        run: gradle test
+        run: /home/vifeco/.sdkman/candidates/gradle/current/gradle -version
