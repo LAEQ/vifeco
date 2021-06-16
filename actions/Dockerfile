@@ -4,13 +4,16 @@ MAINTAINER David Maignan davidmaignan@gmail.com
 ARG JAVA_VERSION="11.0.10.fx-librca"
 ARG GRADLE_VERSION="6.3"
 
-#ARG USER_UID="1000"
-#ARG USER_GID="1000"
-#ARG USER_NAME="actions"
-#RUN groupadd -g $USER_GID $USER_NAME && \
-#	useradd -m -g $USER_GID -u $USER_UID $USER_NAME
+# Defining default non-root user UID, GID, and name
+ARG USER_UID="1000"
+ARG USER_GID="1000"
+ARG USER_NAME="vifeco"
 
-WORKDIR /home
+# Creating default non-user
+RUN groupadd -g $USER_GID $USER_NAME && \
+	useradd -m -g $USER_GID -u $USER_UID $USER_NAME
+
+WORKDIR /home/$USER_NAME
 
 SHELL ["/bin/bash", "-c"]
 
@@ -29,7 +32,11 @@ RUN bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && \
     rm -rf $HOME/.sdkman/archives/* && \
     rm -rf $HOME/.sdkman/tmp/*"
 
-#ADD entrypoint.sh /entrypoint.sh
-#RUN chmod +x /entrypoint.sh
-#ENTRYPOINT ["/entrypoint.sh"]
+ENV MAVEN_HOME="/home/vifeco/.sdkman/candidates/maven/current"
+ENV JAVA_HOME="/home/vifeco/.sdkman/candidates/java/current"
+ENV PATH="$MAVEN_HOME/bin:$JAVA_HOME/bin:$PATH"
+
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 #ENTRYPOINT bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && $0 $@"
