@@ -10,7 +10,7 @@ Vifeco (video features counter) is a stand-alone, multiplatform (Windows, Mac an
 
 | Branch | status | DOI |
 | ------------- | ------------- | ---- |
-| Master  |  ![build status](https://travis-ci.org/LAEQ/vifeco.svg?branch=master)| [![DOI](https://zenodo.org/badge/165725219.svg)](https://zenodo.org/badge/latestdoi/165725219)
+| Master  |  ![Master branch ](https://github.com/laeq/vifeco/actions/workflows/main.yml/badge.svg?branch=master) | [![DOI](https://zenodo.org/badge/165725219.svg)](https://zenodo.org/badge/latestdoi/165725219)
 
 
 ## Download
