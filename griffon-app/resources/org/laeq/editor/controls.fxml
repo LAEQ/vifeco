@@ -11,6 +11,11 @@
       <Slider fx:id="size" layoutX="10.0" layoutY="95.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="95.0" />
       <Label layoutX="10.0" layoutY="133.0" prefHeight="17.0" prefWidth="173.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="133.0" JavaFXUtils.i18nKey="z.duration" />
       <Slider fx:id="duration" layoutX="10.0" layoutY="158.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="158.0" />
+      <fx:define>
+          <ToggleGroup fx:id="durationInterval"/>
+      </fx:define>
+      <RadioButton fx:id="durationUnder1s" layoutX="100.0" layoutY="133.0" AnchorPane.rightAnchor="170.0" AnchorPane.topAnchor="133.0" toggleGroup="$durationInterval" JavaFXUtils.i18nKey="z.under1s"/>
+      <RadioButton fx:id="durationOver1s" layoutX="200.0" layoutY="133.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="133.0" toggleGroup="$durationInterval" JavaFXUtils.i18nKey="z.over1s"/>
       <Label fx:id="speedLabel" layoutX="158.0" layoutY="28.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
       <Label fx:id="sizeLabel" layoutX="162.0" layoutY="95.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="90.0" />
       <Label fx:id="durationLabel" layoutX="162.0" layoutY="158.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="155.0" />
