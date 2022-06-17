@@ -91,7 +91,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     }
 
     private void initDurationSlider() {
-        durationLabel.setText(String.format("%.0f s", controls.duration.getValue()));
+        durationLabel.setText(String.format("%.2f s", controls.duration.getValue()));
         duration.valueProperty().bindBidirectional(controls.duration);
         duration.setMin(controls.durationValue[0]);
         duration.setMax(controls.durationValue[1]);
@@ -99,9 +99,9 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         duration.setShowTickMarks(true);
         duration.setShowTickLabels(true);
         duration.valueProperty().addListener((obs, oldval, newVal) -> {
-            double value = Math.round(newVal.doubleValue() * 1) / 1f;
+            double value = newVal.doubleValue();
             duration.setValue(value);
-            durationLabel.setText(String.format("%.0f s", value));
+            durationLabel.setText(String.format("%.2f s", value));
             controller.dispatch("duration.change", Double.valueOf(value));
             controls.duration.set(value);
         });
