@@ -186,6 +186,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     private Scene init() {
         Scene scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
+        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
 
         Node node = loadFromFXML();
         if (node instanceof Parent) {
