@@ -4,12 +4,14 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -39,6 +41,9 @@ public class ControlsView extends AbstractJavaFXGriffonView {
     @FXML private Label sizeLabel;
     @FXML private Label volumeLabel;
 
+    @FXML private RadioButton durationUnder1s;
+    @FXML private RadioButton durationOver1s;
+
     @MVCMember
     public void setController(@Nonnull ControlsController controller) {
         this.controller = controller;
@@ -67,7 +72,20 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         });
 
         initSpeedSlider();
-        initDurationSlider();
+
+        durationUnder1s.setOnAction(action -> {
+            initDurationSlider(0.01d, 1d, 0.1d);
+        });
+        durationOver1s.selectedProperty().addListener(
+            (ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) ->{
+            initDurationSlider(
+                    controls.durationValue[0],
+                    controls.durationValue[1],
+                    5);
+        });
+
+        durationOver1s.setSelected(true);
+
         initSizeSlider();
         initOpacitySlider();
         initVolumeSlider();
@@ -90,18 +108,18 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         });
     }
 
-    private void initDurationSlider() {
-        durationLabel.setText(String.format("%.0f s", controls.duration.getValue()));
+    private void initDurationSlider(double min, double max, double tickUnit) {
+        durationLabel.setText(String.format("%.2f s", controls.duration.getValue()));
         duration.valueProperty().bindBidirectional(controls.duration);
-        duration.setMin(controls.durationValue[0]);
-        duration.setMax(controls.durationValue[1]);
-        duration.setMajorTickUnit(5);
+        duration.setMin(min);
+        duration.setMax(max);
+        duration.setMajorTickUnit(tickUnit);
         duration.setShowTickMarks(true);
         duration.setShowTickLabels(true);
         duration.valueProperty().addListener((obs, oldval, newVal) -> {
-            double value = Math.round(newVal.doubleValue() * 1) / 1f;
+            double value = newVal.doubleValue();
             duration.setValue(value);
-            durationLabel.setText(String.format("%.0f s", value));
+            durationLabel.setText(String.format("%.2f s", value));
             controller.dispatch("duration.change", Double.valueOf(value));
             controls.duration.set(value);
         });
