@@ -2,8 +2,6 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\david\Documents\Projects\distribution\windows\vifeco-3.0.5-all.jar</jar>
-  <outfile>C:\Users\david\Documents\Projects\distribution\windows\vifeco.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,7 +11,6 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>C:\Users\david\Documents\Projects\distribution\windows\favicon_v\favicon.ico</icon>
   <singleInstance>
     <mutexName>vifeco</mutexName>
     <windowTitle></windowTitle>

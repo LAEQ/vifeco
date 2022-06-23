@@ -73,8 +73,8 @@ if (keyAlias || keystorePwd) {
 
 launch4j {
     headerType = "gui"
-    outfile = 'vifeco.exe'
+    outfile = "../../distribution/windows/vifeco.exe"
+    icon = "../../distribution/windows/favicon_io/favicon.ico"
     mainClassName = 'org.laeq.Launcher'
-    icon = "${projectDir}/distribution/windows/favicon_io/favicon.ico"
-    jar = "${projectDir}/build/libs/vifeco-3.0.2-all.jar" // TODO version name as variable
+    jar = "${projectDir}/build/libs/vifeco-${version}-all.jar"
 }
