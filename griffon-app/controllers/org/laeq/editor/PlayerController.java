@@ -189,7 +189,15 @@ public class PlayerController extends AbstractGriffonController {
         });
 
         list.put("brightness.change", objects -> {
-            System.out.println("HFDFSDF");
+            view.refreshBrightness((Double) objects[0]);
+        });
+
+        list.put("saturation.change", objects -> {
+            view.refreshSaturation((Double) objects[0]);
+        });
+
+        list.put("constrast.change", objects -> {
+            view.refreshContrast((Double) objects[0]);
         });
 
         list.put("opacity.change", objects -> {

@@ -29,9 +29,11 @@ public class ImageControlsView extends AbstractJavaFXGriffonView {
 
     @FXML private Slider brightness;
     @FXML private Slider saturation;
+    @FXML private Slider contrast;
 
     @FXML private Label brightnessLabel;
     @FXML private Label saturationLabel;
+    @FXML private Label contrastLabel;
 
 
     @MVCMember
@@ -63,6 +65,7 @@ public class ImageControlsView extends AbstractJavaFXGriffonView {
 
         initBrightnessSlider();
         initSaturationSlider();
+        initContrastSlider();
     }
 
     private void initBrightnessSlider() {
@@ -96,6 +99,23 @@ public class ImageControlsView extends AbstractJavaFXGriffonView {
             saturationLabel.setText(String.format("%.2f", value));
             controller.dispatch("saturation.change",  Double.valueOf(value));
             controls.saturation.setValue(value);
+        });
+    }
+
+    private void initContrastSlider() {
+        contrastLabel.setText(String.format("%.2f", controls.saturation.getValue()));
+        contrast.setValue(controls.saturation.getValue());
+        contrast.setMin(controls.contrastValue[0]);
+        contrast.setMax(controls.contrastValue[1]);
+        contrast.setMajorTickUnit(0.1);
+        contrast.setShowTickMarks(true);
+        contrast.setShowTickLabels(true);
+        contrast.valueProperty().addListener((obs, oldval, newVal) -> {
+            double value = Math.round(newVal.doubleValue() * 10) / 10f;
+            contrast.setValue(value);
+            contrastLabel.setText(String.format("%.2f", value));
+            controller.dispatch("constrast.change",  Double.valueOf(value));
+            controls.contrast.setValue(value);
         });
     }
 

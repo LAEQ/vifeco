@@ -14,7 +14,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -70,6 +71,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private Button forwardActionTarget;
     @FXML private Button controlsActionTarget;
     @FXML private Button imageControlsActionTarget;
+
+    private ColorAdjust colorAdjust;
 
     private Boolean wasPlaying = false;
     private Double videoDuration;
@@ -178,6 +181,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         try {
             final File file = new File(video.getPath());
             final Media media = new Media(file.getCanonicalFile().toURI().toString());
+
+            colorAdjust = new ColorAdjust();
+            mediaView.setEffect(colorAdjust);
 
             videoDuration = video.getDuration().toMillis();
             display = model.controls.display();
@@ -307,6 +313,25 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     public void refreshOpacity(Double opacity) {
         Platform.runLater(() ->{
             iconPane.getChildren().forEach(node -> node.setOpacity(opacity));
+        });
+    }
+
+    public void refreshBrightness(Double brightness){
+        Platform.runLater(() -> {
+            colorAdjust.setBrightness(brightness);
+        });
+    }
+
+    public void refreshSaturation(Double brightness){
+        Platform.runLater(() -> {
+            colorAdjust.setSaturation(brightness);
+        });
+    }
+
+
+    public void refreshContrast(Double contrast) {
+        Platform.runLater(() -> {
+            colorAdjust.setContrast(contrast);
         });
     }
 
