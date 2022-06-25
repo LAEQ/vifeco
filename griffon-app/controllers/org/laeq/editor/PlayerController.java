@@ -77,6 +77,19 @@ public class PlayerController extends AbstractGriffonController {
         createMVCGroup("controls", args);
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void imageControls() {
+        Stage display = (Stage) getApplication().getWindowManager().findWindow("image_controls");
+        if(display != null){
+            return;
+        }
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("controls", model.imageControls);
+        createMVCGroup("image_controls", args);
+    }
+
     @Override
     public void mvcGroupDestroy(){
         view.pause();
@@ -173,6 +186,10 @@ public class PlayerController extends AbstractGriffonController {
         list.put("speed.change", objects -> {
             view.refreshRate((Double) objects[0]);
             getApplication().getEventRouter().publishEvent("video.currentTime", Arrays.asList(view.getCurrentTime()));
+        });
+
+        list.put("brightness.change", objects -> {
+            System.out.println("HFDFSDF");
         });
 
         list.put("opacity.change", objects -> {

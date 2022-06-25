@@ -69,6 +69,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private Button rewindActionTarget;
     @FXML private Button forwardActionTarget;
     @FXML private Button controlsActionTarget;
+    @FXML private Button imageControlsActionTarget;
 
     private Boolean wasPlaying = false;
     private Double videoDuration;
@@ -133,6 +134,10 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         icon = new Icon(IconSVG.controls, org.laeq.model.icon.Color.gray_dark);
         controlsActionTarget.setGraphic(icon);
         controlsActionTarget.setText("");
+
+        icon = new Icon(IconSVG.imageControls, org.laeq.model.icon.Color.gray_dark);
+        imageControlsActionTarget.setGraphic(icon);
+        imageControlsActionTarget.setText("");
 
         icon = new Icon(IconSVG.backward30, org.laeq.model.icon.Color.gray_dark);
         rewindActionTarget.setGraphic(icon);

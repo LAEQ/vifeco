@@ -11,8 +11,11 @@
 <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="680.0">
         <children>
-            <AnchorPane layoutX="34.0" layoutY="24.0" prefHeight="337.0" prefWidth="562.0" style="-fx-background-color: #dddddd;" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0">
-                <Pane fx:id="playerPane" layoutX="14.0" layoutY="23.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="25.0">
+            <AnchorPane layoutX="34.0" layoutY="24.0" prefHeight="337.0" prefWidth="562.0"
+                        style="-fx-background-color: #dddddd;" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0"
+                        AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0">
+                <Pane fx:id="playerPane" layoutX="14.0" layoutY="23.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="10.0"
+                      AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="25.0">
                     <MediaView fx:id="mediaView" fitHeight="${playerPane.height}" fitWidth="${playerPane.width}" layoutX="1.0" />
                     <IconPane fx:id="iconPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: #aaaaaa;" />
                 </Pane>
@@ -20,7 +23,9 @@
             <!-- Player Buttons -->
             <Button fx:id="playActionTarget" layoutX="14.0" layoutY="408.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="62.0" styleClass="btn, btn-success" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
             <Button fx:id="stopActionTarget" layoutX="112.0" layoutY="412.0" mnemonicParsing="false" styleClass="btn, btn-danger" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" />
-            <Button fx:id="controlsActionTarget" layoutX="559.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" " AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="5.0" />
+            <Button fx:id="controlsActionTarget" layoutX="569.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" " AnchorPane.rightAnchor="110.0" AnchorPane.topAnchor="5.0" />
+            <Button fx:id="imageControlsActionTarget" layoutX="479.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" " AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="5.0" />
+
             <Button fx:id="addActionTarget" layoutX="656.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-info" text=" " AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
             <Button fx:id="rewindActionTarget" layoutX="237.0" layoutY="612.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="200.0" />
             <Button fx:id="forwardActionTarget" layoutX="302.0" layoutY="612.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="300.0" />

@@ -28,6 +28,7 @@ public final class PlayerModel extends AbstractGriffonModel {
 
     //Video controls
     public final Controls controls = new Controls();
+    public final ImageControls imageControls = new ImageControls();
     public final SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
 
     //Manager for the points
