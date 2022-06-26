@@ -155,6 +155,12 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         });
     }
 
+    public void refreshBrightness(Double brightness) {
+       Platform.runLater(()->{
+           System.out.println(brightness);
+       });
+    }
+
     private Image getImage(String path) {
         return new Image(getClass().getClassLoader().getResourceAsStream(path));
     }

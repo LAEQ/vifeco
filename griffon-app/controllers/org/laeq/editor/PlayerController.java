@@ -77,11 +77,26 @@ public class PlayerController extends AbstractGriffonController {
         createMVCGroup("controls", args);
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void imageControls() {
+        Stage display = (Stage) getApplication().getWindowManager().findWindow("image_controls");
+        System.out.println(display);
+        if(display != null){
+            return;
+        }
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("controls", model.imageControls);
+        createMVCGroup("image_controls", args);
+    }
+
     @Override
     public void mvcGroupDestroy(){
         view.pause();
         getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
         getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("controls"));
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("image_controls"));
     }
 
     @ControllerAction
@@ -173,6 +188,22 @@ public class PlayerController extends AbstractGriffonController {
         list.put("speed.change", objects -> {
             view.refreshRate((Double) objects[0]);
             getApplication().getEventRouter().publishEvent("video.currentTime", Arrays.asList(view.getCurrentTime()));
+        });
+
+        list.put("brightness.change", objects -> {
+            view.refreshBrightness((Double) objects[0]);
+        });
+
+        list.put("saturation.change", objects -> {
+            view.refreshSaturation((Double) objects[0]);
+        });
+
+        list.put("constrast.change", objects -> {
+            view.refreshContrast((Double) objects[0]);
+        });
+
+        list.put("hue.change", objects -> {
+            view.refreshHue((Double) objects[0]);
         });
 
         list.put("opacity.change", objects -> {

@@ -2,11 +2,11 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Vifeco"
-#define MyAppVersion "3.0.2"
+#define MyAppVersion "3.0.4"
 #define MyAppPublisher "LAEQ"
 #define MyAppURL "https://github.com/LAEQ/vifeco/releases"
 #define MyAppExeName "vifeco.exe"
-#define Version = "3.0.2"
+#define Version = "3.0.4"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
