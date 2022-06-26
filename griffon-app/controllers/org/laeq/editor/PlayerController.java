@@ -81,6 +81,7 @@ public class PlayerController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void imageControls() {
         Stage display = (Stage) getApplication().getWindowManager().findWindow("image_controls");
+        System.out.println(display);
         if(display != null){
             return;
         }
@@ -95,6 +96,7 @@ public class PlayerController extends AbstractGriffonController {
         view.pause();
         getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
         getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("controls"));
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("image_controls"));
     }
 
     @ControllerAction
@@ -198,6 +200,10 @@ public class PlayerController extends AbstractGriffonController {
 
         list.put("constrast.change", objects -> {
             view.refreshContrast((Double) objects[0]);
+        });
+
+        list.put("hue.change", objects -> {
+            view.refreshHue((Double) objects[0]);
         });
 
         list.put("opacity.change", objects -> {

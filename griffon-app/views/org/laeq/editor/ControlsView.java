@@ -180,6 +180,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         destroy(name);
         closeScene(name);
     }
+
     private void destroy(String name) {
         try{
             MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);

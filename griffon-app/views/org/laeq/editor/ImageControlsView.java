@@ -30,11 +30,12 @@ public class ImageControlsView extends AbstractJavaFXGriffonView {
     @FXML private Slider brightness;
     @FXML private Slider saturation;
     @FXML private Slider contrast;
+    @FXML private Slider hue;
 
     @FXML private Label brightnessLabel;
     @FXML private Label saturationLabel;
     @FXML private Label contrastLabel;
-
+    @FXML private Label hueLabel;
 
     @MVCMember
     public void setController(@Nonnull ImageControlsController controller) {
@@ -50,13 +51,13 @@ public class ImageControlsView extends AbstractJavaFXGriffonView {
     public void initUI() {
         Stage stage = (Stage) getApplication()
             .createApplicationContainer(Collections.<String,Object>emptyMap());
-        stage.setTitle(getApplication().getMessageSource().getMessage("z.controls"));
+        stage.setTitle(getApplication().getMessageSource().getMessage("z.image_controls"));
         stage.getIcons().add( getImage("favicon-32x32.png"));
         stage.setScene(init());
         stage.sizeToScene();
         stage.setAlwaysOnTop(false);
-        getApplication().getWindowManager().attach("controls", stage);
-        getApplication().getWindowManager().show("controls");
+        getApplication().getWindowManager().attach("image_controls", stage);
+        getApplication().getWindowManager().show("image_controls");
 
 
         stage.setOnCloseRequest(event -> {
@@ -66,6 +67,7 @@ public class ImageControlsView extends AbstractJavaFXGriffonView {
         initBrightnessSlider();
         initSaturationSlider();
         initContrastSlider();
+        initHueSlider();
     }
 
     private void initBrightnessSlider() {
@@ -119,21 +121,21 @@ public class ImageControlsView extends AbstractJavaFXGriffonView {
         });
     }
 
-    private void initOpacitySlider() {
-//        opacityLabel.setText(String.format("%.1f", controls.opacity.getValue()));
-//        opacity.setValue(controls.opacity.getValue());
-//        opacity.setMin(controls.opacityValue[0]);
-//        opacity.setMax(controls.opacityValue[1]);
-//        opacity.setMajorTickUnit(.1);
-//        opacity.setShowTickMarks(true);
-//        opacity.setShowTickLabels(true);
-//        opacity.valueProperty().addListener((obs, oldval, newVal) -> {
-//            double value = Math.round(newVal.doubleValue() * 10) / 10f;
-//            opacity.setValue(value);
-//            opacityLabel.setText(String.format("%.1f", value));
-//            controller.dispatch("opacity.change",  Double.valueOf(value));
-//            controls.opacity.setValue(value);
-//        });
+    private void initHueSlider() {
+        hueLabel.setText(String.format("%.2f", controls.hue.getValue()));
+        hue.setValue(controls.hue.getValue());
+        hue.setMin(controls.hueValue[0]);
+        hue.setMax(controls.hueValue[1]);
+        hue.setMajorTickUnit(0.1);
+        hue.setShowTickMarks(true);
+        hue.setShowTickLabels(true);
+        hue.valueProperty().addListener((obs, oldval, newVal) -> {
+            double value = Math.round(newVal.doubleValue() * 10) / 10f;
+            hue.setValue(value);
+            hueLabel.setText(String.format("%.2f", value));
+            controller.dispatch("hue.change",  Double.valueOf(value));
+            controls.hue.setValue(value);
+        });
     }
 
     private void closeAndDestroy(String name){

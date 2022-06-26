@@ -335,6 +335,13 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         });
     }
 
+
+    public void refreshHue(Double hue) {
+        Platform.runLater(() -> {
+            colorAdjust.setHue(hue);
+        });
+    }
+
     public void refreshSize(Double size) {
         Platform.runLater(() -> {
             iconPane.getChildren().forEach(node -> {
