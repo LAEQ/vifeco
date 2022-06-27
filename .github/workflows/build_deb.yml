@@ -9,6 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Download JRE
-      - run: wget https://download.bell-sw.com/java/11.0.15.1+2/bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz
+      - name: Checkout
+        run: wget https://download.bell-sw.com/java/11.0.15.1+2/bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz
 
