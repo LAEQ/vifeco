@@ -6,6 +6,9 @@ on:
       - actions
 
 jobs:
-  build:
+  test_schedule:
     runs-on: ubuntu-latest
-      - run: echo Build debian package
+    steps:
+      - name: Build package
+        run: echo "This step will build the package"
+
