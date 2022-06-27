@@ -14,7 +14,7 @@ jobs:
       - name: Checkout
         run: wget https://download.bell-sw.com/java/11.0.15.1+2/bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz
       - name: Unzip
-        run: tar -xzvf bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz
+        run: tar -xzvf bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz && mv jre-11.0.15.1-full distribution/debian && rm bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz 
       - name: pwd
         run: ls -la
 
