@@ -12,9 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Checkout
-        run: wget https://download.bell-sw.com/java/11.0.15.1+2/bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz
+        run: curl https://download.bell-sw.com/java/11.0.15.1+2/bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz -o bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz
       - name: Unzip
-        run: tar -xzvf bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz -C distribution/debian/jre-11.0.10-full && rm bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz 
+        run: mkdir distribution/debian/jre-11.0.10-full && tar -xzvf bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz && mv jre-11.0.15.1-full/* distribution/debian/jre-11.0.10-full  && rm bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz 
       - name: Run package script
         run: cd distribution/deb && bash package_linux_deb.sh
 
