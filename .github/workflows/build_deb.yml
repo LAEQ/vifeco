@@ -11,14 +11,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set release version
-        run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:11})
       - name: Checkout
         run: wget https://download.bell-sw.com/java/11.0.15.1+2/bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz
       - name: Unzip
-        run: tar -xzvf bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz && mv jre-11.0.15.1-full distribution/debian && rm bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz 
+        run: tar -xzvf bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz && mv jre-11.0.15.1-full distribution/debian/jre-11.0.10-full && rm bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz 
       - name: pwd
-        run: ls -la
-      - name: tag
-        run: echo ${{github.ref_name}}
+        run: cd distribution/deb
+      - name:
+        run: bash package_linux_deb.sh
 
