@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3 
+        uses: actions/checkout@v3
+      - name: Set release version
+        run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:11})
       - name: Checkout
         run: wget https://download.bell-sw.com/java/11.0.15.1+2/bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz
       - name: Unzip
