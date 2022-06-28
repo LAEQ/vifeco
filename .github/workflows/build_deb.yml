@@ -17,4 +17,6 @@ jobs:
         run: tar -xzvf bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz && mv jre-11.0.15.1-full distribution/debian && rm bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz 
       - name: pwd
         run: ls -la
+      - name: tag
+        run: echo ${{github.ref_name}}
 
