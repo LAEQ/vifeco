@@ -1,4 +1,4 @@
-name: Vifeco CI
+name: Vifeco Debian Build
 
 on:
   push:
