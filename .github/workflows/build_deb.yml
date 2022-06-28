@@ -9,12 +9,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'liberica'
+          java-version: '11'
+          java-package: jdk+fx # optional (jdk, jre, jdk+fx or jre+fx) - defaults to jdk
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Checkout
-        run: curl https://download.bell-sw.com/java/11.0.15.1+2/bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz -o bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz
-      - name: Unzip
-        run: mkdir distribution/deb/jre-11.0.10-full && tar -xzvf bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz && mv jre-11.0.15.1-full/* distribution/deb/jre-11.0.10-full  && rm bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz 
-      - name: Run package script
-        run: cd distribution/deb && ls -la
+      - name: Gradle build
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: 6.3
+          wrapper-cache-enabled: true
+          dependencies-cache-enabled: true
+          configuration-cache-enabled: true
+          arguments: build
 
