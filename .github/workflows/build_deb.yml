@@ -16,5 +16,5 @@ jobs:
       - name: Unzip
         run: mkdir distribution/deb/jre-11.0.10-full && tar -xzvf bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz && mv jre-11.0.15.1-full/* distribution/deb/jre-11.0.10-full  && rm bellsoft-jre11.0.15.1+2-linux-amd64-full.tar.gz 
       - name: Run package script
-        run: cd distribution/deb && bash package_linux_deb.sh
+        run: cd distribution/deb && ls -la
 
