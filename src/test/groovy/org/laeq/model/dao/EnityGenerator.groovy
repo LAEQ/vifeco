@@ -1,6 +1,8 @@
 package org.laeq.model.dao
 
+import javafx.geometry.Point2D
 import javafx.util.Duration
+import org.laeq.editor.DrawingType
 import org.laeq.model.*
 
 class EntityGenerator {
@@ -10,6 +12,10 @@ class EntityGenerator {
 
     static def createCategory(String shortcut){
         return new Category("mock name", "mock path", "#FF1234", shortcut)
+    }
+
+    static def createDraw(){
+        return new Drawing(DrawingType.LINE,"#FF00FF", new Point2D(10.1, 10.2), new Point2D(11.1, 11.2))
     }
 
     static def createCollection(){
