@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.DatabaseService;
+import org.laeq.model.Drawing;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
@@ -81,7 +82,6 @@ public class PlayerController extends AbstractGriffonController {
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void imageControls() {
         Stage display = (Stage) getApplication().getWindowManager().findWindow("image_controls");
-        System.out.println(display);
         if(display != null){
             return;
         }
@@ -91,12 +91,30 @@ public class PlayerController extends AbstractGriffonController {
         createMVCGroup("image_controls", args);
     }
 
+    @ControllerAction
+    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
+    public void detach() {
+        Stage display = (Stage) getApplication().getWindowManager().findWindow("detach");
+        if(display != null){
+            return;
+        }
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("model", model);
+        args.put("currentTime", view.getCurrentTime());
+        args.put("controls", model.controls);
+
+        createMVCGroup("full_screen", args);
+        getApplication().getEventRouter().publishEvent("status.info", Arrays.asList("video.create.start"));
+    }
+
     @Override
     public void mvcGroupDestroy(){
         view.pause();
         getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
         getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("controls"));
         getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("image_controls"));
+        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("drawing"));
     }
 
     @ControllerAction
@@ -181,47 +199,24 @@ public class PlayerController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("display.ready", objects -> {
-           model.isReady.set(Boolean.TRUE);
-        });
+        list.put("display.ready", objects -> model.isReady.set(Boolean.TRUE));
 
         list.put("speed.change", objects -> {
             view.refreshRate((Double) objects[0]);
             getApplication().getEventRouter().publishEvent("video.currentTime", Arrays.asList(view.getCurrentTime()));
         });
 
-        list.put("brightness.change", objects -> {
-            view.refreshBrightness((Double) objects[0]);
-        });
+        list.put("brightness.change", objects -> view.refreshBrightness((Double) objects[0]));
+        list.put("saturation.change", objects -> view.refreshSaturation((Double) objects[0]));
+        list.put("constrast.change", objects -> view.refreshContrast((Double) objects[0]));
+        list.put("hue.change", objects -> view.refreshHue((Double) objects[0]));
 
-        list.put("saturation.change", objects -> {
-            view.refreshSaturation((Double) objects[0]);
-        });
+        list.put("opacity.change", objects -> view.refreshOpacity((Double) objects[0]));
+        list.put("duration.change", objects -> view.setDuration(model.controls.display()));
+        list.put("size.change", objects -> view.refreshSize((Double) objects[0]));
+        list.put("volume.change", objects -> view.refreshVolume((Double) objects[0]));
 
-        list.put("constrast.change", objects -> {
-            view.refreshContrast((Double) objects[0]);
-        });
-
-        list.put("hue.change", objects -> {
-            view.refreshHue((Double) objects[0]);
-        });
-
-        list.put("opacity.change", objects -> {
-            view.refreshOpacity((Double) objects[0]);
-        });
-        list.put("duration.change", objects -> {
-            view.setDuration(model.controls.display());
-        });
-        list.put("size.change", objects -> {
-            view.refreshSize((Double) objects[0]);
-        });
-        list.put("volume.change", objects -> {
-            view.refreshVolume((Double) objects[0]);
-        });
-
-        list.put("row.currentTime", objects -> {
-            view.rewind((Duration) objects[0]);
-        });
+        list.put("row.currentTime", objects -> view.rewind((Duration) objects[0]));
 
         list.put("timeline.point.deleted", objects -> {
             Point pt = (Point) objects[0];
@@ -229,35 +224,25 @@ public class PlayerController extends AbstractGriffonController {
             view.removePoint(pt);
         });
 
-        list.put("icon.delete", objects -> {
-            deletePoint((IconPointColorized) objects[0]);
-        });
+        list.put("icon.delete", objects -> deletePoint((IconPointColorized) objects[0]));
 
-        list.put("slider.release", objects -> {
-            view.sliderReleased(video.getDuration().multiply((Double) objects[0] / 100));
-        });
-        list.put("slider.pressed", objects -> {
-            view.sliderPressed();
-        });
+        list.put("slider.release", objects -> view.sliderReleased(video.getDuration().multiply((Double) objects[0] / 100)));
+        list.put("slider.pressed", objects -> view.sliderPressed());
         list.put("slider.currentTime", objects -> {
             Duration now = video.getDuration().multiply((Double) objects[0] / 100);
             view.sliderCurrentTime(now);
         });
 
-        list.put("mouse.position", objects -> {
-            model.setMousePosition((Point2D) objects[0]);
-        });
+        list.put("mouse.position", objects -> model.setMousePosition((Point2D) objects[0]));
+        list.put("mouse.active", objects -> model.setMouseActive((boolean) objects[0]));
 
-        list.put("mouse.active", objects -> {
-            model.setMouseActive((boolean) objects[0]);
-        });
+        list.put("elapsed.focus.on", objects -> stop());
+        list.put("elapsed.currentTime", objects -> view.rewind((Duration) objects[0]));
 
-        list.put("elapsed.focus.on", objects -> {
-            stop();
-        });
-        list.put("elapsed.currentTime", objects -> {
-            view.rewind((Duration) objects[0]);
-        });
+        list.put("drawing.line.start", args -> view.drawLineStart());
+        list.put("drawing.rectangle.start", args -> view.drawRectangleStart());
+        list.put("drawing.updated", args -> view.drawingUpdated((List<Drawing>) args[0]));
+        list.put("drawing.destroyed", args -> view.drawingDestroy());
 
         return list;
     }
@@ -294,5 +279,18 @@ public class PlayerController extends AbstractGriffonController {
             view.rewind(now);
             getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(now));
         }
+    }
+
+    public PlayerController() {
+        super();
+    }
+
+    public void draw() {
+        Stage display = (Stage) getApplication().getWindowManager().findWindow("drawing");
+        if(display != null){
+            return;
+        }
+
+        createMVCGroup("drawing");
     }
 }

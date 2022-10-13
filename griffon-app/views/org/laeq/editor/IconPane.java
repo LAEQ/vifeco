@@ -5,11 +5,11 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import org.laeq.model.Drawing;
 import org.reactfx.EventStream;
 import org.reactfx.EventStreams;
 import org.reactfx.Subscription;
 import java.util.Arrays;
-
 
 public class IconPane extends Pane {
     EventRouter router;

@@ -5,8 +5,6 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
@@ -16,10 +14,7 @@ import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonModel.class)
@@ -65,10 +60,6 @@ public final class PlayerModel extends AbstractGriffonModel {
         return shortcutMap.get(shortcut);
     }
 
-    public Boolean hasShortcut(String shortcut){
-        return shortcutMap.entrySet().contains(shortcut);
-    }
-
     public Point generatePoint(String code, Duration currentTime) {
         Category category = getCategoryByShortcut(code);
 
@@ -105,8 +96,8 @@ public final class PlayerModel extends AbstractGriffonModel {
 
         return collection.subList(start, end).stream().map(point -> {
             IconPointColorized icon = point.getIconPoint();
-            icon.setScaleX(controls.scale().doubleValue());
-            icon.setScaleY(controls.scale().doubleValue());
+            icon.setScaleX(controls.scale());
+            icon.setScaleY(controls.scale());
             icon.setLayoutX(point.getX() * width.doubleValue());
             icon.setLayoutY(point.getY() * height.doubleValue());
             icon.setOpacity(controls.opacity.getValue());
@@ -117,8 +108,8 @@ public final class PlayerModel extends AbstractGriffonModel {
     public IconPointColorized getIcon(String key) {
         Point point = collection.getIcon(key);
         IconPointColorized icon = point.getIconPoint();
-        icon.setScaleX(controls.scale().doubleValue());
-        icon.setScaleY(controls.scale().doubleValue());
+        icon.setScaleX(controls.scale());
+        icon.setScaleY(controls.scale());
         icon.setLayoutX(point.getX() * width.doubleValue());
         icon.setLayoutY(point.getY() * height.doubleValue());
         icon.setOpacity(controls.opacity.getValue());

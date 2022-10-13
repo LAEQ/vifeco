@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.laeq.model.Drawing;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
@@ -38,7 +39,6 @@ import org.laeq.model.icon.IconSVG;
 import org.reactfx.EventStream;
 import org.reactfx.EventStreams;
 import org.reactfx.Subscription;
-
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
@@ -60,6 +60,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private Pane playerPane;
     @FXML private MediaView mediaView;
     @FXML private IconPane iconPane;
+
+    @FXML private DrawingPane drawingPane;
     @FXML private VideoSlider slider;
     @FXML private ElapsedText elapsed;
     @FXML private Label duration;
@@ -71,6 +73,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private Button forwardActionTarget;
     @FXML private Button controlsActionTarget;
     @FXML private Button imageControlsActionTarget;
+
+    @FXML private Button drawActionTarget;
 
     private ColorAdjust colorAdjust;
 
@@ -106,7 +110,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         scene = init();
         stage.setScene(scene);
         stage.sizeToScene();
-        stage.setAlwaysOnTop(false);
+        stage.setAlwaysOnTop(true);
 
         getApplication().getWindowManager().attach("editor", stage);
         getApplication().getWindowManager().show("editor");
@@ -115,6 +119,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             runInsideUIAsync(() -> {
                 mediaPlayer.stop();
                 iconPane.dispose();
+                drawingPane.dispose();
                 subscription.unsubscribe();
                 slider.dispose();
             });
@@ -150,9 +155,14 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         forwardActionTarget.setGraphic(icon);
         forwardActionTarget.setText("");
 
+        icon = new Icon(IconSVG.draw, org.laeq.model.icon.Color.gray_dark);
+        drawActionTarget.setGraphic(icon);
+        drawActionTarget.setText("");
+
         iconPane.setEventRouter(getApplication().getEventRouter());
         slider.setEventRouter(getApplication().getEventRouter());
         elapsed.setEventRouter(getApplication().getEventRouter());
+        drawingPane.setEventRouter(getApplication().getEventRouter());
 
         initPlayer();
     }
@@ -222,6 +232,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
                 iconPane.setPrefWidth(model.width.doubleValue());
                 iconPane.setPrefHeight(model.height.doubleValue());
+
+                drawingPane.setPrefWidth(model.width.doubleValue());
+                drawingPane.setPrefHeight(model.height.doubleValue());
 
                 Platform.runLater(() -> {
                     final Collection<IconPointColorized> icons = model.setCurrentTime(mediaPlayer.getCurrentTime());
@@ -353,9 +366,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void removePoint(Point point) {
         markers.remove(point.getId().toString());
-        Platform.runLater(() -> {
-            iconPane.getChildren().remove(point.getIconPoint());
-        });
+        Platform.runLater(() -> iconPane.getChildren().remove(point.getIconPoint()));
     }
 
     public void rewind(Duration now) {
@@ -367,7 +378,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             iconPane.getChildren().addAll(icons);
             elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
 
-            if(model.isPlaying.getValue() == false){
+            if(!model.isPlaying.getValue()){
                 slider.setValue(now.toMillis() / videoDuration * 100);
             }
         });
@@ -413,5 +424,40 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     public void setDuration(Duration display) {
         this.display = display;
+    }
+
+    public void drawLineStart() {
+        drawingPane.startDrawLine();
+    }
+
+    public void drawRectangleStart() {
+        drawingPane.drawRectangle();
+    }
+
+    public void deleteDraw(Drawing drawing) {
+        drawingPane.drawings.remove(drawing);
+    }
+
+    public void showDraw(Drawing drawing) {
+        runInsideUISync(() -> {
+            drawingPane.drawings.add(drawing);
+        });
+    }
+
+    public void hideDraw(Drawing drawing) {
+        runInsideUISync(() -> {
+            drawingPane.drawings.remove(drawing);
+        });
+    }
+
+    public void drawingDestroy() {
+        runInsideUISync(() -> drawingPane.drawings.clear());
+    }
+
+    public void drawingUpdated(List<Drawing> list) {
+        runInsideUISync(() -> {
+            drawingPane.drawings.clear();
+            drawingPane.drawings.addAll(list);
+        });
     }
 }

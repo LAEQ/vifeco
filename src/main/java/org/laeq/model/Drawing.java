@@ -3,9 +3,12 @@ package org.laeq.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Point2D;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.apache.commons.lang3.NotImplementedException;
 import org.hibernate.validator.constraints.Length;
 import org.laeq.editor.DrawingType;
 import org.laeq.model.converter.hibernate.Point2DConverter;
@@ -17,7 +20,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "drawing")
-@JsonIgnoreProperties({""})
+@JsonIgnoreProperties({"canvas", "isVisible"})
 public class Drawing {
     @Id
     @GeneratedValue(generator = "increment")
@@ -43,6 +46,9 @@ public class Drawing {
     @JsonDeserialize(converter = Point2DConverterDeserialize.class)
     @Convert(converter = Point2DConverter.class)
     private Point2D end;
+
+    @Transient
+    private SimpleBooleanProperty active = new SimpleBooleanProperty(false);
 
     public Drawing() {
         super();
@@ -99,7 +105,8 @@ public class Drawing {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Drawing drawing = (Drawing) o;
-        return id.equals(drawing.id) && type.equals(drawing.type) && color.equals(drawing.color) && start.equals(drawing.start) && end.equals(drawing.end);
+        return id.equals(drawing.id) && type.equals(drawing.type) && color.equals(drawing.color)
+                && start.equals(drawing.start) && end.equals(drawing.end);
     }
 
     @Override
@@ -107,14 +114,60 @@ public class Drawing {
         return Objects.hash(id, type, color, start, end);
     }
 
-    public void draw(GraphicsContext gc) {
-        double x = start.getX();
-        double y = start.getY();
-        double x2 = end.getX();
-        double y2 = end.getY();
+    public Canvas getCanvas(double width, double height, double dash, double dashOffset) {
+        if(type == DrawingType.LINE){
+            return getLineCanvas(width,height,dash,dashOffset);
+        } else if(type == DrawingType.RECTANGLE){
+            return getRectangleCanvas(width,height,dash,dashOffset);
+        }
 
-        gc.setStroke(Color.RED);
-        gc.setLineWidth(3);
-        gc.strokeLine(x, y, x2, y2);
+        throw new NotImplementedException("Draw type is not implemented");
+    }
+
+    public Canvas getLineCanvas(double width, double height, double dash, double dashOffset) {
+        Canvas canvas = new Canvas(width, height);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.valueOf(color));
+        gc.setStroke(Color.valueOf(color));
+        gc.setLineWidth(2);
+
+        gc.setLineDashes(dash);
+        gc.setLineDashOffset(dashOffset);
+
+        gc.strokeLine(
+                start.getX(),
+                start.getY(),
+                end.getX(),
+                end.getY());
+
+        return canvas;
+    }
+
+    public Canvas getRectangleCanvas(double width, double height, double dash, double dashOffset) {
+        Canvas canvas = new Canvas(width, height);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setStroke(Color.valueOf(color));
+        gc.setLineWidth(2);
+
+        gc.setLineDashes(dash);
+        gc.setLineDashOffset(dashOffset);
+
+        gc.strokeRoundRect(start.getX(), start.getY(),
+                end.getX() - start.getX(), end.getY() - start.getY(),
+                0, 0);
+
+        return canvas;
+    }
+
+    public SimpleBooleanProperty activeProperty() {
+        return active ;
+    }
+
+    public final boolean isActive() {
+        return activeProperty().get();
+    }
+
+    public final void setActive(boolean active) {
+        activeProperty().set(active);
     }
 }
