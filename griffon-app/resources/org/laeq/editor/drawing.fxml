@@ -8,11 +8,11 @@
 <?import javafx.scene.paint.Color?>
 
 <?import javafx.scene.control.Button?>
-<AnchorPane maxHeight="325.0" maxWidth="500.0" minHeight="325.0" minWidth="200.0" prefHeight="325.0" prefWidth="500.0"
+<AnchorPane maxHeight="325.0" maxWidth="350.0" minHeight="325.0" minWidth="200.0" prefHeight="325.0" prefWidth="350.0"
             xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.laeq.editor.ControlsController">
    <children>
-       <Button fx:id="lineActionTarget" layoutX="14.0" layoutY="24.0" mnemonicParsing="false" text="Line" />
-       <Button fx:id="rectangleActionTarget" layoutX="70.0" layoutY="24.0" mnemonicParsing="false" text="Rectangle" />
+       <Button fx:id="lineActionTarget" layoutX="14.0" layoutY="20.0" mnemonicParsing="false" text="Line" />
+       <Button fx:id="rectangleActionTarget" layoutX="70.0" layoutY="20.0" mnemonicParsing="false" text="Rectangle" />
       <ColorPicker fx:id="colorPicker" layoutX="179.0" layoutY="20.0" AnchorPane.leftAnchor="179.0" AnchorPane.topAnchor="20.0">
          <value>
             <Color green="1.0" />
@@ -24,8 +24,6 @@
             <TableColumn prefWidth="78.0" JavaFXUtils.i18nKey="z.show_hide" fx:id="selected" />
             <TableColumn prefWidth="78.0" JavaFXUtils.i18nKey="z.draw_type" fx:id="draw_type" />
             <TableColumn prefWidth="83.0" JavaFXUtils.i18nKey="z.color" fx:id="color" />
-            <TableColumn prefWidth="104.0" JavaFXUtils.i18nKey="z.start" fx:id="start"/>
-            <TableColumn prefWidth="75.0" JavaFXUtils.i18nKey="z.end" fx:id="end"/>
             <TableColumn prefWidth="200.0" JavaFXUtils.i18nKey="z.actions" fx:id="actions" />
         </columns>
       </TableView>

@@ -27,24 +27,16 @@ public class DrawingView extends AbstractJavaFXGriffonView {
 
     @MVCMember DrawingController controller;
     @MVCMember DrawingModel model;
-
     @FXML private TableView<Drawing> drawTable;
-
     @FXML private TableColumn<Drawing, Boolean> selected;
     @FXML private TableColumn<Drawing, String> draw_type;
     @FXML private TableColumn<Drawing, String> color;
-    @FXML private TableColumn<Drawing, String> start;
-    @FXML private TableColumn<Drawing, String> end;
-
     @FXML private TableColumn<Drawing, Void> actions;
 
     @FXML private Button lineButton;
     @FXML private Button rectangleButton;
-
     @FXML private ColorPicker colorPicker;
-
     private Scene scene;
-
 
     @Override
     public void mvcGroupDestroy(){
@@ -109,8 +101,6 @@ public class DrawingView extends AbstractJavaFXGriffonView {
         selected.setCellFactory(CheckBoxTableCell.forTableColumn(selected));
         draw_type.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getType().toString()));
         color.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getColor()));
-        start.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getStart().toString()));
-        end.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getEnd().toString()));
         actions.setCellFactory(addActions());
     }
 

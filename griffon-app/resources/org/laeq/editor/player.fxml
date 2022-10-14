@@ -18,8 +18,8 @@
                 <Pane fx:id="playerPane" layoutX="14.0" layoutY="23.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="10.0"
                       AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="25.0">
                     <MediaView fx:id="mediaView" fitHeight="${playerPane.height}" fitWidth="${playerPane.width}" layoutX="1.0" />
-                    <IconPane fx:id="iconPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: #aaaaaa;" />
                     <DrawingPane fx:id="drawingPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: #FF00FF;" />
+                    <IconPane fx:id="iconPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: #aaaaaa;" />
                 </Pane>
             </AnchorPane>
             <!-- Player Buttons -->

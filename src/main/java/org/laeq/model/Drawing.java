@@ -135,10 +135,10 @@ public class Drawing {
         gc.setLineDashOffset(dashOffset);
 
         gc.strokeLine(
-                start.getX(),
-                start.getY(),
-                end.getX(),
-                end.getY());
+                start.getX() * width,
+                start.getY() * height,
+                end.getX() * width,
+                end.getY() * height);
 
         return canvas;
     }
@@ -152,8 +152,8 @@ public class Drawing {
         gc.setLineDashes(dash);
         gc.setLineDashOffset(dashOffset);
 
-        gc.strokeRoundRect(start.getX(), start.getY(),
-                end.getX() - start.getX(), end.getY() - start.getY(),
+        gc.strokeRoundRect(start.getX() * width, start.getY() * height,
+                (end.getX() - start.getX()) * width, (end.getY() - start.getY()) * height,
                 0, 0);
 
         return canvas;

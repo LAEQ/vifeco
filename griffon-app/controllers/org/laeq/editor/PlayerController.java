@@ -239,8 +239,8 @@ public class PlayerController extends AbstractGriffonController {
         list.put("elapsed.focus.on", objects -> stop());
         list.put("elapsed.currentTime", objects -> view.rewind((Duration) objects[0]));
 
-        list.put("drawing.line.start", args -> view.drawLineStart());
-        list.put("drawing.rectangle.start", args -> view.drawRectangleStart());
+        list.put("drawing.line.start", args -> view.drawLineStart((String) args[0]));
+        list.put("drawing.rectangle.start", args -> view.drawRectangleStart((String) args[0]));
         list.put("drawing.updated", args -> view.drawingUpdated((List<Drawing>) args[0]));
         list.put("drawing.destroyed", args -> view.drawingDestroy());
 

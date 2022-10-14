@@ -48,13 +48,13 @@ public class DrawingController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void line() throws Exception {
-        getApplication().getEventRouter().publishEvent("drawing.line.start");
+        getApplication().getEventRouter().publishEvent("drawing.line.start", Arrays.asList(model.color.get()));
     }
 
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD)
     public void rectangle() throws Exception {
-        getApplication().getEventRouter().publishEvent("drawing.rectangle.start");
+        getApplication().getEventRouter().publishEvent("drawing.rectangle.start", Arrays.asList(model.color.get()));
     }
 
     private Map<String, RunnableWithArgs> listeners() {
@@ -64,6 +64,7 @@ public class DrawingController extends AbstractGriffonController {
             Drawing drawing = (Drawing) objets[0];
             drawing.setColor(model.color.get());
             if(dbService.drawingDAO.create(drawing)){
+                drawing.setActive(true);
                 model.drawingList.add((Drawing) objets[0]);
                 getApplication().getEventRouter().publishEvent("drawing.updated", Arrays.asList(model.getVisibleDrawing()));
             } else {

@@ -426,12 +426,12 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         this.display = display;
     }
 
-    public void drawLineStart() {
-        drawingPane.startDrawLine();
+    public void drawLineStart(String color) {
+        iconPane.startDrawLine(color);
     }
 
-    public void drawRectangleStart() {
-        drawingPane.drawRectangle();
+    public void drawRectangleStart(String color) {
+        iconPane.drawRectangle(color);
     }
 
     public void deleteDraw(Drawing drawing) {

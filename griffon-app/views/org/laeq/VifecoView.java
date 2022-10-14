@@ -14,10 +14,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -45,6 +47,16 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         createMVCGroup("bottom");
         createMVCGroup("menu");
         createMVCGroup(model.currentGroup);
+
+        Video video = null;
+        try {
+            video = dbService.videoDAO.findAll().get(0);
+            Map<String, Object> arguments = new HashMap<>();
+            arguments.put("video", video);
+            createMVCGroup("editor", arguments);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
