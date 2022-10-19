@@ -4,6 +4,7 @@ import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Point;
 import javax.annotation.Nonnull;
@@ -32,13 +33,11 @@ public class IconPaneController extends AbstractGriffonController {
             model.addPoint((Point) objects[0]);
         });
 
-        list.put("timeline.point.deleted", objects ->{
+        list.put("point.removed", objects ->{
             model.removePoint((Point) objects[0]);
         });
 
-        list.put("player.point.deleted", objects ->{
-            model.removePoint((Point) objects[0]);
-        });
+        list.put("currentTime.update", objects -> view.updateCurrentTime((Duration) objects[0]));
 
         return list;
     }
