@@ -208,9 +208,7 @@ public class PlayerController extends AbstractGriffonController {
         list.put("constrast.change", objects -> view.refreshContrast((Double) objects[0]));
         list.put("hue.change", objects -> view.refreshHue((Double) objects[0]));
 
-        list.put("opacity.change", objects -> view.refreshOpacity((Double) objects[0]));
-        list.put("duration.change", objects -> view.setDuration(model.controls.display()));
-        list.put("size.change", objects -> view.refreshSize((Double) objects[0]));
+
         list.put("volume.change", objects -> view.refreshVolume((Double) objects[0]));
 
         list.put("row.currentTime", objects -> view.rewind((Duration) objects[0]));

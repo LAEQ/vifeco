@@ -71,8 +71,16 @@ public class IconPaneView extends AbstractJavaFXGriffonView implements PaneSizab
     }
 
     public void addIcon(IconPointColorized icon) {
-        runInsideUIAsync(() -> {
-            container.getChildren().add(icon);
-        });
+        runInsideUIAsync(() -> container.getChildren().add(icon));
+    }
+
+    public void refreshOpacity(Double opacity) {
+        runInsideUISync(() -> container.getChildren().forEach(node -> node.setOpacity(opacity)));
+    }
+    public void refreshSize(Double size) {
+        runInsideUISync(() -> container.getChildren().forEach(node -> {
+            node.setScaleX(size / 100);
+            node.setScaleY(size / 100);
+        }));
     }
 }

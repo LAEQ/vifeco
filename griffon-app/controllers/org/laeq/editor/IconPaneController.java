@@ -46,10 +46,22 @@ public class IconPaneController extends AbstractGriffonController {
 
         list.put("point.removed", objects ->{
             System.out.println("point.removed");
-//            model.removePoint((Point) objects[0]);
         });
 
         list.put("currentTime.update", objects -> view.updateCurrentTime((Duration) objects[0]));
+
+        list.put("opacity.change", objects -> {
+            model.controls.opacity.set((Double) objects[0]);
+            view.refreshOpacity((Double) objects[0]);
+        });
+        list.put("duration.change", objects -> {
+            model.controls.duration.set((Double) objects[0]);
+            view.updateCurrentTime(model.getCurrentTime());
+        });
+        list.put("size.change", objects -> {
+            model.controls.size.set((Double) objects[0]);
+            view.refreshSize((Double) objects[0]);
+        });
 
         return list;
     }

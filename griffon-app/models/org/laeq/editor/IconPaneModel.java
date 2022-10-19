@@ -1,11 +1,9 @@
 package org.laeq.editor;
 
-import griffon.core.Observable;
 import griffon.core.artifact.GriffonModel;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
@@ -23,14 +21,14 @@ final public class IconPaneModel extends AbstractGriffonModel {
 
     private Duration currentTime = Duration.ZERO;
 
-    private SimpleDoubleProperty width = new SimpleDoubleProperty(0);
-    private SimpleDoubleProperty height = new SimpleDoubleProperty(0);
+    final private SimpleDoubleProperty width = new SimpleDoubleProperty(0);
+    final private SimpleDoubleProperty height = new SimpleDoubleProperty(0);
 
-    private Controls controls = new Controls();
+    final public Controls controls = new Controls();
 
-    private NavigableSet<Point> points = new TreeSet<>();
+    final private NavigableSet<Point> points = new TreeSet<>();
 
-    private final Map<String, Category> shortcutMap= new HashMap();
+    final private Map<String, Category> shortcutMap= new HashMap();
 
     public void setVideo(@Nonnull Video video){
         this.video = video;

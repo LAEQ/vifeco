@@ -5,7 +5,6 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -18,8 +17,6 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -220,8 +217,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             //Mouse, Keyboard events
             scene.setOnKeyReleased(keyReleased());
 
-
-
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
         }
@@ -255,26 +250,18 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private ChangeListener<Duration> currentTimeListener(){
         return (observable, oldValue, newValue) -> {
             getApplication().getEventRouter().publishEventOutsideUI("currentTime.update", Arrays.asList(newValue));
-//            Platform.runLater(() -> {
-//                if(! slider.isPressed()){
-//                    final double now = newValue.toMillis();
-//                    Duration before = newValue.subtract(display);
-//                    slider.setValue(now / videoDuration * 100.0);
-//                    elapsed.setText(DurationFormatUtils.formatDuration((long) now, "HH:mm:ss"));
-//                    iconPane.getChildren().removeIf(node -> ((IconPointColorized)node).obsolete(before));
-//                }
-//            });
+            Platform.runLater(() -> {
+                if(! slider.isPressed()){
+                    final double now = newValue.toMillis();
+                    slider.setValue(now / videoDuration * 100.0);
+                    elapsed.setText(DurationFormatUtils.formatDuration((long) now, "HH:mm:ss"));
+                }
+            });
         };
     }
 
     private Image getImage(String path) {
         return new Image(getClass().getClassLoader().getResourceAsStream(path));
-    }
-
-    public void refreshOpacity(Double opacity) {
-        Platform.runLater(() ->{
-            iconPane.getChildren().forEach(node -> node.setOpacity(opacity));
-        });
     }
 
     public void refreshBrightness(Double brightness){
@@ -289,26 +276,15 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         });
     }
 
-
     public void refreshContrast(Double contrast) {
         Platform.runLater(() -> {
             colorAdjust.setContrast(contrast);
         });
     }
 
-
     public void refreshHue(Double hue) {
         Platform.runLater(() -> {
             colorAdjust.setHue(hue);
-        });
-    }
-
-    public void refreshSize(Double size) {
-        Platform.runLater(() -> {
-            iconPane.getChildren().forEach(node -> {
-                node.setScaleX(size / 100);
-                node.setScaleY(size / 100);
-            });
         });
     }
 
