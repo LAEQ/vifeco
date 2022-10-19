@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.DatabaseService;
-import org.laeq.model.Drawing;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
@@ -34,25 +33,6 @@ public class PlayerController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         getApplication().getEventRouter().addEventListener(listeners());
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void stop() {
-        model.isPlaying.set(false);
-        view.pause();
-        getApplication().getEventRouter().publishEventOutsideUI("player.pause");
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
-    public void play() {
-        if(model.isReady.get()){
-            model.isPlaying.set(true);
-            getApplication().getEventRouter().publishEventOutsideUI("player.currentTime", Arrays.asList(view.getCurrentTime()));
-            getApplication().getEventRouter().publishEventOutsideUI("player.play");
-            view.play();
-        }
     }
 
     @ControllerAction
@@ -116,49 +96,6 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     public void addPoint(KeyCode code, Duration currentTime) {
         getApplication().getEventRouter().publishEventOutsideUI("point.adding", Arrays.asList(code, currentTime));
-//        if(model.isReady.get()){
-//            runInsideUIAsync(() -> {
-//                final Point point = model.generatePoint(code.getName(), currentTime);
-//
-//                if(point == null){
-//                    return;
-//                }
-//
-//                if(dbService.pointDAO.create(point)){
-//                    model.addPoint(point);
-//                    view.addPoint(point);
-//
-//                    getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
-//                    getApplication().getEventRouter().publishEvent("point.added", Arrays.asList(point));
-//                } else {
-//                    getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
-//                }
-//            });
-//        }
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD)
-    public void rewind(){
-        Duration now = view.getCurrentTime().subtract(Duration.seconds(30));
-        if(now.lessThan(Duration.ZERO)){
-            now = Duration.ZERO;
-        }
-
-        getApplication().getEventRouter().publishEvent("player.rewind", Arrays.asList(now));
-        view.rewind(now);
-    }
-
-    @ControllerAction
-    @Threading(Threading.Policy.OUTSIDE_UITHREAD)
-    public void forward(){
-        Duration now = view.getCurrentTime().add(Duration.seconds(30));
-        if(now.greaterThan(video.getDuration())){
-           now = video.getDuration();
-        }
-
-        getApplication().getEventRouter().publishEvent("player.rewind", Arrays.asList(now));
-        view.rewind(now);
     }
 
     @ControllerAction
@@ -210,8 +147,7 @@ public class PlayerController extends AbstractGriffonController {
 
 
         list.put("volume.change", objects -> view.refreshVolume((Double) objects[0]));
-
-        list.put("row.currentTime", objects -> view.rewind((Duration) objects[0]));
+        list.put("row.currentTime", objects -> view.seek((Duration) objects[0]));
 
 //        list.put("timeline.point.deleted", objects -> {
 //            Point pt = (Point) objects[0];
@@ -231,8 +167,13 @@ public class PlayerController extends AbstractGriffonController {
         list.put("mouse.position", objects -> model.setMousePosition((Point2D) objects[0]));
         list.put("mouse.active", objects -> model.setMouseActive((boolean) objects[0]));
 
-        list.put("elapsed.focus.on", objects -> stop());
-        list.put("elapsed.currentTime", objects -> view.rewind((Duration) objects[0]));
+//        list.put("elapsed.focus.on", objects -> stop());
+//        list.put("elapsed.currentTime", objects -> view.rewind((Duration) objects[0]));
+
+        list.put("media.play", args -> view.play());
+        list.put("media.pause", args -> view.pause());
+        list.put("media.rewind", args-> view.rewind());
+        list.put("media.forward", args-> view.forward());
 
         return list;
     }
@@ -250,25 +191,6 @@ public class PlayerController extends AbstractGriffonController {
                 view.removePoint(pt);
             }
         });
-    }
-
-    public void rewind(double value) {
-        final Duration now = view.getCurrentTime().subtract(Duration.seconds(value));
-        if(now.lessThan(Duration.ZERO)){
-            view.rewind(Duration.ZERO);
-            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(Duration.ZERO));
-        } else{
-            view.rewind(now);
-            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(now));
-        }
-    }
-
-    public void forward(double value) {
-        final Duration now = view.getCurrentTime().add(Duration.seconds(value));
-        if(now.greaterThan(video.getDuration()) == false){
-            view.rewind(now);
-            getApplication().getEventRouter().publishEventOutsideUI("player.rewind", Arrays.asList(now));
-        }
     }
 
     public PlayerController() {

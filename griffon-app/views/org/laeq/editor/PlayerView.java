@@ -27,7 +27,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Drawing;
 import org.laeq.model.Icon;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
@@ -53,6 +52,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     //Video player
     private MediaPlayer mediaPlayer;
     @FXML public Pane playerPane;
+
+    @FXML public AnchorPane playerControls;
     @FXML private MediaView mediaView;
     @FXML public Pane iconPane;
     @FXML private VideoSlider slider;
@@ -60,10 +61,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML private Label duration;
 
     @FXML private Button addActionTarget;
-    @FXML private Button playActionTarget;
-    @FXML private Button stopActionTarget;
-    @FXML private Button rewindActionTarget;
-    @FXML private Button forwardActionTarget;
     @FXML private Button controlsActionTarget;
     @FXML private Button imageControlsActionTarget;
 
@@ -87,8 +84,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         createMVCGroup("timeline", arguments);
         createMVCGroup("category_sum", arguments);
         createMVCGroup("icon_pane", arguments);
+        createMVCGroup("player_controls", arguments);
     }
-
 
     @Override
     public void mvcGroupDestroy(){
@@ -116,38 +113,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
             getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
         });
-
-        Icon icon = new Icon(IconSVG.video_plus, org.laeq.model.icon.Color.white);
-        addActionTarget.setGraphic(icon);
-        addActionTarget.setText("");
-
-        icon = new Icon(IconSVG.btnPlay, org.laeq.model.icon.Color.white);
-        playActionTarget.setGraphic(icon);
-        playActionTarget.setText("");
-
-        icon = new Icon(IconSVG.btnPause, org.laeq.model.icon.Color.white);
-        stopActionTarget.setGraphic(icon);
-        stopActionTarget.setText("");
-
-        icon = new Icon(IconSVG.controls, org.laeq.model.icon.Color.gray_dark);
-        controlsActionTarget.setGraphic(icon);
-        controlsActionTarget.setText("");
-
-        icon = new Icon(IconSVG.imageControls, org.laeq.model.icon.Color.gray_dark);
-        imageControlsActionTarget.setGraphic(icon);
-        imageControlsActionTarget.setText("");
-
-        icon = new Icon(IconSVG.backward30, org.laeq.model.icon.Color.gray_dark);
-        rewindActionTarget.setGraphic(icon);
-        rewindActionTarget.setText("");
-
-        icon = new Icon(IconSVG.forward30, org.laeq.model.icon.Color.gray_dark);
-        forwardActionTarget.setGraphic(icon);
-        forwardActionTarget.setText("");
-
-        icon = new Icon(IconSVG.draw, org.laeq.model.icon.Color.gray_dark);
-        drawActionTarget.setGraphic(icon);
-        drawActionTarget.setText("");
 
         slider.setEventRouter(getApplication().getEventRouter());
         elapsed.setEventRouter(getApplication().getEventRouter());
@@ -288,19 +253,24 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         getApplication().getEventRouter().publishEventOutsideUI("point.removed", Arrays.asList(point));
     }
 
-    public void rewind(Duration now) {
-        final Collection<IconPointColorized> icons = model.setCurrentTime(now);
+    public void rewind() {
+        Duration now = mediaPlayer.getCurrentTime().subtract(Duration.seconds(30));
+        if(now.lessThan(Duration.ZERO)){
+            now = Duration.ZERO;
+        }
+
         mediaPlayer.seek(now);
+        slider.setValue(now.toMillis() / videoDuration * 100);
+    }
 
-        Platform.runLater(() -> {
-            iconPane.getChildren().clear();
-            iconPane.getChildren().addAll(icons);
-            elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
+    public void forward() {
+        Duration now = mediaPlayer.getCurrentTime().add(Duration.seconds(30));
+        if(now.greaterThan(video.getDuration())){
+           now = video.getDuration();
+        }
 
-            if(!model.isPlaying.getValue()){
-                slider.setValue(now.toMillis() / videoDuration * 100);
-            }
-        });
+        mediaPlayer.seek(now);
+        slider.setValue(now.toMillis() / videoDuration * 100);
     }
 
     public void refreshRate(Double rate) {
@@ -317,11 +287,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void sliderReleased(Duration now) {
-        final Collection<IconPointColorized> icons = model.setCurrentTime(now);
         mediaPlayer.seek(now);
         Platform.runLater(() -> {
-            iconPane.getChildren().clear();
-            iconPane.getChildren().addAll(icons);
             elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
             mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
 
@@ -332,11 +299,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void sliderCurrentTime(final Duration now) {
-        final Collection<IconPointColorized> icons = model.setCurrentTime(now);
         mediaPlayer.seek(now);
         Platform.runLater(() -> {
-            iconPane.getChildren().clear();
-            iconPane.getChildren().addAll(icons);
             elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
         });
     }
@@ -345,6 +309,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         this.display = display;
     }
 
-
-
+    public void seek(Duration object) {
+        mediaPlayer.seek(object);
+    }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+<AnchorPane fx:id="" xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.laeq.editor.PlayerControlsController"
+            AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0">
+    <children>
+        <Button fx:id="playActionTarget" layoutX="14.0" layoutY="408.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="62.0"
+                styleClass="btn, btn-success" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" />
+        <Button fx:id="stopActionTarget" layoutX="112.0" layoutY="412.0" mnemonicParsing="false" styleClass="btn, btn-danger" text=" "
+                AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" />
+        <Button fx:id="rewindActionTarget" layoutX="237.0" layoutY="612.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" "
+                AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="200.0" />
+        <Button fx:id="forwardActionTarget" layoutX="302.0" layoutY="612.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" "
+                AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="300.0" />
+
+<!--        <Button fx:id="controlsActionTarget" layoutX="569.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" "-->
+<!--                AnchorPane.rightAnchor="110.0" AnchorPane.topAnchor="5.0" />-->
+<!--        <Button fx:id="imageControlsActionTarget" layoutX="479.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" "-->
+<!--                AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="5.0" />-->
+<!--        <Button fx:id="drawActionTarget" layoutX="479.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" "-->
+<!--                AnchorPane.rightAnchor="290.0" AnchorPane.topAnchor="5.0" />-->
+<!--        <Button fx:id="addActionTarget" layoutX="656.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-info" text=" "-->
+<!--                AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />-->
+    </children>
+</AnchorPane>
