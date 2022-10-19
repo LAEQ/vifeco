@@ -12,15 +12,21 @@
 <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="680.0">
         <children>
-            <AnchorPane layoutX="34.0" layoutY="24.0" prefHeight="337.0" prefWidth="562.0"
-                        style="-fx-background-color: #dddddd;" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="10.0"
-                        AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0">
-                <Pane fx:id="playerPane" layoutX="14.0" layoutY="23.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="10.0"
-                      AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="25.0">
+            <AnchorPane style="-fx-background-color: #dddddd;"
+                        AnchorPane.bottomAnchor="85.0"
+                        AnchorPane.leftAnchor="0.0"
+                        AnchorPane.rightAnchor="0.0"
+                        AnchorPane.topAnchor="50.0">
+                <AnchorPane fx:id="playerPane"
+                      AnchorPane.bottomAnchor="10.0"
+                      AnchorPane.leftAnchor="10.0"
+                      AnchorPane.rightAnchor="10.0"
+                      AnchorPane.topAnchor="10.0"
+                      style="-fx-border-color: yellow; -fx-border-width: 5" >
                     <MediaView fx:id="mediaView" fitHeight="${playerPane.height}" fitWidth="${playerPane.width}" layoutX="1.0" />
-                    <DrawingPane fx:id="drawingPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: #FF00FF;" />
-                    <IconPane fx:id="iconPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: #aaaaaa;" />
-                </Pane>
+                    <DrawingPane fx:id="drawingPane" layoutX="0.0" layoutY="0.0"  />
+                    <Pane fx:id="iconPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: blue; -fx-border-width: 2; -fx-opacity: .3"  />
+                </AnchorPane>
             </AnchorPane>
             <!-- Player Buttons -->
             <Button fx:id="playActionTarget" layoutX="14.0" layoutY="408.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="62.0" styleClass="btn, btn-success" text=" " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />

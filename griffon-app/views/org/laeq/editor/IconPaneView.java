@@ -1,10 +1,10 @@
 package org.laeq.editor;
 
-import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
@@ -34,7 +34,10 @@ public class IconPaneView extends AbstractJavaFXGriffonView implements PaneSizab
         Node node = loadFromFXML();
         parentView.playerPane.getChildren().add(node);
         connectMessageSource(node);
+
         resizeListener();
+
+        container.setEventRouter(getApplication().getEventRouter());
     }
 
     @Override
@@ -60,6 +63,16 @@ public class IconPaneView extends AbstractJavaFXGriffonView implements PaneSizab
         runInsideUIAsync(() -> {
             container.getChildren().clear();
             container.getChildren().addAll(icons);
+        });
+    }
+
+    public Point2D getMousePosition() {
+        return container.getMousePosition();
+    }
+
+    public void addIcon(IconPointColorized icon) {
+        runInsideUIAsync(() -> {
+            container.getChildren().add(icon);
         });
     }
 }

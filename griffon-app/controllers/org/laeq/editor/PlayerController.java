@@ -58,11 +58,7 @@ public class PlayerController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void togglePlay() {
-        if(model.isPlaying.getValue()){
-            stop();
-        } else {
-            play();
-        }
+       getApplication().getEventRouter().publishEventOutsideUI("media.toggle");
     }
 
     @ControllerAction
@@ -119,25 +115,26 @@ public class PlayerController extends AbstractGriffonController {
 
     @ControllerAction
     public void addPoint(KeyCode code, Duration currentTime) {
-        if(model.isReady.get()){
-            runInsideUIAsync(() -> {
-                final Point point = model.generatePoint(code.getName(), currentTime);
-
-                if(point == null){
-                    return;
-                }
-
-                if(dbService.pointDAO.create(point)){
-                    model.addPoint(point);
-                    view.addPoint(point);
-
-                    getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
-                    getApplication().getEventRouter().publishEvent("point.added", Arrays.asList(point));
-                } else {
-                    getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
-                }
-            });
-        }
+        getApplication().getEventRouter().publishEventOutsideUI("point.adding", Arrays.asList(code, currentTime));
+//        if(model.isReady.get()){
+//            runInsideUIAsync(() -> {
+//                final Point point = model.generatePoint(code.getName(), currentTime);
+//
+//                if(point == null){
+//                    return;
+//                }
+//
+//                if(dbService.pointDAO.create(point)){
+//                    model.addPoint(point);
+//                    view.addPoint(point);
+//
+//                    getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("editor.point.create.success", point.toString()));
+//                    getApplication().getEventRouter().publishEvent("point.added", Arrays.asList(point));
+//                } else {
+//                    getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("editor.point.create.error", point.toString()));
+//                }
+//            });
+//        }
     }
 
     @ControllerAction
@@ -218,11 +215,11 @@ public class PlayerController extends AbstractGriffonController {
 
         list.put("row.currentTime", objects -> view.rewind((Duration) objects[0]));
 
-        list.put("timeline.point.deleted", objects -> {
-            Point pt = (Point) objects[0];
-            model.removePoint(pt);
-            view.removePoint(pt);
-        });
+//        list.put("timeline.point.deleted", objects -> {
+//            Point pt = (Point) objects[0];
+//            model.removePoint(pt);
+//            view.removePoint(pt);
+//        });
 
         list.put("icon.delete", objects -> deletePoint((IconPointColorized) objects[0]));
 

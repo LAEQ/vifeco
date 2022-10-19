@@ -1,18 +1,20 @@
 package org.laeq.editor;
 
+import griffon.core.Observable;
 import griffon.core.artifact.GriffonModel;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.ObservableList;
+import javafx.geometry.Point2D;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.laeq.model.Category;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.NavigableSet;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonModel.class)
@@ -28,10 +30,14 @@ final public class IconPaneModel extends AbstractGriffonModel {
 
     private NavigableSet<Point> points = new TreeSet<>();
 
+    private final Map<String, Category> shortcutMap= new HashMap();
+
     public void setVideo(@Nonnull Video video){
         this.video = video;
 
         points.addAll(this.video.getPoints());
+
+        video.getCollection().getCategories().forEach(c -> shortcutMap.put(c.getShortcut(), c));
     }
 
     public void setWidth(double width) {
@@ -78,15 +84,36 @@ final public class IconPaneModel extends AbstractGriffonModel {
         }).collect(Collectors.toSet());
     }
 
-//    public IconPointColorized getIcon(String key) {
-//        Point point = collection.getIcon(key);
-//        IconPointColorized icon = point.getIconPoint();
-//        icon.setScaleX(controls.scale());
-//        icon.setScaleY(controls.scale());
-//        icon.setLayoutX(point.getX() * width.doubleValue());
-//        icon.setLayoutY(point.getY() * height.doubleValue());
-//        icon.setOpacity(controls.opacity.getValue());
-//
-//        return icon;
-//    }
+    public Point generatePoint(String code, Duration currentTime, Point2D mousePosition) {
+        Category category = getCategoryByShortcut(code);
+
+        if(category != null && mousePosition != null){
+            Point point = new Point();
+            point.setVideo(video);
+            video.addPoint(point);
+            point.setCategory(getCategoryByShortcut(code));
+            point.setStart(currentTime);
+            point.setX(mousePosition.getX() / width.doubleValue());
+            point.setY(mousePosition.getY() / height.doubleValue());
+
+            return point;
+        }
+
+        return null;
+    }
+
+    private Category getCategoryByShortcut(String shortcut){
+        return shortcutMap.get(shortcut);
+    }
+
+    public IconPointColorized getIcon(Point point) {
+        IconPointColorized icon = point.getIconPoint();
+        icon.setScaleX(controls.scale());
+        icon.setScaleY(controls.scale());
+        icon.setLayoutX(point.getX() * width.doubleValue());
+        icon.setLayoutY(point.getY() * height.doubleValue());
+        icon.setOpacity(controls.opacity.getValue());
+
+        return icon;
+    }
 }

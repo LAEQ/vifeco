@@ -36,8 +36,6 @@ import org.laeq.model.Point;
 import org.laeq.model.Video;
 import org.laeq.model.icon.IconPointColorized;
 import org.laeq.model.icon.IconSVG;
-import org.reactfx.EventStream;
-import org.reactfx.EventStreams;
 import org.reactfx.Subscription;
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -49,7 +47,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull private Video video;
 
-    private Scene scene;
+    public Scene scene;
 
     @FXML public Label title;
     @FXML public AnchorPane timeline;
@@ -57,9 +55,9 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     //Video player
     private MediaPlayer mediaPlayer;
-    @FXML private Pane playerPane;
+    @FXML public Pane playerPane;
     @FXML private MediaView mediaView;
-    @FXML private IconPane iconPane;
+    @FXML public Pane iconPane;
 
     @FXML private DrawingPane drawingPane;
     @FXML private VideoSlider slider;
@@ -81,21 +79,21 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     private Boolean wasPlaying = false;
     private Double videoDuration;
 
-    public ObservableMap<String, Duration> markers;
     public Subscription currentTimeSubscription;
 
     private ChangeListener<? super Duration> currentTimeListener = currentTimeListener();
     private Duration display;
 
-    private Subscription subscription = () -> {};
-
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
-        Map<String, Object> video = new HashMap<>();
-        video.put("video", args.get("video"));
-        createMVCGroup("timeline", video);
-        createMVCGroup("category_sum", video);
+        Map<String, Object> arguments = new HashMap<>();
+        arguments.put("video", args.get("video"));
+
+        createMVCGroup("timeline", arguments);
+        createMVCGroup("category_sum", arguments);
+        createMVCGroup("icon_pane", arguments);
     }
+
 
     @Override
     public void mvcGroupDestroy(){
@@ -118,9 +116,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         stage.setOnCloseRequest(event -> {
             runInsideUIAsync(() -> {
                 mediaPlayer.stop();
-                iconPane.dispose();
                 drawingPane.dispose();
-                subscription.unsubscribe();
                 slider.dispose();
             });
 
@@ -159,7 +155,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         drawActionTarget.setGraphic(icon);
         drawActionTarget.setText("");
 
-        iconPane.setEventRouter(getApplication().getEventRouter());
         slider.setEventRouter(getApplication().getEventRouter());
         elapsed.setEventRouter(getApplication().getEventRouter());
         drawingPane.setEventRouter(getApplication().getEventRouter());
@@ -198,11 +193,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
             videoDuration = video.getDuration().toMillis();
             display = model.controls.display();
 
-            markers = media.getMarkers();
-            model.collection.points.forEach(point -> {
-                markers.put(point.getId().toString(), point.getStart());
-            });
-
             mediaPlayer = new MediaPlayer(media);
             mediaView.setMediaPlayer(mediaPlayer);
 
@@ -211,18 +201,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 model.isReady.set(Boolean.TRUE);
                 mediaPlayer.play();
                 mediaPlayer.pause();
+                getApplication().getEventRouter().publishEventOutsideUI("currentTime.update", Arrays.asList(Duration.ZERO));
             });
+
             mediaPlayer.setOnHalted(() -> {
                 //noop
-            });
-            mediaPlayer.setOnMarker(event -> {
-                Platform.runLater(() -> {
-                    try {
-                        iconPane.getChildren().add(model.getIcon(event.getMarker().getKey()));
-                    }catch (Exception e){
-                        //noop
-                    }
-                });
             });
 
             duration.setText(video.getDurationFormatted());
@@ -230,47 +213,18 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 model.width.set(newValue.getWidth());
                 model.height.set(newValue.getHeight());
 
-                iconPane.setPrefWidth(model.width.doubleValue());
-                iconPane.setPrefHeight(model.height.doubleValue());
-
                 drawingPane.setPrefWidth(model.width.doubleValue());
                 drawingPane.setPrefHeight(model.height.doubleValue());
-
-                Platform.runLater(() -> {
-                    final Collection<IconPointColorized> icons = model.setCurrentTime(mediaPlayer.getCurrentTime());
-                    iconPane.getChildren().clear();
-                    iconPane.getChildren().addAll(icons);
-                });
             });
 
             //Mouse, Keyboard events
             scene.setOnKeyReleased(keyReleased());
 
-            EventStream<MouseEvent> clicks = EventStreams.eventsOf(iconPane, MouseEvent.MOUSE_CLICKED);
 
-            manageSubscription(clicks.subscribe(event -> {
-                if(event.isControlDown()){
-                    Node node = event.getPickResult().getIntersectedNode();
-                    Parent parent = node.getParent();
-                    if(parent instanceof IconPointColorized) {
-                        controller.deletePoint((IconPointColorized) parent);
-                    }
-                } else if (event.getButton() == MouseButton.PRIMARY){
-                    controller.rewind(5d);
-                    getApplication().getEventRouter().publishEvent("player.rewind.5");
-                } else if (event.getButton() == MouseButton.SECONDARY){
-                    controller.forward(5d);
-                    getApplication().getEventRouter().publishEvent("player.forward.5");
-                }
-            }));
 
         } catch (Exception e) {
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
         }
-    }
-
-    void manageSubscription(Subscription other) {
-        subscription.and(other);
     }
 
     public void play(){
@@ -285,6 +239,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     private EventHandler<? super KeyEvent> keyReleased() {
         return (EventHandler<KeyEvent>) event -> {
+            System.out.println(event.getCode());
             if(event.getCode() == KeyCode.CONTROL){
                 controller.togglePlay();
             } else {
@@ -299,28 +254,21 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
     private ChangeListener<Duration> currentTimeListener(){
         return (observable, oldValue, newValue) -> {
-            Platform.runLater(() -> {
-                if(! slider.isPressed()){
-                    final double now = newValue.toMillis();
-                    Duration before = newValue.subtract(display);
-                    slider.setValue(now / videoDuration * 100.0);
-                    elapsed.setText(DurationFormatUtils.formatDuration((long) now, "HH:mm:ss"));
-                    iconPane.getChildren().removeIf(node -> ((IconPointColorized)node).obsolete(before));
-                }
-            });
+            getApplication().getEventRouter().publishEventOutsideUI("currentTime.update", Arrays.asList(newValue));
+//            Platform.runLater(() -> {
+//                if(! slider.isPressed()){
+//                    final double now = newValue.toMillis();
+//                    Duration before = newValue.subtract(display);
+//                    slider.setValue(now / videoDuration * 100.0);
+//                    elapsed.setText(DurationFormatUtils.formatDuration((long) now, "HH:mm:ss"));
+//                    iconPane.getChildren().removeIf(node -> ((IconPointColorized)node).obsolete(before));
+//                }
+//            });
         };
     }
 
     private Image getImage(String path) {
         return new Image(getClass().getClassLoader().getResourceAsStream(path));
-    }
-
-    public void addPoint(Point point) {
-        markers.put(point.getId().toString(), point.getStart());
-
-        Platform.runLater(() -> {
-            iconPane.getChildren().add(model.getIcon(point.getId().toString()));
-        });
     }
 
     public void refreshOpacity(Double opacity) {
@@ -365,8 +313,7 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void removePoint(Point point) {
-        markers.remove(point.getId().toString());
-        Platform.runLater(() -> iconPane.getChildren().remove(point.getIconPoint()));
+        getApplication().getEventRouter().publishEventOutsideUI("point.removed", Arrays.asList(point));
     }
 
     public void rewind(Duration now) {
@@ -427,11 +374,11 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     }
 
     public void drawLineStart(String color) {
-        iconPane.startDrawLine(color);
+        //iconPane.startDrawLine(color);
     }
 
     public void drawRectangleStart(String color) {
-        iconPane.drawRectangle(color);
+        //iconPane.drawRectangle(color);
     }
 
     public void deleteDraw(Drawing drawing) {

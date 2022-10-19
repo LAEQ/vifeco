@@ -4,10 +4,13 @@ import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.geometry.Point2D;
+import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Point;
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,12 +32,21 @@ public class IconPaneController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("point.added", objects ->{
-            model.addPoint((Point) objects[0]);
+        list.put("point.adding", objects ->{
+            KeyCode key = (KeyCode) objects[0];
+            Duration currentTime = (Duration) objects[1];
+            Point2D mousePosition = view.getMousePosition();
+            final Point point = model.generatePoint(key.getName(), currentTime, mousePosition);
+            if(point != null){
+                model.addPoint(point);
+                view.addIcon(model.getIcon(point));
+                getApplication().getEventRouter().publishEventOutsideUI("point.added", Arrays.asList(point));
+            }
         });
 
         list.put("point.removed", objects ->{
-            model.removePoint((Point) objects[0]);
+            System.out.println("point.removed");
+//            model.removePoint((Point) objects[0]);
         });
 
         list.put("currentTime.update", objects -> view.updateCurrentTime((Duration) objects[0]));
