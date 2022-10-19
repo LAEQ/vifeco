@@ -55,8 +55,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
     @FXML public Pane playerPane;
     @FXML private MediaView mediaView;
     @FXML public Pane iconPane;
-
-    @FXML private DrawingPane drawingPane;
     @FXML private VideoSlider slider;
     @FXML private ElapsedText elapsed;
     @FXML private Label duration;
@@ -113,7 +111,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         stage.setOnCloseRequest(event -> {
             runInsideUIAsync(() -> {
                 mediaPlayer.stop();
-                drawingPane.dispose();
                 slider.dispose();
             });
 
@@ -154,7 +151,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
 
         slider.setEventRouter(getApplication().getEventRouter());
         elapsed.setEventRouter(getApplication().getEventRouter());
-        drawingPane.setEventRouter(getApplication().getEventRouter());
 
         initPlayer();
     }
@@ -210,8 +206,8 @@ public class PlayerView extends AbstractJavaFXGriffonView {
                 model.width.set(newValue.getWidth());
                 model.height.set(newValue.getHeight());
 
-                drawingPane.setPrefWidth(model.width.doubleValue());
-                drawingPane.setPrefHeight(model.height.doubleValue());
+//                drawingPane.setPrefWidth(model.width.doubleValue());
+//                drawingPane.setPrefHeight(model.height.doubleValue());
             });
 
             //Mouse, Keyboard events
@@ -349,38 +345,6 @@ public class PlayerView extends AbstractJavaFXGriffonView {
         this.display = display;
     }
 
-    public void drawLineStart(String color) {
-        //iconPane.startDrawLine(color);
-    }
 
-    public void drawRectangleStart(String color) {
-        //iconPane.drawRectangle(color);
-    }
 
-    public void deleteDraw(Drawing drawing) {
-        drawingPane.drawings.remove(drawing);
-    }
-
-    public void showDraw(Drawing drawing) {
-        runInsideUISync(() -> {
-            drawingPane.drawings.add(drawing);
-        });
-    }
-
-    public void hideDraw(Drawing drawing) {
-        runInsideUISync(() -> {
-            drawingPane.drawings.remove(drawing);
-        });
-    }
-
-    public void drawingDestroy() {
-        runInsideUISync(() -> drawingPane.drawings.clear());
-    }
-
-    public void drawingUpdated(List<Drawing> list) {
-        runInsideUISync(() -> {
-            drawingPane.drawings.clear();
-            drawingPane.drawings.addAll(list);
-        });
-    }
 }

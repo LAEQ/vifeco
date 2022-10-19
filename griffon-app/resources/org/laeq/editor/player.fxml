@@ -24,7 +24,6 @@
                       AnchorPane.topAnchor="10.0"
                       style="-fx-border-color: yellow; -fx-border-width: 5" >
                     <MediaView fx:id="mediaView" fitHeight="${playerPane.height}" fitWidth="${playerPane.width}" layoutX="1.0" />
-                    <DrawingPane fx:id="drawingPane" layoutX="0.0" layoutY="0.0"  />
                     <Pane fx:id="iconPane" layoutX="0.0" layoutY="0.0" style="-fx-border-color: blue; -fx-border-width: 2; -fx-opacity: .3"  />
                 </AnchorPane>
             </AnchorPane>

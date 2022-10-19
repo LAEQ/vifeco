@@ -8,12 +8,13 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.laeq.model.Drawing;
 import org.laeq.model.Video;
 import javax.annotation.Nonnull;
 import javafx.util.Duration;
 import org.laeq.model.icon.IconPointColorized;
-
 import java.util.Collection;
+import java.util.List;
 
 
 @ArtifactProviderFor(GriffonView.class)
@@ -25,6 +26,8 @@ public class IconPaneView extends AbstractJavaFXGriffonView implements PaneSizab
 
     @FXML private IconPane container;
     @FXML private AnchorPane iconAnchor;
+
+    @FXML private DrawingPane drawingPane;
 
     private int videoWidth = 960;
     private int videoHeight = 540;
@@ -54,6 +57,8 @@ public class IconPaneView extends AbstractJavaFXGriffonView implements PaneSizab
 
             container.setPrefWidth(width);
             container.setPrefHeight(height);
+            drawingPane.setPrefWidth(width);
+            drawingPane.setPrefHeight(height);
         });
     }
 
@@ -82,5 +87,40 @@ public class IconPaneView extends AbstractJavaFXGriffonView implements PaneSizab
             node.setScaleX(size / 100);
             node.setScaleY(size / 100);
         }));
+    }
+
+    public void drawLineStart(String color) {
+        container.startDrawLine(color);
+    }
+
+    public void drawRectangleStart(String color) {
+        container.drawRectangle(color);
+    }
+
+    public void deleteDraw(Drawing drawing) {
+        drawingPane.drawings.remove(drawing);
+    }
+
+    public void showDraw(Drawing drawing) {
+        runInsideUISync(() -> {
+            drawingPane.drawings.add(drawing);
+        });
+    }
+
+    public void hideDraw(Drawing drawing) {
+        runInsideUISync(() -> {
+            drawingPane.drawings.remove(drawing);
+        });
+    }
+
+    public void drawingDestroy() {
+        runInsideUISync(() -> drawingPane.drawings.clear());
+    }
+
+    public void drawingUpdated(List<Drawing> list) {
+        runInsideUISync(() -> {
+            drawingPane.drawings.clear();
+            drawingPane.drawings.addAll(list);
+        });
     }
 }

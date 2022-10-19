@@ -31,10 +31,6 @@ public class DrawingPane extends Pane {
         super(children);
     }
 
-    void dispose() {
-
-    }
-
     public void setEventRouter(EventRouter eventRouter) {
         this.router = eventRouter;
     }

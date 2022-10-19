@@ -8,10 +8,12 @@ import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.laeq.model.Drawing;
 import org.laeq.model.Point;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -62,6 +64,11 @@ public class IconPaneController extends AbstractGriffonController {
             model.controls.size.set((Double) objects[0]);
             view.refreshSize((Double) objects[0]);
         });
+
+        list.put("drawing.line.start", args -> view.drawLineStart((String) args[0]));
+        list.put("drawing.rectangle.start", args -> view.drawRectangleStart((String) args[0]));
+        list.put("drawing.updated", args -> view.drawingUpdated((List<Drawing>) args[0]));
+        list.put("drawing.destroyed", args -> view.drawingDestroy());
 
         return list;
     }
