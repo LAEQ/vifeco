@@ -58,8 +58,7 @@ public class IconPane extends Pane {
                 Node node = event.getPickResult().getIntersectedNode();
                 Parent parent = node.getParent();
                 if(parent instanceof IconPointColorized) {
-                    System.out.println(parent);
-                    this.router.publishEvent("icon.removed", Arrays.asList(parent));
+                    this.router.publishEvent("icon.deleted", Arrays.asList(parent));
                 }
             } else if (event.getButton() == MouseButton.PRIMARY){
                 this.router.publishEvent("player.rewind.5");

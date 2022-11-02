@@ -1,8 +1,10 @@
 package org.laeq.editor;
 
+import griffon.core.Observable;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -15,12 +17,13 @@ import javafx.util.Duration;
 import org.laeq.model.icon.IconPointColorized;
 import java.util.Collection;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 @ArtifactProviderFor(GriffonView.class)
 public class IconPaneView extends AbstractJavaFXGriffonView implements PaneSizable {
     @MVCMember @Nonnull private IconPaneModel model;
-    @MVCMember @Nonnull private PlayerView parentView;
+    @MVCMember @Nonnull private IconPaneController controller;
+    @MVCMember @Nonnull private EditorView parentView;
 
     @MVCMember @Nonnull private Video video;
 
@@ -41,6 +44,8 @@ public class IconPaneView extends AbstractJavaFXGriffonView implements PaneSizab
         resizeListener();
 
         container.setEventRouter(getApplication().getEventRouter());
+
+        this.updateCurrentTime(Duration.ZERO);
     }
 
     @Override
@@ -59,15 +64,21 @@ public class IconPaneView extends AbstractJavaFXGriffonView implements PaneSizab
             container.setPrefHeight(height);
             drawingPane.setPrefWidth(width);
             drawingPane.setPrefHeight(height);
+
+            refresh();
         });
     }
 
     public void updateCurrentTime(Duration currentTime) {
-        System.out.println(currentTime);
         Collection<IconPointColorized> icons = model.setCurrentTime(currentTime);
         runInsideUIAsync(() -> {
-            container.getChildren().clear();
-            container.getChildren().addAll(icons);
+            List<Node> out = container.getChildren().stream().filter(node -> icons.contains(node) == false).collect(Collectors.toList());
+            container.getChildren().removeAll(out);
+            icons.forEach(iconPointColorized -> {
+                if(container.getChildren().contains(iconPointColorized) == false){
+                    container.getChildren().add(iconPointColorized);
+                }
+            });
         });
     }
 
@@ -122,5 +133,18 @@ public class IconPaneView extends AbstractJavaFXGriffonView implements PaneSizab
             drawingPane.drawings.clear();
             drawingPane.drawings.addAll(list);
         });
+    }
+
+    public void refresh() {
+        container.getChildren().clear();
+        Collection<IconPointColorized> icons = model.setCurrentTime(model.getCurrentTime());
+        container.getChildren().addAll(icons);
+    }
+
+    public void removeIcon(IconPointColorized icon) {
+        runInsideUISync(() -> {
+            container.getChildren().remove(icon);
+        });
+
     }
 }

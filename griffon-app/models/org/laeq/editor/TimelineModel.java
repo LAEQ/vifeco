@@ -13,6 +13,7 @@ import org.laeq.model.comparator.DurationComparator;
 
 import javax.annotation.Nonnull;
 import java.util.Comparator;
+import java.util.List;
 
 @ArtifactProviderFor(GriffonModel.class)
 final public class TimelineModel extends AbstractGriffonModel {
@@ -25,11 +26,17 @@ final public class TimelineModel extends AbstractGriffonModel {
 
     public Comparator<Point> comparator = new DurationComparator();
 
-
     public void setVideo(@Nonnull Video video){
         this.video = video;
 
-        points.addAll(video.getPoints());
+        List<Point> list = video.getPoints();
+        list.sort(comparator);
+
+        points.addAll(list);
         sortedList = points.sorted(comparator);
+    }
+
+    public void deletePoint(Point point) {
+        points.remove(point);
     }
 }

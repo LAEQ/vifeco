@@ -6,26 +6,22 @@ import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
-import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.DatabaseService;
-import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.model.icon.IconPointColorized;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.util.*;
 
 @ArtifactProviderFor(GriffonController.class)
-public class PlayerController extends AbstractGriffonController {
-    @MVCMember @Nonnull private PlayerModel model;
-    @MVCMember @Nonnull private PlayerView view;
+public class EditorController extends AbstractGriffonController {
+    @MVCMember @Nonnull private EditorModel model;
+    @MVCMember @Nonnull private EditorView view;
     @MVCMember @Nonnull private Video video;
 
     @Inject DatabaseService dbService;
@@ -77,7 +73,6 @@ public class PlayerController extends AbstractGriffonController {
 
         Map<String, Object> args = new HashMap<>();
         args.put("model", model);
-        args.put("currentTime", view.getCurrentTime());
         args.put("controls", model.controls);
 
         createMVCGroup("full_screen", args);
@@ -86,22 +81,20 @@ public class PlayerController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        view.pause();
-        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
-        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("controls"));
-        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("image_controls"));
-        getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("drawing"));
+        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("display"));
+        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("controls"));
+        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("image_controls"));
+        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("drawing"));
     }
 
     @ControllerAction
-    public void addPoint(KeyCode code, Duration currentTime) {
-        getApplication().getEventRouter().publishEventOutsideUI("point.adding", Arrays.asList(code, currentTime));
+    public void addPoint(KeyCode code) {
+        getApplication().getEventRouter().publishEvent("point.adding", Arrays.asList(code));
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void add() {
-        view.pause();
         model.isReady.set(Boolean.FALSE);
 
         getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("display"));
@@ -120,7 +113,6 @@ public class PlayerController extends AbstractGriffonController {
         if (selectedFile != null) {
             Map<String, Object> args = new HashMap<>();
             args.put("file", selectedFile);
-            args.put("currentTime", view.getCurrentTime());
             args.put("controls", model.controls);
 
             createMVCGroup("display", args);
@@ -133,67 +125,13 @@ public class PlayerController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("display.ready", objects -> model.isReady.set(Boolean.TRUE));
-
-        list.put("speed.change", objects -> {
-            view.refreshRate((Double) objects[0]);
-            getApplication().getEventRouter().publishEvent("video.currentTime", Arrays.asList(view.getCurrentTime()));
-        });
-
-        list.put("brightness.change", objects -> view.refreshBrightness((Double) objects[0]));
-        list.put("saturation.change", objects -> view.refreshSaturation((Double) objects[0]));
-        list.put("constrast.change", objects -> view.refreshContrast((Double) objects[0]));
-        list.put("hue.change", objects -> view.refreshHue((Double) objects[0]));
-
-
-        list.put("volume.change", objects -> view.refreshVolume((Double) objects[0]));
-        list.put("row.currentTime", objects -> view.seek((Duration) objects[0]));
-
-//        list.put("timeline.point.deleted", objects -> {
-//            Point pt = (Point) objects[0];
-//            model.removePoint(pt);
-//            view.removePoint(pt);
-//        });
-
-        list.put("icon.delete", objects -> deletePoint((IconPointColorized) objects[0]));
-
-        list.put("slider.release", objects -> view.sliderReleased(video.getDuration().multiply((Double) objects[0] / 100)));
-        list.put("slider.pressed", objects -> view.sliderPressed());
-        list.put("slider.currentTime", objects -> {
-            Duration now = video.getDuration().multiply((Double) objects[0] / 100);
-            view.sliderCurrentTime(now);
-        });
-
-        list.put("mouse.position", objects -> model.setMousePosition((Point2D) objects[0]));
-        list.put("mouse.active", objects -> model.setMouseActive((boolean) objects[0]));
-
-//        list.put("elapsed.focus.on", objects -> stop());
-//        list.put("elapsed.currentTime", objects -> view.rewind((Duration) objects[0]));
-
-        list.put("media.play", args -> view.play());
-        list.put("media.pause", args -> view.pause());
-        list.put("media.rewind", args-> view.rewind());
-        list.put("media.forward", args-> view.forward());
+//        list.put("display.ready", objects -> model.isReady.set(Boolean.TRUE));
+//        list.put("icon.delete", objects -> deletePoint((IconPointColorized) objects[0]));
 
         return list;
     }
 
-    @ControllerAction
-    @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
-    public void deletePoint(IconPointColorized icon) {
-        runInsideUIAsync(() -> {
-            Optional<Point> point = model.getPointFromIcon(icon);
-            if(point.isPresent() && dbService.pointDAO.delete(point.get())) {
-                Point pt = point.get();
-                getApplication().getEventRouter().publishEvent("player.point.deleted", Arrays.asList(pt));
-
-                model.removePoint(pt);
-                view.removePoint(pt);
-            }
-        });
-    }
-
-    public PlayerController() {
+    public EditorController() {
         super();
     }
 

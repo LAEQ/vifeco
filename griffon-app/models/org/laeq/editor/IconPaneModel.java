@@ -4,8 +4,12 @@ import griffon.core.artifact.GriffonModel;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.laeq.model.Category;
 import org.laeq.model.Point;
@@ -28,12 +32,20 @@ final public class IconPaneModel extends AbstractGriffonModel {
 
     final private NavigableSet<Point> points = new TreeSet<>();
 
+    public BidiMap<IconPointColorized, Point> icons = new DualHashBidiMap<>();
+
+    public ObservableList<Point> displayPoints = FXCollections.observableArrayList();
+
     final private Map<String, Category> shortcutMap= new HashMap();
 
     public void setVideo(@Nonnull Video video){
         this.video = video;
 
-        points.addAll(this.video.getPoints());
+        this.video.getPoints().forEach(point -> {
+            this.points.add(point);
+            icons.put(point.getIconPoint(), point);
+        });
+
 
         video.getCollection().getCategories().forEach(c -> shortcutMap.put(c.getShortcut(), c));
     }
@@ -51,11 +63,14 @@ final public class IconPaneModel extends AbstractGriffonModel {
     }
 
     public void addPoint(Point point) {
+        icons.put(point.getIconPoint(), point);
         points.add(point);
     }
 
-    public void removePoint(Point point) {
+    public IconPointColorized deletePoint(Point point) {
         points.remove(point);
+
+        return icons.removeValue(point);
     }
 
     public Collection<Point> subList(Point start, Point end) {
@@ -113,5 +128,9 @@ final public class IconPaneModel extends AbstractGriffonModel {
         icon.setOpacity(controls.opacity.getValue());
 
         return icon;
+    }
+
+    public Point getPointFromIcon(IconPointColorized icon) {
+        return icons.get(icon);
     }
 }

@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 @ArtifactProviderFor(GriffonView.class)
 public class CategorySumView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private CategorySumModel model;
-    @MVCMember @Nonnull private PlayerView parentView;
+    @MVCMember @Nonnull private EditorView parentView;
 
     @FXML public TableView<CategoryCount> summaryTable;
     @FXML public TableColumn<CategoryCount, Icon> iconTS;

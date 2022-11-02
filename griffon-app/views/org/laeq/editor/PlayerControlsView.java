@@ -17,7 +17,7 @@ public class PlayerControlsView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private PlayerControlsController controller;
     @MVCMember @Nonnull private PlayerControlsModel model;
 
-    @MVCMember @Nonnull private PlayerView parentView;
+    @MVCMember @Nonnull private EditorView parentView;
 
     @FXML private Button playActionTarget;
     @FXML private Button stopActionTarget;

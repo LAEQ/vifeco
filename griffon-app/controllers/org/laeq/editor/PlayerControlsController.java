@@ -24,26 +24,24 @@ public class PlayerControlsController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void rewind() {
-        getApplication().getEventRouter().publishEventAsync("media.rewind");
+        getApplication().getEventRouter().publishEvent("media.rewind");
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void forward() {
-        getApplication().getEventRouter().publishEventAsync("media.forward");
+        getApplication().getEventRouter().publishEvent("media.forward");
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void stop() {
-        System.out.println("stop");
         getApplication().getEventRouter().publishEventAsync("media.pause");
     }
 
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
     public void play() {
-        System.out.println("play");
         getApplication().getEventRouter().publishEventAsync("media.play");
     }
 

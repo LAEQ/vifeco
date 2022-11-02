@@ -47,16 +47,6 @@ public class VifecoView extends AbstractJavaFXGriffonView {
         createMVCGroup("bottom");
         createMVCGroup("menu");
         createMVCGroup(model.currentGroup);
-
-        Video video = null;
-        try {
-            video = dbService.videoDAO.findAll().get(0);
-            Map<String, Object> arguments = new HashMap<>();
-            arguments.put("video", video);
-            createMVCGroup("editor", arguments);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
