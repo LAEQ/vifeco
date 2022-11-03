@@ -8,7 +8,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.apache.commons.lang3.NotImplementedException;
 import org.hibernate.validator.constraints.Length;
 import org.laeq.editor.DrawingType;
 import org.laeq.model.converter.hibernate.Point2DConverter;
@@ -20,7 +19,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "drawing")
-@JsonIgnoreProperties({"canvas", "isVisible"})
+@JsonIgnoreProperties({"canvas", "isVisible", "active"})
 public class Drawing {
     @Id
     @GeneratedValue(generator = "increment")
@@ -117,11 +116,9 @@ public class Drawing {
     public Canvas getCanvas(double width, double height, double dash, double dashOffset) {
         if(type == DrawingType.LINE){
             return getLineCanvas(width,height,dash,dashOffset);
-        } else if(type == DrawingType.RECTANGLE){
+        } else {
             return getRectangleCanvas(width,height,dash,dashOffset);
         }
-
-        throw new NotImplementedException("Draw type is not implemented");
     }
 
     public Canvas getLineCanvas(double width, double height, double dash, double dashOffset) {

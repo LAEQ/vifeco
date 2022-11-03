@@ -6,7 +6,6 @@
 <?import org.laeq.editor.DrawingPane?>
 <AnchorPane fx:id="iconAnchor" xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.laeq.editor.IconPaneController"
-            style="-fx-border-color: green; -fx-border-width: 4"
             AnchorPane.bottomAnchor="40.0"
             AnchorPane.leftAnchor="0.0"
             AnchorPane.rightAnchor="0.0"

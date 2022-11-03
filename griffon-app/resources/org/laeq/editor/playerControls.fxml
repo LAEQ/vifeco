@@ -17,14 +17,5 @@
                 AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="200.0" />
         <Button fx:id="forwardActionTarget" layoutX="302.0" layoutY="612.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" "
                 AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="300.0" />
-
-<!--        <Button fx:id="controlsActionTarget" layoutX="569.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" "-->
-<!--                AnchorPane.rightAnchor="110.0" AnchorPane.topAnchor="5.0" />-->
-<!--        <Button fx:id="imageControlsActionTarget" layoutX="479.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" "-->
-<!--                AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="5.0" />-->
-<!--        <Button fx:id="drawActionTarget" layoutX="479.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-default" text=" "-->
-<!--                AnchorPane.rightAnchor="290.0" AnchorPane.topAnchor="5.0" />-->
-<!--        <Button fx:id="addActionTarget" layoutX="656.0" layoutY="5.0" mnemonicParsing="false" styleClass="btn, btn-info" text=" "-->
-<!--                AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />-->
     </children>
 </AnchorPane>
