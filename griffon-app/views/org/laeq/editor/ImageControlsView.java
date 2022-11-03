@@ -62,6 +62,7 @@ public class ImageControlsView extends AbstractJavaFXGriffonView {
 
         stage.setOnCloseRequest(event -> {
             getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("image_controls"));
+            getApplication().getEventRouter().publishEventOutsideUI("image_controls.reset");
         });
 
         initBrightnessSlider();

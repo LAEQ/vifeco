@@ -11,7 +11,17 @@ import javax.annotation.Nonnull;
 public final class PlayerModel extends AbstractGriffonModel {
     @MVCMember @Nonnull private Video video;
 
+    private Boolean isPlaying = false;
+
     public void setVideo(@Nonnull Video video){
         this.video = video;
+    }
+
+    public Boolean getPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(Boolean playing) {
+        isPlaying = playing;
     }
 }

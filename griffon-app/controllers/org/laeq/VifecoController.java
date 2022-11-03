@@ -75,8 +75,12 @@ public class VifecoController extends AbstractGriffonController {
      * @param name
      */
     private void cleanAndDestroy(String name){
-        destroyMVC(name);
-        closeWindow(name);
+        runInsideUIAsync(() -> {
+            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
+
+            destroyMVC(name);
+            closeWindow(name);
+        });
     }
 
     private void closeWindow(String name){
@@ -85,7 +89,7 @@ public class VifecoController extends AbstractGriffonController {
             getApplication().getWindowManager().detach(name);
             window.close();
         } catch (Exception e){
-
+            getApplication().getLog().error("close window error: " + name);
         }
     }
 

@@ -3,6 +3,7 @@ package org.laeq.editor;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
+import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
@@ -40,46 +41,81 @@ public class ToolsController extends AbstractGriffonController {
         });
 
         list.put("tools.controls", objects -> {
-            Stage display = (Stage) getApplication().getWindowManager().findWindow("controls");
+            String name = "controls";
+            Stage display = (Stage) getApplication().getWindowManager().findWindow(name);
+            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
             if(display != null){
                 return;
             }
 
             Map<String, Object> args = new HashMap<>();
             args.put("controls", new Controls());
-            createMVCGroup("controls", args);
+            try{
+                if(group != null){
+                    getApplication().getMvcGroupManager().destroyMVCGroup(name);
+                }
+                createMVCGroup(name, args);
+            }catch (Exception e){
+                getApplication().getLog().error(e.getMessage());
+            }
         });
 
         list.put("tools.image_controls", objects -> {
-            Stage display = (Stage) getApplication().getWindowManager().findWindow("image_controls");
+            String name = "image_controls";
+            Stage display = (Stage) getApplication().getWindowManager().findWindow(name);
+            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
             if(display != null){
                 return;
             }
 
             Map<String, Object> args = new HashMap<>();
             args.put("controls", new ImageControls());
-            createMVCGroup("image_controls", args);
+
+            try{
+                if(group != null){
+                    getApplication().getMvcGroupManager().destroyMVCGroup(name);
+                }
+                createMVCGroup(name, args);
+            }catch (Exception e){
+                getApplication().getLog().error(e.getMessage());
+            }
         });
 
         list.put("tools.drawing", objects -> {
-            Stage display = (Stage) getApplication().getWindowManager().findWindow("drawing");
+            String name = "drawing";
+            Stage display = (Stage) getApplication().getWindowManager().findWindow(name);
+            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
             if(display != null){
                 return;
             }
 
-            createMVCGroup("drawing");
+            try{
+                if(group != null){
+                    getApplication().getMvcGroupManager().destroyMVCGroup(name);
+                }
+                createMVCGroup(name);
+            }catch (Exception e){
+                getApplication().getLog().error(e.getMessage());
+            }
         });
 
         list.put("tools.zoom", args -> {
-            Stage display = (Stage) getApplication().getWindowManager().findWindow("zoom");
+            String name = "zoom";
+            Stage display = (Stage) getApplication().getWindowManager().findWindow(name);
+            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
             if(display != null){
                 return;
             }
 
-            createMVCGroup("zoom");
+            try{
+                if(group != null){
+                    getApplication().getMvcGroupManager().destroyMVCGroup(name);
+                }
+                createMVCGroup(name);
+            }catch (Exception e){
+                getApplication().getLog().error(e.getMessage());
+            }
         });
-
-
 
         return list;
     }

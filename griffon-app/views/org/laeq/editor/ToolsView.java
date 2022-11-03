@@ -18,11 +18,9 @@ public class ToolsView extends AbstractJavaFXGriffonView {
 
     @Inject @Nonnull EditorView parentView;
 
-
-
     @Override
     public void mvcGroupDestroy(){
-        getApplication().getEventRouter().publishEvent("video_tools");
+
     }
 
     @Override

@@ -17,6 +17,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Video;
 import javax.annotation.Nonnull;
@@ -25,6 +26,7 @@ import java.io.File;
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable {
     @MVCMember @Nonnull private PlayerController controller;
+    @MVCMember @Nonnull private PlayerModel model;
     @MVCMember @Nonnull Video video;
     @MVCMember @Nonnull EditorView parentView;
     @FXML private AnchorPane mediaAnchor;
@@ -45,6 +47,8 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
     private InvalidationListener timeSliderListener;
 
     private ColorAdjust colorAdjust;
+
+    private Boolean isPlaying = false;
 
     @Override
     public void initUI() {
@@ -90,6 +94,11 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
                 }
             };
 
+            mediaPlayer.setOnReady(() ->{
+                updateValues();
+                mediaPlayer.play();
+            });
+
             mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
 
             timeSlider.setOnMousePressed(event -> {
@@ -101,17 +110,20 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
             timeSlider.setOnMouseReleased(event -> {
                 timeSlider.valueProperty().removeListener(timeSliderListener);
                 mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
+
+                mediaPlayer.seek(video.getDuration().multiply(timeSlider.getValue() / 100.0));
+                updateValues();
             });
 
         } catch (Exception exception) {
-            System.out.println(exception.getMessage());
+            getApplication().getLog().error("Initialisation for player failed", exception);
         }
 
     }
     protected void updateValues() {
         Platform.runLater(() -> {
             Duration currentTime = mediaPlayer.getCurrentTime();
-//            elapsed.setText(DurationFormatUtils.formatDuration((long)currentTime.toMillis(), "HH:mm:ss"));
+            elapsed.setText(DurationFormatUtils.formatDuration((long)currentTime.toMillis(), "HH:mm:ss"));
             controller.updateCurrentTime(currentTime);
         });
     }
@@ -131,9 +143,11 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
     }
 
     public void play() {
+        model.setPlaying(true);
         mediaPlayer.play();;
     }
     public void pause() {
+        model.setPlaying(false);
         mediaPlayer.pause();
     }
 
@@ -145,8 +159,8 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
         mediaPlayer.setVolume(volume);
     }
 
-    public void forward() {
-        Duration now = mediaPlayer.getCurrentTime().add(Duration.seconds(30));
+    public void forward(int seconds) {
+        Duration now = mediaPlayer.getCurrentTime().add(Duration.seconds(seconds));
         if(now.greaterThan(video.getDuration())){
            now = video.getDuration();
         }
@@ -154,15 +168,14 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
         Duration finalNow = now;
         mediaPlayer.seek(finalNow);
     }
-    public void rewind() {
-        Duration now = mediaPlayer.getCurrentTime().subtract(Duration.seconds(30));
+    public void rewind(int seconds) {
+        Duration now = mediaPlayer.getCurrentTime().subtract(Duration.seconds(seconds));
         if(now.lessThan(Duration.ZERO)){
             now = Duration.ZERO;
         }
 
         Duration finalNow = now;
         mediaPlayer.seek(finalNow);
-
     }
     public void refreshBrightness(Double brightness){
         Platform.runLater(() -> {
@@ -186,8 +199,15 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
     }
 
     public void seek(Duration currentTime) {
-        runInsideUIAsync(() -> {
+        runInsideUISync(() -> {
             mediaPlayer.seek(currentTime);
         });
+    }
+
+    public void imageControlsReset() {
+        colorAdjust.setBrightness(0);
+        colorAdjust.setContrast(0);
+        colorAdjust.setSaturation(0);
+        colorAdjust.setHue(0);
     }
 }

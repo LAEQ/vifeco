@@ -81,10 +81,11 @@ public class EditorController extends AbstractGriffonController {
 
     @Override
     public void mvcGroupDestroy(){
-        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("display"));
-        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("controls"));
-        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("image_controls"));
-        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("drawing"));
+//        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("display"));
+//        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("controls"));
+//        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("image_controls"));
+//        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("drawing"));
+//        getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("editor_tools"));
     }
 
     @ControllerAction

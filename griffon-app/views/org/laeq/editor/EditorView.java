@@ -19,6 +19,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Point;
 import org.laeq.model.Video;
@@ -47,21 +48,13 @@ public class EditorView extends AbstractJavaFXGriffonView {
     @FXML public Pane mediaPane;
     @FXML public Pane tools;
 
-    @FXML private Button addActionTarget;
-    @FXML private Button controlsActionTarget;
-    @FXML private Button imageControlsActionTarget;
-
-    @FXML private Button drawActionTarget;
-
-    public Subscription currentTimeSubscription;
-
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args){
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("video", args.get("video"));
-
-        createMVCGroup("editor_tools", arguments);
         createMVCGroup("player", arguments);
+        createMVCGroup("editor_tools", arguments);
+
         createMVCGroup("timeline", arguments);
         createMVCGroup("category_sum", arguments);
         createMVCGroup("icon_pane", arguments);
@@ -87,7 +80,7 @@ public class EditorView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().show("editor");
 
         stage.setOnCloseRequest(event -> {
-            getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
+            getApplication().getMvcGroupManager().findGroup("editor").destroy();
         });
 
         scene.setOnKeyReleased(keyReleased());
@@ -108,7 +101,7 @@ public class EditorView extends AbstractJavaFXGriffonView {
         connectActions(node, controller);
         connectMessageSource(node);
 
-        title.setText(video.pathToName());
+        title.setText(String.format("%s - %s", video.pathToName(), DurationFormatUtils.formatDuration((long) video.getDuration().toMillis(), "HH:mm:ss")));
 
         return scene;
     }

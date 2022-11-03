@@ -40,7 +40,7 @@ public class DrawingView extends AbstractJavaFXGriffonView {
 
     @Override
     public void mvcGroupDestroy(){
-        getApplication().getEventRouter().publishEvent("drawing.destroy");
+//        getApplication().getEventRouter().publishEvent("drawing.destroy");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class DrawingView extends AbstractJavaFXGriffonView {
 
         stage.setOnCloseRequest(event -> {
             model.drawingList.clear();
-            getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("drawing"));
+//            getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("drawing"));
         });
     }
 

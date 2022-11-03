@@ -61,9 +61,9 @@ public class IconPane extends Pane {
                     this.router.publishEvent("icon.deleted", Arrays.asList(parent));
                 }
             } else if (event.getButton() == MouseButton.PRIMARY){
-                this.router.publishEvent("player.rewind.5");
+                this.router.publishEvent("media.rewind.5");
             } else if (event.getButton() == MouseButton.SECONDARY){
-                this.router.publishEvent("player.forward.5");
+                this.router.publishEvent("media.forward.5");
             }
         });
     }

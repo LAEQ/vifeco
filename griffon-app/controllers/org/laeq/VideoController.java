@@ -49,6 +49,7 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
 
                 getApplication().getEventRouter().publishEventAsync("status.info", Arrays.asList("db.video.fetch.success"));
             } catch (Exception e){
+                getApplication().getLog().error("Cannot fetch the list of videos");
                 getApplication().getEventRouter().publishEventAsync("status.error", Arrays.asList("db.video.fetch.error"));
             }
         });
@@ -83,7 +84,10 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
                 }
             });
 
-            mediaPlayer.setOnError(() -> getApplication().getEventRouter().publishEventOutsideUI("status.error", Arrays.asList("video.metadata.error", video.getPath())));
+            mediaPlayer.setOnError(() -> {
+                getApplication().getEventRouter().publishEventOutsideUI("status.error", Arrays.asList("video.metadata.error", video.getPath()));
+                getApplication().getLog().error("video metadata error", String.format("Cannot get duration for video %s", video.getPath()));
+            });
         });
 
     }
@@ -108,6 +112,7 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
             view.refresh();
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("video.delete.success", video.pathToName()));
         }  else {
+            getApplication().getLog().error("video delete error", String.format("%s not deleted", video.toString()));
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.delete.error"));
         }
     }
@@ -125,6 +130,7 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
                 getApplication().getEventRouter().publishEvent("status.info.parametrized", Arrays.asList("video.edit.success",model.selectedVideo.getPath()));
                 createDisplay();
             } else {
+                getApplication().getLog().error("video edit error", String.format("%s does not exists", file.toString()));
                 getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.edit.file_not_found"));
             }
         }
@@ -142,10 +148,12 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
     private void closeWindow(String name){
         try{
             Stage window = (Stage) getApplication().getWindowManager().findWindow(name);
-            getApplication().getWindowManager().detach(name);
-            window.close();
+            if(window != null){
+                getApplication().getWindowManager().detach(name);
+                window.close();
+            }
         } catch (Exception e){
-
+            getApplication().getLog().error("video close window: " + name);
         }
     }
 
@@ -156,7 +164,7 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
                 group.destroy();
             }
         }catch (Exception e){
-
+            getApplication().getLog().error("destroyMVC", e);
         }
     }
 
@@ -187,7 +195,7 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
 
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("video.export.success", filename));
         } catch (IOException e) {
-            e.printStackTrace();
+            getApplication().getLog().error("video export", e);
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.export.error"));
         }
     }
@@ -199,6 +207,7 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
             dbService.videoDAO.create(video);
             getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.user.updated.success"));
         } catch (Exception e) {
+            getApplication().getLog().error("video update user", e);
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.user.updated.error"));
         }
 
@@ -215,6 +224,7 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
 
             getApplication().getEventRouter().publishEvent("status.success", Arrays.asList("video.collection.updated.success"));
         } catch (Exception e){
+            getApplication().getLog().error("video update collection", e);
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.collection.updated.error"));
         }
 
@@ -240,7 +250,7 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
                     try {
                         dbService.videoDAO.create(video);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        getApplication().getLog().error("video select error", e);
                     }
                 });
 
@@ -264,6 +274,7 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
 
             model.videoList.forEach(v -> setVideoDuration(v));
         } catch (Exception e) {
+            getApplication().getLog().error("video refresh list", e);
             getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("db.error.fetch"));
         }
     }
@@ -292,8 +303,6 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
         return list;
     }
 
-
-
     @ControllerAction
     @Threading(Threading.Policy.OUTSIDE_UITHREAD_ASYNC)
     public void save(Video video) {
@@ -301,6 +310,7 @@ public class VideoController extends AbstractGriffonController implements CRUDIn
             view.refresh();
             getApplication().getEventRouter().publishEvent("status.success.parametrized", Arrays.asList("video.update.success", video.pathToName()));
         } else {
+            getApplication().getLog().error("video save error", String.format("video: %s", video.getPath()));
             getApplication().getEventRouter().publishEvent("status.error.parametrized", Arrays.asList("video.update.error", video.pathToName()));
         }
     }

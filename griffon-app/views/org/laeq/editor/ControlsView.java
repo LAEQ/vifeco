@@ -68,7 +68,9 @@ public class ControlsView extends AbstractJavaFXGriffonView {
 
 
         stage.setOnCloseRequest(event -> {
-            getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("controls"));
+            getApplication().getWindowManager().detach("controls");
+
+//            getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("controls"));
         });
 
         initSpeedSlider();
