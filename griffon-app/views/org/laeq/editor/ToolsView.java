@@ -42,9 +42,9 @@ public class ToolsView extends AbstractJavaFXGriffonView {
         btn.setLayoutY(160);
         parentView.tools.getChildren().add(btn);
 
-        btn = generateButton(IconSVG.zoom,"Zoom", "org.laeq.menu.tooltip.drawing", "tools.zoom");
-        btn.setLayoutY(210);
-        parentView.tools.getChildren().add(btn);
+//        btn = generateButton(IconSVG.zoom,"Zoom", "org.laeq.menu.tooltip.drawing", "tools.zoom");
+//        btn.setLayoutY(210);
+//        parentView.tools.getChildren().add(btn);
     }
 
     private IconButton generateButton(String path, String name, String help, String eventName){

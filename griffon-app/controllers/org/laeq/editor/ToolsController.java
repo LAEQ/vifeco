@@ -126,7 +126,12 @@ public class ToolsController extends AbstractGriffonController {
                 if(group != null){
                     getApplication().getMvcGroupManager().destroyMVCGroup(name);
                 }
-                createMVCGroup(name);
+
+                Map<String, Object> params = new HashMap<>();
+                params.put("mediaWidth", 960);
+                params.put("mediaHeight", 540);
+
+                createMVCGroup(name, params);
             }catch (Exception e){
                 getApplication().getLog().error(e.getMessage());
             }

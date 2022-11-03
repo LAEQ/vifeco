@@ -68,7 +68,7 @@ public class ZoomView extends AbstractJavaFXGriffonView {
         getApplication().getWindowManager().show("zoom");
 
         stage.setOnCloseRequest(event -> {
-            getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("zoom"));
+
         });
     }
 

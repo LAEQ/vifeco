@@ -16,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
@@ -95,7 +96,9 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
             };
 
             mediaPlayer.setOnReady(() ->{
+                mediaPlayer.play();
                 updateValues();
+                mediaPlayer.pause();
             });
 
             mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
@@ -216,5 +219,10 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
 
     public Duration getCurrentTime(){
         return mediaPlayer.getCurrentTime();
+    }
+
+    public void setZoom(Double zoom) {
+        mediaView.setFitWidth(videoWidth + videoWidth * zoom);
+        mediaView.setFitHeight(videoHeight + videoHeight * zoom);
     }
 }

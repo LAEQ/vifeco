@@ -63,6 +63,10 @@ public class PlayerController extends AbstractGriffonController {
                 getApplication().getLog().error(e.getMessage());
             }
         });
+        list.put("zoom.change", objects -> {
+            Double zoom = (Double) objects[0];
+            view.setZoom(zoom);
+        });
 
         return list;
     }
