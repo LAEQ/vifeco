@@ -1,417 +1,228 @@
 package org.laeq.editor;
 
 import griffon.core.artifact.GriffonView;
+import griffon.core.i18n.MessageSource;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ObservableMap;
-import javafx.event.EventHandler;
+import javafx.beans.InvalidationListener;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.image.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
-import org.laeq.model.Icon;
-import org.laeq.model.Point;
 import org.laeq.model.Video;
-import org.laeq.model.icon.IconPointColorized;
-import org.laeq.model.icon.IconSVG;
-import org.reactfx.EventStream;
-import org.reactfx.EventStreams;
-import org.reactfx.Subscription;
-
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.*;
 
 @ArtifactProviderFor(GriffonView.class)
-public class PlayerView extends AbstractJavaFXGriffonView {
+public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable {
     @MVCMember @Nonnull private PlayerController controller;
     @MVCMember @Nonnull private PlayerModel model;
-    @MVCMember @Nonnull private Video video;
+    @MVCMember @Nonnull Video video;
+    @MVCMember @Nonnull EditorView parentView;
+    @FXML private AnchorPane mediaAnchor;
+    @FXML private Pane mediaPane;
+    @FXML private Label elapsed;
+    @FXML private Slider timeSlider;
 
-    private Scene scene;
+    private int videoWidth = 960;
+    private int videoHeight = 540;
 
-    @FXML public Label title;
-    @FXML public AnchorPane timeline;
-    @FXML public AnchorPane summary;
-
-    //Video player
+    private MessageSource messageSource;
+    private MediaView mediaView;
     private MediaPlayer mediaPlayer;
-    @FXML private Pane playerPane;
-    @FXML private MediaView mediaView;
-    @FXML private IconPane iconPane;
-    @FXML private VideoSlider slider;
-    @FXML private ElapsedText elapsed;
-    @FXML private Label duration;
 
-    @FXML private Button addActionTarget;
-    @FXML private Button playActionTarget;
-    @FXML private Button stopActionTarget;
-    @FXML private Button rewindActionTarget;
-    @FXML private Button forwardActionTarget;
-    @FXML private Button controlsActionTarget;
-    @FXML private Button imageControlsActionTarget;
+    private Duration duration;
+
+    private InvalidationListener currentTimeListener;
+    private InvalidationListener timeSliderListener;
 
     private ColorAdjust colorAdjust;
 
-    private Boolean wasPlaying = false;
-    private Double videoDuration;
-
-    public ObservableMap<String, Duration> markers;
-    public Subscription currentTimeSubscription;
-
-    private ChangeListener<? super Duration> currentTimeListener = currentTimeListener();
-    private Duration display;
-
-    private Subscription subscription = () -> {};
+    private Boolean isPlaying = false;
 
     @Override
-    public void mvcGroupInit(@Nonnull Map<String, Object> args){
-        Map<String, Object> video = new HashMap<>();
-        video.put("video", args.get("video"));
-        createMVCGroup("timeline", video);
-        createMVCGroup("category_sum", video);
+    public void initUI() {
+        Node node = loadFromFXML();
+        parentView.playerPane.getChildren().add(node);
+        connectMessageSource(node);
+        connectActions(node, controller);
+
+        messageSource = getApplication().getMessageSource();
+        resizeListener();
+
+        init();
     }
 
     @Override
     public void mvcGroupDestroy(){
-        mediaPlayer.currentTimeProperty().removeListener(currentTimeListener);
+        mediaPlayer.pause();
     }
+    private void init(){
+        try{
+            duration = video.getDuration();
 
-    @Override
-    public void initUI() {
-        Stage stage = (Stage) getApplication().createApplicationContainer(Collections.<String,Object>emptyMap());
-        stage.setTitle(getApplication().getMessageSource().getMessage("editor.window.title"));
-        stage.getIcons().add( getImage("favicon-32x32.png"));
-        scene = init();
-        stage.setScene(scene);
-        stage.sizeToScene();
-        stage.setAlwaysOnTop(false);
-
-        getApplication().getWindowManager().attach("editor", stage);
-        getApplication().getWindowManager().show("editor");
-
-        stage.setOnCloseRequest(event -> {
-            runInsideUIAsync(() -> {
-                mediaPlayer.stop();
-                iconPane.dispose();
-                subscription.unsubscribe();
-                slider.dispose();
-            });
-
-            getApplication().getEventRouter().publishEvent("mvc.clean", Arrays.asList("editor"));
-        });
-
-        Icon icon = new Icon(IconSVG.video_plus, org.laeq.model.icon.Color.white);
-        addActionTarget.setGraphic(icon);
-        addActionTarget.setText("");
-
-        icon = new Icon(IconSVG.btnPlay, org.laeq.model.icon.Color.white);
-        playActionTarget.setGraphic(icon);
-        playActionTarget.setText("");
-
-        icon = new Icon(IconSVG.btnPause, org.laeq.model.icon.Color.white);
-        stopActionTarget.setGraphic(icon);
-        stopActionTarget.setText("");
-
-        icon = new Icon(IconSVG.controls, org.laeq.model.icon.Color.gray_dark);
-        controlsActionTarget.setGraphic(icon);
-        controlsActionTarget.setText("");
-
-        icon = new Icon(IconSVG.imageControls, org.laeq.model.icon.Color.gray_dark);
-        imageControlsActionTarget.setGraphic(icon);
-        imageControlsActionTarget.setText("");
-
-        icon = new Icon(IconSVG.backward30, org.laeq.model.icon.Color.gray_dark);
-        rewindActionTarget.setGraphic(icon);
-        rewindActionTarget.setText("");
-
-        icon = new Icon(IconSVG.forward30, org.laeq.model.icon.Color.gray_dark);
-        forwardActionTarget.setGraphic(icon);
-        forwardActionTarget.setText("");
-
-        iconPane.setEventRouter(getApplication().getEventRouter());
-        slider.setEventRouter(getApplication().getEventRouter());
-        elapsed.setEventRouter(getApplication().getEventRouter());
-
-        initPlayer();
-    }
-
-    private Scene init() {
-        final Scene scene = new Scene(new Group());
-        scene.setFill(Color.WHITE);
-        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
-
-        final Node node = loadFromFXML();
-
-        if (node instanceof Parent) {
-            scene.setRoot((Parent) node);
-        } else {
-            ((Group) scene.getRoot()).getChildren().addAll(node);
-        }
-        connectActions(node, controller);
-        connectMessageSource(node);
-
-        title.setText(video.pathToName());
-
-        return scene;
-    }
-
-    private void initPlayer(){
-        try {
             final File file = new File(video.getPath());
             final Media media = new Media(file.getCanonicalFile().toURI().toString());
+
+            mediaPlayer = new MediaPlayer(media);
+            mediaView = new MediaView();
+            mediaView.setMediaPlayer(mediaPlayer);
+            mediaAnchor.getChildren().add(mediaView);
 
             colorAdjust = new ColorAdjust();
             mediaView.setEffect(colorAdjust);
 
-            videoDuration = video.getDuration().toMillis();
-            display = model.controls.display();
+            currentTimeListener = ov -> {
+                timeSlider.setValue(mediaPlayer.getCurrentTime().divide(video.getDuration()).toMillis() * 100.0);
+                updateValues();
+            };
 
-            markers = media.getMarkers();
-            model.collection.points.forEach(point -> {
-                markers.put(point.getId().toString(), point.getStart());
-            });
+            timeSliderListener = ov -> {
+                if (timeSlider.isValueChanging()) {
+                    mediaPlayer.seek(video.getDuration().multiply(timeSlider.getValue() / 100.0));
+                    updateValues();
+                }
+            };
 
-            mediaPlayer = new MediaPlayer(media);
-            mediaView.setMediaPlayer(mediaPlayer);
-
-            //mediaPlayer Event listeners
             mediaPlayer.setOnReady(() ->{
-                model.isReady.set(Boolean.TRUE);
                 mediaPlayer.play();
+                updateValues();
                 mediaPlayer.pause();
             });
-            mediaPlayer.setOnHalted(() -> {
-                //noop
-            });
-            mediaPlayer.setOnMarker(event -> {
-                Platform.runLater(() -> {
-                    try {
-                        iconPane.getChildren().add(model.getIcon(event.getMarker().getKey()));
-                    }catch (Exception e){
-                        //noop
-                    }
-                });
+
+            mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
+
+            timeSlider.setOnMousePressed(event -> {
+                mediaPlayer.pause();
+                mediaPlayer.currentTimeProperty().removeListener(currentTimeListener);
+                timeSlider.valueProperty().addListener(timeSliderListener);
             });
 
-            duration.setText(video.getDurationFormatted());
-            mediaView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
-                model.width.set(newValue.getWidth());
-                model.height.set(newValue.getHeight());
+            timeSlider.setOnMouseReleased(event -> {
+                timeSlider.valueProperty().removeListener(timeSliderListener);
+                mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
 
-                iconPane.setPrefWidth(model.width.doubleValue());
-                iconPane.setPrefHeight(model.height.doubleValue());
+                mediaPlayer.seek(video.getDuration().multiply(timeSlider.getValue() / 100.0));
+                updateValues();
 
-                Platform.runLater(() -> {
-                    final Collection<IconPointColorized> icons = model.setCurrentTime(mediaPlayer.getCurrentTime());
-                    iconPane.getChildren().clear();
-                    iconPane.getChildren().addAll(icons);
-                });
-            });
-
-            //Mouse, Keyboard events
-            scene.setOnKeyReleased(keyReleased());
-
-            EventStream<MouseEvent> clicks = EventStreams.eventsOf(iconPane, MouseEvent.MOUSE_CLICKED);
-
-            manageSubscription(clicks.subscribe(event -> {
-                if(event.isControlDown()){
-                    Node node = event.getPickResult().getIntersectedNode();
-                    Parent parent = node.getParent();
-                    if(parent instanceof IconPointColorized) {
-                        controller.deletePoint((IconPointColorized) parent);
-                    }
-                } else if (event.getButton() == MouseButton.PRIMARY){
-                    controller.rewind(5d);
-                    getApplication().getEventRouter().publishEvent("player.rewind.5");
-                } else if (event.getButton() == MouseButton.SECONDARY){
-                    controller.forward(5d);
-                    getApplication().getEventRouter().publishEvent("player.forward.5");
+                if(model.getPlaying()){
+                    mediaPlayer.play();
                 }
-            }));
+            });
 
-        } catch (Exception e) {
-            getApplication().getEventRouter().publishEvent("status.error", Arrays.asList("video.play.error", e.getMessage()));
+        } catch (Exception exception) {
+            getApplication().getLog().error("Initialisation for player failed", exception);
         }
+
+    }
+    protected void updateValues() {
+        Platform.runLater(() -> {
+            Duration currentTime = mediaPlayer.getCurrentTime();
+            elapsed.setText(DurationFormatUtils.formatDuration((long)currentTime.toMillis(), "HH:mm:ss"));
+            controller.updateCurrentTime(currentTime);
+        });
+    }
+    @Override
+    public void resizeListener() {
+        mediaPane.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
+            final double widthRatio = newValue.getWidth() / videoWidth;
+            final double heightRatio = newValue.getHeight() / videoHeight;
+            final double bestRatio = Math.min(widthRatio, heightRatio);
+            final double width = videoWidth * bestRatio;
+            final double height = videoHeight * bestRatio;
+
+
+            mediaView.setFitWidth(width);
+            mediaView.setFitHeight(height);
+        });
     }
 
-    void manageSubscription(Subscription other) {
-        subscription.and(other);
+    public void play() {
+        model.setPlaying(true);
+        mediaPlayer.play();;
     }
-
-    public void play(){
-        mediaPlayer.play();
-        mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
-    }
-
-    public void pause(){
-        mediaPlayer.currentTimeProperty().removeListener(currentTimeListener);
+    public void pause() {
+        model.setPlaying(false);
         mediaPlayer.pause();
     }
 
-    private EventHandler<? super KeyEvent> keyReleased() {
-        return (EventHandler<KeyEvent>) event -> {
-            if(event.getCode() == KeyCode.CONTROL){
-                controller.togglePlay();
-            } else {
-                controller.addPoint(event.getCode(), mediaPlayer.getCurrentTime());
-            }
-        };
+    public void speed(Double speed) {
+        mediaPlayer.setRate(speed);
     }
 
-    public Duration getCurrentTime() {
-        return mediaPlayer.getCurrentTime();
+    public void volume(Double volume) {
+        mediaPlayer.setVolume(volume);
     }
 
-    private ChangeListener<Duration> currentTimeListener(){
-        return (observable, oldValue, newValue) -> {
-            Platform.runLater(() -> {
-                if(! slider.isPressed()){
-                    final double now = newValue.toMillis();
-                    Duration before = newValue.subtract(display);
-                    slider.setValue(now / videoDuration * 100.0);
-                    elapsed.setText(DurationFormatUtils.formatDuration((long) now, "HH:mm:ss"));
-                    iconPane.getChildren().removeIf(node -> ((IconPointColorized)node).obsolete(before));
-                }
-            });
-        };
+    public void forward(int seconds) {
+        Duration now = mediaPlayer.getCurrentTime().add(Duration.seconds(seconds));
+        if(now.greaterThan(video.getDuration())){
+           now = video.getDuration();
+        }
+
+        Duration finalNow = now;
+        mediaPlayer.seek(finalNow);
     }
+    public void rewind(int seconds) {
+        Duration now = mediaPlayer.getCurrentTime().subtract(Duration.seconds(seconds));
+        if(now.lessThan(Duration.ZERO)){
+            now = Duration.ZERO;
+        }
 
-    private Image getImage(String path) {
-        return new Image(getClass().getClassLoader().getResourceAsStream(path));
+        Duration finalNow = now;
+        mediaPlayer.seek(finalNow);
     }
-
-    public void addPoint(Point point) {
-        markers.put(point.getId().toString(), point.getStart());
-
-        Platform.runLater(() -> {
-            iconPane.getChildren().add(model.getIcon(point.getId().toString()));
-        });
-    }
-
-    public void refreshOpacity(Double opacity) {
-        Platform.runLater(() ->{
-            iconPane.getChildren().forEach(node -> node.setOpacity(opacity));
-        });
-    }
-
     public void refreshBrightness(Double brightness){
         Platform.runLater(() -> {
             colorAdjust.setBrightness(brightness);
         });
     }
-
     public void refreshSaturation(Double brightness){
         Platform.runLater(() -> {
             colorAdjust.setSaturation(brightness);
         });
     }
-
-
     public void refreshContrast(Double contrast) {
         Platform.runLater(() -> {
             colorAdjust.setContrast(contrast);
         });
     }
-
-
     public void refreshHue(Double hue) {
         Platform.runLater(() -> {
             colorAdjust.setHue(hue);
         });
     }
 
-    public void refreshSize(Double size) {
-        Platform.runLater(() -> {
-            iconPane.getChildren().forEach(node -> {
-                node.setScaleX(size / 100);
-                node.setScaleY(size / 100);
-            });
+    public void seek(Duration currentTime) {
+        runInsideUISync(() -> {
+            mediaPlayer.seek(currentTime);
         });
     }
 
-    public void removePoint(Point point) {
-        markers.remove(point.getId().toString());
-        Platform.runLater(() -> {
-            iconPane.getChildren().remove(point.getIconPoint());
-        });
+    public void imageControlsReset() {
+        colorAdjust.setBrightness(0);
+        colorAdjust.setContrast(0);
+        colorAdjust.setSaturation(0);
+        colorAdjust.setHue(0);
     }
 
-    public void rewind(Duration now) {
-        final Collection<IconPointColorized> icons = model.setCurrentTime(now);
-        mediaPlayer.seek(now);
-
-        Platform.runLater(() -> {
-            iconPane.getChildren().clear();
-            iconPane.getChildren().addAll(icons);
-            elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
-
-            if(model.isPlaying.getValue() == false){
-                slider.setValue(now.toMillis() / videoDuration * 100);
-            }
-        });
+    public Duration getCurrentTime(){
+        return mediaPlayer.getCurrentTime();
     }
 
-    public void refreshRate(Double rate) {
-        mediaPlayer.setRate(rate);
-    }
-
-    public void refreshVolume(Double volume) {
-        mediaPlayer.setVolume(volume);
-    }
-
-    public void sliderPressed() {
-        mediaPlayer.currentTimeProperty().removeListener(currentTimeListener);
-        mediaPlayer.pause();
-    }
-
-    public void sliderReleased(Duration now) {
-        final Collection<IconPointColorized> icons = model.setCurrentTime(now);
-        mediaPlayer.seek(now);
-        Platform.runLater(() -> {
-            iconPane.getChildren().clear();
-            iconPane.getChildren().addAll(icons);
-            elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
-            mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
-
-            if(model.isPlaying.getValue()){
-                mediaPlayer.play();
-            }
-        });
-    }
-
-    public void sliderCurrentTime(final Duration now) {
-        final Collection<IconPointColorized> icons = model.setCurrentTime(now);
-        mediaPlayer.seek(now);
-        Platform.runLater(() -> {
-            iconPane.getChildren().clear();
-            iconPane.getChildren().addAll(icons);
-            elapsed.setText(DurationFormatUtils.formatDuration((long) now.toMillis(), "HH:mm:ss"));
-        });
-    }
-
-    public void setDuration(Duration display) {
-        this.display = display;
+    public void setZoom(Double zoom) {
+        mediaView.setFitWidth(videoWidth + videoWidth * zoom);
+        mediaView.setFitHeight(videoHeight + videoHeight * zoom);
     }
 }

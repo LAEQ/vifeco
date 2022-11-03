@@ -86,6 +86,4 @@ public class IconPointColorized extends IconPoint {
             isColorized = false;
         }
     }
-
-
 }

@@ -726,12 +726,12 @@ Serialize Canvas path commands to SVG.
 * [d3.path](https://github.com/d3/d3-path/blob/master/README.md#path) - create a new path serializer.
 * [*path*.moveTo](https://github.com/d3/d3-path/blob/master/README.md#path_moveTo) - move to the given point.
 * [*path*.closePath](https://github.com/d3/d3-path/blob/master/README.md#path_closePath) - close the current subpath.
-* [*path*.lineTo](https://github.com/d3/d3-path/blob/master/README.md#path_lineTo) - draw a straight line segment.
-* [*path*.quadraticCurveTo](https://github.com/d3/d3-path/blob/master/README.md#path_quadraticCurveTo) - draw a quadratic Bézier segment.
-* [*path*.bezierCurveTo](https://github.com/d3/d3-path/blob/master/README.md#path_bezierCurveTo) - draw a cubic Bézier segment.
-* [*path*.arcTo](https://github.com/d3/d3-path/blob/master/README.md#path_arcTo) - draw a circular arc segment.
-* [*path*.arc](https://github.com/d3/d3-path/blob/master/README.md#path_arc) - draw a circular arc segment.
-* [*path*.rect](https://github.com/d3/d3-path/blob/master/README.md#path_rect) - draw a rectangle.
+* [*path*.lineTo](https://github.com/d3/d3-path/blob/master/README.md#path_lineTo) - drawing a straight line segment.
+* [*path*.quadraticCurveTo](https://github.com/d3/d3-path/blob/master/README.md#path_quadraticCurveTo) - drawing a quadratic Bézier segment.
+* [*path*.bezierCurveTo](https://github.com/d3/d3-path/blob/master/README.md#path_bezierCurveTo) - drawing a cubic Bézier segment.
+* [*path*.arcTo](https://github.com/d3/d3-path/blob/master/README.md#path_arcTo) - drawing a circular arc segment.
+* [*path*.arc](https://github.com/d3/d3-path/blob/master/README.md#path_arc) - drawing a circular arc segment.
+* [*path*.rect](https://github.com/d3/d3-path/blob/master/README.md#path_rect) - drawing a rectangle.
 * [*path*.toString](https://github.com/d3/d3-path/blob/master/README.md#path_toString) - serialize to an SVG path data string.
 
 ## [Polygons (d3-polygon)](https://github.com/d3/d3-polygon)
@@ -1159,7 +1159,7 @@ A categorical shape encoding, as in a scatterplot.
 * [d3.symbolTriangle](https://github.com/d3/d3-shape/blob/master/README.md#symbolTriangle) - an up-pointing triangle.
 * [d3.symbolWye](https://github.com/d3/d3-shape/blob/master/README.md#symbolWye) - a Y shape.
 * [d3.pointRadial](https://github.com/d3/d3-shape/blob/master/README.md#pointRadial) -
-* [*symbolType*.draw](https://github.com/d3/d3-shape/blob/master/README.md#symbolType_draw) - draw this symbol to the given context.
+* [*symbolType*.drawing](https://github.com/d3/d3-shape/blob/master/README.md#symbolType_draw) - drawing this symbol to the given context.
 
 ### [Stacks](https://github.com/d3/d3-shape/blob/master/README.md#stacks)
 

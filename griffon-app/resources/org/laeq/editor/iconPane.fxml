@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import org.laeq.editor.IconPane?>
+<?import org.laeq.editor.DrawingPane?>
+<AnchorPane fx:id="iconAnchor" xmlns="http://javafx.com/javafx/11.0.10" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.laeq.editor.IconPaneController"
+            AnchorPane.bottomAnchor="40.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0">
+    <children>
+        <DrawingPane fx:id="drawingPane" />
+        <IconPane fx:id="container" />
+    </children>
+</AnchorPane>

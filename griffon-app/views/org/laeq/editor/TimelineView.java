@@ -32,7 +32,7 @@ public class TimelineView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private TimelineModel model;
     @MVCMember @Nonnull private Video video;
 
-    @MVCMember @Nonnull private PlayerView parentView;
+    @MVCMember @Nonnull private EditorView parentView;
 
     @Inject private HelperService helperService;
 
@@ -44,7 +44,6 @@ public class TimelineView extends AbstractJavaFXGriffonView {
     @FXML public TableColumn<Point, Void>  delete;
 
     private MessageSource messageSource;
-
     private Comparator<Point> comparator;
 
     @Override

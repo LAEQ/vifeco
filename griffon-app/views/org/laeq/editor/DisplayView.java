@@ -56,7 +56,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         stage.getIcons().add( getImage("favicon-32x32.png"));
         stage.setScene(init());
         stage.sizeToScene();
-        stage.setAlwaysOnTop(false);
+        stage.setAlwaysOnTop(true);
         initPlayer();
 
         getApplication().getWindowManager().attach("display", stage);
@@ -67,7 +67,7 @@ public class DisplayView extends AbstractJavaFXGriffonView {
                 mediaPlayer.stop();
             });
 
-            getApplication().getEventRouter().publishEventAsync("mvc.clean", Arrays.asList("display"));
+            getApplication().getMvcGroupManager().findGroup("display").destroy();
         });
     }
 
@@ -180,10 +180,6 @@ public class DisplayView extends AbstractJavaFXGriffonView {
         mediaPlayer.pause();
     }
 
-    public void sliderCurrentTime(Double object) {
-        Duration now = videoDuration.multiply(object / 100);
-        mediaPlayer.seek(now);
-    }
 
     public void rowCurrentTime(Duration now) {
         mediaPlayer.seek(now);
@@ -195,5 +191,9 @@ public class DisplayView extends AbstractJavaFXGriffonView {
 
     public void rewind(Duration now) {
         mediaPlayer.seek(now);
+    }
+
+    public void seek(Duration object) {
+        mediaPlayer.seek(object);
     }
 }

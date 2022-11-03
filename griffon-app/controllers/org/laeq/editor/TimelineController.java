@@ -40,17 +40,17 @@ public class TimelineController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         list.put("point.added", objects ->{
-            synchronized (this){
+            runInsideUIAsync(() -> {
                 model.points.add((Point) objects[0]);
                 view.refesh();
-            }
+            });
         });
 
-        list.put("player.point.deleted", objects ->{
-            synchronized (this){
+        list.put("point.deleted", objects ->{
+            runInsideUIAsync(() -> {
                 model.points.remove(objects[0]);
                 view.refesh();
-            }
+            });
         });
 
         return list;
@@ -65,16 +65,10 @@ public class TimelineController extends AbstractGriffonController {
     @ControllerAction
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     public void deletePoint(Point point) {
-        runInsideUIAsync(() -> {
+        runOutsideUIAsync(() -> {
             if(dbService.pointDAO.delete(point)){
-                video.getPoints().remove(point);
-                getApplication().getEventRouter().publishEvent("timeline.point.deleted", Arrays.asList(point));
-
-                synchronized (this){
-                    view.clear();
-                    model.points.remove(point);
-                    view.refesh();
-                }
+                model.deletePoint(point);
+                getApplication().getEventRouter().publishEventOutsideUI("point.deleted", Arrays.asList(point));
             }
         });
     }

@@ -21,20 +21,21 @@ import java.util.List;
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
 public class DatabaseService extends AbstractGriffonService{
-    private final HibernateUtil hbu;
     public final UserDAO userDAO;
     public final CategoryDAO categoryDAO;
     public final CollectionDAO collectionDAO;
     public final VideoDAO videoDAO;
     public final PointDAO pointDAO;
+    public final DrawingDAO drawingDAO;
 
     public DatabaseService(){
-        this.hbu = new HibernateUtil("hibernate.cfg.xml");
-        this.userDAO = new UserDAO(this.hbu);
-        this.categoryDAO = new CategoryDAO(this.hbu);
-        this.videoDAO = new VideoDAO(this.hbu);
-        this.collectionDAO = new CollectionDAO(this.hbu);
-        this.pointDAO = new PointDAO(this.hbu);
+        HibernateUtil hbu = new HibernateUtil("hibernate.cfg.xml");
+        this.userDAO = new UserDAO(hbu);
+        this.categoryDAO = new CategoryDAO(hbu);
+        this.videoDAO = new VideoDAO(hbu);
+        this.collectionDAO = new CollectionDAO(hbu);
+        this.pointDAO = new PointDAO(hbu);
+        this.drawingDAO = new DrawingDAO(hbu);
 
         try {
             int total = this.userDAO.findAll().size();
@@ -63,25 +64,26 @@ public class DatabaseService extends AbstractGriffonService{
             categoryDAO.create(category);
         }
 
-        categories.forEach(category -> {
-            collection.addCategory(category);
-        });
+        categories.forEach(collection::addCategory);
 
         this.collectionDAO.create(collection);
 
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream resource = classLoader.getResourceAsStream("sample/sample.mp4");
         String filePath = String.format("%s%s%s", Settings.videoPath, File.separator, "sample.mp4");
-        Files.copy(resource, Paths.get(filePath));
 
-        File file = new File(filePath);
-        Video video = new Video();
-        video.setPath(file.getAbsolutePath());
-        video.setCollection(collection);
-        video.setUser(defaultUser);
-        video.setDuration(Duration.seconds(23));
+        if(resource != null){
+            Files.copy(resource, Paths.get(filePath));
 
-        videoDAO.create(video);
+            File file = new File(filePath);
+            Video video = new Video();
+            video.setPath(file.getAbsolutePath());
+            video.setCollection(collection);
+            video.setUser(defaultUser);
+            video.setDuration(Duration.seconds(23));
+
+            videoDAO.create(video);
+        }
     }
     
     private List<Category> getCategoryFixtures(){

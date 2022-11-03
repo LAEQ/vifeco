@@ -31,5 +31,6 @@
         <mapping class="org.laeq.model.Collection"/>
         <mapping class="org.laeq.model.Point"/>
         <mapping class="org.laeq.model.Video"/>
+        <mapping class="org.laeq.model.Drawing"/>
     </session-factory>
 </hibernate-configuration>

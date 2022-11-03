@@ -55,13 +55,14 @@ public class ImageControlsView extends AbstractJavaFXGriffonView {
         stage.getIcons().add( getImage("favicon-32x32.png"));
         stage.setScene(init());
         stage.sizeToScene();
-        stage.setAlwaysOnTop(false);
+        stage.setAlwaysOnTop(true);
         getApplication().getWindowManager().attach("image_controls", stage);
         getApplication().getWindowManager().show("image_controls");
 
 
         stage.setOnCloseRequest(event -> {
             getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("image_controls"));
+            getApplication().getEventRouter().publishEventOutsideUI("image_controls.reset");
         });
 
         initBrightnessSlider();

@@ -31,7 +31,6 @@ public class ConfigView extends AbstractJavaFXGriffonView {
     @FXML private ComboBox<String> languages;
     @FXML private Group summary;
 
-
     @Inject private PreferencesService preferencesService;
 
     @Inject private Metadata metadata;
