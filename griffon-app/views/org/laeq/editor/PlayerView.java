@@ -96,7 +96,6 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
 
             mediaPlayer.setOnReady(() ->{
                 updateValues();
-                mediaPlayer.play();
             });
 
             mediaPlayer.currentTimeProperty().addListener(currentTimeListener);
@@ -113,6 +112,10 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
 
                 mediaPlayer.seek(video.getDuration().multiply(timeSlider.getValue() / 100.0));
                 updateValues();
+
+                if(model.getPlaying()){
+                    mediaPlayer.play();
+                }
             });
 
         } catch (Exception exception) {
@@ -209,5 +212,9 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
         colorAdjust.setContrast(0);
         colorAdjust.setSaturation(0);
         colorAdjust.setHue(0);
+    }
+
+    public Duration getCurrentTime(){
+        return mediaPlayer.getCurrentTime();
     }
 }

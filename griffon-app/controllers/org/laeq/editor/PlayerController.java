@@ -2,12 +2,14 @@ package org.laeq.editor;
 
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
+import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.laeq.model.Video;
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +43,26 @@ public class PlayerController extends AbstractGriffonController {
         list.put("image_controls.reset", objects -> view.imageControlsReset());
         list.put("media.rewind.5", objects -> view.rewind(5));
         list.put("media.forward.5", objects -> view.forward(5));
+        list.put("display.add", objects -> {
+            File selectedFile = (File) objects[0];
+
+            Map<String, Object> args = new HashMap<>();
+            args.put("file", selectedFile);
+            args.put("controls", new Controls());
+            args.put("currentTime", view.getCurrentTime());
+
+            String name = "display";
+            MVCGroup group = getApplication().getMvcGroupManager().findGroup(name);
+
+            try{
+                if(group != null){
+                    getApplication().getMvcGroupManager().destroyMVCGroup(name);
+                }
+                createMVCGroup(name, args);
+            }catch (Exception e){
+                getApplication().getLog().error(e.getMessage());
+            }
+        });
 
         return list;
     }

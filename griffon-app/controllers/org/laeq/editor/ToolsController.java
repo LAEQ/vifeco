@@ -7,6 +7,7 @@ import griffon.core.mvc.MVCGroup;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
@@ -16,6 +17,7 @@ import org.laeq.model.Video;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +39,20 @@ public class ToolsController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         list.put("tools.open", args -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Resource File");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter(
+                            "Video Files",
+                            "*.mp4", "*.wav", "*.mkv", "*.avi", "*.wmv", "*.mov")
+            );
 
+            Stage stage = (Stage) getApplication().getWindowManager().findWindow("editor");
+
+            File selectedFile = fileChooser.showOpenDialog(stage);
+            if (selectedFile != null) {
+              getApplication().getEventRouter().publishEventOutsideUI("display.add", Arrays.asList(selectedFile));
+            }
         });
 
         list.put("tools.controls", objects -> {

@@ -46,28 +46,24 @@ public class DisplayController extends AbstractGriffonController {
     private Map<String, RunnableWithArgs> listeners(){
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
-        list.put("player.pause", objects -> {
+        list.put("media.pause", objects -> {
             view.pause();
         });
 
-        list.put("player.play", objects -> {
+        list.put("media.play", objects -> {
             view.play();
         });
 
-        list.put("player.rewind", objects -> {
+        list.put("media.rewind", objects -> {
             view.rewind((Duration) objects[0]);
         });
 
-        list.put("slider.currentTime", objects -> {
-            view.sliderCurrentTime( (Double)objects[0]);
+        list.put("currentTime.update", objects -> {
+            view.seek( (Duration) objects[0]);
         });
 
         list.put("speed.change", objects -> {
             view.refreshRate((Double) objects[0]);
-        });
-
-        list.put("video.currentTime", objects -> {
-            view.rowCurrentTime((Duration) objects[0]);
         });
 
         list.put("row.currentTime", objects -> {
