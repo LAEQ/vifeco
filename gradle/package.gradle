@@ -1,3 +1,5 @@
+apply plugin: 'edu.sc.seis.launch4j' // for Windows builds
+
 apply plugin: 'izpack'
 if (macosx) apply plugin: 'com.github.cr0.macappbundle'
 
@@ -67,4 +69,12 @@ if (keyAlias || keystorePwd) {
         }
         signJarParams = [alias: keyAlias, storepass: keystorePwd]
     }
+}
+
+launch4j {
+    headerType = "gui"
+    outfile = "../../distribution/windows/vifeco.exe"
+    icon = "../../distribution/windows/favicon_io/favicon.ico"
+    mainClassName = 'org.laeq.Launcher'
+    jar = "${projectDir}/build/libs/vifeco-${version}-all.jar"
 }
