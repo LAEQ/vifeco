@@ -25,5 +25,8 @@
       <Label layoutX="14.0" layoutY="257.0" prefHeight="17.0" prefWidth="173.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="260.0" JavaFXUtils.i18nKey="z.volume" />
       <Slider fx:id="volume" layoutX="14.0" layoutY="284.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="50.0" />
       <Label fx:id="volumeLabel" layoutX="166.0" layoutY="284.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="280.0" />
+      <Label layoutX="14.0" layoutY="324.0" prefHeight="17.0" prefWidth="173.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="324.0" JavaFXUtils.i18nKey="z.alt_rewind.step" />
+      <Slider fx:id="step" cache="true" layoutX="10.0" layoutY="344.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="50.0" />
+      <Label fx:id="stepLabel" layoutX="166.0" layoutY="344.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="344.0" />
    </children>
 </AnchorPane>
