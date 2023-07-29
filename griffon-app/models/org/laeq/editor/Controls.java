@@ -4,12 +4,14 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
 
 public final class Controls {
+    public final Double[] stepValue = new Double[]{0.1d, 10.0};
     public final Double[] speedValue = new Double[]{0.1d, 10.0};
     public final Double[] opacityValue = new Double[]{.1, 1.0};
     public final Double[] sizeValue = new Double[]{10d, 80d};
     public final Double[] durationValue = new Double[]{1d, 30d};
     public final Double[] volumeValue = new Double[]{0d, 1.0};
 
+    public final SimpleDoubleProperty step = new SimpleDoubleProperty(.1);
     public final SimpleDoubleProperty duration = new SimpleDoubleProperty(3);
     public final SimpleDoubleProperty speed = new SimpleDoubleProperty(1);
     public final SimpleDoubleProperty size = new SimpleDoubleProperty(50);

@@ -60,6 +60,12 @@ public class IconPane extends Pane {
                 if(parent instanceof IconPointColorized) {
                     this.router.publishEvent("icon.deleted", Arrays.asList(parent));
                 }
+            } else if (event.isAltDown()){
+                if (event.getButton() == MouseButton.PRIMARY){
+                    this.router.publishEvent("media.rewind.alt");
+                } else if (event.getButton() == MouseButton.SECONDARY){
+                    this.router.publishEvent("media.forward.alt");
+                }
             } else if (event.getButton() == MouseButton.PRIMARY){
                 this.router.publishEvent("media.rewind.5");
             } else if (event.getButton() == MouseButton.SECONDARY){

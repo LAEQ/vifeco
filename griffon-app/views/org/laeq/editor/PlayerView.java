@@ -23,6 +23,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.laeq.model.Video;
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.lang.Math;
 
 @ArtifactProviderFor(GriffonView.class)
 public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable {
@@ -50,6 +51,8 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
     private ColorAdjust colorAdjust;
 
     private Boolean isPlaying = false;
+
+    private double altStepInterval = 0.1;
 
     @Override
     public void initUI() {
@@ -165,8 +168,8 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
         mediaPlayer.setVolume(volume);
     }
 
-    public void forward(int seconds) {
-        Duration now = mediaPlayer.getCurrentTime().add(Duration.seconds(seconds));
+    public void forward(double seconds) {
+        Duration now = mediaPlayer.getCurrentTime().add(Duration.millis(1000*seconds));
         if(now.greaterThan(video.getDuration())){
            now = video.getDuration();
         }
@@ -174,14 +177,20 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
         Duration finalNow = now;
         mediaPlayer.seek(finalNow);
     }
-    public void rewind(int seconds) {
-        Duration now = mediaPlayer.getCurrentTime().subtract(Duration.seconds(seconds));
+    public void rewind(double seconds) {
+        Duration now = mediaPlayer.getCurrentTime().subtract(Duration.millis(1000*seconds));
         if(now.lessThan(Duration.ZERO)){
             now = Duration.ZERO;
         }
 
         Duration finalNow = now;
         mediaPlayer.seek(finalNow);
+    }
+    public double getAltStepInterval() {
+        return this.altStepInterval;
+    }
+    public void setAltStepInterval(double seconds) {
+        this.altStepInterval = Math.abs(seconds);
     }
     public void refreshBrightness(Double brightness){
         Platform.runLater(() -> {

@@ -29,12 +29,14 @@ public class ControlsView extends AbstractJavaFXGriffonView {
 
     @MVCMember @Nonnull private Controls controls;
 
+    @FXML private Slider step;
     @FXML private Slider speed;
     @FXML private Slider size;
     @FXML private Slider duration;
     @FXML private Slider opacity;
     @FXML private Slider volume;
 
+    @FXML private Label stepLabel;
     @FXML private Label speedLabel;
     @FXML private Label durationLabel;
     @FXML private Label opacityLabel;
@@ -73,6 +75,7 @@ public class ControlsView extends AbstractJavaFXGriffonView {
 //            getApplication().getEventRouter().publishEventOutsideUI("mvc.clean", Arrays.asList("controls"));
         });
 
+        initStepSlider();
         initSpeedSlider();
 
         durationUnder1s.setOnAction(action -> {
@@ -91,6 +94,23 @@ public class ControlsView extends AbstractJavaFXGriffonView {
         initSizeSlider();
         initOpacitySlider();
         initVolumeSlider();
+    }
+
+    private void initStepSlider() {
+        stepLabel.setText(String.format("%.1f", controls.step.getValue()));
+        step.valueProperty().bindBidirectional(controls.step);
+        step.setMin(controls.stepValue[0]);
+        step.setMax(controls.stepValue[1]);
+        step.setMajorTickUnit(.1);
+        step.setShowTickMarks(true);
+        step.setShowTickLabels(true);
+        step.valueProperty().addListener((obs, oldval, newVal) -> {
+            double value = newVal.doubleValue();
+            step.setValue(value);
+            stepLabel.setText(String.format("%.1f s", value));
+            controller.dispatch("step.change", Double.valueOf(value));
+            controls.step.set(value);
+        });
     }
 
     private void initSpeedSlider() {

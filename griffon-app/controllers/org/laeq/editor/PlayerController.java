@@ -32,6 +32,7 @@ public class PlayerController extends AbstractGriffonController {
         list.put("media.play", args -> view.play());
         list.put("media.pause", args -> view.pause());
         list.put("speed.change", args -> view.speed((Double)args[0]));
+        list.put("step.change", args -> view.setAltStepInterval((Double)args[0]));
         list.put("volume.change", args -> view.volume((Double) args[0]));
         list.put("media.forward", args -> view.forward(30));
         list.put("media.rewind", args -> view.rewind(30));
@@ -41,6 +42,8 @@ public class PlayerController extends AbstractGriffonController {
         list.put("hue.change", objects -> view.refreshHue((Double) objects[0]));
         list.put("row.currentTime", objects -> view.seek((Duration) objects[0]));
         list.put("image_controls.reset", objects -> view.imageControlsReset());
+        list.put("media.rewind.alt", objects -> view.rewind(view.getAltStepInterval()));
+        list.put("media.forward.alt", objects -> view.forward(view.getAltStepInterval()));
         list.put("media.rewind.5", objects -> view.rewind(5));
         list.put("media.forward.5", objects -> view.forward(5));
         list.put("display.add", objects -> {
