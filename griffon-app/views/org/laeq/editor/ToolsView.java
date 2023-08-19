@@ -12,6 +12,7 @@ import org.laeq.model.icon.IconSquare;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Arrays;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ToolsView extends AbstractJavaFXGriffonView {
