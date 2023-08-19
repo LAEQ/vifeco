@@ -25,8 +25,6 @@ public class ToolsView extends AbstractJavaFXGriffonView {
 
     @Override
     public void initUI() {
-        System.out.println("Init UI") ;
-
         IconButton btn = generateButton(IconSVG.video_plus,"Add video", "org.laeq.menu.tooltip.video_add", "tools.open");
         parentView.tools.getChildren().add(btn);
 

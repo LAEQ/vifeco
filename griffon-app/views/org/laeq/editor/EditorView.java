@@ -107,6 +107,7 @@ public class EditorView extends AbstractJavaFXGriffonView {
     }
 
     private EventHandler<? super KeyEvent> keyReleased() {
+
         return (EventHandler<KeyEvent>) event -> {
             if(event.getCode() == KeyCode.CONTROL){
                 controller.togglePlay();
