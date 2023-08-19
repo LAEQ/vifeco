@@ -7,12 +7,14 @@ import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import org.laeq.model.Drawing;
 import org.laeq.model.icon.IconPointColorized;
 import org.reactfx.EventStream;
 import org.reactfx.EventStreams;
 import org.reactfx.Subscription;
+
 import java.util.Arrays;
 
 public class IconPane extends Pane {
@@ -52,6 +54,13 @@ public class IconPane extends Pane {
         released = EventStreams.eventsOf(this, MouseEvent.MOUSE_RELEASED);
 
         EventStream<MouseEvent> clicks = EventStreams.eventsOf(this, MouseEvent.MOUSE_CLICKED);
+
+        EventStream<ScrollEvent> scrollUp = EventStreams.eventsOf(this, ScrollEvent.SCROLL);
+
+        scrollUp.subscribe(scrollEvent -> {
+            String eventName = scrollEvent.getDeltaY() > 0 ? "media.rewind.alt" : "media.forward.alt";
+            router.publishEvent(eventName);
+        });
 
         clicks.subscribe(event -> {
             if(event.isControlDown()){
