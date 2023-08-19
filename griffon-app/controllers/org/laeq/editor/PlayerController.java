@@ -30,6 +30,7 @@ public class PlayerController extends AbstractGriffonController {
         Map<String, RunnableWithArgs> list = new HashMap<>();
 
         list.put("media.play", args -> view.play());
+        list.put("media.toggle", args -> view.toggle());
         list.put("media.pause", args -> view.pause());
         list.put("speed.change", args -> view.speed((Double)args[0]));
         list.put("step.change", args -> view.setAltStepInterval((Double)args[0]));

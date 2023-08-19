@@ -155,6 +155,14 @@ public class PlayerView extends AbstractJavaFXGriffonView implements PaneSizable
         model.setPlaying(true);
         mediaPlayer.play();;
     }
+
+    public void toggle(){
+        if ( model.getPlaying()) {
+            this.pause();
+        } else {
+            this.play();
+        }
+    }
     public void pause() {
         model.setPlaying(false);
         mediaPlayer.pause();
