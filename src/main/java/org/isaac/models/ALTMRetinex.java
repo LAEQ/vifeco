@@ -1,6 +1,7 @@
 package org.isaac.models;
 
 import org.isaac.filters.Filters;
+import org.laeq.editor.filter.AltmRetinexControls;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
@@ -11,9 +12,13 @@ import java.util.stream.Stream;
 
 public class ALTMRetinex {
     // Global Adaptation Parameters -- fixed
-    private static final double rParam = 0.299;
-    private static final double gParam = 0.587;
-    private static final double bParam = 0.114;
+    public static double rParam = 0.299;
+    public static double gParam = 0.587;
+    public static double bParam = 0.114;
+
+    public ALTMRetinex(){
+
+    }
 
     public static Mat enhance(Mat image, int r, double eps, double eta, double lambda, double krnlRatio) {
         image.convertTo(image, CvType.CV_32F);
